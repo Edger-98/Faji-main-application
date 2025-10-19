@@ -1,0 +1,60 @@
+targets:
+  $default:
+    builders:
+      # Freezed code generation
+      freezed:
+        enabled: true
+        generate_for:
+          - lib/**
+        options:
+          # Generate copyWith methods
+          copy_with: true
+          # Generate when methods
+          when: true
+          # Generate map methods
+          map: true
+      
+      # JSON serialization
+      json_serializable:
+        enabled: true
+        generate_for:
+          - lib/**
+        options:
+          # Generate nullable fields
+          nullable: true
+          # Use explicit toJson
+          explicit_to_json: true
+          # Include if null
+          include_if_null: false
+          # Create factory constructors
+          create_factory: true
+          # Create to_json method
+          create_to_json: true
+      
+      # Riverpod code generation
+      riverpod_generator:
+        enabled: true
+        generate_for:
+          - lib/**
+        options:
+          # Generate providers
+          generate_riverpod_annotation: true
+      
+      # Retrofit code generation
+      retrofit_generator:
+        enabled: true
+        generate_for:
+          - lib/**
+      
+      # Hive code generation
+      hive_generator:
+        enabled: true
+        generate_for:
+          - lib/**
+
+# Global options
+global_options:
+  # Exclude generated files from analysis
+  build_runner:
+    options:
+      delete_conflicting_outputs: true
