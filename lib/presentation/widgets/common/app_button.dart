@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Button variants for different use cases
 enum AppButtonVariant {

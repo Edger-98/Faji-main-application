@@ -280,7 +280,7 @@ class _UtilitiesShowcaseState extends ConsumerState<UtilitiesShowcase> {
             runSpacing: AppSpacing.buttonSpacing,
             children: <Widget>[
               AppButton.secondary(
-                onPressed: () => _demonstrateError(const NetworkFailure.noConnection()),
+                onPressed: () => _demonstrateError(NetworkFailure.noConnection()),
                 child: const Text('Network Error'),
               ),
               AppButton.secondary(

@@ -45,14 +45,8 @@ class Config {
   static String get apiVersion => _getEnvVar('API_VERSION', defaultValue: 'v1');
   static String get apiKey => _getEnvVar('API_KEY');
 
-  // Firebase Configuration
-  static String get firebaseProjectId => _getEnvVar('FIREBASE_PROJECT_ID');
-  static String get firebaseApiKey => _getEnvVar('FIREBASE_API_KEY');
-  static String get firebaseAppId => _getEnvVar('FIREBASE_APP_ID');
-
   // Feature Flags
   static bool get enableAnalytics => _getEnvVar('ENABLE_ANALYTICS', defaultValue: 'true').toLowerCase() == 'true';
-  static bool get enableCrashlytics => _getEnvVar('ENABLE_CRASHLYTICS', defaultValue: 'true').toLowerCase() == 'true';
   static bool get enableLogging => _getEnvVar('ENABLE_LOGGING', defaultValue: 'true').toLowerCase() == 'true';
   static bool get enableDebugMode => _getEnvVar('DEBUG_MODE', defaultValue: 'false').toLowerCase() == 'true';
 
@@ -79,9 +73,6 @@ class Config {
       // Check required variables
       baseUrl;
       apiKey;
-      firebaseProjectId;
-      firebaseApiKey;
-      firebaseAppId;
       encryptionKey;
       jwtSecret;
       return true;
@@ -97,7 +88,6 @@ class Config {
       'baseUrl': baseUrl,
       'apiVersion': apiVersion,
       'enableAnalytics': enableAnalytics,
-      'enableCrashlytics': enableCrashlytics,
       'enableLogging': enableLogging,
       'enableDebugMode': enableDebugMode,
       'isProduction': isProduction,

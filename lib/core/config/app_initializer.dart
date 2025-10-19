@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -33,9 +31,6 @@ class AppInitializer {
 
       // Initialize local storage
       await _initializeLocalStorage();
-
-      // Initialize Firebase
-      await _initializeFirebase();
 
       // Initialize error handling
       await _initializeErrorHandling();
@@ -85,35 +80,21 @@ class AppInitializer {
     }
   }
 
-  /// Initialize Firebase services
-  static Future<void> _initializeFirebase() async {
-    try {
-      await Firebase.initializeApp();
-      Logger.info('Firebase initialized successfully');
-    } catch (e) {
-      Logger.error('Failed to initialize Firebase', e);
-      rethrow;
-    }
-  }
 
-  /// Initialize error handling and crash reporting
+
+  /// Initialize error handling
   static Future<void> _initializeErrorHandling() async {
     try {
-      if (Config.enableCrashlytics && !kDebugMode) {
-        // Enable Crashlytics in production
-        FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-        
-        // Handle errors outside of Flutter
-        PlatformDispatcher.instance.onError = (error, stack) {
-          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-          return true;
-        };
-      } else {
-        // In debug mode, print errors to console
-        FlutterError.onError = (FlutterErrorDetails details) {
-          Logger.error('Flutter Error', details.exception, details.stack);
-        };
-      }
+      // Set up Flutter error handling to use Logger
+      FlutterError.onError = (FlutterErrorDetails details) {
+        Logger.error('Flutter Error', details.exception, details.stack);
+      };
+
+      // Handle errors outside of Flutter
+      PlatformDispatcher.instance.onError = (error, stack) {
+        Logger.error('Platform Error', error, stack);
+        return true;
+      };
 
       Logger.info('Error handling initialized');
     } catch (e) {

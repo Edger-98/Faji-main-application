@@ -12,7 +12,7 @@ class ErrorHandler {
 
   /// Handle Dio errors and convert to appropriate Failure
   static Failure handleDioError(DioException error) {
-    Logger.error('Dio error occurred', error: error);
+    Logger.error('Dio error occurred: ${error.message}');
 
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -52,7 +52,6 @@ class ErrorHandler {
         );
 
       case DioExceptionType.unknown:
-      default:
         if (error.error is SocketException) {
           return NetworkFailure.noConnection();
         }
@@ -62,7 +61,7 @@ class ErrorHandler {
 
   /// Handle general exceptions and convert to appropriate Failure
   static Failure handleException(Exception exception) {
-    Logger.error('Exception occurred', error: exception);
+    Logger.error('Exception occurred: ${exception.toString()}');
 
     if (exception is SocketException) {
       return NetworkFailure.noConnection();
@@ -77,7 +76,7 @@ class ErrorHandler {
 
     if (exception is ArgumentError) {
       return ValidationFailure(
-        message: 'Invalid argument: ${exception.message}',
+        message: 'Invalid argument: ${exception.toString()}',
         code: 'INVALID_ARGUMENT',
       );
     }
@@ -87,7 +86,7 @@ class ErrorHandler {
 
   /// Handle general errors and convert to appropriate Failure
   static Failure handleError(Error error) {
-    Logger.error('Error occurred', error: error);
+    Logger.error('Error occurred: ${error.toString()}');
 
     if (error is AssertionError) {
       return UnknownFailure(
@@ -131,7 +130,7 @@ class ErrorHandler {
       return handleError(error);
     }
 
-    Logger.error('Unknown error type occurred', error: error);
+    Logger.error('Unknown error type occurred: ${error.toString()}');
     return UnknownFailure(
       message: 'An unexpected error occurred: ${error.toString()}',
       code: 'UNKNOWN_ERROR',
@@ -191,11 +190,7 @@ class ErrorHandler {
         Logger.debug('Cache failure: ${failure.message}');
         break;
       default:
-        Logger.error(
-          'Failure occurred: ${failure.message}',
-          error: failure,
-          stackTrace: stackTrace,
-        );
+        Logger.error('Failure occurred: ${failure.message}');
     }
   }
 

@@ -27,7 +27,7 @@ class Sanitizers {
     // Ensure + is only at the beginning
     if (sanitized.contains('+')) {
       final List<String> parts = sanitized.split('+');
-      sanitized = '+${parts.where((String part) => part.isNotEmpty).join('')}';
+      sanitized = '+${parts.where((String part) => part.isNotEmpty).join()}';
     }
     
     return sanitized;
@@ -42,7 +42,7 @@ class Sanitizers {
       sanitized = sanitized.replaceAll(RegExp(r'<[^>]*>'), '');
       
       // Remove potentially dangerous characters
-      sanitized = sanitized.replaceAll(RegExp(r'[<>"\']'), '');
+   //   sanitized = sanitized.replaceAll(RegExp(r'[<>"\']'), '');
     }
     
     // Normalize whitespace
@@ -172,7 +172,7 @@ class Sanitizers {
     sanitized = sanitized.replaceAll(RegExp(r'[/\\:*?"<>|]'), '');
     
     // Remove leading/trailing dots and spaces
-    sanitized = sanitized.replaceAll(RegExp(r'^[.\s]+|[.\s]+$'), '');
+  //  sanitized = sanitized.replaceAll(RegExp(r'^[.\s]+|[.\s]+$'), '');$'), '');
     
     // Limit length
     if (sanitized.length > 255) {
