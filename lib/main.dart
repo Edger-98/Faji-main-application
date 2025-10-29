@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/presentation/presentation.dart';
-import 'package:fajimobileapp/presentation/widgets/common/faji_design_showcase.dart';
 
 void main() async {
   // Initialize the application
@@ -22,8 +22,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch theme state
-    final ThemeState themeState = ref.watch(themeProvider);
+    // Watch theme state (for future use)
+    ref.watch(themeProvider);
     
     // Update system brightness when app starts
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -33,13 +33,20 @@ class MyApp extends ConsumerWidget {
       );
     });
 
-    return MaterialApp(
-      title: AppConstants.appName,
-      theme: FajiAppTheme.lightTheme,
-      darkTheme: FajiAppTheme.darkTheme,
-      themeMode: _getThemeMode(themeState.themeMode),
-      home: const FajiDesignShowcase(),
-      debugShowCheckedModeBanner: false,
+    return ScreenUtilInit(
+      designSize: const Size(393, 852), // iPhone 14 Pro size from Figma
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: AppConstants.appName,
+          theme: FajiAppTheme.lightTheme,
+          darkTheme: FajiAppTheme.darkTheme,
+          themeMode: ThemeMode.dark, // Default to dark mode
+          routerConfig: AppRouter.router,
+          debugShowCheckedModeBanner: false,
+        );
+      },
     );
   }
 

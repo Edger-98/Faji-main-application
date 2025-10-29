@@ -10,8 +10,8 @@ enum AppTextFieldVariant {
 }
 
 /// Reusable text field component with validation and theming
-class AppTextField extends StatefulWidget {
-  const AppTextField({
+class CommonAppTextField extends StatefulWidget {
+  const CommonAppTextField({
     super.key,
     this.controller,
     this.labelText,
@@ -65,10 +65,10 @@ class AppTextField extends StatefulWidget {
   final bool enableSuggestions;
 
   @override
-  State<AppTextField> createState() => _AppTextFieldState();
+  State<CommonAppTextField> createState() => _CommonAppTextFieldState();
 }
 
-class _AppTextFieldState extends State<AppTextField> {
+class _CommonAppTextFieldState extends State<CommonAppTextField> {
   late bool _obscureText;
   late FocusNode _focusNode;
   bool _isFocused = false;

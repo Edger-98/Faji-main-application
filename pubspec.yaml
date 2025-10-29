@@ -50,6 +50,13 @@ dependencies:
   connectivity_plus: ^6.0.5
   permission_handler: ^11.3.1
   
+  # Responsive Design
+  flutter_screenutil: ^5.9.3
+  responsive_sizer: ^3.3.1
+  
+  # Country Picker
+  country_picker: ^2.0.26
+  
   # Internationalization
   flutter_localizations:
     sdk: flutter
@@ -91,6 +98,61 @@ flutter:
     - .env.dev
     - .env.staging
     - .env.production
+  
+  # Fonts
+  fonts:
+    - family: PP Neue Montreal
+      fonts:
+        - asset: assets/fonts/ppneuemontreal-thin.otf
+          weight: 100
+        - asset: assets/fonts/ppneuemontreal-book.otf
+          weight: 400
+        - asset: assets/fonts/ppneuemontreal-medium.otf
+          weight: 500
+        - asset: assets/fonts/ppneuemontreal-bold.otf
+          weight: 700
+        - asset: assets/fonts/ppneuemontreal-italic.otf
+          style: italic
+        - asset: assets/fonts/ppneuemontreal-semibolditalic.otf
+          weight: 600
+          style: italic
+    
+    - family: Neue Haas Grotesk Display Pro
+      fonts:
+        - asset: assets/fonts/NeueHaasDisplayXXThin.ttf
+          weight: 100
+        - asset: assets/fonts/NeueHaasDisplayXThin.ttf
+          weight: 200
+        - asset: assets/fonts/NeueHaasDisplayThin.ttf
+          weight: 300
+        - asset: assets/fonts/NeueHaasDisplayLight.ttf
+          weight: 400
+        - asset: assets/fonts/NeueHaasDisplayRoman.ttf
+          weight: 500
+        - asset: assets/fonts/NeueHaasDisplayMediu.ttf
+          weight: 600
+        - asset: assets/fonts/NeueHaasDisplayBold.ttf
+          weight: 700
+        - asset: assets/fonts/NeueHaasDisplayBlack.ttf
+          weight: 900
+        - asset: assets/fonts/NeueHaasDisplayThinItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/NeueHaasDisplayLightItalic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/NeueHaasDisplayRomanItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/NeueHaasDisplayMediumItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/NeueHaasDisplayBoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/NeueHaasDisplayBlackItalic.ttf
+          weight: 900
+          style: italic
   
   # Generate localization files
   generate: true

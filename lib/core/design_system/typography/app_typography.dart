@@ -5,29 +5,30 @@ import 'package:flutter/material.dart';
 class AppTypography {
   AppTypography._();
 
-  // Base font families (From Figma)
-  static const String _primaryFontFamily = 'Neue Haas Grotesk Display Pro';
-  static const String _secondaryFontFamily = 'PP Neue Montreal';
-  static const String _fallbackFontFamily = 'SF Pro Display'; // iOS fallback
+  // Base font families (From Figma - EXACT NAMES)
+  static const String neueHaasDisplay = 'Neue Haas Grotesk Display Pro';
+  static const String ppNeueMontreal = 'PP Neue Montreal';
 
-  // Font weights
+  // Font weights (matching actual font files)
+  static const FontWeight thin = FontWeight.w100;
   static const FontWeight light = FontWeight.w300;
   static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w500;
   static const FontWeight semiBold = FontWeight.w600;
   static const FontWeight bold = FontWeight.w700;
+  static const FontWeight black = FontWeight.w900;
 
-  // Display styles - largest text on screen (From Figma: 37px)
+  // EXACT FIGMA STYLES - Display (Neue Haas Display Pro, 37px, 600 weight)
   static const TextStyle displayLarge = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 37,
-    fontWeight: semiBold,
+    fontWeight: semiBold, // 600
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle displayMedium = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 32,
     fontWeight: semiBold,
     height: 1.2,
@@ -35,24 +36,24 @@ class AppTypography {
   );
 
   static const TextStyle displaySmall = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 28,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // Headline styles - high-emphasis text (From Figma: 28px)
+  // EXACT FIGMA STYLES - Headlines (Neue Haas Display Pro, 28px, 600 weight)
   static const TextStyle headlineLarge = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 28,
-    fontWeight: semiBold,
+    fontWeight: semiBold, // 600
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle headlineMedium = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 24,
     fontWeight: semiBold,
     height: 1.2,
@@ -60,16 +61,16 @@ class AppTypography {
   );
 
   static const TextStyle headlineSmall = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 20,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // Title styles - medium-emphasis text
+  // EXACT FIGMA STYLES - Titles (Neue Haas Display Pro for buttons)
   static const TextStyle titleLarge = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 22,
     fontWeight: semiBold,
     height: 1.2,
@@ -77,7 +78,7 @@ class AppTypography {
   );
 
   static const TextStyle titleMedium = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 18,
     fontWeight: semiBold,
     height: 1.2,
@@ -85,24 +86,24 @@ class AppTypography {
   );
 
   static const TextStyle titleSmall = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 16,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // Label styles - text used in components (From Figma: 18px for buttons)
+  // EXACT FIGMA STYLES - Labels/Buttons (Neue Haas Display Pro, 18px, 600 weight)
   static const TextStyle labelLarge = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 18,
-    fontWeight: semiBold,
+    fontWeight: semiBold, // 600
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle labelMedium = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 16,
     fontWeight: semiBold,
     height: 1.2,
@@ -110,34 +111,34 @@ class AppTypography {
   );
 
   static const TextStyle labelSmall = TextStyle(
-    fontFamily: _primaryFontFamily,
+    fontFamily: neueHaasDisplay,
     fontSize: 14,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // Body styles - main text content (From Figma: PP Neue Montreal, 17px)
+  // EXACT FIGMA STYLES - Body Text (PP Neue Montreal, 17px, 100 weight)
   static const TextStyle bodyLarge = TextStyle(
-    fontFamily: _secondaryFontFamily,
+    fontFamily: ppNeueMontreal,
     fontSize: 17,
-    fontWeight: FontWeight.w100,
+    fontWeight: thin, // 100
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle bodyMedium = TextStyle(
-    fontFamily: _secondaryFontFamily,
+    fontFamily: ppNeueMontreal,
     fontSize: 16,
-    fontWeight: FontWeight.w100,
+    fontWeight: thin, // 100
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle bodySmall = TextStyle(
-    fontFamily: _secondaryFontFamily,
+    fontFamily: ppNeueMontreal,
     fontSize: 14,
-    fontWeight: FontWeight.w100,
+    fontWeight: thin, // 100
     height: 1.2,
     letterSpacing: 0,
   );
