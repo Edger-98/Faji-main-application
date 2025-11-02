@@ -105,7 +105,7 @@ class AppRouter {
         pageBuilder: (context, state) => _buildPageWithTransition(
           context,
           state,
-          const PinScreen(),
+          const PinScreen(), // Using proper PIN screen with visual lines
         ),
       ),
       GoRoute(

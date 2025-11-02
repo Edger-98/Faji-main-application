@@ -271,7 +271,17 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
                             height: 59,
                             onPressed: () {
                               if (_isPhoneValid) {
-                                context.goNamed(RouteManager.authPinName);
+                                debugPrint('Phone screen: Navigating to PIN screen');
+                                debugPrint('Route name: ${RouteManager.authPinName}');
+                                debugPrint('Route path: ${RouteManager.authPin}');
+                                try {
+                                  context.goNamed(RouteManager.authPinName);
+                                  debugPrint('Navigation called successfully');
+                                } catch (e) {
+                                  debugPrint('Navigation error: $e');
+                                  // Fallback to path-based navigation
+                                  context.go(RouteManager.authPin);
+                                }
                               }
                             },
                             isEnabled: _isPhoneValid,

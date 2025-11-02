@@ -16,8 +16,6 @@ Intro Screen (Get Started)
     ↓
 Email Screen
     ↓
-Phone Screen
-    ↓
 Verify Screen (PIN)
     ↓
 Your Name Screen
@@ -26,6 +24,8 @@ Password Screen
     ↓
 Home Screen
 ```
+
+**Note**: Phone screen is NOT part of the main sign-up flow.
 
 ### Detailed Steps
 
@@ -40,33 +40,23 @@ Home Screen
 - **Purpose:** Collect user's email address
 - **Validation:** Email must contain '@' and '.'
 - **Actions:**
-  - Continue button → Navigate to Phone Screen
+  - Continue button → Navigate to PIN Screen (Verify)
   - Back button → Return to Intro
 - **File:** `lib/features/auth/presentation/screens/email_screen.dart`
 
-#### 3. Phone Screen (`/auth/phone`)
-- **Purpose:** Collect user's phone number with country code
+#### 3. Verify Screen - PIN (`/auth/pin`)
+- **Purpose:** Verify email with 6-digit PIN code
 - **Features:**
-  - Country picker with flags
-  - Phone number validation
-- **Actions:**
-  - Continue button → Navigate to PIN Screen (Verify)
-  - Back button → Return to Email Screen
-- **File:** `lib/features/auth/presentation/screens/phone_screen.dart`
-
-#### 4. Verify Screen - PIN (`/auth/pin`)
-- **Purpose:** Verify phone number with 6-digit PIN
-- **Features:**
-  - 6-digit PIN input
+  - 6-digit PIN input (visual lines)
   - Auto-continue when complete
   - Resend code option
 - **Actions:**
   - Auto-navigate when PIN complete → Navigate to Name Screen
   - Continue button → Navigate to Name Screen
-  - Back button → Return to Phone Screen
+  - Back button → Return to Email Screen
 - **File:** `lib/features/auth/presentation/screens/pin_screen.dart`
 
-#### 5. Your Name Screen (`/auth/name`)
+#### 4. Your Name Screen (`/auth/name`)
 - **Purpose:** Collect user's full name
 - **Validation:** Name must not be empty
 - **Actions:**
@@ -74,7 +64,7 @@ Home Screen
   - Back button → Return to PIN Screen
 - **File:** `lib/features/auth/presentation/screens/name_screen.dart`
 
-#### 6. Password Screen (`/auth/password`)
+#### 5. Password Screen (`/auth/password`)
 - **Purpose:** Create account password
 - **Features:**
   - Password visibility toggle
@@ -85,7 +75,7 @@ Home Screen
   - Back button → Return to Name Screen
 - **File:** `lib/features/auth/presentation/screens/password_screen.dart`
 
-#### 7. Home Screen (`/home`)
+#### 6. Home Screen (`/home`)
 - **Purpose:** Main app screen after successful registration
 - **File:** `lib/features/home/presentation/screens/home_screen.dart`
 

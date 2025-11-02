@@ -146,7 +146,8 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
                 height: 59.h, // Responsive height
                 onPressed: () {
                   if (_isEmailValid) {
-                    context.goNamed(RouteManager.authPhoneName);
+                    debugPrint('Email screen: Navigating to PIN screen');
+                    context.goNamed(RouteManager.authPinName);
                   }
                 },
                 isEnabled: _isEmailValid,

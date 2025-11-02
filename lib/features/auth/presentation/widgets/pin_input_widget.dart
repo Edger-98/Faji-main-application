@@ -118,8 +118,8 @@ class _PinInputWidgetState extends State<PinInputWidget>
                     height: 3,
                     decoration: BoxDecoration(
                       color: _controllers[index].text.isNotEmpty 
-                          ? context.colors.primary 
-                          : context.colors.outline,
+                          ? AppColors.primary 
+                          : const Color(0xFF454545), // Figma: #454545
                       borderRadius: BorderRadius.circular(1.5),
                     ),
                   );
