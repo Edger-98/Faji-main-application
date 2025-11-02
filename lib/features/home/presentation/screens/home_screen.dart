@@ -5,6 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
+import 'package:fajimobileapp/features/favorites/presentation/screens/favorites_content.dart';
+import 'package:fajimobileapp/features/tickets/presentation/screens/tickets_content.dart';
+import 'package:fajimobileapp/features/profile/presentation/screens/profile_content.dart';
 
 /// Home screen matching Figma design (node-id=2-648)
 class HomeScreen extends ConsumerStatefulWidget {
@@ -22,17 +25,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       backgroundColor: context.colors.surface,
       extendBody: true, // Extend body behind bottom nav
-      body: SafeArea(
-        bottom: false, // Don't apply safe area to bottom
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            _buildHomeContent(),
-            _buildFavoritesContent(),
-            _buildTicketsContent(),
-            _buildProfileContent(),
-          ],
-        ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          _buildHomeContent(),
+          const FavoritesContent(),
+          const TicketsContent(),
+          const ProfileContent(),
+        ],
       ),
       bottomNavigationBar: HomeBottomNav(
         currentIndex: _selectedIndex,
@@ -42,8 +42,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildHomeContent() {
-    return CustomScrollView(
-      slivers: [
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        slivers: [
         // Header
         SliverToBoxAdapter(
           child: HomeHeader(),
@@ -98,25 +100,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         
         SliverToBoxAdapter(child: SizedBox(height: 100.h)),
-      ],
-    );
-  }
-
-  Widget _buildFavoritesContent() {
-    return Center(
-      child: AppText.titleLarge('Favorites', color: context.colors.onSurface),
-    );
-  }
-
-  Widget _buildTicketsContent() {
-    return Center(
-      child: AppText.titleLarge('Tickets', color: context.colors.onSurface),
-    );
-  }
-
-  Widget _buildProfileContent() {
-    return Center(
-      child: AppText.titleLarge('Profile', color: context.colors.onSurface),
+        ],
+      ),
     );
   }
 }

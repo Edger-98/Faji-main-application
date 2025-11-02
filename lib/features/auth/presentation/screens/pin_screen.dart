@@ -75,7 +75,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
                   },
                   onCompleted: (pin) {
                     // Auto-continue when PIN is complete
-                    context.goNamed(RouteManager.authPhoneName);
+                    context.goNamed(RouteManager.authNameName);
                   },
                 ),
               ),
@@ -130,7 +130,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
                 height: 59,
                 onPressed: () {
                   if (_currentPin.length == 6) {
-                    context.goNamed(RouteManager.authPhoneName);
+                    context.goNamed(RouteManager.authNameName);
                   }
                 },
                 isEnabled: _currentPin.length == 6,

@@ -1,0 +1,443 @@
+{
+  "metadata": {
+    "name": "Faji App UI",
+    "lastModified": "2025-09-28T18:36:29Z",
+    "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/b4469c55-a71e-4a22-ac7e-be88df7af0a7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWCZDDNLKEH%2F20251026%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251026T120000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=681506e6ac99792df138e1f74302600d7d83db6d4919485557d1e061e0262d07"
+  },
+  "nodes": [
+    {
+      "id": "38:3173",
+      "name": "iPhone 13 & 14 - 40",
+      "type": "FRAME",
+      "boundingBox": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 852
+      },
+      "fills": "fill_IJRVXE",
+      "layout": "layout_JIEBW6",
+      "children": [
+        {
+          "id": "38:3229",
+          "name": "cs18 2",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 46,
+            "y": 81,
+            "width": 278,
+            "height": 278
+          },
+          "fills": "fill_F9PARM",
+          "layout": "layout_QQKIYW"
+        },
+        {
+          "id": "38:3179",
+          "name": "Ellipse 209",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 24,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_HC2JMO",
+          "layout": "layout_O99OGF"
+        },
+        {
+          "id": "38:3189",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 46,
+            "y": 81,
+            "width": 6,
+            "height": 16
+          },
+          "strokes": "stroke_4AR5BZ",
+          "layout": "layout_E6QE8R",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "38:3226",
+          "name": "Support",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 151,
+            "y": 81,
+            "width": 87,
+            "height": 30
+          },
+          "textStyle": "style_BDZQYC",
+          "fills": "fill_XG1U66",
+          "layout": "layout_ZDR848",
+          "text": "Support"
+        },
+        {
+          "id": "38:3228",
+          "name": "Hello, how can we help you?",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 71,
+            "y": 308,
+            "width": 248,
+            "height": 66
+          },
+          "textStyle": "style_WMLRCL",
+          "fills": "fill_XG1U66",
+          "layout": "layout_H8SNCR",
+          "text": "Hello, how can we\nhelp you?"
+        },
+        {
+          "id": "38:3230",
+          "name": "Rectangle 5879",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 420,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_HC2JMO",
+          "layout": "layout_HH2YKL",
+          "borderRadius": "34.5px"
+        },
+        {
+          "id": "38:3231",
+          "name": "Rectangle 5880",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 497,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_HC2JMO",
+          "layout": "layout_ZQFYHY",
+          "borderRadius": "34.5px"
+        },
+        {
+          "id": "38:3234",
+          "name": "Rectangle 5881",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 574,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_HC2JMO",
+          "layout": "layout_L590AK",
+          "borderRadius": "34.5px"
+        },
+        {
+          "id": "38:3203",
+          "name": "Contact live chat",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 51,
+            "y": 438,
+            "width": 115,
+            "height": 33
+          },
+          "textStyle": "style_XIWEN2",
+          "fills": "fill_XG1U66",
+          "layout": "layout_1NGWMK",
+          "text": "Contact live chat"
+        },
+        {
+          "id": "38:3232",
+          "name": "Send us an email",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 51,
+            "y": 515,
+            "width": 119,
+            "height": 33
+          },
+          "textStyle": "style_XIWEN2",
+          "fills": "fill_XG1U66",
+          "layout": "layout_HESJ8J",
+          "text": "Send us an email"
+        },
+        {
+          "id": "38:3235",
+          "name": "FAQs",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 51,
+            "y": 592,
+            "width": 39,
+            "height": 33
+          },
+          "textStyle": "style_XIWEN2",
+          "fills": "fill_XG1U66",
+          "layout": "layout_YAIBK6",
+          "text": "FAQs"
+        },
+        {
+          "id": "38:3192",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 330,
+            "y": 450,
+            "width": 4,
+            "height": 10
+          },
+          "strokes": "stroke_XPDHWO",
+          "layout": "layout_Q6G5NZ",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "38:3233",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 330,
+            "y": 527,
+            "width": 4,
+            "height": 10
+          },
+          "strokes": "stroke_XPDHWO",
+          "layout": "layout_CZLZAA",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "38:3236",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 330,
+            "y": 604,
+            "width": 4,
+            "height": 10
+          },
+          "strokes": "stroke_XPDHWO",
+          "layout": "layout_2YJA4J",
+          "borderRadius": "3px"
+        }
+      ]
+    }
+  ],
+  "globalVars": {
+    "styles": {
+      "fill_IJRVXE": [
+        "#1F1F1F"
+      ],
+      "layout_JIEBW6": {
+        "mode": "none",
+        "clipsContent": true,
+        "dimensions": {
+          "width": 390,
+          "height": 852
+        }
+      },
+      "fill_F9PARM": [
+        {
+          "type": "IMAGE",
+          "imageRef": "c0c8d2e6f5656b6dd694b67e57d1af92cad8a90d",
+          "scaleMode": "FILL"
+        }
+      ],
+      "layout_QQKIYW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 278,
+          "height": 278
+        }
+      },
+      "fill_HC2JMO": [
+        "rgba(40, 40, 40, 0.81)"
+      ],
+      "layout_O99OGF": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "stroke_4AR5BZ": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_E6QE8R": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 6,
+          "height": 16
+        }
+      },
+      "style_BDZQYC": {
+        "fontFamily": "Neue Haas Grotesk Display Pro",
+        "fontWeight": 500,
+        "fontSize": 25,
+        "lineHeight": "1.2000000762939453em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_XG1U66": [
+        "#F8F8F8"
+      ],
+      "layout_ZDR848": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 151,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 87,
+          "height": 30
+        }
+      },
+      "style_WMLRCL": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 500,
+        "fontSize": 32,
+        "lineHeight": "1.03125em",
+        "textAlignHorizontal": "CENTER",
+        "textAlignVertical": "TOP"
+      },
+      "layout_H8SNCR": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 71,
+          "y": 308
+        },
+        "dimensions": {
+          "width": 248,
+          "height": 66
+        }
+      },
+      "layout_HH2YKL": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 420
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_ZQFYHY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 497
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_L590AK": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 574
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "style_XIWEN2": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 17,
+        "lineHeight": "1.9411764705882353em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_1NGWMK": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 51,
+          "y": 438
+        },
+        "dimensions": {
+          "width": 115,
+          "height": 33
+        }
+      },
+      "layout_HESJ8J": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 51,
+          "y": 515
+        },
+        "dimensions": {
+          "width": 119,
+          "height": 33
+        }
+      },
+      "layout_YAIBK6": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 51,
+          "y": 592
+        },
+        "dimensions": {
+          "width": 39,
+          "height": 33
+        }
+      },
+      "stroke_XPDHWO": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "1px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_Q6G5NZ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 330,
+          "y": 450
+        },
+        "dimensions": {
+          "width": 4,
+          "height": 10
+        }
+      },
+      "layout_CZLZAA": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 330,
+          "y": 527
+        },
+        "dimensions": {
+          "width": 4,
+          "height": 10
+        }
+      },
+      "layout_2YJA4J": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 330,
+          "y": 604
+        },
+        "dimensions": {
+          "width": 4,
+          "height": 10
+        }
+      }
+    }
+  }
+}

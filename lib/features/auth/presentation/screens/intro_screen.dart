@@ -179,7 +179,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                               text: 'Get Started',
                               width: 190.w, // Responsive width from Figma
                               height: 59.h, // Responsive height from Figma
-                              onPressed: () => context.goNamed(RouteManager.authNameName),
+                              onPressed: () => context.goNamed(RouteManager.authEmailName),
                             ),
                             
                             SizedBox(height: 11.h), // EXACT from Figma
@@ -189,8 +189,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                               padding: EdgeInsets.symmetric(horizontal: 64.w), // EXACT from Figma (88px - 24px = 64px)
                               child: TextButton(
                                 onPressed: () {
-                                  // Navigate to sign in (for now, go to email screen)
-                                  context.goNamed(RouteManager.authPhoneName);
+                                  // Navigate to login screen
+                                  context.goNamed(RouteManager.loginName);
                                 },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,

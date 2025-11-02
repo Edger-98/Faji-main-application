@@ -1,0 +1,1479 @@
+{
+  "metadata": {
+    "name": "Faji App UI",
+    "lastModified": "2025-09-28T18:36:29Z",
+    "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/b4469c55-a71e-4a22-ac7e-be88df7af0a7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWCZDDNLKEH%2F20251026%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251026T120000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=681506e6ac99792df138e1f74302600d7d83db6d4919485557d1e061e0262d07"
+  },
+  "nodes": [
+    {
+      "id": "36:2524",
+      "name": "iPhone 13 & 14 - 22",
+      "type": "FRAME",
+      "boundingBox": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 852
+      },
+      "fills": "fill_QT6DG1",
+      "layout": "layout_SB3LVC",
+      "children": [
+        {
+          "id": "36:2531",
+          "name": "Ellipse 209",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 24,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_3KN3Z3",
+          "layout": "layout_S2V7E6"
+        },
+        {
+          "id": "36:2533",
+          "name": "Favorites",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 146,
+            "y": 74,
+            "width": 98,
+            "height": 30
+          },
+          "textStyle": "style_HZFRL7",
+          "fills": "fill_OUMKWJ",
+          "layout": "layout_GALSHJ",
+          "text": "Favorites"
+        },
+        {
+          "id": "36:2534",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 46,
+            "y": 81,
+            "width": 6,
+            "height": 16
+          },
+          "strokes": "stroke_L5XHVE",
+          "layout": "layout_C8CCM3",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "36:2574",
+          "name": "Rectangle 5878",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 140,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_3KN3Z3",
+          "layout": "layout_6C2XIX",
+          "borderRadius": "34.5px"
+        },
+        {
+          "id": "36:2575",
+          "name": "Search your favorites",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 81,
+            "y": 163,
+            "width": 152,
+            "height": 22
+          },
+          "textStyle": "style_WHD2ZW",
+          "fills": "fill_ODNZPH",
+          "layout": "layout_WCLPP1",
+          "text": "Search your favorites"
+        },
+        {
+          "id": "36:2576",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 48,
+            "y": 164,
+            "width": 18,
+            "height": 19
+          },
+          "strokes": "stroke_83A0UR",
+          "layout": "layout_Y5K6PP",
+          "borderRadius": "0px 0px 0px 0px"
+        },
+        {
+          "id": "36:2584",
+          "name": "Rectangle 5903",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 229,
+            "width": 91,
+            "height": 33
+          },
+          "fills": "fill_R423GM",
+          "layout": "layout_BJZW26",
+          "borderRadius": "34.5px"
+        },
+        {
+          "id": "36:2586",
+          "name": "Rectangle 5905",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 121,
+            "y": 229,
+            "width": 105,
+            "height": 33
+          },
+          "fills": "fill_R423GM",
+          "layout": "layout_KB5FRY",
+          "borderRadius": "34.5px"
+        },
+        {
+          "id": "36:2587",
+          "name": "Events",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 45,
+            "y": 236,
+            "width": 49,
+            "height": 20
+          },
+          "textStyle": "style_DQJ61R",
+          "fills": "fill_2YLUG6",
+          "layout": "layout_DKMGFW",
+          "text": "Events"
+        },
+        {
+          "id": "36:2589",
+          "name": "Organizer",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 138,
+            "y": 236,
+            "width": 71,
+            "height": 20
+          },
+          "textStyle": "style_DQJ61R",
+          "fills": "fill_4SPAA2",
+          "layout": "layout_D30WE5",
+          "text": "Organizer"
+        },
+        {
+          "id": "36:2605",
+          "name": "Group 1171275106",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 22.955078125,
+            "y": 274,
+            "width": 338.0898742675781,
+            "height": 295
+          },
+          "layout": "layout_ARZOLQ",
+          "borderRadius": "0px 0px 0px 0px",
+          "children": [
+            {
+              "id": "36:2590",
+              "name": "Rectangle 5888",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 22.955078125,
+                "y": 274,
+                "width": 338.0898742675781,
+                "height": 295
+              },
+              "fills": "fill_YJSP4J",
+              "layout": "layout_QLV9R1",
+              "borderRadius": "40px"
+            },
+            {
+              "id": "36:2591",
+              "name": "Mask group",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 22.955078125,
+                "y": 274,
+                "width": 338.0898742675781,
+                "height": 269.5880126953125
+              },
+              "layout": "layout_GMTEC6",
+              "borderRadius": "0px 0px 0px 0px",
+              "children": [
+                {
+                  "id": "36:2592",
+                  "name": "Rectangle 5889",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 22.955078125,
+                    "y": 274,
+                    "width": 338.0898742675781,
+                    "height": 269.5880126953125
+                  },
+                  "fills": "fill_YJSP4J",
+                  "layout": "layout_GMTEC6",
+                  "borderRadius": "40px"
+                },
+                {
+                  "id": "36:2593",
+                  "name": "image 33",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 80.40826416015625,
+                    "y": 224.28076171875,
+                    "width": 258.5393371582031,
+                    "height": 332.5655517578125
+                  },
+                  "fills": "fill_AX1H2V",
+                  "layout": "layout_E5CBJC"
+                }
+              ]
+            },
+            {
+              "id": "36:2594",
+              "name": "Group 1171275053",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 298.06744384765625,
+                "y": 290.5732421875,
+                "width": 46.40449523925781,
+                "height": 46.40449523925781
+              },
+              "layout": "layout_OOTVE4",
+              "children": [
+                {
+                  "id": "36:2595",
+                  "name": "Ellipse 54",
+                  "type": "ELLIPSE",
+                  "boundingBox": {
+                    "x": 298.06744384765625,
+                    "y": 290.5732421875,
+                    "width": 46.40449523925781,
+                    "height": 46.40449523925781
+                  },
+                  "fills": "fill_T0J0J0",
+                  "layout": "layout_7EB7HO"
+                },
+                {
+                  "id": "36:2596",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "boundingBox": {
+                    "x": 311.32586669921875,
+                    "y": 304.9365234375,
+                    "width": 19.88763999938965,
+                    "height": 17.677902221679688
+                  },
+                  "fills": "fill_2YLUG6",
+                  "layout": "layout_8W150T"
+                }
+              ]
+            },
+            {
+              "id": "36:2597",
+              "name": "Rectangle 5890",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 22.955078125,
+                "y": 471.771484375,
+                "width": 338.0898742675781,
+                "height": 97.22846221923828
+              },
+              "fills": "fill_MA2IVB",
+              "effects": "effect_AXGZKJ",
+              "layout": "layout_6KKQYB",
+              "borderRadius": "35px"
+            },
+            {
+              "id": "36:2598",
+              "name": "GENfest Music Festival 2024 - Multi - sensorial Audio Interface",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 47.26220703125,
+                "y": 491.6591796875,
+                "width": 260.7490539550781,
+                "height": 39.7752799987793
+              },
+              "textStyle": "style_G8M1XU",
+              "fills": "fill_OUMKWJ",
+              "layout": "layout_X3K535",
+              "text": "GENfest Music Festival 2024 - Multi - \nsensorial Audio Interface"
+            },
+            {
+              "id": "36:2599",
+              "name": "Wed 22/03",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 47.26220703125,
+                "y": 538.0634765625,
+                "width": 64.0823974609375,
+                "height": 15.468164443969727
+              },
+              "textStyle": "style_E8429R",
+              "fills": "fill_OCFH3H",
+              "layout": "layout_Q9ZACM",
+              "text": "Wed 22/03"
+            },
+            {
+              "id": "36:2600",
+              "name": "08:30 PM",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 126.812744140625,
+                "y": 538.0634765625,
+                "width": 57.453182220458984,
+                "height": 15.468164443969727
+              },
+              "textStyle": "style_E8429R",
+              "fills": "fill_OCFH3H",
+              "layout": "layout_HUPG7F",
+              "text": "08:30 PM"
+            },
+            {
+              "id": "36:2601",
+              "name": "From $40.00",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 197.52435302734375,
+                "y": 538.0634765625,
+                "width": 72.92134857177734,
+                "height": 15.468164443969727
+              },
+              "textStyle": "style_E8429R",
+              "fills": "fill_2YLUG6",
+              "layout": "layout_A19ALL",
+              "text": "From $40.00"
+            },
+            {
+              "id": "36:2602",
+              "name": "Live",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 52.78656005859375,
+                "y": 296.09716796875,
+                "width": 27.621723175048828,
+                "height": 18.782772064208984
+              },
+              "textStyle": "style_5DVUPE",
+              "fills": "fill_FNBSHE",
+              "layout": "layout_4HFTWG",
+              "text": "Live"
+            },
+            {
+              "id": "36:2603",
+              "name": "Ellipse 210",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 117.97381591796875,
+                "y": 544.69287109375,
+                "width": 3.313725471496582,
+                "height": 3.313725471496582
+              },
+              "fills": "fill_78YX3U",
+              "layout": "layout_ZFOPMY"
+            },
+            {
+              "id": "36:2604",
+              "name": "Ellipse 211",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 187.58053588867188,
+                "y": 544.69287109375,
+                "width": 3.313725471496582,
+                "height": 3.313725471496582
+              },
+              "fills": "fill_78YX3U",
+              "layout": "layout_QI4AF9"
+            }
+          ]
+        },
+        {
+          "id": "36:2606",
+          "name": "Vector 19",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 312,
+            "y": 305,
+            "width": 19,
+            "height": 17
+          },
+          "fills": "fill_2YLUG6",
+          "strokes": "stroke_048ZT5",
+          "layout": "layout_UJH7TQ",
+          "borderRadius": "35px"
+        },
+        {
+          "id": "36:2622",
+          "name": "Group 1171275054",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 24,
+            "y": 583,
+            "width": 338.2921447753906,
+            "height": 295.1764831542969
+          },
+          "layout": "layout_YAH8FS",
+          "borderRadius": "0px 0px 0px 0px",
+          "children": [
+            {
+              "id": "36:2623",
+              "name": "Mask group",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 24,
+                "y": 583,
+                "width": 338.2921447753906,
+                "height": 295.1764831542969
+              },
+              "layout": "layout_P2TZWD",
+              "borderRadius": "0px 0px 0px 0px",
+              "children": [
+                {
+                  "id": "36:2624",
+                  "name": "Rectangle 5888",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 24,
+                    "y": 583,
+                    "width": 338.2921447753906,
+                    "height": 295.1764831542969
+                  },
+                  "fills": "fill_YJSP4J",
+                  "layout": "layout_P2TZWD",
+                  "borderRadius": "40px"
+                },
+                {
+                  "id": "36:2625",
+                  "name": "long-hair-guitar-guy-singing-low-view 1",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 15.15576171875,
+                    "y": 557.57275390625,
+                    "width": 346.0308532714844,
+                    "height": 431.1566467285156
+                  },
+                  "fills": "fill_9PLYVH",
+                  "layout": "layout_4XC0CS"
+                }
+              ]
+            },
+            {
+              "id": "36:2626",
+              "name": "Group 1171275053",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 299.2769470214844,
+                "y": 599.5830078125,
+                "width": 46.4322509765625,
+                "height": 46.4322509765625
+              },
+              "layout": "layout_ZDVCLQ",
+              "children": [
+                {
+                  "id": "36:2627",
+                  "name": "Ellipse 54",
+                  "type": "ELLIPSE",
+                  "boundingBox": {
+                    "x": 299.2769470214844,
+                    "y": 599.5830078125,
+                    "width": 46.4322509765625,
+                    "height": 46.4322509765625
+                  },
+                  "fills": "fill_T0J0J0",
+                  "layout": "layout_EMUPQR"
+                },
+                {
+                  "id": "36:2628",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "boundingBox": {
+                    "x": 312.54327392578125,
+                    "y": 613.955078125,
+                    "width": 19.899538040161133,
+                    "height": 17.688478469848633
+                  },
+                  "fills": "fill_2YLUG6",
+                  "layout": "layout_Y4W2R7"
+                }
+              ]
+            },
+            {
+              "id": "36:2629",
+              "name": "Rectangle 5890",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 24,
+                "y": 780.8896484375,
+                "width": 338.2921447753906,
+                "height": 97.28662872314453
+              },
+              "fills": "fill_MA2IVB",
+              "effects": "effect_AXGZKJ",
+              "layout": "layout_LCQTBJ",
+              "borderRadius": "35px"
+            },
+            {
+              "id": "36:2630",
+              "name": "GENfest Music Festival 2024 - Multi - sensorial Audio Interface",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 48.3216552734375,
+                "y": 800.7890625,
+                "width": 260.9050598144531,
+                "height": 39.799076080322266
+              },
+              "textStyle": "style_G8M1XU",
+              "fills": "fill_OUMKWJ",
+              "layout": "layout_F3K1V0",
+              "text": "GENfest Music Festival 2024 - Multi - \nsensorial Audio Interface"
+            },
+            {
+              "id": "36:2631",
+              "name": "Wed 22/03",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 48.3216552734375,
+                "y": 847.22119140625,
+                "width": 64.12073516845703,
+                "height": 15.477417945861816
+              },
+              "textStyle": "style_E8429R",
+              "fills": "fill_OCFH3H",
+              "layout": "layout_1TFA0I",
+              "text": "Wed 22/03"
+            },
+            {
+              "id": "36:2632",
+              "name": "08:30 PM",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 127.9197998046875,
+                "y": 847.22119140625,
+                "width": 57.487552642822266,
+                "height": 15.477417945861816
+              },
+              "textStyle": "style_E8429R",
+              "fills": "fill_OCFH3H",
+              "layout": "layout_TIWSQW",
+              "text": "08:30 PM"
+            },
+            {
+              "id": "36:2633",
+              "name": "From $40.00",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 198.6737060546875,
+                "y": 847.22119140625,
+                "width": 72.96497344970703,
+                "height": 15.477417945861816
+              },
+              "textStyle": "style_E8429R",
+              "fills": "fill_2YLUG6",
+              "layout": "layout_K5IVKE",
+              "text": "From $40.00"
+            },
+            {
+              "id": "36:2634",
+              "name": "Live",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 53.84930419921875,
+                "y": 605.11083984375,
+                "width": 27.638246536254883,
+                "height": 18.79400634765625
+              },
+              "textStyle": "style_5DVUPE",
+              "fills": "fill_FNBSHE",
+              "layout": "layout_97PXN9",
+              "text": "Live"
+            },
+            {
+              "id": "36:2635",
+              "name": "Ellipse 210",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 119.07559204101562,
+                "y": 853.8544921875,
+                "width": 3.316589593887329,
+                "height": 3.316589593887329
+              },
+              "fills": "fill_78YX3U",
+              "layout": "layout_7HY8KS"
+            },
+            {
+              "id": "36:2636",
+              "name": "Ellipse 211",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 188.72393798828125,
+                "y": 853.8544921875,
+                "width": 3.316589593887329,
+                "height": 3.316589593887329
+              },
+              "fills": "fill_78YX3U",
+              "layout": "layout_10GYMA"
+            }
+          ]
+        },
+        {
+          "id": "36:2637",
+          "name": "Vector 20",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 313,
+            "y": 614,
+            "width": 19,
+            "height": 17
+          },
+          "fills": "fill_2YLUG6",
+          "strokes": "stroke_048ZT5",
+          "layout": "layout_0BLARM",
+          "borderRadius": "35px"
+        },
+        {
+          "id": "36:2563",
+          "name": "Group 1171275091",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 14,
+            "y": 749,
+            "width": 362,
+            "height": 88
+          },
+          "layout": "layout_NKY0CZ",
+          "borderRadius": "0px 0px 0px 0px",
+          "children": [
+            {
+              "id": "36:2564",
+              "name": "Rectangle 5898",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 14,
+                "y": 749,
+                "width": 362,
+                "height": 88
+              },
+              "fills": "fill_KOARE0",
+              "effects": "effect_AXGZKJ",
+              "layout": "layout_2GLYBV",
+              "borderRadius": "44px"
+            },
+            {
+              "id": "36:2565",
+              "name": "Ellipse 217",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 17,
+                "y": 753,
+                "width": 81,
+                "height": 81
+              },
+              "fills": "fill_2YLUG6",
+              "layout": "layout_BQ3Y3J"
+            },
+            {
+              "id": "36:2566",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 47,
+                "y": 783,
+                "width": 20.979503631591797,
+                "height": 20.527864456176758
+              },
+              "fills": "fill_QT6DG1",
+              "strokes": "stroke_KTU47H",
+              "layout": "layout_DCS68N",
+              "borderRadius": "0px 0px 0px 0px"
+            },
+            {
+              "id": "36:2567",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 142,
+                "y": 780,
+                "width": 24,
+                "height": 22
+              },
+              "fills": "fill_OUMKWJ",
+              "layout": "layout_7RMPWG"
+            },
+            {
+              "id": "36:2568",
+              "name": "Group 1171275067",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 225,
+                "y": 782,
+                "width": 22.5,
+                "height": 18
+              },
+              "layout": "layout_D3ZNMS",
+              "borderRadius": "0px 0px 0px 0px",
+              "children": [
+                {
+                  "id": "36:2569",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "boundingBox": {
+                    "x": 225,
+                    "y": 782,
+                    "width": 22.5,
+                    "height": 18
+                  },
+                  "strokes": "stroke_LXS0D9",
+                  "layout": "layout_0ZM3UI",
+                  "borderRadius": "0px 0px 0px 0px"
+                },
+                {
+                  "id": "36:2570",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "boundingBox": {
+                    "x": 238.5,
+                    "y": 782,
+                    "width": 7.868051170589752e-7,
+                    "height": 18
+                  },
+                  "strokes": "stroke_PGOT46",
+                  "layout": "layout_5V93KW"
+                }
+              ]
+            },
+            {
+              "id": "36:2571",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 306,
+                "y": 780,
+                "width": 16,
+                "height": 21
+              },
+              "strokes": "stroke_LXS0D9",
+              "layout": "layout_CMO6NT",
+              "borderRadius": "0px 0px 0px 0px"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalVars": {
+    "styles": {
+      "fill_QT6DG1": [
+        "#1F1F1F"
+      ],
+      "layout_SB3LVC": {
+        "mode": "none",
+        "clipsContent": true,
+        "dimensions": {
+          "width": 390,
+          "height": 852
+        }
+      },
+      "fill_3KN3Z3": [
+        "rgba(40, 40, 40, 0.81)"
+      ],
+      "layout_S2V7E6": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "style_HZFRL7": {
+        "fontFamily": "Neue Haas Grotesk Display Pro",
+        "fontWeight": 500,
+        "fontSize": 25,
+        "lineHeight": "1.2000000762939453em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_OUMKWJ": [
+        "#F8F8F8"
+      ],
+      "layout_GALSHJ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 146,
+          "y": 74
+        },
+        "dimensions": {
+          "width": 98,
+          "height": 30
+        }
+      },
+      "stroke_L5XHVE": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "2px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_C8CCM3": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 6,
+          "height": 16
+        }
+      },
+      "layout_6C2XIX": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 140
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "style_WHD2ZW": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 18,
+        "lineHeight": "1.2000000211927626em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_ODNZPH": [
+        "#A1A1A1"
+      ],
+      "layout_WCLPP1": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 81,
+          "y": 163
+        },
+        "dimensions": {
+          "width": 152,
+          "height": 22
+        }
+      },
+      "stroke_83A0UR": {
+        "colors": [
+          "#A1A1A1"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_Y5K6PP": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 48,
+          "y": 164
+        },
+        "dimensions": {
+          "width": 18,
+          "height": 19
+        }
+      },
+      "fill_R423GM": [
+        "rgba(21, 21, 21, 0.81)"
+      ],
+      "layout_BJZW26": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 229
+        },
+        "dimensions": {
+          "width": 91,
+          "height": 33
+        }
+      },
+      "layout_KB5FRY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 121,
+          "y": 229
+        },
+        "dimensions": {
+          "width": 105,
+          "height": 33
+        }
+      },
+      "style_DQJ61R": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 17,
+        "lineHeight": "1.2000000897575827em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_2YLUG6": [
+        "#FD99C9"
+      ],
+      "layout_DKMGFW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 45,
+          "y": 236
+        },
+        "dimensions": {
+          "width": 49,
+          "height": 20
+        }
+      },
+      "fill_4SPAA2": [
+        "#616161"
+      ],
+      "layout_D30WE5": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 138,
+          "y": 236
+        },
+        "dimensions": {
+          "width": 71,
+          "height": 20
+        }
+      },
+      "layout_ARZOLQ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 22.96,
+          "y": 274
+        },
+        "dimensions": {
+          "width": 338.09,
+          "height": 295
+        }
+      },
+      "fill_YJSP4J": [
+        "#043D9E"
+      ],
+      "layout_QLV9R1": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 338.09,
+          "height": 295
+        }
+      },
+      "layout_GMTEC6": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 338.09,
+          "height": 269.59
+        }
+      },
+      "fill_AX1H2V": [
+        {
+          "type": "IMAGE",
+          "imageRef": "52c0875c795588dfce2952661bbc938d9c996830",
+          "scaleMode": "STRETCH"
+        }
+      ],
+      "layout_E5CBJC": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 57.45,
+          "y": -49.72
+        },
+        "dimensions": {
+          "width": 258.54,
+          "height": 332.57
+        }
+      },
+      "layout_OOTVE4": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 275.11,
+          "y": 16.57
+        },
+        "dimensions": {
+          "width": 46.4,
+          "height": 46.4
+        }
+      },
+      "fill_T0J0J0": [
+        "rgba(31, 31, 31, 0.21)"
+      ],
+      "layout_7EB7HO": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 46.4,
+          "height": 46.4
+        }
+      },
+      "layout_8W150T": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 13.26,
+          "y": 14.36
+        },
+        "dimensions": {
+          "width": 19.89,
+          "height": 17.68
+        }
+      },
+      "fill_MA2IVB": [
+        "rgba(7, 7, 7, 0.43)"
+      ],
+      "effect_AXGZKJ": {
+        "backdropFilter": "blur(40px)"
+      },
+      "layout_6KKQYB": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 197.77
+        },
+        "dimensions": {
+          "width": 338.09,
+          "height": 97.23
+        }
+      },
+      "style_G8M1XU": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 15,
+        "lineHeight": "1.2em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_X3K535": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24.31,
+          "y": 217.66
+        },
+        "dimensions": {
+          "width": 260.75,
+          "height": 39.78
+        }
+      },
+      "style_E8429R": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 12,
+        "lineHeight": "1.2000000476837158em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_OCFH3H": [
+        "#AAA9A9"
+      ],
+      "layout_Q9ZACM": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24.31,
+          "y": 264.06
+        },
+        "dimensions": {
+          "width": 64.08,
+          "height": 15.47
+        }
+      },
+      "layout_HUPG7F": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 103.86,
+          "y": 264.06
+        },
+        "dimensions": {
+          "width": 57.45,
+          "height": 15.47
+        }
+      },
+      "layout_A19ALL": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 174.57,
+          "y": 264.06
+        },
+        "dimensions": {
+          "width": 72.92,
+          "height": 15.47
+        }
+      },
+      "style_5DVUPE": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 14,
+        "lineHeight": "1.2000000817435128em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_FNBSHE": [
+        "#CA4638"
+      ],
+      "layout_4HFTWG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 29.83,
+          "y": 22.1
+        },
+        "dimensions": {
+          "width": 27.62,
+          "height": 18.78
+        }
+      },
+      "fill_78YX3U": [
+        "#D9D9D9"
+      ],
+      "layout_ZFOPMY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 95.02,
+          "y": 270.69
+        },
+        "dimensions": {
+          "width": 3.31,
+          "height": 3.31
+        }
+      },
+      "layout_QI4AF9": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 164.63,
+          "y": 270.69
+        },
+        "dimensions": {
+          "width": 3.31,
+          "height": 3.31
+        }
+      },
+      "stroke_048ZT5": {
+        "colors": [
+          "#FD99C9"
+        ],
+        "strokeWeight": "1px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_UJH7TQ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 312,
+          "y": 305
+        },
+        "dimensions": {
+          "width": 19,
+          "height": 17
+        }
+      },
+      "layout_YAH8FS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 583
+        },
+        "dimensions": {
+          "width": 338.29,
+          "height": 295.18
+        }
+      },
+      "layout_P2TZWD": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 338.29,
+          "height": 295.18
+        }
+      },
+      "fill_9PLYVH": [
+        {
+          "type": "IMAGE",
+          "imageRef": "0d6b5adf05ed1399a82b7962f86d7a77987aacb1",
+          "scaleMode": "FILL"
+        }
+      ],
+      "layout_4XC0CS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": -8.84,
+          "y": -25.43
+        },
+        "dimensions": {
+          "width": 346.03,
+          "height": 431.16
+        }
+      },
+      "layout_ZDVCLQ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 275.28,
+          "y": 16.58
+        },
+        "dimensions": {
+          "width": 46.43,
+          "height": 46.43
+        }
+      },
+      "layout_EMUPQR": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 46.43,
+          "height": 46.43
+        }
+      },
+      "layout_Y4W2R7": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 13.27,
+          "y": 14.37
+        },
+        "dimensions": {
+          "width": 19.9,
+          "height": 17.69
+        }
+      },
+      "layout_LCQTBJ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 197.89
+        },
+        "dimensions": {
+          "width": 338.29,
+          "height": 97.29
+        }
+      },
+      "layout_F3K1V0": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24.32,
+          "y": 217.79
+        },
+        "dimensions": {
+          "width": 260.91,
+          "height": 39.8
+        }
+      },
+      "layout_1TFA0I": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24.32,
+          "y": 264.22
+        },
+        "dimensions": {
+          "width": 64.12,
+          "height": 15.48
+        }
+      },
+      "layout_TIWSQW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 103.92,
+          "y": 264.22
+        },
+        "dimensions": {
+          "width": 57.49,
+          "height": 15.48
+        }
+      },
+      "layout_K5IVKE": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 174.67,
+          "y": 264.22
+        },
+        "dimensions": {
+          "width": 72.96,
+          "height": 15.48
+        }
+      },
+      "layout_97PXN9": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 29.85,
+          "y": 22.11
+        },
+        "dimensions": {
+          "width": 27.64,
+          "height": 18.79
+        }
+      },
+      "layout_7HY8KS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 95.08,
+          "y": 270.85
+        },
+        "dimensions": {
+          "width": 3.32,
+          "height": 3.32
+        }
+      },
+      "layout_10GYMA": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 164.72,
+          "y": 270.85
+        },
+        "dimensions": {
+          "width": 3.32,
+          "height": 3.32
+        }
+      },
+      "layout_0BLARM": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 313,
+          "y": 614
+        },
+        "dimensions": {
+          "width": 19,
+          "height": 17
+        }
+      },
+      "layout_NKY0CZ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 14,
+          "y": 749
+        },
+        "dimensions": {
+          "width": 362,
+          "height": 88
+        }
+      },
+      "fill_KOARE0": [
+        "rgba(7, 7, 7, 0.25)"
+      ],
+      "layout_2GLYBV": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 362,
+          "height": 88
+        }
+      },
+      "layout_BQ3Y3J": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 3,
+          "y": 4
+        },
+        "dimensions": {
+          "width": 81,
+          "height": 81
+        }
+      },
+      "stroke_KTU47H": {
+        "colors": [
+          "#1F1F1F"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_DCS68N": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 33,
+          "y": 34
+        },
+        "dimensions": {
+          "width": 20.98,
+          "height": 20.53
+        }
+      },
+      "layout_7RMPWG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 128,
+          "y": 31
+        },
+        "dimensions": {
+          "width": 24,
+          "height": 22
+        }
+      },
+      "layout_D3ZNMS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 211,
+          "y": 33
+        },
+        "dimensions": {
+          "width": 22.5,
+          "height": 18
+        }
+      },
+      "stroke_LXS0D9": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_0ZM3UI": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 22.5,
+          "height": 18
+        }
+      },
+      "stroke_PGOT46": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeDashes": [
+          2,
+          3
+        ],
+        "strokeAlign": "CENTER"
+      },
+      "layout_5V93KW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 13.5,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 0,
+          "height": 18
+        }
+      },
+      "layout_CMO6NT": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 292,
+          "y": 31
+        },
+        "dimensions": {
+          "width": 16,
+          "height": 21
+        }
+      }
+    }
+  }
+}

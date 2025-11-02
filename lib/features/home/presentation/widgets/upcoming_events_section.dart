@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 
 /// Upcoming events horizontal scrollable section
@@ -35,7 +37,7 @@ class UpcomingEventsSection extends StatelessWidget {
                 organizerAvatar: 'https://i.pravatar.cc/150?img=${index + 1}',
                 isLive: index == 0,
                 onTap: () {
-                  // TODO: Navigate to event details
+                  context.push(RouteManager.eventDetails);
                 },
               );
             },

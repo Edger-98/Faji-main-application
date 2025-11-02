@@ -1,5 +1,8 @@
 /// Profile feature module exports
 
+// Presentation layer
+export 'presentation/screens/profile_screen.dart';
+
 // Data layer
 // export 'data/models/models.dart';
 // export 'data/repositories/repositories.dart';
@@ -15,3 +18,5 @@
 // export 'presentation/screens/screens.dart';
 // export 'presentation/widgets/widgets.dart';
 // export 'presentation/controllers/controllers.dart';
+
+// Note: Wallet navigation is handled via RouteManager.walletBalance

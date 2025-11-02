@@ -1,0 +1,1021 @@
+{
+  "metadata": {
+    "name": "Faji App UI",
+    "lastModified": "2025-09-28T18:36:29Z",
+    "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/b4469c55-a71e-4a22-ac7e-be88df7af0a7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWCZDDNLKEH%2F20251026%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251026T120000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=681506e6ac99792df138e1f74302600d7d83db6d4919485557d1e061e0262d07"
+  },
+  "nodes": [
+    {
+      "id": "29:1912",
+      "name": "iPhone 13 & 14 - 18",
+      "type": "FRAME",
+      "boundingBox": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 1394
+      },
+      "fills": "fill_0874HX",
+      "layout": "layout_Y5SXTE",
+      "children": [
+        {
+          "id": "29:1917",
+          "name": "Rectangle 5879",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 347,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_ISXYFH",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "35:2254",
+          "name": "Rectangle 5886",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 245,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_KS8VFW",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "34:1983",
+          "name": "Rectangle 5881",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 691,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_C2A7QM",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "34:1986",
+          "name": "Rectangle 5882",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 806,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_T6DFNK",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "34:1989",
+          "name": "Rectangle 5883",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 921,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_CIEPXG",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "34:1992",
+          "name": "Rectangle 5884",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 1036,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_FKGS0T",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "34:2000",
+          "name": "Rectangle 5885",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 1144,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_19W10N",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "29:1977",
+          "name": "Rectangle 5880",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 462,
+            "width": 337,
+            "height": 183
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_1WDI0F",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "29:1918",
+          "name": "It shows on your event profile",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 370,
+            "width": 163,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_5SRIO9",
+          "text": "It shows on your event profile"
+        },
+        {
+          "id": "35:2255",
+          "name": "Add title of your event",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 268,
+            "width": 121,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_49AX5O",
+          "text": "Add title of your event"
+        },
+        {
+          "id": "34:1984",
+          "name": "Choose date from the calendar",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 714,
+            "width": 176,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_T8M7HO",
+          "text": "Choose date from the calendar "
+        },
+        {
+          "id": "34:1987",
+          "name": "Add time",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 829,
+            "width": 51,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_8ECQOL",
+          "text": "Add time"
+        },
+        {
+          "id": "34:1990",
+          "name": "Add total available seats",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 944,
+            "width": 136,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_YZ4LXQ",
+          "text": "Add total available seats"
+        },
+        {
+          "id": "34:1993",
+          "name": "Get a location",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 1059,
+            "width": 79,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_UK4WG1",
+          "text": "Get a location"
+        },
+        {
+          "id": "34:2001",
+          "name": "Add ticket price",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 1167,
+            "width": 88,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_S0LSFC",
+          "text": "Add ticket price"
+        },
+        {
+          "id": "29:1978",
+          "name": "Description",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 436,
+            "width": 78,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_XA5OIM",
+          "text": "Description"
+        },
+        {
+          "id": "34:1982",
+          "name": "Add Cover photos",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 321,
+            "width": 122,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_IABS4C",
+          "text": "Add Cover photos "
+        },
+        {
+          "id": "35:2256",
+          "name": "Add Title",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 219,
+            "width": 59,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_TPIWJH",
+          "text": "Add Title"
+        },
+        {
+          "id": "34:1985",
+          "name": "Add event date",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 665,
+            "width": 102,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_H3RO9R",
+          "text": "Add event date "
+        },
+        {
+          "id": "34:1988",
+          "name": "Add event time",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 780,
+            "width": 101,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_RRVS46",
+          "text": "Add event time"
+        },
+        {
+          "id": "34:1991",
+          "name": "Add event seats",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 895,
+            "width": 109,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_IHB6AG",
+          "text": "Add event seats"
+        },
+        {
+          "id": "34:1994",
+          "name": "Add event location",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 1010,
+            "width": 125,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_IHW64Z",
+          "text": "Add event location "
+        },
+        {
+          "id": "34:2002",
+          "name": "Add ticket price",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 38,
+            "y": 1118,
+            "width": 105,
+            "height": 19
+          },
+          "textStyle": "style_8KFS0P",
+          "fills": "fill_ZXAG4O",
+          "layout": "layout_K835LR",
+          "text": "Add ticket price"
+        },
+        {
+          "id": "29:1980",
+          "name": "Add description about your event.",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 480,
+            "width": 190,
+            "height": 17
+          },
+          "textStyle": "style_QUW7E2",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_L1WELX",
+          "text": "Add description about your event. "
+        },
+        {
+          "id": "34:1981",
+          "name": "0-500 words",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 266,
+            "y": 616,
+            "width": 70,
+            "height": 16
+          },
+          "textStyle": "style_N46G8P",
+          "fills": "fill_5ABUI9",
+          "layout": "layout_ZLCNS7",
+          "text": "0-500 words"
+        },
+        {
+          "id": "29:1919",
+          "name": "Ellipse 209",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 24,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_2KYGCN",
+          "layout": "layout_E7ABG6"
+        },
+        {
+          "id": "29:1922",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 46,
+            "y": 81,
+            "width": 6,
+            "height": 16
+          },
+          "strokes": "stroke_8Z266Z",
+          "layout": "layout_I77YDU",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "29:1961",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 301,
+            "y": 370,
+            "width": 28,
+            "height": 28
+          },
+          "strokes": "stroke_PIO5VP",
+          "layout": "layout_1WR11J",
+          "borderRadius": "0px 0px 0px 0px"
+        },
+        {
+          "id": "29:1963",
+          "name": "Organize an event",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 24,
+            "y": 134,
+            "width": 218,
+            "height": 34
+          },
+          "textStyle": "style_L01SYN",
+          "fills": "fill_1HD5XX",
+          "layout": "layout_UXYZP0",
+          "text": "Organize an event"
+        },
+        {
+          "id": "29:1964",
+          "name": "Fill out the fields below to host an event",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 24,
+            "y": 168,
+            "width": 267,
+            "height": 20
+          },
+          "textStyle": "style_9T5V2N",
+          "fills": "fill_0043O0",
+          "layout": "layout_KFRHAY",
+          "text": "Fill out the fields below to host an event"
+        },
+        {
+          "id": "34:1996",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 321,
+            "y": 717,
+            "width": 15,
+            "height": 17
+          },
+          "strokes": "stroke_G2MCJS",
+          "layout": "layout_CHTRW3",
+          "borderRadius": "0px 0px 0px 0px"
+        },
+        {
+          "id": "34:1997",
+          "name": "Group 1171275074",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 24,
+            "y": 1264,
+            "width": 337,
+            "height": 69
+          },
+          "layout": "layout_E37UZ6",
+          "borderRadius": "34.5px",
+          "children": [
+            {
+              "id": "34:1998",
+              "name": "Rectangle 5879",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 24,
+                "y": 1264,
+                "width": 337,
+                "height": 69
+              },
+              "fills": "fill_82JJMH",
+              "layout": "layout_JUVO3F",
+              "borderRadius": "34.5px"
+            },
+            {
+              "id": "34:1999",
+              "name": "Organize an event",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 122,
+                "y": 1288,
+                "width": 140,
+                "height": 22
+              },
+              "textStyle": "style_M1NE9G",
+              "fills": "fill_0874HX",
+              "layout": "layout_A931HX",
+              "text": "Organize an event "
+            }
+          ]
+        },
+        {
+          "id": "34:2003",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 322,
+            "y": 1062,
+            "width": 13,
+            "height": 17
+          },
+          "strokes": "stroke_G2MCJS",
+          "layout": "layout_DOK2LA",
+          "borderRadius": "0px 0px 0px 0px"
+        }
+      ]
+    }
+  ],
+  "globalVars": {
+    "styles": {
+      "fill_0874HX": [
+        "#1F1F1F"
+      ],
+      "layout_Y5SXTE": {
+        "mode": "none",
+        "clipsContent": true,
+        "dimensions": {
+          "width": 390,
+          "height": 1394
+        }
+      },
+      "fill_2KYGCN": [
+        "rgba(40, 40, 40, 0.81)"
+      ],
+      "layout_ISXYFH": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 347
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_KS8VFW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 245
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_C2A7QM": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 691
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_T6DFNK": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 806
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_CIEPXG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 921
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_FKGS0T": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 1036
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_19W10N": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 1144
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "layout_1WDI0F": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 462
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 183
+        }
+      },
+      "style_QUW7E2": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 14,
+        "lineHeight": "1.2000000817435128em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_5ABUI9": [
+        "#B9B9B9"
+      ],
+      "layout_5SRIO9": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 370
+        },
+        "dimensions": {
+          "width": 163,
+          "height": 17
+        }
+      },
+      "layout_49AX5O": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 268
+        },
+        "dimensions": {
+          "width": 121,
+          "height": 17
+        }
+      },
+      "layout_T8M7HO": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 714
+        },
+        "dimensions": {
+          "width": 176,
+          "height": 17
+        }
+      },
+      "layout_8ECQOL": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 829
+        },
+        "dimensions": {
+          "width": 51,
+          "height": 17
+        }
+      },
+      "layout_YZ4LXQ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 944
+        },
+        "dimensions": {
+          "width": 136,
+          "height": 17
+        }
+      },
+      "layout_UK4WG1": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 1059
+        },
+        "dimensions": {
+          "width": 79,
+          "height": 17
+        }
+      },
+      "layout_S0LSFC": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 1167
+        },
+        "dimensions": {
+          "width": 88,
+          "height": 17
+        }
+      },
+      "style_8KFS0P": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 16,
+        "lineHeight": "1.2000000476837158em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_ZXAG4O": [
+        "#FFFFFF"
+      ],
+      "layout_XA5OIM": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 436
+        },
+        "dimensions": {
+          "width": 78,
+          "height": 19
+        }
+      },
+      "layout_IABS4C": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 321
+        },
+        "dimensions": {
+          "width": 122,
+          "height": 19
+        }
+      },
+      "layout_TPIWJH": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 219
+        },
+        "dimensions": {
+          "width": 59,
+          "height": 19
+        }
+      },
+      "layout_H3RO9R": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 665
+        },
+        "dimensions": {
+          "width": 102,
+          "height": 19
+        }
+      },
+      "layout_RRVS46": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 780
+        },
+        "dimensions": {
+          "width": 101,
+          "height": 19
+        }
+      },
+      "layout_IHB6AG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 895
+        },
+        "dimensions": {
+          "width": 109,
+          "height": 19
+        }
+      },
+      "layout_IHW64Z": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 1010
+        },
+        "dimensions": {
+          "width": 125,
+          "height": 19
+        }
+      },
+      "layout_K835LR": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 1118
+        },
+        "dimensions": {
+          "width": 105,
+          "height": 19
+        }
+      },
+      "layout_L1WELX": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 480
+        },
+        "dimensions": {
+          "width": 190,
+          "height": 17
+        }
+      },
+      "style_N46G8P": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 13,
+        "lineHeight": "1.200000029343825em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_ZLCNS7": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 266,
+          "y": 616
+        },
+        "dimensions": {
+          "width": 70,
+          "height": 16
+        }
+      },
+      "layout_E7ABG6": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "stroke_8Z266Z": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "2px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_I77YDU": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 6,
+          "height": 16
+        }
+      },
+      "stroke_PIO5VP": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_1WR11J": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 301,
+          "y": 370
+        },
+        "dimensions": {
+          "width": 28,
+          "height": 28
+        }
+      },
+      "style_L01SYN": {
+        "fontFamily": "Neue Haas Grotesk Display Pro",
+        "fontWeight": 600,
+        "fontSize": 28,
+        "lineHeight": "1.2000000817435128em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_1HD5XX": [
+        "#F8F8F8"
+      ],
+      "layout_UXYZP0": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 134
+        },
+        "dimensions": {
+          "width": 218,
+          "height": 34
+        }
+      },
+      "style_9T5V2N": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 17,
+        "lineHeight": "1.2000000897575827em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_0043O0": [
+        "#A1A1A1"
+      ],
+      "layout_KFRHAY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 168
+        },
+        "dimensions": {
+          "width": 267,
+          "height": 20
+        }
+      },
+      "stroke_G2MCJS": {
+        "colors": [
+          "#AAA9A9"
+        ],
+        "strokeWeight": "1px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_CHTRW3": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 321,
+          "y": 717
+        },
+        "dimensions": {
+          "width": 15,
+          "height": 17
+        }
+      },
+      "layout_E37UZ6": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 1264
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "fill_82JJMH": [
+        "#FD99C9"
+      ],
+      "layout_JUVO3F": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "style_M1NE9G": {
+        "fontFamily": "Neue Haas Grotesk Display Pro",
+        "fontWeight": 600,
+        "fontSize": 18,
+        "lineHeight": "1.2000000211927626em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_A931HX": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 98,
+          "y": 24
+        },
+        "dimensions": {
+          "width": 140,
+          "height": 22
+        }
+      },
+      "layout_DOK2LA": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 322,
+          "y": 1062
+        },
+        "dimensions": {
+          "width": 13,
+          "height": 17
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1270 @@
+{
+  "metadata": {
+    "name": "Faji App UI",
+    "lastModified": "2025-09-28T18:36:29Z",
+    "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/b4469c55-a71e-4a22-ac7e-be88df7af0a7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWCZDDNLKEH%2F20251026%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251026T120000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=681506e6ac99792df138e1f74302600d7d83db6d4919485557d1e061e0262d07"
+  },
+  "nodes": [
+    {
+      "id": "20:1726",
+      "name": "iPhone 13 & 14 - 17",
+      "type": "FRAME",
+      "boundingBox": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 852
+      },
+      "fills": "fill_OW72EK",
+      "layout": "layout_HDNM94",
+      "children": [
+        {
+          "id": "26:1909",
+          "name": "Rectangle 5879",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 140,
+            "width": 337,
+            "height": 69
+          },
+          "fills": "fill_DFY1KR",
+          "layout": "layout_G0DYWS",
+          "borderRadius": "37px"
+        },
+        {
+          "id": "20:1891",
+          "name": "Organize an event",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 46,
+            "y": 163,
+            "width": 153,
+            "height": 24
+          },
+          "textStyle": "style_WWACGV",
+          "fills": "fill_91POO7",
+          "layout": "layout_EJJF3P",
+          "text": "Organize an event"
+        },
+        {
+          "id": "20:1888",
+          "name": "Ellipse 209",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 24,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_DFY1KR",
+          "layout": "layout_GS7B8B"
+        },
+        {
+          "id": "26:1908",
+          "name": "Ellipse 210",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 311,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_DFY1KR",
+          "layout": "layout_NP2L9O"
+        },
+        {
+          "id": "20:1889",
+          "name": "My Tickets",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 137,
+            "y": 74,
+            "width": 115,
+            "height": 30
+          },
+          "textStyle": "style_U9VRMD",
+          "fills": "fill_F0E2GJ",
+          "layout": "layout_P4SYH7",
+          "text": "My Tickets"
+        },
+        {
+          "id": "20:1887",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 46,
+            "y": 81,
+            "width": 6,
+            "height": 16
+          },
+          "strokes": "stroke_TWLRQV",
+          "layout": "layout_71UA35",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "26:1900",
+          "name": "Group 1171275089",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 16,
+            "y": 226,
+            "width": 345,
+            "height": 267
+          },
+          "layout": "layout_48YE54",
+          "borderRadius": "0px 0px 0px 0px",
+          "children": [
+            {
+              "id": "20:1753",
+              "name": "Rectangle 5888",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 24,
+                "y": 226,
+                "width": 337,
+                "height": 267
+              },
+              "fills": "fill_ON19QY",
+              "layout": "layout_WYF34N",
+              "borderRadius": "40px"
+            },
+            {
+              "id": "20:1754",
+              "name": "Mask group",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 16,
+                "y": 226,
+                "width": 306,
+                "height": 244
+              },
+              "layout": "layout_VJZQIG",
+              "borderRadius": "0px 0px 0px 0px",
+              "children": [
+                {
+                  "id": "20:1755",
+                  "name": "Rectangle 5889",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 16,
+                    "y": 226,
+                    "width": 306,
+                    "height": 244
+                  },
+                  "fills": "fill_ON19QY",
+                  "layout": "layout_VJZQIG",
+                  "borderRadius": "40px"
+                },
+                {
+                  "id": "20:1756",
+                  "name": "image 33",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 68,
+                    "y": 181,
+                    "width": 234,
+                    "height": 301
+                  },
+                  "fills": "fill_U3360G",
+                  "layout": "layout_V0RASW"
+                }
+              ]
+            },
+            {
+              "id": "20:1760",
+              "name": "Rectangle 5890",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 24,
+                "y": 405,
+                "width": 337,
+                "height": 88
+              },
+              "fills": "fill_W7GYFH",
+              "effects": "effect_S90RKO",
+              "layout": "layout_DWBT47",
+              "borderRadius": "40px"
+            },
+            {
+              "id": "20:1761",
+              "name": "GENfest Music Festival 2024 - Multi - sensorial Audio Interface",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 54,
+                "y": 423,
+                "width": 236,
+                "height": 36
+              },
+              "textStyle": "style_397H24",
+              "fills": "fill_F0E2GJ",
+              "layout": "layout_5GH82Q",
+              "text": "GENfest Music Festival 2024 - Multi - \nsensorial Audio Interface"
+            },
+            {
+              "id": "20:1762",
+              "name": "Wed 22/03",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 54,
+                "y": 465,
+                "width": 58,
+                "height": 14
+              },
+              "textStyle": "style_CWC3NZ",
+              "fills": "fill_XAA0NR",
+              "layout": "layout_0FBMSY",
+              "text": "Wed 22/03"
+            },
+            {
+              "id": "20:1765",
+              "name": "08:30 PM",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 126,
+                "y": 465,
+                "width": 52,
+                "height": 14
+              },
+              "textStyle": "style_CWC3NZ",
+              "fills": "fill_XAA0NR",
+              "layout": "layout_DDKWZL",
+              "text": "08:30 PM"
+            },
+            {
+              "id": "20:1766",
+              "name": "From $40.00",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 190,
+                "y": 465,
+                "width": 66,
+                "height": 14
+              },
+              "textStyle": "style_CWC3NZ",
+              "fills": "fill_IY3XXX",
+              "layout": "layout_18SH0J",
+              "text": "From $40.00"
+            },
+            {
+              "id": "20:1769",
+              "name": "Ellipse 210",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 118,
+                "y": 471,
+                "width": 3,
+                "height": 3
+              },
+              "fills": "fill_FTSV81",
+              "layout": "layout_TIRIRC"
+            },
+            {
+              "id": "20:1770",
+              "name": "Ellipse 211",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 181,
+                "y": 471,
+                "width": 3,
+                "height": 3
+              },
+              "fills": "fill_FTSV81",
+              "layout": "layout_G562BX"
+            },
+            {
+              "id": "26:1894",
+              "name": "Ellipse 218",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 295,
+                "y": 426,
+                "width": 50,
+                "height": 50
+              },
+              "fills": "fill_AXS4JR",
+              "layout": "layout_O97WHJ"
+            },
+            {
+              "id": "26:1896",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 310.5181179046631,
+                "y": 442,
+                "width": 18.446255087852478,
+                "height": 18.319173097610474
+              },
+              "strokes": "stroke_6H8KI6",
+              "layout": "layout_VZPUWG",
+              "borderRadius": "0px 0px 0px 0px"
+            }
+          ]
+        },
+        {
+          "id": "26:1901",
+          "name": "Group 1171275090",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 24,
+            "y": 507,
+            "width": 337,
+            "height": 267
+          },
+          "layout": "layout_4C5LTJ",
+          "borderRadius": "0px 0px 0px 0px",
+          "children": [
+            {
+              "id": "20:1772",
+              "name": "Mask group",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 24,
+                "y": 507,
+                "width": 337,
+                "height": 267
+              },
+              "layout": "layout_F25RGD",
+              "borderRadius": "0px 0px 0px 0px",
+              "children": [
+                {
+                  "id": "20:1773",
+                  "name": "Rectangle 5888",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 24,
+                    "y": 507,
+                    "width": 337,
+                    "height": 267
+                  },
+                  "fills": "fill_ON19QY",
+                  "layout": "layout_F25RGD",
+                  "borderRadius": "40px"
+                },
+                {
+                  "id": "20:1774",
+                  "name": "long-hair-guitar-guy-singing-low-view 1",
+                  "type": "RECTANGLE",
+                  "boundingBox": {
+                    "x": 15.18951416015625,
+                    "y": 484,
+                    "width": 344.70916748046875,
+                    "height": 390
+                  },
+                  "fills": "fill_G37KT9",
+                  "layout": "layout_VMQTQE"
+                }
+              ]
+            },
+            {
+              "id": "20:1778",
+              "name": "Rectangle 5890",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 24,
+                "y": 686,
+                "width": 337,
+                "height": 88
+              },
+              "fills": "fill_W7GYFH",
+              "effects": "effect_S90RKO",
+              "layout": "layout_789B9L",
+              "borderRadius": "35px"
+            },
+            {
+              "id": "26:1897",
+              "name": "Group 1171275088",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 54,
+                "y": 704,
+                "width": 236,
+                "height": 56
+              },
+              "layout": "layout_2TPWNI",
+              "children": [
+                {
+                  "id": "20:1779",
+                  "name": "GENfest Music Festival 2024 - Multi - sensorial Audio Interface",
+                  "type": "TEXT",
+                  "boundingBox": {
+                    "x": 54,
+                    "y": 704,
+                    "width": 236,
+                    "height": 36
+                  },
+                  "textStyle": "style_397H24",
+                  "fills": "fill_F0E2GJ",
+                  "layout": "layout_6IQFGS",
+                  "text": "GENfest Music Festival 2024 - Multi - \nsensorial Audio Interface"
+                },
+                {
+                  "id": "20:1780",
+                  "name": "Wed 22/03",
+                  "type": "TEXT",
+                  "boundingBox": {
+                    "x": 54,
+                    "y": 746,
+                    "width": 58,
+                    "height": 14
+                  },
+                  "textStyle": "style_CWC3NZ",
+                  "fills": "fill_XAA0NR",
+                  "layout": "layout_IY5XFZ",
+                  "text": "Wed 22/03"
+                },
+                {
+                  "id": "20:1781",
+                  "name": "08:30 PM",
+                  "type": "TEXT",
+                  "boundingBox": {
+                    "x": 126,
+                    "y": 746,
+                    "width": 52,
+                    "height": 14
+                  },
+                  "textStyle": "style_CWC3NZ",
+                  "fills": "fill_XAA0NR",
+                  "layout": "layout_1S9C7Z",
+                  "text": "08:30 PM"
+                },
+                {
+                  "id": "20:1782",
+                  "name": "From $40.00",
+                  "type": "TEXT",
+                  "boundingBox": {
+                    "x": 190,
+                    "y": 746,
+                    "width": 66,
+                    "height": 14
+                  },
+                  "textStyle": "style_CWC3NZ",
+                  "fills": "fill_IY3XXX",
+                  "layout": "layout_0ZPWAZ",
+                  "text": "From $40.00"
+                },
+                {
+                  "id": "20:1784",
+                  "name": "Ellipse 210",
+                  "type": "ELLIPSE",
+                  "boundingBox": {
+                    "x": 118,
+                    "y": 752,
+                    "width": 3,
+                    "height": 3
+                  },
+                  "fills": "fill_FTSV81",
+                  "layout": "layout_U31HT0"
+                },
+                {
+                  "id": "20:1785",
+                  "name": "Ellipse 211",
+                  "type": "ELLIPSE",
+                  "boundingBox": {
+                    "x": 181,
+                    "y": 752,
+                    "width": 3,
+                    "height": 3
+                  },
+                  "fills": "fill_FTSV81",
+                  "layout": "layout_A234WT"
+                }
+              ]
+            },
+            {
+              "id": "26:1898",
+              "name": "Ellipse 219",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 295,
+                "y": 705,
+                "width": 50,
+                "height": 50
+              },
+              "fills": "fill_RKDO84",
+              "layout": "layout_7N0QX4"
+            },
+            {
+              "id": "26:1899",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 310.5181179046631,
+                "y": 721,
+                "width": 18.446255087852478,
+                "height": 18.319173097610474
+              },
+              "strokes": "stroke_6H8KI6",
+              "layout": "layout_9EIDNY",
+              "borderRadius": "0px 0px 0px 0px"
+            }
+          ]
+        },
+        {
+          "id": "26:1907",
+          "name": "Group 1171275091",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 14,
+            "y": 747,
+            "width": 362,
+            "height": 88
+          },
+          "layout": "layout_1P0HDT",
+          "borderRadius": "0px 0px 0px 0px",
+          "children": [
+            {
+              "id": "20:1879",
+              "name": "Rectangle 5898",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 14,
+                "y": 747,
+                "width": 362,
+                "height": 88
+              },
+              "fills": "fill_E7QJ32",
+              "effects": "effect_S90RKO",
+              "layout": "layout_FNZQU6",
+              "borderRadius": "44px"
+            },
+            {
+              "id": "20:1880",
+              "name": "Ellipse 217",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 17,
+                "y": 751,
+                "width": 81,
+                "height": 81
+              },
+              "fills": "fill_IY3XXX",
+              "layout": "layout_5Y000X"
+            },
+            {
+              "id": "20:1881",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 47,
+                "y": 781,
+                "width": 20.979503631591797,
+                "height": 20.527864456176758
+              },
+              "fills": "fill_OW72EK",
+              "strokes": "stroke_H1ZA6C",
+              "layout": "layout_2WQQ8P",
+              "borderRadius": "0px 0px 0px 0px"
+            },
+            {
+              "id": "20:1882",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 142,
+                "y": 778,
+                "width": 24,
+                "height": 22
+              },
+              "fills": "fill_F0E2GJ",
+              "layout": "layout_PIIWB7"
+            },
+            {
+              "id": "20:1883",
+              "name": "Group 1171275067",
+              "type": "GROUP",
+              "boundingBox": {
+                "x": 225,
+                "y": 780,
+                "width": 22.5,
+                "height": 18
+              },
+              "layout": "layout_ZTKFKM",
+              "borderRadius": "0px 0px 0px 0px",
+              "children": [
+                {
+                  "id": "20:1884",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "boundingBox": {
+                    "x": 225,
+                    "y": 780,
+                    "width": 22.5,
+                    "height": 18
+                  },
+                  "strokes": "stroke_6H8KI6",
+                  "layout": "layout_1RN4ES",
+                  "borderRadius": "0px 0px 0px 0px"
+                },
+                {
+                  "id": "20:1885",
+                  "name": "Vector",
+                  "type": "IMAGE-SVG",
+                  "boundingBox": {
+                    "x": 238.5,
+                    "y": 780,
+                    "width": 7.868051170589752e-7,
+                    "height": 18
+                  },
+                  "strokes": "stroke_W0A3KY",
+                  "layout": "layout_L892P2"
+                }
+              ]
+            },
+            {
+              "id": "20:1886",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 306,
+                "y": 778,
+                "width": 16,
+                "height": 21
+              },
+              "strokes": "stroke_6H8KI6",
+              "layout": "layout_AEBD5U",
+              "borderRadius": "0px 0px 0px 0px"
+            }
+          ]
+        },
+        {
+          "id": "20:1892",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 327,
+            "y": 80,
+            "width": 18,
+            "height": 19
+          },
+          "strokes": "stroke_CLWR6Z",
+          "layout": "layout_W89LBG",
+          "borderRadius": "0px 0px 0px 0px"
+        },
+        {
+          "id": "26:1911",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 301,
+            "y": 161,
+            "width": 28,
+            "height": 28
+          },
+          "strokes": "stroke_6H8KI6",
+          "layout": "layout_0U02SZ",
+          "borderRadius": "0px 0px 0px 0px"
+        }
+      ]
+    }
+  ],
+  "globalVars": {
+    "styles": {
+      "fill_OW72EK": [
+        "#1F1F1F"
+      ],
+      "layout_HDNM94": {
+        "mode": "none",
+        "clipsContent": true,
+        "dimensions": {
+          "width": 390,
+          "height": 852
+        }
+      },
+      "fill_DFY1KR": [
+        "rgba(40, 40, 40, 0.81)"
+      ],
+      "layout_G0DYWS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 140
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 69
+        }
+      },
+      "style_WWACGV": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 20,
+        "lineHeight": "1.2em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_91POO7": [
+        "#B9B9B9"
+      ],
+      "layout_EJJF3P": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 163
+        },
+        "dimensions": {
+          "width": 153,
+          "height": 24
+        }
+      },
+      "layout_GS7B8B": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "layout_NP2L9O": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 311,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "style_U9VRMD": {
+        "fontFamily": "Neue Haas Grotesk Display Pro",
+        "fontWeight": 500,
+        "fontSize": 25,
+        "lineHeight": "1.2000000762939453em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_F0E2GJ": [
+        "#F8F8F8"
+      ],
+      "layout_P4SYH7": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 137,
+          "y": 74
+        },
+        "dimensions": {
+          "width": 115,
+          "height": 30
+        }
+      },
+      "stroke_TWLRQV": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "2px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_71UA35": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 6,
+          "height": 16
+        }
+      },
+      "layout_48YE54": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 16,
+          "y": 226
+        },
+        "dimensions": {
+          "width": 345,
+          "height": 267
+        }
+      },
+      "fill_ON19QY": [
+        "#043D9E"
+      ],
+      "layout_WYF34N": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 8,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 267
+        }
+      },
+      "layout_VJZQIG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 306,
+          "height": 244
+        }
+      },
+      "fill_U3360G": [
+        {
+          "type": "IMAGE",
+          "imageRef": "52c0875c795588dfce2952661bbc938d9c996830",
+          "scaleMode": "STRETCH"
+        }
+      ],
+      "layout_V0RASW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 52,
+          "y": -45
+        },
+        "dimensions": {
+          "width": 234,
+          "height": 301
+        }
+      },
+      "fill_W7GYFH": [
+        "rgba(7, 7, 7, 0.43)"
+      ],
+      "effect_S90RKO": {
+        "backdropFilter": "blur(40px)"
+      },
+      "layout_DWBT47": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 8,
+          "y": 179
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 88
+        }
+      },
+      "style_397H24": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 15,
+        "lineHeight": "1.2em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_5GH82Q": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 197
+        },
+        "dimensions": {
+          "width": 236,
+          "height": 36
+        }
+      },
+      "style_CWC3NZ": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 12,
+        "lineHeight": "1.2000000476837158em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_XAA0NR": [
+        "#AAA9A9"
+      ],
+      "layout_0FBMSY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 38,
+          "y": 239
+        },
+        "dimensions": {
+          "width": 58,
+          "height": 14
+        }
+      },
+      "layout_DDKWZL": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 110,
+          "y": 239
+        },
+        "dimensions": {
+          "width": 52,
+          "height": 14
+        }
+      },
+      "fill_IY3XXX": [
+        "#FD99C9"
+      ],
+      "layout_18SH0J": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 174,
+          "y": 239
+        },
+        "dimensions": {
+          "width": 66,
+          "height": 14
+        }
+      },
+      "fill_FTSV81": [
+        "#D9D9D9"
+      ],
+      "layout_TIRIRC": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 102,
+          "y": 245
+        },
+        "dimensions": {
+          "width": 3,
+          "height": 3
+        }
+      },
+      "layout_G562BX": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 165,
+          "y": 245
+        },
+        "dimensions": {
+          "width": 3,
+          "height": 3
+        }
+      },
+      "fill_AXS4JR": [
+        "rgba(0, 0, 0, 0.38)"
+      ],
+      "layout_O97WHJ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 279,
+          "y": 200
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "stroke_6H8KI6": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_VZPUWG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 294.52,
+          "y": 216
+        },
+        "dimensions": {
+          "width": 18.45,
+          "height": 18.32
+        }
+      },
+      "layout_4C5LTJ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 507
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 267
+        }
+      },
+      "layout_F25RGD": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 267
+        }
+      },
+      "fill_G37KT9": [
+        {
+          "type": "IMAGE",
+          "imageRef": "0d6b5adf05ed1399a82b7962f86d7a77987aacb1",
+          "scaleMode": "FILL"
+        }
+      ],
+      "layout_VMQTQE": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": -8.81,
+          "y": -23
+        },
+        "dimensions": {
+          "width": 344.71,
+          "height": 390
+        }
+      },
+      "layout_789B9L": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 179
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 88
+        }
+      },
+      "layout_2TPWNI": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 30,
+          "y": 197
+        },
+        "dimensions": {
+          "width": 236,
+          "height": 56
+        }
+      },
+      "layout_6IQFGS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 236,
+          "height": 36
+        }
+      },
+      "layout_IY5XFZ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 42
+        },
+        "dimensions": {
+          "width": 58,
+          "height": 14
+        }
+      },
+      "layout_1S9C7Z": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 72,
+          "y": 42
+        },
+        "dimensions": {
+          "width": 52,
+          "height": 14
+        }
+      },
+      "layout_0ZPWAZ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 136,
+          "y": 42
+        },
+        "dimensions": {
+          "width": 66,
+          "height": 14
+        }
+      },
+      "layout_U31HT0": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 64,
+          "y": 48
+        },
+        "dimensions": {
+          "width": 3,
+          "height": 3
+        }
+      },
+      "layout_A234WT": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 127,
+          "y": 48
+        },
+        "dimensions": {
+          "width": 3,
+          "height": 3
+        }
+      },
+      "fill_RKDO84": [
+        "#000000"
+      ],
+      "layout_7N0QX4": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 271,
+          "y": 198
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "layout_9EIDNY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 286.52,
+          "y": 214
+        },
+        "dimensions": {
+          "width": 18.45,
+          "height": 18.32
+        }
+      },
+      "layout_1P0HDT": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 14,
+          "y": 747
+        },
+        "dimensions": {
+          "width": 362,
+          "height": 88
+        }
+      },
+      "fill_E7QJ32": [
+        "rgba(7, 7, 7, 0.25)"
+      ],
+      "layout_FNZQU6": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 362,
+          "height": 88
+        }
+      },
+      "layout_5Y000X": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 3,
+          "y": 4
+        },
+        "dimensions": {
+          "width": 81,
+          "height": 81
+        }
+      },
+      "stroke_H1ZA6C": {
+        "colors": [
+          "#1F1F1F"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_2WQQ8P": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 33,
+          "y": 34
+        },
+        "dimensions": {
+          "width": 20.98,
+          "height": 20.53
+        }
+      },
+      "layout_PIIWB7": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 128,
+          "y": 31
+        },
+        "dimensions": {
+          "width": 24,
+          "height": 22
+        }
+      },
+      "layout_ZTKFKM": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 211,
+          "y": 33
+        },
+        "dimensions": {
+          "width": 22.5,
+          "height": 18
+        }
+      },
+      "layout_1RN4ES": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 22.5,
+          "height": 18
+        }
+      },
+      "stroke_W0A3KY": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeDashes": [
+          2,
+          3
+        ],
+        "strokeAlign": "CENTER"
+      },
+      "layout_L892P2": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 13.5,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 0,
+          "height": 18
+        }
+      },
+      "layout_AEBD5U": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 292,
+          "y": 31
+        },
+        "dimensions": {
+          "width": 16,
+          "height": 21
+        }
+      },
+      "stroke_CLWR6Z": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_W89LBG": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 327,
+          "y": 80
+        },
+        "dimensions": {
+          "width": 18,
+          "height": 19
+        }
+      },
+      "layout_0U02SZ": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 301,
+          "y": 161
+        },
+        "dimensions": {
+          "width": 28,
+          "height": 28
+        }
+      }
+    }
+  }
+}

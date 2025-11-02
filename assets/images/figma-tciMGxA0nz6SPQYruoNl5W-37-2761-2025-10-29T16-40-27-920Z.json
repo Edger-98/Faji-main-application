@@ -1,0 +1,1071 @@
+{
+  "metadata": {
+    "name": "Faji App UI",
+    "lastModified": "2025-09-28T18:36:29Z",
+    "thumbnailUrl": "https://s3-alpha.figma.com/thumbnails/b4469c55-a71e-4a22-ac7e-be88df7af0a7?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQ4GOSFWCZDDNLKEH%2F20251026%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20251026T120000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=681506e6ac99792df138e1f74302600d7d83db6d4919485557d1e061e0262d07"
+  },
+  "nodes": [
+    {
+      "id": "37:2761",
+      "name": "iPhone 13 & 14 - 24",
+      "type": "FRAME",
+      "boundingBox": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 980
+      },
+      "fills": "fill_YTLAYL",
+      "layout": "layout_3D97SR",
+      "children": [
+        {
+          "id": "37:2766",
+          "name": "Ellipse 209",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 24,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_171WHD",
+          "layout": "layout_HHNBS4"
+        },
+        {
+          "id": "37:2767",
+          "name": "Ellipse 210",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 311,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_171WHD",
+          "layout": "layout_046YQL"
+        },
+        {
+          "id": "37:2769",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 46,
+            "y": 81,
+            "width": 6,
+            "height": 16
+          },
+          "strokes": "stroke_J1EWXQ",
+          "layout": "layout_W2P7HC",
+          "borderRadius": "3px"
+        },
+        {
+          "id": "37:2777",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 328,
+            "y": 82,
+            "width": 16,
+            "height": 14
+          },
+          "strokes": "stroke_5OOHKR",
+          "layout": "layout_YBLKNT"
+        },
+        {
+          "id": "37:2918",
+          "name": "Group 1171275108",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 24,
+            "y": 128,
+            "width": 58,
+            "height": 58
+          },
+          "layout": "layout_6WOHFF",
+          "children": [
+            {
+              "id": "37:2915",
+              "name": "Ellipse 233",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 24,
+                "y": 128,
+                "width": 58,
+                "height": 58
+              },
+              "fills": "fill_4QRCAP",
+              "layout": "layout_XPGRHW"
+            },
+            {
+              "id": "37:2916",
+              "name": "GEN",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 29.043472290039062,
+                "y": 133.04345703125,
+                "width": 44.130435943603516,
+                "height": 29
+              },
+              "textStyle": "style_9GMABO",
+              "fills": "fill_VHCDE5",
+              "layout": "layout_HXP4NB",
+              "text": "GEN"
+            },
+            {
+              "id": "37:2917",
+              "name": "fest",
+              "type": "TEXT",
+              "boundingBox": {
+                "x": 31.565216064453125,
+                "y": 150.69580078125,
+                "width": 41,
+                "height": 29
+              },
+              "textStyle": "style_9GMABO",
+              "fills": "fill_VHCDE5",
+              "layout": "layout_VT6755",
+              "text": "fest"
+            }
+          ]
+        },
+        {
+          "id": "37:2927",
+          "name": "Group 1171275109",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 25,
+            "y": 208,
+            "width": 44,
+            "height": 44
+          },
+          "layout": "layout_DXCUXS",
+          "children": [
+            {
+              "id": "37:2928",
+              "name": "Ellipse 233",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 25,
+                "y": 208,
+                "width": 44,
+                "height": 44
+              },
+              "fills": "fill_4QRCAP",
+              "layout": "layout_TSGU6F"
+            },
+            {
+              "id": "37:2931",
+              "name": "Vector",
+              "type": "IMAGE-SVG",
+              "boundingBox": {
+                "x": 29.824432373046875,
+                "y": 216.8330078125,
+                "width": 33.359256744384766,
+                "height": 26.560958862304688
+              },
+              "fills": "fill_VHCDE5",
+              "layout": "layout_KHBGQE"
+            }
+          ]
+        },
+        {
+          "id": "37:2920",
+          "name": "GENfest Music Festival 2024 - Multi - sensorial Audio Interface",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 92,
+            "y": 137,
+            "width": 260.7490539550781,
+            "height": 39.7752799987793
+          },
+          "textStyle": "style_ZY8GI0",
+          "fills": "fill_NBK8LL",
+          "layout": "layout_7DRHVO",
+          "text": "GENfest Music Festival 2024 - Multi - \nsensorial Audio Interface"
+        },
+        {
+          "id": "37:2923",
+          "name": "200+ users",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 92,
+            "y": 171,
+            "width": 69,
+            "height": 17
+          },
+          "textStyle": "style_UDPSOJ",
+          "fills": "fill_5RGVST",
+          "layout": "layout_NGQ7OL",
+          "text": "200+ users"
+        },
+        {
+          "id": "37:2921",
+          "name": "Ellipse 234",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 69,
+            "y": 131,
+            "width": 13,
+            "height": 13
+          },
+          "fills": "fill_5TKRKX",
+          "layout": "layout_EADS4X"
+        },
+        {
+          "id": "37:2925",
+          "name": "Rectangle 3467534",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 261,
+            "width": 318,
+            "height": 102
+          },
+          "fills": "fill_EWQTI5",
+          "layout": "layout_RBGS27",
+          "borderRadius": "21px"
+        },
+        {
+          "id": "38:2964",
+          "name": "Rectangle 3467538",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 0,
+            "y": 919,
+            "width": 390,
+            "height": 102
+          },
+          "fills": "fill_EWQTI5",
+          "layout": "layout_FF6Z6Z",
+          "borderRadius": "21px"
+        },
+        {
+          "id": "38:2960",
+          "name": "Rectangle 3467537",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 809,
+            "width": 177,
+            "height": 75
+          },
+          "fills": "fill_EWQTI5",
+          "layout": "layout_AHB04G",
+          "borderRadius": "18px"
+        },
+        {
+          "id": "38:2937",
+          "name": "Rectangle 3467536",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 442,
+            "width": 260,
+            "height": 295
+          },
+          "fills": "fill_EWQTI5",
+          "layout": "layout_VYOFIC",
+          "borderRadius": "21px"
+        },
+        {
+          "id": "38:2934",
+          "name": "Rectangle 3467535",
+          "type": "RECTANGLE",
+          "boundingBox": {
+            "x": 24,
+            "y": 398,
+            "width": 337,
+            "height": 32
+          },
+          "fills": "fill_EWQTI5",
+          "layout": "layout_XED42N",
+          "borderRadius": "21px"
+        },
+        {
+          "id": "37:2926",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 40,
+            "y": 287,
+            "width": 292,
+            "height": 66
+          },
+          "textStyle": "style_ENPMLH",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_SBS6TE",
+          "text": "Libero voluptas et est est. Sit sint in dolorem expedita. Et dignissimos sed cupiditate nobis facere alias fugiat. Dolore perferendis qui suscipit ab."
+        },
+        {
+          "id": "38:2961",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 40,
+            "y": 835,
+            "width": 150,
+            "height": 15
+          },
+          "textStyle": "style_ENPMLH",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_X58RZ0",
+          "text": "Libero voluptas et est est :)"
+        },
+        {
+          "id": "38:2935",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 58,
+            "y": 406,
+            "width": 274,
+            "height": 15
+          },
+          "textStyle": "style_ENPMLH",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_R14VAE",
+          "text": "+1 097 755 545 subscribed to the GENfest event"
+        },
+        {
+          "id": "38:2936",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 153,
+            "y": 379,
+            "width": 87,
+            "height": 15
+          },
+          "textStyle": "style_HCKY9A",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_5FMWAK",
+          "text": "March 11, 2024"
+        },
+        {
+          "id": "38:2965",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 99,
+            "y": 937,
+            "width": 191,
+            "height": 15
+          },
+          "textStyle": "style_ENPMLH",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_R9UCBH",
+          "text": "Only admins can send messages"
+        },
+        {
+          "id": "38:2933",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 286,
+            "y": 342,
+            "width": 42,
+            "height": 13
+          },
+          "textStyle": "style_W0MEC4",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_JB2519",
+          "text": "4:32 PM"
+        },
+        {
+          "id": "38:2962",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 153,
+            "y": 863,
+            "width": 35,
+            "height": 11
+          },
+          "textStyle": "style_03U4V4",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_ZTFYI8",
+          "text": "4:32 PM"
+        },
+        {
+          "id": "38:2938",
+          "name": "Text",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 229,
+            "y": 716,
+            "width": 42,
+            "height": 13
+          },
+          "textStyle": "style_W0MEC4",
+          "fills": "fill_9MJWLE",
+          "layout": "layout_LPM121",
+          "text": "4:32 PM"
+        },
+        {
+          "id": "38:2932",
+          "name": "GENfest",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 40,
+            "y": 269,
+            "width": 54,
+            "height": 18
+          },
+          "textStyle": "style_ZY8GI0",
+          "fills": "fill_VHCDE5",
+          "layout": "layout_J4M32A",
+          "text": "GENfest"
+        },
+        {
+          "id": "38:2963",
+          "name": "Lola Schmidt",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 40,
+            "y": 817,
+            "width": 83,
+            "height": 18
+          },
+          "textStyle": "style_ZY8GI0",
+          "fills": "fill_G07ZXY",
+          "layout": "layout_IE7Y2J",
+          "text": "Lola Schmidt"
+        },
+        {
+          "id": "38:2939",
+          "name": "GENfest",
+          "type": "TEXT",
+          "boundingBox": {
+            "x": 40,
+            "y": 450,
+            "width": 54,
+            "height": 18
+          },
+          "textStyle": "style_ZY8GI0",
+          "fills": "fill_VHCDE5",
+          "layout": "layout_91R5FO",
+          "text": "GENfest"
+        },
+        {
+          "id": "37:2909",
+          "name": "Mask group",
+          "type": "GROUP",
+          "boundingBox": {
+            "x": 24,
+            "y": 758,
+            "width": 44,
+            "height": 44
+          },
+          "layout": "layout_4O8W6Z",
+          "children": [
+            {
+              "id": "37:2910",
+              "name": "Ellipse 10",
+              "type": "ELLIPSE",
+              "boundingBox": {
+                "x": 24,
+                "y": 758,
+                "width": 44,
+                "height": 44
+              },
+              "fills": "fill_UX64ET",
+              "layout": "layout_TSGU6F"
+            },
+            {
+              "id": "37:2911",
+              "name": "pexels-mart-production-9558894 1",
+              "type": "RECTANGLE",
+              "boundingBox": {
+                "x": 2.4315338134765625,
+                "y": 728.666015625,
+                "width": 76.67868041992188,
+                "height": 115.60784149169922
+              },
+              "fills": "fill_9S7YYJ",
+              "layout": "layout_UMJRTY"
+            }
+          ]
+        },
+        {
+          "id": "38:3049",
+          "name": "Ellipse 235",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 257,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_171WHD",
+          "layout": "layout_WQ6C2Y"
+        },
+        {
+          "id": "38:3050",
+          "name": "Ellipse 236",
+          "type": "ELLIPSE",
+          "boundingBox": {
+            "x": 203,
+            "y": 64,
+            "width": 50,
+            "height": 50
+          },
+          "fills": "fill_171WHD",
+          "layout": "layout_Z1J3L8"
+        },
+        {
+          "id": "38:3051",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 273,
+            "y": 80,
+            "width": 17.979074478149414,
+            "height": 17.979074478149414
+          },
+          "strokes": "stroke_PJ8JRO",
+          "layout": "layout_ZYS1EN",
+          "borderRadius": "0px 0px 0px 0px"
+        },
+        {
+          "id": "38:3052",
+          "name": "Vector",
+          "type": "IMAGE-SVG",
+          "boundingBox": {
+            "x": 217,
+            "y": 81,
+            "width": 22,
+            "height": 16
+          },
+          "strokes": "stroke_PJ8JRO",
+          "layout": "layout_KDV5PX",
+          "borderRadius": "0px 0px 0px 0px"
+        }
+      ]
+    }
+  ],
+  "globalVars": {
+    "styles": {
+      "fill_YTLAYL": [
+        "#1F1F1F"
+      ],
+      "layout_3D97SR": {
+        "mode": "none",
+        "clipsContent": true,
+        "dimensions": {
+          "width": 390,
+          "height": 980
+        }
+      },
+      "fill_171WHD": [
+        "rgba(40, 40, 40, 0.81)"
+      ],
+      "layout_HHNBS4": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "layout_046YQL": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 311,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "stroke_J1EWXQ": {
+        "colors": [
+          "#FFFFFF"
+        ],
+        "strokeWeight": "2px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_W2P7HC": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 46,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 6,
+          "height": 16
+        }
+      },
+      "stroke_5OOHKR": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1.5px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_YBLKNT": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 328,
+          "y": 82
+        },
+        "dimensions": {
+          "width": 16,
+          "height": 14
+        }
+      },
+      "layout_6WOHFF": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 128
+        },
+        "dimensions": {
+          "width": 58,
+          "height": 58
+        }
+      },
+      "fill_4QRCAP": [
+        "#3E3E3E"
+      ],
+      "layout_XPGRHW": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 58,
+          "height": 58
+        }
+      },
+      "style_9GMABO": {
+        "fontFamily": "Ceviche One",
+        "fontWeight": 400,
+        "fontSize": 28,
+        "lineHeight": "1.0429999487740653em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_VHCDE5": [
+        "#FD99C9"
+      ],
+      "layout_HXP4NB": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 5.04,
+          "y": 5.04
+        },
+        "dimensions": {
+          "width": 44.13,
+          "height": 29
+        }
+      },
+      "layout_VT6755": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 7.57,
+          "y": 22.7
+        },
+        "dimensions": {
+          "width": 41,
+          "height": 29
+        }
+      },
+      "layout_DXCUXS": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 25,
+          "y": 208
+        },
+        "dimensions": {
+          "width": 44,
+          "height": 44
+        }
+      },
+      "layout_TSGU6F": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 0
+        },
+        "dimensions": {
+          "width": 44,
+          "height": 44
+        }
+      },
+      "layout_KHBGQE": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 4.82,
+          "y": 8.83
+        },
+        "dimensions": {
+          "width": 33.36,
+          "height": 26.56
+        }
+      },
+      "style_ZY8GI0": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 15,
+        "lineHeight": "1.2em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_NBK8LL": [
+        "#F8F8F8"
+      ],
+      "layout_7DRHVO": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 92,
+          "y": 137
+        },
+        "dimensions": {
+          "width": 260.75,
+          "height": 39.78
+        }
+      },
+      "style_UDPSOJ": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 14,
+        "lineHeight": "1.2000000817435128em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_5RGVST": [
+        "#616161"
+      ],
+      "layout_NGQ7OL": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 92,
+          "y": 171
+        },
+        "dimensions": {
+          "width": 69,
+          "height": 17
+        }
+      },
+      "fill_5TKRKX": [
+        "#7FD249"
+      ],
+      "layout_EADS4X": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 69,
+          "y": 131
+        },
+        "dimensions": {
+          "width": 13,
+          "height": 13
+        }
+      },
+      "fill_EWQTI5": [
+        "rgba(40, 40, 40, 0.8)"
+      ],
+      "layout_RBGS27": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 261
+        },
+        "dimensions": {
+          "width": 318,
+          "height": 102
+        }
+      },
+      "layout_FF6Z6Z": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 0,
+          "y": 919
+        },
+        "dimensions": {
+          "width": 390,
+          "height": 102
+        }
+      },
+      "layout_AHB04G": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 809
+        },
+        "dimensions": {
+          "width": 177,
+          "height": 75
+        }
+      },
+      "layout_VYOFIC": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 442
+        },
+        "dimensions": {
+          "width": 260,
+          "height": 295
+        }
+      },
+      "layout_XED42N": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 398
+        },
+        "dimensions": {
+          "width": 337,
+          "height": 32
+        }
+      },
+      "style_ENPMLH": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 14,
+        "lineHeight": "1.1066365242004395em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "fill_9MJWLE": [
+        "#FFFFFF"
+      ],
+      "layout_SBS6TE": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 40,
+          "y": 287
+        },
+        "dimensions": {
+          "width": 292,
+          "height": 66
+        }
+      },
+      "layout_X58RZ0": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 40,
+          "y": 835
+        },
+        "dimensions": {
+          "width": 150,
+          "height": 15
+        }
+      },
+      "layout_R14VAE": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 58,
+          "y": 406
+        },
+        "dimensions": {
+          "width": 274,
+          "height": 15
+        }
+      },
+      "style_HCKY9A": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 400,
+        "fontSize": 14,
+        "lineHeight": "1.1066365242004395em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_5FMWAK": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 153,
+          "y": 379
+        },
+        "dimensions": {
+          "width": 87,
+          "height": 15
+        }
+      },
+      "layout_R9UCBH": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 99,
+          "y": 937
+        },
+        "dimensions": {
+          "width": 191,
+          "height": 15
+        }
+      },
+      "style_W0MEC4": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 12,
+        "lineHeight": "1.1066365242004395em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_JB2519": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 286,
+          "y": 342
+        },
+        "dimensions": {
+          "width": 42,
+          "height": 13
+        }
+      },
+      "style_03U4V4": {
+        "fontFamily": "PP Neue Montreal",
+        "fontWeight": 100,
+        "fontSize": 10,
+        "lineHeight": "1.1066365242004395em",
+        "textAlignHorizontal": "LEFT",
+        "textAlignVertical": "TOP"
+      },
+      "layout_ZTFYI8": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 153,
+          "y": 863
+        },
+        "dimensions": {
+          "width": 35,
+          "height": 11
+        }
+      },
+      "layout_LPM121": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 229,
+          "y": 716
+        },
+        "dimensions": {
+          "width": 42,
+          "height": 13
+        }
+      },
+      "layout_J4M32A": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 40,
+          "y": 269
+        },
+        "dimensions": {
+          "width": 54,
+          "height": 18
+        }
+      },
+      "fill_G07ZXY": [
+        "#FEB822"
+      ],
+      "layout_IE7Y2J": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 40,
+          "y": 817
+        },
+        "dimensions": {
+          "width": 83,
+          "height": 18
+        }
+      },
+      "layout_91R5FO": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 40,
+          "y": 450
+        },
+        "dimensions": {
+          "width": 54,
+          "height": 18
+        }
+      },
+      "layout_4O8W6Z": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 24,
+          "y": 758
+        },
+        "dimensions": {
+          "width": 44,
+          "height": 44
+        }
+      },
+      "fill_UX64ET": [
+        "#D9D9D9"
+      ],
+      "fill_9S7YYJ": [
+        {
+          "type": "IMAGE",
+          "imageRef": "9d826250aecaaad98283f19805dad79606d4d2fb",
+          "scaleMode": "FILL"
+        }
+      ],
+      "layout_UMJRTY": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": -21.57,
+          "y": -29.33
+        },
+        "dimensions": {
+          "width": 76.68,
+          "height": 115.61
+        }
+      },
+      "layout_WQ6C2Y": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 257,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "layout_Z1J3L8": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 203,
+          "y": 64
+        },
+        "dimensions": {
+          "width": 50,
+          "height": 50
+        }
+      },
+      "stroke_PJ8JRO": {
+        "colors": [
+          "#F8F8F8"
+        ],
+        "strokeWeight": "1px",
+        "strokeAlign": "CENTER"
+      },
+      "layout_ZYS1EN": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 273,
+          "y": 80
+        },
+        "dimensions": {
+          "width": 17.98,
+          "height": 17.98
+        }
+      },
+      "layout_KDV5PX": {
+        "mode": "none",
+        "locationRelativeToParent": {
+          "x": 217,
+          "y": 81
+        },
+        "dimensions": {
+          "width": 22,
+          "height": 16
+        }
+      }
+    }
+  }
+}

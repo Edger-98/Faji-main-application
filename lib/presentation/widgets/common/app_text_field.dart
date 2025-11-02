@@ -156,19 +156,19 @@ class _CommonAppTextFieldState extends State<CommonAppTextField> {
       errorText: widget.errorText,
       prefixIcon: widget.prefixIcon,
       suffixIcon: _buildSuffixIcon(theme),
-      filled: widget.variant == AppTextFieldVariant.filled,
-      fillColor: widget.variant == AppTextFieldVariant.filled
-          ? colorScheme.surfaceContainerHighest
-          : null,
-      border: _buildBorder(theme, isError: false, isFocused: false),
-      enabledBorder: _buildBorder(theme, isError: false, isFocused: false),
-      focusedBorder: _buildBorder(theme, isError: false, isFocused: true),
-      errorBorder: _buildBorder(theme, isError: true, isFocused: false),
-      focusedErrorBorder: _buildBorder(theme, isError: true, isFocused: true),
-      disabledBorder: _buildBorder(theme, isError: false, isFocused: false),
+      filled: false, // No fill
+      fillColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      border: InputBorder.none,
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      errorBorder: InputBorder.none,
+      focusedErrorBorder: InputBorder.none,
+      disabledBorder: InputBorder.none,
       contentPadding: const EdgeInsets.symmetric(
-        horizontal: 28, // From Figma: More padding for rounded inputs
-        vertical: 24,   // From Figma: Height 69px with proper padding
+        horizontal: 28,
+        vertical: 24,
       ),
       labelStyle: theme.textTheme.bodyMedium?.copyWith(
         color: _isFocused
@@ -207,37 +207,26 @@ class _CommonAppTextFieldState extends State<CommonAppTextField> {
   }) {
     final ColorScheme colorScheme = theme.colorScheme;
     
-    Color borderColor;
-    double borderWidth;
+    BorderSide borderSide;
 
     if (isError) {
-      borderColor = colorScheme.error;
-      borderWidth = isFocused ? 2 : 1;
+      borderSide = BorderSide(
+        color: colorScheme.error,
+        width: isFocused ? 2 : 1,
+      );
     } else if (isFocused) {
-      borderColor = colorScheme.primary;
-      borderWidth = 2;
+      borderSide = BorderSide(
+        color: colorScheme.primary,
+        width: 2,
+      );
     } else {
-      borderColor = Colors.transparent; // No border when not focused (Figma style)
-      borderWidth = 0;
+      // No border when not focused (Figma style)
+      borderSide = BorderSide.none;
     }
 
-    switch (widget.variant) {
-      case AppTextFieldVariant.outlined:
-        return OutlineInputBorder(
-          borderRadius: BorderRadius.circular(34.5), // From Figma: 34.5px
-          borderSide: BorderSide(
-            color: borderColor,
-            width: borderWidth,
-          ),
-        );
-      case AppTextFieldVariant.filled:
-        return OutlineInputBorder(
-          borderRadius: BorderRadius.circular(34.5), // From Figma: 34.5px
-          borderSide: BorderSide(
-            color: borderColor,
-            width: borderWidth,
-          ),
-        );
-    }
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(34.5), // From Figma: 34.5px
+      borderSide: borderSide,
+    );
   }
 }

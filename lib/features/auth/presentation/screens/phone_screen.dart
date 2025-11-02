@@ -271,7 +271,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
                             height: 59,
                             onPressed: () {
                               if (_isPhoneValid) {
-                                context.goNamed(RouteManager.authNameName);
+                                context.goNamed(RouteManager.authPinName);
                               }
                             },
                             isEnabled: _isPhoneValid,

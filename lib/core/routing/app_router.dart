@@ -1,9 +1,20 @@
+import 'package:fajimobileapp/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/auth/auth_feature.dart';
 import 'package:fajimobileapp/features/home/home_feature.dart';
+import 'package:fajimobileapp/features/event_details/event_details_feature.dart';
+import 'package:fajimobileapp/features/home/presentation/screens/search_screen.dart';
+import 'package:fajimobileapp/features/tickets/tickets.dart';
+import 'package:fajimobileapp/features/organize_event/organize_event.dart';
+import 'package:fajimobileapp/features/favorites/favorites.dart';
+import 'package:fajimobileapp/features/chat/chat.dart';
+import 'package:fajimobileapp/features/profile/profile.dart';
+import 'package:fajimobileapp/features/support/support.dart';
+import 'package:fajimobileapp/features/terms/terms.dart';
+import 'package:fajimobileapp/features/wallet/wallet.dart';
 
 /// Application router configuration
 class AppRouter {
@@ -125,6 +136,17 @@ class AppRouter {
         ),
       ),
       
+      // Login route
+      GoRoute(
+        path: RouteManager.login,
+        name: RouteManager.loginName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const LoginScreen(),
+        ),
+      ),
+      
       // Home route
       GoRoute(
         path: RouteManager.home,
@@ -133,6 +155,221 @@ class AppRouter {
           context,
           state,
           const HomeScreen(),
+        ),
+      ),
+      
+      // Event Details routes
+      GoRoute(
+        path: RouteManager.eventDetails,
+        name: RouteManager.eventDetailsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const EventDetailsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.ticketInformation,
+        name: RouteManager.ticketInformationName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const TicketInformationScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.eventDirection,
+        name: RouteManager.eventDirectionName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const EventDirectionScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.buyTicket,
+        name: RouteManager.buyTicketName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const BuyTicketScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.makePayment,
+        name: RouteManager.makePaymentName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const MakePaymentScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.paymentSuccessful,
+        name: RouteManager.paymentSuccessfulName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const PaymentSuccessfulScreen(),
+        ),
+      ),
+      
+      // Search route
+      GoRoute(
+        path: RouteManager.search,
+        name: RouteManager.searchName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const SearchScreen(),
+        ),
+      ),
+      
+      // My Tickets route
+      GoRoute(
+        path: RouteManager.myTickets,
+        name: RouteManager.myTicketsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const MyTicketsScreen(),
+        ),
+      ),
+      
+      // Organize Event route
+      GoRoute(
+        path: RouteManager.organizeEvent,
+        name: RouteManager.organizeEventName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const OrganizeEventScreen(),
+        ),
+      ),
+      
+      // Favorites route
+      GoRoute(
+        path: RouteManager.favorites,
+        name: RouteManager.favoritesName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const FavoritesScreen(),
+        ),
+      ),
+      
+      // Chat routes
+      GoRoute(
+        path: RouteManager.chatList,
+        name: RouteManager.chatListName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const ChatListScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.chatDetail,
+        name: RouteManager.chatDetailName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const ChatDetailScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.organizerChat,
+        name: RouteManager.organizerChatName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const OrganizerChatScreen(),
+        ),
+      ),
+      
+      // Profile route
+      GoRoute(
+        path: RouteManager.profile,
+        name: RouteManager.profileName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const ProfileScreen(),
+        ),
+      ),
+      
+      // Support route
+      GoRoute(
+        path: RouteManager.support,
+        name: RouteManager.supportName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const SupportScreen(),
+        ),
+      ),
+      
+      // Terms route
+      GoRoute(
+        path: RouteManager.terms,
+        name: RouteManager.termsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const TermsScreen(),
+        ),
+      ),
+      
+      // Wallet routes
+      GoRoute(
+        path: RouteManager.walletBalance,
+        name: RouteManager.walletBalanceName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const BalanceDetailScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.walletEnterAmount,
+        name: RouteManager.walletEnterAmountName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const EnterWithdrawalAmountScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.walletReview,
+        name: RouteManager.walletReviewName,
+        pageBuilder: (context, state) {
+          final amount = state.extra as String? ?? '0.00';
+          return _buildPageWithTransition(
+            context,
+            state,
+            ReviewWithdrawalScreen(amount: amount),
+          );
+        },
+      ),
+      GoRoute(
+        path: RouteManager.walletConfirmation,
+        name: RouteManager.walletConfirmationName,
+        pageBuilder: (context, state) {
+          final amount = state.extra as String? ?? '0.00';
+          return _buildPageWithTransition(
+            context,
+            state,
+            WithdrawalConfirmationScreen(amount: amount),
+          );
+        },
+      ),
+      GoRoute(
+        path: RouteManager.walletHistory,
+        name: RouteManager.walletHistoryName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const TransactionHistoryScreen(),
         ),
       ),
     ],

@@ -107,6 +107,7 @@ class AppColors {
 
   // Home Feature Specific Colors (From Figma)
   static const Color eventCardBlue = Color(0xFF043D9E);
+  static const Color eventCardYellow = Color(0xFFFEB822);
   static const Color liveRed = Color(0xFFCA4638);
   static const Color textSecondary = Color(0xFFAAA9A9);
   static const Color textTertiary = Color(0xFF616161);
@@ -116,7 +117,8 @@ class AppColors {
   static const Color overlayBackground = Color(0x6E070707); // rgba(7, 7, 7, 0.43)
   static const Color dotSeparator = Color(0xFFD9D9D9);
   static const Color iconGray = Color(0xFFDCDCDC);
-  static const Color successGreen = Color(0xFF45D12E);
+  static const Color successGreen = Color(0xFF7FD249);
+  static const Color messageBubbleBackground = Color(0xCC282828); // rgba(40, 40, 40, 0.8)
 
   // Neutral Colors
   static const Color neutral10 = Color(0xFF1C1B1F);

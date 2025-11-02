@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 
 /// Your events horizontal scrollable section
@@ -34,7 +36,7 @@ class YourEventsSection extends StatelessWidget {
                 price: 'From \$40.00',
                 isLive: index == 0,
                 onTap: () {
-                  // TODO: Navigate to event details
+                  context.push(RouteManager.eventDetails);
                 },
                 onFavorite: () {
                   // TODO: Toggle favorite
