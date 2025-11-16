@@ -20,8 +20,6 @@ targets:
         generate_for:
           - lib/**
         options:
-          # Generate nullable fields
-          nullable: true
           # Use explicit toJson
           explicit_to_json: true
           # Include if null
@@ -30,6 +28,10 @@ targets:
           create_factory: true
           # Create to_json method
           create_to_json: true
+          # Check for required fields
+          checked: true
+          # Allow any map type
+          any_map: true
       
       # Riverpod code generation
       riverpod_generator:

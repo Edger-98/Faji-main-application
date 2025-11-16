@@ -1,14 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/presentation/widgets/common/app_bottom_nav.dart';
+import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  String _userName = 'User';
+  String _userEmail = 'user@example.com';
+
+  @override
+  void initState() {
+    super.initState();
+    // Load user data after frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadUserData();
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    // Trigger auth check to ensure user data is loaded
+    await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
+    
+    // Try to get from current user provider
+    final currentUser = ref.read(currentUserProvider);
+    
+    if (currentUser != null) {
+      if (mounted) {
+        setState(() {
+          _userName = '${currentUser.firstName} ${currentUser.lastName}';
+          _userEmail = currentUser.email;
+        });
+      }
+      return;
+    }
+
+    // Fallback to saved user data
+    final localDataSource = ref.read(authLocalDataSourceProvider);
+    final userData = await localDataSource.getUserData();
+    
+    if (userData['firstName'] != null && userData['email'] != null) {
+      if (mounted) {
+        setState(() {
+          _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
+          _userEmail = userData['email']!;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Watch for user changes
+    ref.listen(currentUserProvider, (previous, next) {
+      if (next != null) {
+        setState(() {
+          _userName = '${next.firstName} ${next.lastName}';
+          _userEmail = next.email;
+        });
+      }
+    });
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -72,7 +135,7 @@ class ProfileScreen extends StatelessWidget {
                   // Name
                   Center(
                     child: Text(
-                      'Rolling 5T0NES',
+                      _userName,
                       style: AppTypography.labelLarge.copyWith(
                         color: AppColors.onSurface,
                         fontWeight: AppTypography.regular,
@@ -83,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                   // Email
                   Center(
                     child: Text(
-                      'rolling5tones@gmail.com',
+                      _userEmail,
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.textSecondary,
                         fontWeight: AppTypography.regular,
@@ -95,8 +158,6 @@ class ProfileScreen extends StatelessWidget {
                   // Balance card
                   InkWell(
                     onTap: () {
-                        debugPrint('Balance card tapped!');
-                        debugPrint('Navigating to: ${RouteManager.walletBalance}');
                         context.push(RouteManager.walletBalance);
                     },
                     borderRadius: BorderRadius.circular(39.5),
@@ -145,7 +206,11 @@ class ProfileScreen extends StatelessWidget {
                   // Personal section
                   _buildSectionHeader('Personal'),
                   const SizedBox(height: 3),
-                  _buildMenuItem(Icons.person_outline, 'Account setting'),
+                  _buildMenuItem(
+                    Icons.person_outline, 
+                    'Account settings',
+                    onTap: () => context.push(RouteManager.accountSettings),
+                  ),
                   _buildMenuItem(Icons.history, 'Events history'),
                   const SizedBox(height: 10),
                   _buildDivider(),
@@ -215,8 +280,11 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
+    return InkWell(
+      onTap: onTap != null ? () {
+        HapticFeedback.lightImpact();
+        onTap();
+      } : null,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(

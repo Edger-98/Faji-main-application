@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-import '../constants/app_constants.dart';
 import '../utils/logger.dart';
 import 'config.dart';
 
@@ -28,9 +26,6 @@ class AppInitializer {
 
       // Initialize configuration
       await _initializeConfiguration();
-
-      // Initialize local storage
-      await _initializeLocalStorage();
 
       // Initialize error handling
       await _initializeErrorHandling();
@@ -60,27 +55,6 @@ class AppInitializer {
       rethrow;
     }
   }
-
-  /// Initialize local storage (Hive)
-  static Future<void> _initializeLocalStorage() async {
-    try {
-      await Hive.initFlutter();
-      
-      // Open required boxes
-      await Future.wait([
-        Hive.openBox(AppConstants.userBox),
-        Hive.openBox(AppConstants.settingsBox),
-        Hive.openBox(AppConstants.cacheBox),
-      ]);
-
-      Logger.info('Local storage initialized successfully');
-    } catch (e) {
-      Logger.error('Failed to initialize local storage', e);
-      rethrow;
-    }
-  }
-
-
 
   /// Initialize error handling
   static Future<void> _initializeErrorHandling() async {
@@ -119,7 +93,6 @@ class AppInitializer {
   /// Clean up resources when app is disposed
   static Future<void> dispose() async {
     try {
-      await Hive.close();
       Logger.info('Application cleanup completed');
     } catch (e) {
       Logger.error('Error during application cleanup', e);

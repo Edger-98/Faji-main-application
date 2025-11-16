@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/services/toast_service.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/auth_widgets.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/login_viewmodel.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 
 /// Login screen for existing users
 class LoginScreen extends ConsumerStatefulWidget {
@@ -18,6 +21,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
   @override
@@ -27,17 +31,75 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
+  void _handleLogin() {
+    // Basic validation
+    if (_emailController.text.trim().isEmpty) {
+      _showError('Email is required');
+      return;
+    }
+    if (!_emailController.text.contains('@')) {
+      _showError('Enter a valid email');
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      _showError('Password is required');
+      return;
+    }
+    if (_passwordController.text.length < 6) {
+      _showError('Password must be at least 6 characters');
+      return;
+    }
+    
+    ref.read(loginViewModelProvider.notifier).login(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+  }
+
+  void _showError(String message) {
+    ToastService.showError(
+      context: context,
+      message: message,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Listen to login state
+    ref.listen(loginViewModelProvider, (previous, next) {
+      next.when(
+        initial: () {},
+        loading: () {},
+        success: (token) async {
+          // Fetch user data
+          await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
+          
+          // Navigate directly to home after first login
+          context.go(RouteManager.home);
+        },
+        error: (failure) {
+          _showError(failure.message);
+        },
+      );
+    });
+
+    final loginState = ref.watch(loginViewModelProvider);
+    final isLoading = loginState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
+
     return Scaffold(
       backgroundColor: context.colors.surface,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                 SizedBox(height: 40.h),
                 
                 // Back button
@@ -86,6 +148,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   hintText: 'Enter your email',
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
+                  enabled: !isLoading,
                 ),
                 
                 SizedBox(height: 24.h),
@@ -99,7 +162,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 AppTextField(
                   hintText: 'Enter your password',
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: _obscurePassword,
+                  enabled: !isLoading,
                   suffixWidget: IconButton(
                     icon: Icon(
                       _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -135,13 +199,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Sign in button
                 Center(
                   child: AuthButton(
-                    text: 'Sign In',
+                    text: isLoading ? 'Signing In...' : 'Sign In',
                     width: 337.w,
                     height: 69.h,
-                    onPressed: () {
-                      // Navigate to home
-                      context.go(RouteManager.home);
-                    },
+                    onPressed: isLoading ? null : _handleLogin,
                   ),
                 ),
                 
@@ -161,7 +222,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 
                 SizedBox(height: 40.h),
-              ],
+                ],
+              ),
             ),
           ),
         ),

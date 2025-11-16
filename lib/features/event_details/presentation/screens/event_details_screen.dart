@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
 
 class EventDetailsScreen extends StatelessWidget {
   const EventDetailsScreen({super.key});
@@ -37,8 +39,11 @@ class EventDetailsScreen extends StatelessWidget {
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 10,
                   left: 24.w,
-                  child: GestureDetector(
-                    onTap: () => context.pop(),
+                  child: AnimatedButton(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      context.pop();
+                    },
                     child: Container(
                       width: 50.w,
                       height: 50.h,
@@ -58,17 +63,23 @@ class EventDetailsScreen extends StatelessWidget {
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 10,
                   right: 80.w,
-                  child: Container(
-                    width: 50.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHighest,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.share_outlined,
-                      color: context.colors.onSurface,
-                      size: 18.sp,
+                  child: AnimatedButton(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      // Share functionality
+                    },
+                    child: Container(
+                      width: 50.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceContainerHighest,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.share_outlined,
+                        color: context.colors.onSurface,
+                        size: 18.sp,
+                      ),
                     ),
                   ),
                 ),
@@ -76,20 +87,26 @@ class EventDetailsScreen extends StatelessWidget {
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 10,
                   right: 24.w,
-                  child: Container(
-                    width: 50.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHighest,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      color: context.colors.onSurface,
-                      size: 19.sp,
+                  child: AnimatedButton(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      // Toggle favorite
+                    },
+                    child: Container(
+                      width: 50.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceContainerHighest,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: context.colors.onSurface,
+                        size: 19.sp,
+                      ),
                     ),
                   ),
-                  ),
+                ),
                 ],
               ),
               SizedBox(height: 22.h),
@@ -454,8 +471,9 @@ class EventDetailsScreen extends StatelessWidget {
             // Book button
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: GestureDetector(
+              child: AnimatedButton(
                 onTap: () {
+                  HapticFeedback.mediumImpact();
                   context.push(RouteManager.ticketInformation);
                 },
                 child: Container(

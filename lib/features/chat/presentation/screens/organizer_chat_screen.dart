@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
 
 class OrganizerChatScreen extends StatefulWidget {
   const OrganizerChatScreen({super.key});
@@ -205,10 +207,11 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
                       maxLines: null,
                     ),
                   ),
-                  GestureDetector(
+                  AnimatedButton(
                     onTap: () {
                       // Handle send message
                       if (_messageController.text.isNotEmpty) {
+                        HapticFeedback.mediumImpact();
                         // TODO: Send message logic
                         _messageController.clear();
                       }

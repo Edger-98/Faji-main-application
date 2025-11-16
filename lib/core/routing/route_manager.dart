@@ -11,8 +11,13 @@ class RouteManager {
   static const String authName = '/auth/name';
   static const String authPassword = '/auth/password';
   static const String login = '/login';
+  static const String welcomeBack = '/welcome-back';
   static const String home = '/home';
+  static const String eventsList = '/events';
   static const String eventDetails = '/event-details';
+  static const String searchEvents = '/events/search';
+  static const String myEvents = '/events/my-events';
+  static const String legacyEventDetails = '/legacy-event-details';
   static const String ticketInformation = '/ticket-information';
   static const String eventDirection = '/event-direction';
   static const String buyTicket = '/buy-ticket';
@@ -26,6 +31,7 @@ class RouteManager {
   static const String chatDetail = '/chat-detail';
   static const String organizerChat = '/organizer-chat';
   static const String profile = '/profile';
+  static const String accountSettings = '/account-settings';
   static const String support = '/support';
   static const String terms = '/terms';
   static const String walletBalance = '/wallet/balance';
@@ -43,8 +49,13 @@ class RouteManager {
   static const String authNameName = 'auth-name';
   static const String authPasswordName = 'auth-password';
   static const String loginName = 'login';
+  static const String welcomeBackName = 'welcome-back';
   static const String homeName = 'home';
+  static const String eventsListName = 'events-list';
   static const String eventDetailsName = 'event-details';
+  static const String searchEventsName = 'search-events';
+  static const String myEventsName = 'my-events';
+  static const String legacyEventDetailsName = 'legacy-event-details';
   static const String ticketInformationName = 'ticket-information';
   static const String eventDirectionName = 'event-direction';
   static const String buyTicketName = 'buy-ticket';
@@ -58,6 +69,7 @@ class RouteManager {
   static const String chatDetailName = 'chat-detail';
   static const String organizerChatName = 'organizer-chat';
   static const String profileName = 'profile';
+  static const String accountSettingsName = 'account-settings';
   static const String supportName = 'support';
   static const String termsName = 'terms';
   static const String walletBalanceName = 'wallet-balance';

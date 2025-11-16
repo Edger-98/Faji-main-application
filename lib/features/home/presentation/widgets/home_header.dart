@@ -1,25 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
+
+/// Provider for user display name
+final userDisplayNameProvider = FutureProvider<String>((ref) async {
+  // Try to get from current user provider first
+  final currentUser = ref.watch(currentUserProvider);
+  if (currentUser?.firstName != null && currentUser!.firstName.isNotEmpty) {
+    return currentUser.firstName;
+  }
+
+  // Fallback to saved user data
+  final localDataSource = ref.watch(authLocalDataSourceProvider);
+  final userData = await localDataSource.getUserData();
+  
+  if (userData['firstName'] != null && userData['firstName']!.isNotEmpty) {
+    return userData['firstName']!;
+  }
+  
+  return 'Guest';
+});
 
 /// Home screen header with greeting and notification bell
-class HomeHeader extends StatelessWidget {
+class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userNameAsync = ref.watch(userDisplayNameProvider);
+    
     return Padding(
       padding: EdgeInsets.fromLTRB(27.w, 20.h, 27.w, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Greeting text
-          AppText.displayLarge(
-            'Hi, Chineme!',
-            color: context.colors.onSurface,
+          userNameAsync.when(
+            data: (userName) => AppText.displayLarge(
+              'Hi, $userName!',
+              color: context.colors.onSurface,
+            ),
+            loading: () => AppText.displayLarge(
+              'Hi!',
+              color: context.colors.onSurface,
+            ),
+            error: (_, __) => AppText.displayLarge(
+              'Hi, Guest!',
+              color: context.colors.onSurface,
+            ),
           ),
           
           Row(

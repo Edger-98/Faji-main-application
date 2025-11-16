@@ -10,7 +10,7 @@ class UpcomingEventCard extends StatelessWidget {
   final String day;
   final String organizerName;
   final String organizerLocation;
-  final String organizerAvatar;
+  final String? organizerAvatar;
   final bool isLive;
   final VoidCallback? onTap;
 
@@ -124,7 +124,16 @@ class UpcomingEventCard extends StatelessWidget {
                     CircleAvatar(
                       radius: 22.r,
                       backgroundColor: context.colors.primary,
-                      backgroundImage: NetworkImage(organizerAvatar),
+                      backgroundImage: organizerAvatar != null && organizerAvatar!.isNotEmpty 
+                          ? NetworkImage(organizerAvatar!) 
+                          : null,
+                      child: organizerAvatar == null || organizerAvatar!.isEmpty
+                          ? Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 20.sp,
+                            )
+                          : null,
                     ),
                     SizedBox(width: 11.w),
                     Expanded(

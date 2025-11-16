@@ -221,6 +221,8 @@ class AppText extends StatelessWidget {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
+    TextDecoration? decoration,
+    TextOverflow? overflow,
   }) {
     return Builder(
       builder: (context) => AppText(
@@ -232,9 +234,86 @@ class AppText extends StatelessWidget {
           height: 1.2,
           letterSpacing: 0,
           color: color ?? context.colors.onSurfaceVariant,
+          decoration: decoration,
         ),
         textAlign: textAlign,
         maxLines: maxLines,
+        overflow: overflow,
+      ),
+    );
+  }
+
+  static Widget titleMedium(
+    String text, {
+    Color? color,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+  }) {
+    return Builder(
+      builder: (context) => AppText(
+        text,
+        style: TextStyle(
+          fontFamily: AppTypography.ppNeueMontreal,
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+          letterSpacing: 0,
+          color: color ?? context.colors.onSurface,
+        ),
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      ),
+    );
+  }
+
+  static Widget titleSmall(
+    String text, {
+    Color? color,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+  }) {
+    return Builder(
+      builder: (context) => AppText(
+        text,
+        style: TextStyle(
+          fontFamily: AppTypography.ppNeueMontreal,
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+          letterSpacing: 0,
+          color: color ?? context.colors.onSurface,
+        ),
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      ),
+    );
+  }
+
+  static Widget headlineSmall(
+    String text, {
+    Color? color,
+    TextAlign? textAlign,
+    int? maxLines,
+    TextOverflow? overflow,
+  }) {
+    return Builder(
+      builder: (context) => AppText(
+        text,
+        style: TextStyle(
+          fontFamily: AppTypography.ppNeueMontreal,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w700,
+          height: 1.2,
+          letterSpacing: 0,
+          color: color ?? context.colors.onSurface,
+        ),
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
       ),
     );
   }

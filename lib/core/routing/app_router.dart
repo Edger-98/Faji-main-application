@@ -1,15 +1,22 @@
 import 'package:fajimobileapp/features/profile/presentation/screens/profile_screen.dart';
+import 'package:fajimobileapp/features/profile/presentation/screens/account_settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/routing/auth_guard.dart';
 import 'package:fajimobileapp/features/auth/auth_feature.dart';
+import 'package:fajimobileapp/features/auth/presentation/screens/welcome_back_screen.dart';
 import 'package:fajimobileapp/features/home/home_feature.dart';
 import 'package:fajimobileapp/features/event_details/event_details_feature.dart';
 import 'package:fajimobileapp/features/home/presentation/screens/search_screen.dart';
+import 'package:fajimobileapp/features/events/presentation/screens/events_list_screen.dart';
+import 'package:fajimobileapp/features/events/presentation/screens/event_details_screen.dart' as events;
+import 'package:fajimobileapp/features/events/presentation/screens/search_screen.dart' as events_search;
+import 'package:fajimobileapp/features/events/presentation/screens/my_events_screen.dart';
+import 'package:fajimobileapp/features/events/presentation/screens/favorites_screen.dart' as events_favorites;
 import 'package:fajimobileapp/features/tickets/tickets.dart';
 import 'package:fajimobileapp/features/organize_event/organize_event.dart';
-import 'package:fajimobileapp/features/favorites/favorites.dart';
 import 'package:fajimobileapp/features/chat/chat.dart';
 import 'package:fajimobileapp/features/profile/profile.dart';
 import 'package:fajimobileapp/features/support/support.dart';
@@ -66,6 +73,7 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     initialLocation: RouteManager.splash,
+    redirect: AuthGuard.redirect,
     routes: [
       // Splash screen
       GoRoute(
@@ -147,6 +155,17 @@ class AppRouter {
         ),
       ),
       
+      // Welcome back route
+      GoRoute(
+        path: RouteManager.welcomeBack,
+        name: RouteManager.welcomeBackName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const WelcomeBackScreen(),
+        ),
+      ),
+      
       // Home route
       GoRoute(
         path: RouteManager.home,
@@ -158,10 +177,57 @@ class AppRouter {
         ),
       ),
       
-      // Event Details routes
+      // Events List route
       GoRoute(
-        path: RouteManager.eventDetails,
+        path: RouteManager.eventsList,
+        name: RouteManager.eventsListName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const EventsListScreen(),
+        ),
+      ),
+      
+      // Event Details with ID parameter
+      GoRoute(
+        path: '${RouteManager.eventDetails}/:id',
         name: RouteManager.eventDetailsName,
+        pageBuilder: (context, state) {
+          final eventId = state.pathParameters['id'] ?? '';
+          return _buildPageWithTransition(
+            context,
+            state,
+            events.EventDetailsScreen(eventId: eventId),
+          );
+        },
+      ),
+      
+      // Search Events route
+      GoRoute(
+        path: RouteManager.searchEvents,
+        name: RouteManager.searchEventsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const events_search.SearchScreen(),
+        ),
+      ),
+      
+      // My Events route
+      GoRoute(
+        path: RouteManager.myEvents,
+        name: RouteManager.myEventsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const MyEventsScreen(),
+        ),
+      ),
+      
+      // Legacy Event Details routes (keeping for backward compatibility with old feature)
+      GoRoute(
+        path: RouteManager.legacyEventDetails,
+        name: RouteManager.legacyEventDetailsName,
         pageBuilder: (context, state) => _buildPageWithTransition(
           context,
           state,
@@ -254,7 +320,7 @@ class AppRouter {
         pageBuilder: (context, state) => _buildPageWithTransition(
           context,
           state,
-          const FavoritesScreen(),
+          const events_favorites.FavoritesScreen(),
         ),
       ),
       
@@ -295,6 +361,17 @@ class AppRouter {
           context,
           state,
           const ProfileScreen(),
+        ),
+      ),
+      
+      // Account Settings route
+      GoRoute(
+        path: RouteManager.accountSettings,
+        name: RouteManager.accountSettingsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const AccountSettingsScreen(),
         ),
       ),
       

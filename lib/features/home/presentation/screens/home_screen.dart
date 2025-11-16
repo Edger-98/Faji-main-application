@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,6 +9,7 @@ import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 import 'package:fajimobileapp/features/favorites/presentation/screens/favorites_content.dart';
 import 'package:fajimobileapp/features/tickets/presentation/screens/tickets_content.dart';
 import 'package:fajimobileapp/features/profile/presentation/screens/profile_content.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 
 /// Home screen matching Figma design (node-id=2-648)
 class HomeScreen extends ConsumerStatefulWidget {
@@ -19,6 +21,24 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
+  bool _isRefreshing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Ensure user data is loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
+    });
+  }
+
+  Future<void> _refreshHome() async {
+    HapticFeedback.lightImpact();
+    setState(() => _isRefreshing = true);
+    // Refresh user data
+    await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
+    setState(() => _isRefreshing = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +56,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       bottomNavigationBar: HomeBottomNav(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) {
+          HapticFeedback.lightImpact();
+          setState(() => _selectedIndex = index);
+        },
       ),
     );
   }
@@ -44,10 +67,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildHomeContent() {
     return SafeArea(
       bottom: false,
-      child: CustomScrollView(
-        slivers: [
-        // Header
-        SliverToBoxAdapter(
+      child: RefreshIndicator(
+        onRefresh: _refreshHome,
+        color: AppColors.primary,
+        backgroundColor: AppColors.surfaceContainerHighest,
+        child: CustomScrollView(
+          slivers: [
+          // Header
+          SliverToBoxAdapter(
           child: HomeHeader(),
         ),
         
@@ -101,6 +128,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         
         SliverToBoxAdapter(child: SizedBox(height: 100.h)),
         ],
+        ),
       ),
     );
   }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/presentation/widgets/common/empty_state.dart';
+import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
+import 'package:fajimobileapp/presentation/widgets/common/event_card_shimmer.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -10,6 +14,16 @@ class ChatListScreen extends StatefulWidget {
 
 class _ChatListScreenState extends State<ChatListScreen> {
   bool _showEventsChat = true;
+  bool _isLoading = false;
+  List<String> _chats = ['chat1', 'chat2', 'chat3', 'chat4', 'chat5', 'chat6', 'chat7']; // Mock data
+
+  Future<void> _refreshChats() async {
+    HapticFeedback.lightImpact();
+    setState(() => _isLoading = true);
+    // Simulate API call
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,64 +127,86 @@ class _ChatListScreenState extends State<ChatListScreen> {
             const SizedBox(height: 20),
             // Chat list
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                children: [
-                  _buildChatItem(
-                    name: 'GENfest',
-                    message: 'asperiores laboriosam volup...',
-                    time: '17:36',
-                    unreadCount: 5,
-                    isEvent: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildChatItem(
-                    name: 'Generator Man',
-                    message: 'velit veniam et',
-                    time: '17:36',
-                    unreadCount: 3,
-                    hasAvatar: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildChatItem(
-                    name: 'Matthew Boyle',
-                    message: 'distinctio qui necessitatibus',
-                    time: '17:36',
-                    unreadCount: 2,
-                    hasAvatar: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildChatItem(
-                    name: 'Ejinne Seun',
-                    message: 'sint corporis debitis',
-                    time: '17:36',
-                    isTyping: true,
-                    hasAvatar: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildChatItem(
-                    name: 'Bolu Shakur',
-                    message: 'debitis et qui',
-                    time: '17:36',
-                    hasAvatar: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildChatItem(
-                    name: 'Jane Neigbour',
-                    message: 'optio fuga nemo',
-                    time: '17:36',
-                    hasAvatar: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildChatItem(
-                    name: 'Tuski Morgan',
-                    message: 'voluptatem tenetur eius',
-                    time: '17:36',
-                    unreadCount: 1,
-                    hasAvatar: true,
-                  ),
-                ],
-              ),
+              child: _isLoading
+                  ? ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      itemCount: 7,
+                      separatorBuilder: (context, index) => const SizedBox(height: 15),
+                      itemBuilder: (context, index) => const ChatItemShimmer(),
+                    )
+                  : _chats.isEmpty
+                      ? EmptyState(
+                          icon: Icons.chat_bubble_outline,
+                          title: 'No chats yet',
+                          message: 'Start a conversation with event organizers',
+                        )
+                      : RefreshIndicator(
+                      onRefresh: _refreshChats,
+                      color: AppColors.primary,
+                      backgroundColor: AppColors.surfaceContainerHighest,
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        itemCount: _chats.length,
+                        separatorBuilder: (context, index) => const SizedBox(height: 15),
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return _buildChatItem(
+                              name: 'GENfest',
+                              message: 'asperiores laboriosam volup...',
+                              time: '17:36',
+                              unreadCount: 5,
+                              isEvent: true,
+                            );
+                          } else if (index == 1) {
+                            return _buildChatItem(
+                              name: 'Generator Man',
+                              message: 'velit veniam et',
+                              time: '17:36',
+                              unreadCount: 3,
+                              hasAvatar: true,
+                            );
+                          } else if (index == 2) {
+                            return _buildChatItem(
+                              name: 'Matthew Boyle',
+                              message: 'distinctio qui necessitatibus',
+                              time: '17:36',
+                              unreadCount: 2,
+                              hasAvatar: true,
+                            );
+                          } else if (index == 3) {
+                            return _buildChatItem(
+                              name: 'Ejinne Seun',
+                              message: 'sint corporis debitis',
+                              time: '17:36',
+                              isTyping: true,
+                              hasAvatar: true,
+                            );
+                          } else if (index == 4) {
+                            return _buildChatItem(
+                              name: 'Bolu Shakur',
+                              message: 'debitis et qui',
+                              time: '17:36',
+                              hasAvatar: true,
+                            );
+                          } else if (index == 5) {
+                            return _buildChatItem(
+                              name: 'Jane Neigbour',
+                              message: 'optio fuga nemo',
+                              time: '17:36',
+                              hasAvatar: true,
+                            );
+                          } else {
+                            return _buildChatItem(
+                              name: 'Tuski Morgan',
+                              message: 'voluptatem tenetur eius',
+                              time: '17:36',
+                              unreadCount: 1,
+                              hasAvatar: true,
+                            );
+                          }
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
@@ -210,7 +246,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
     bool isEvent = false,
     bool hasAvatar = false,
   }) {
-    return Row(
+    return AnimatedButton(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        // Navigate to chat detail
+      },
+      child: Row(
       children: [
         // Avatar
         Container(
@@ -324,6 +365,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           ],
         ),
       ],
+      ),
     );
   }
 }

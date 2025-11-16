@@ -3,11 +3,31 @@ import 'dart:ui';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/presentation/widgets/common/app_bottom_nav.dart';
+import 'package:fajimobileapp/presentation/widgets/common/empty_state.dart';
+import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
+import 'package:fajimobileapp/presentation/widgets/common/event_card_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-class MyTicketsScreen extends StatelessWidget {
+class MyTicketsScreen extends StatefulWidget {
   const MyTicketsScreen({super.key});
+
+  @override
+  State<MyTicketsScreen> createState() => _MyTicketsScreenState();
+}
+
+class _MyTicketsScreenState extends State<MyTicketsScreen> {
+  List<String> _tickets = ['ticket1', 'ticket2']; // Mock data
+  bool _isLoading = false;
+
+  Future<void> _refreshTickets() async {
+    HapticFeedback.lightImpact();
+    setState(() => _isLoading = true);
+    // Simulate API call
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +87,11 @@ class MyTicketsScreen extends StatelessWidget {
             // Organize event button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: GestureDetector(
-                onTap: () => context.push(RouteManager.organizeEvent),
+              child: AnimatedButton(
+                onTap: () {
+                  HapticFeedback.mediumImpact();
+                  context.push(RouteManager.organizeEvent);
+                },
                 child: Container(
                   height: 69,
                   decoration: BoxDecoration(
@@ -105,14 +128,38 @@ class MyTicketsScreen extends StatelessWidget {
             const SizedBox(height: 14),
             // Tickets list
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                children: [
-                  _buildTicketCard(context, isLiked: false),
-                  const SizedBox(height: 14),
-                  _buildTicketCard(context, isLiked: true),
-                ],
-              ),
+              child: _isLoading
+                  ? ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      itemCount: 3,
+                      itemBuilder: (context, index) => Padding(
+                        padding: EdgeInsets.only(bottom: index < 2 ? 14 : 0),
+                        child: const TicketCardShimmer(),
+                      ),
+                    )
+                  : _tickets.isEmpty
+                      ? EmptyState(
+                          icon: Icons.confirmation_number_outlined,
+                          title: 'No tickets yet',
+                          message: 'Your purchased tickets will appear here',
+                        )
+                      : RefreshIndicator(
+                      onRefresh: _refreshTickets,
+                      color: AppColors.primary,
+                      backgroundColor: AppColors.surfaceContainerHighest,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        itemCount: _tickets.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: index < _tickets.length - 1 ? 14 : 0,
+                            ),
+                            child: _buildTicketCard(context, isLiked: index == 1),
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
@@ -229,17 +276,23 @@ class MyTicketsScreen extends StatelessWidget {
           Positioned(
             right: 16,
             top: 16,
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: isLiked ? Colors.black : Colors.black.withOpacity(0.38),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                isLiked ? Icons.favorite : Icons.favorite_border,
-                color: AppColors.onSurface,
-                size: 20,
+            child: AnimatedButton(
+              onTap: () {
+                HapticFeedback.mediumImpact();
+                // Toggle favorite
+              },
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: isLiked ? Colors.black : Colors.black.withOpacity(0.38),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: AppColors.onSurface,
+                  size: 20,
+                ),
               ),
             ),
           ),

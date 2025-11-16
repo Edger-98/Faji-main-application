@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toastification/toastification.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/presentation/presentation.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 void main() async {
   // Initialize the application
   await AppInitializer.initialize();
   
+  // Initialize SharedPreferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  
   // Run the app with Riverpod
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      overrides: [
+        // Override SharedPreferences provider
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: const MyApp(),
     ),
   );
 }
@@ -38,13 +48,15 @@ class MyApp extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp.router(
-          title: AppConstants.appName,
-          theme: FajiAppTheme.lightTheme,
-          darkTheme: FajiAppTheme.darkTheme,
-          themeMode: ThemeMode.dark, // Default to dark mode
-          routerConfig: AppRouter.router,
-          debugShowCheckedModeBanner: false,
+        return ToastificationWrapper(
+          child: MaterialApp.router(
+            title: AppConstants.appName,
+            theme: FajiAppTheme.lightTheme,
+            darkTheme: FajiAppTheme.darkTheme,
+            themeMode: ThemeMode.dark, // Default to dark mode
+            routerConfig: AppRouter.router,
+            debugShowCheckedModeBanner: false,
+          ),
         );
       },
     );

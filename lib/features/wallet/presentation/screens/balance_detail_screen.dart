@@ -16,9 +16,18 @@ class BalanceDetailScreen extends StatelessWidget {
           children: [
             _buildAppBar(context),
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  // Simulate refresh
+                  await Future.delayed(const Duration(seconds: 1));
+                  // TODO: Fetch latest balance from API
+                },
+                color: AppColors.primary,
+                backgroundColor: AppColors.surface,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 32),
@@ -33,6 +42,7 @@ class BalanceDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
+                ),
             ),
             _buildReviewButton(context),
           ],

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 /// Splash screen matching Figma design (node-id=1-286)
 class SplashScreen extends ConsumerStatefulWidget {
@@ -63,9 +64,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Future<void> _navigateToIntro() async {
-    await Future.delayed(const Duration(seconds: 3));
-    if (mounted) {
-      context.goNamed(RouteManager.introName);
+    await Future.delayed(const Duration(seconds: 2));
+    
+    if (!mounted) return;
+    
+    // Check if user has saved credentials
+    final localDataSource = ref.read(authLocalDataSourceProvider);
+    final userData = await localDataSource.getUserData();
+    final hasUserData = userData['email'] != null && userData['email']!.isNotEmpty;
+    
+    if (hasUserData) {
+      // User has logged in before, show welcome back screen
+      if (mounted) {
+        context.go(RouteManager.welcomeBack);
+      }
+    } else {
+      // First time user, show intro
+      if (mounted) {
+        context.go(RouteManager.intro);
+      }
     }
   }
 

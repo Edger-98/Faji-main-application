@@ -72,7 +72,6 @@ class HomeSearchBar extends StatelessWidget {
 
     if (result != null) {
       // TODO: Apply filters to event list
-      debugPrint('Filters applied: ${result.sortBy}, ${result.priceRange}');
     }
   }
 }

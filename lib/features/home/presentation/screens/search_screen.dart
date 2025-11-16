@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -44,8 +46,11 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () => context.pop(),
+                AnimatedButton(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.pop();
+                  },
                   child: Container(
                     width: 50.w,
                     height: 50.h,

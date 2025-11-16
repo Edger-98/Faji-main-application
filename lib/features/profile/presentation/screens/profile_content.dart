@@ -1,14 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
+import 'package:fajimobileapp/debug_data_screen.dart';
 
-class ProfileContent extends StatelessWidget {
+class ProfileContent extends ConsumerStatefulWidget {
   const ProfileContent({super.key});
 
   @override
+  ConsumerState<ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends ConsumerState<ProfileContent> {
+  String _userName = 'User';
+  String _userEmail = 'user@example.com';
+
+  @override
+  void initState() {
+    super.initState();
+    // Load user data after frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadUserData();
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    // First, try to load from saved data (faster)
+    final localDataSource = ref.read(authLocalDataSourceProvider);
+    final userData = await localDataSource.getUserData();
+    
+    if (userData['firstName'] != null && userData['email'] != null) {
+      if (mounted) {
+        setState(() {
+          _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
+          _userEmail = userData['email']!;
+        });
+      }
+    }
+    
+    // Then trigger auth check in background to refresh data
+    ref.read(authStateViewModelProvider.notifier).checkAuthStatus().then((_) {
+      final currentUser = ref.read(currentUserProvider);
+      
+      if (currentUser != null && mounted) {
+        setState(() {
+          _userName = '${currentUser.firstName} ${currentUser.lastName}';
+          _userEmail = currentUser.email;
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Watch for user changes
+    ref.listen(currentUserProvider, (previous, next) {
+      if (next != null) {
+        setState(() {
+          _userName = '${next.firstName} ${next.lastName}';
+          _userEmail = next.email;
+        });
+      }
+    });
+    
     return SafeArea(
       bottom: false,
       child: Column(
@@ -29,7 +88,15 @@ class ProfileContent extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(Icons.settings_outlined, size: 19.sp),
                     color: AppColors.onSurface,
-                    onPressed: () {},
+                    onPressed: () {
+                      // Temporary: Navigate to debug screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DebugDataScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -56,7 +123,7 @@ class ProfileContent extends StatelessWidget {
                 // Name
                 Center(
                   child: Text(
-                    'Rolling 5T0NES',
+                    _userName,
                     style: TextStyle(
                       fontFamily: 'PP Neue Montreal',
                       fontSize: 18.sp,
@@ -69,7 +136,7 @@ class ProfileContent extends StatelessWidget {
                 // Email
                 Center(
                   child: Text(
-                    'rolling5tones@gmail.com',
+                    _userEmail,
                     style: TextStyle(
                       fontFamily: 'PP Neue Montreal',
                       fontSize: 15.sp,
@@ -82,8 +149,6 @@ class ProfileContent extends StatelessWidget {
                 // Balance card
                 GestureDetector(
                     onTap: () {
-                      debugPrint('Balance card tapped!');
-                      debugPrint('Navigating to: ${RouteManager.walletBalance}');
                       context.push(RouteManager.walletBalance);
                     },
                   child: Container(
@@ -133,7 +198,15 @@ class ProfileContent extends StatelessWidget {
                 // Personal section
                 _buildSectionHeader('Personal'),
                 SizedBox(height: 3.h),
-                _buildMenuItem(context, Icons.person_outline, 'Account setting'),
+                _buildMenuItem(
+                  context, 
+                  Icons.person_outline, 
+                  'Account settings',
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.push(RouteManager.accountSettings);
+                  },
+                ),
                 _buildMenuItem(context, Icons.history, 'Events history'),
                 SizedBox(height: 10.h),
                 _buildDivider(),
@@ -204,7 +277,7 @@ class ProfileContent extends StatelessWidget {
   }
 
   Widget _buildMenuItem(BuildContext context, IconData icon, String title, {VoidCallback? onTap}) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.h),
