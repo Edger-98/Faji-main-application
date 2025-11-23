@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/presentation/widgets/common/app_bottom_nav.dart';
-import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
+
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 

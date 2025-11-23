@@ -8,17 +8,22 @@ import '../../data/datasources/auth_local_datasource.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/add_name_usecase.dart';
+import '../../domain/usecases/add_phone_usecase.dart';
+import '../../domain/usecases/complete_registration_usecase.dart';
 import '../../domain/usecases/delete_account_usecase.dart';
 import '../../domain/usecases/forget_password_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/get_user_by_id_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
+import '../../domain/usecases/register_email_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
 import '../../domain/usecases/send_otp_usecase.dart';
 import '../../domain/usecases/update_password_usecase.dart';
 import '../../domain/usecases/update_settings_usecase.dart';
 import '../../domain/usecases/verify_otp_usecase.dart';
+import '../../domain/usecases/verify_registration_otp_usecase.dart';
 
 // ============================================================================
 // Data Sources
@@ -135,4 +140,38 @@ final updateSettingsUseCaseProvider = Provider<UpdateSettingsUseCase>((ref) {
 final deleteAccountUseCaseProvider = Provider<DeleteAccountUseCase>((ref) {
   final repository = ref.watch(authRepositoryProvider);
   return DeleteAccountUseCase(repository);
+});
+
+// ============================================================================
+// Multi-Step Registration Use Cases
+// ============================================================================
+
+/// Register Email Use Case Provider (Step 1)
+final registerEmailUseCaseProvider = Provider<RegisterEmailUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return RegisterEmailUseCase(repository);
+});
+
+/// Verify Registration OTP Use Case Provider (Step 2)
+final verifyRegistrationOtpUseCaseProvider = Provider<VerifyRegistrationOtpUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return VerifyRegistrationOtpUseCase(repository);
+});
+
+/// Add Phone Use Case Provider (Step 3)
+final addPhoneUseCaseProvider = Provider<AddPhoneUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return AddPhoneUseCase(repository);
+});
+
+/// Add Name Use Case Provider (Step 4)
+final addNameUseCaseProvider = Provider<AddNameUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return AddNameUseCase(repository);
+});
+
+/// Complete Registration Use Case Provider (Step 5)
+final completeRegistrationUseCaseProvider = Provider<CompleteRegistrationUseCase>((ref) {
+  final repository = ref.watch(authRepositoryProvider);
+  return CompleteRegistrationUseCase(repository);
 });

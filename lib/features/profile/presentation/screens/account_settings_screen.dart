@@ -7,7 +7,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/services/toast_service.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
-import 'package:fajimobileapp/features/auth/domain/usecases/update_settings_usecase.dart';
 
 /// Account Settings Screen
 class AccountSettingsScreen extends ConsumerStatefulWidget {

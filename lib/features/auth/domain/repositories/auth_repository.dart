@@ -2,10 +2,50 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
 import '../entities/auth_token_entity.dart';
+import '../entities/registration_complete_entity.dart';
+import '../entities/registration_session_entity.dart';
+import '../entities/registration_token_entity.dart';
 import '../entities/user_entity.dart';
 
 /// Auth repository interface - domain layer
 abstract class AuthRepository {
+  // ========== Multi-Step Registration Flow ==========
+  
+  /// Step 1: Register email and get session ID
+  Future<Either<Failure, RegistrationSessionEntity>> registerEmail({
+    required String email,
+  });
+
+  /// Step 2: Verify OTP and get registration token
+  Future<Either<Failure, RegistrationTokenEntity>> verifyRegistrationOtp({
+    required String email,
+    required String otp,
+    required String sessionId,
+  });
+
+  /// Step 3: Add phone number
+  Future<Either<Failure, RegistrationTokenEntity>> addPhone({
+    required String phoneNo,
+    required String registrationToken,
+  });
+
+  /// Step 4: Add name
+  Future<Either<Failure, RegistrationTokenEntity>> addName({
+    required String firstName,
+    required String lastName,
+    required String registrationToken,
+  });
+
+  /// Step 5: Complete registration with password
+  Future<Either<Failure, RegistrationCompleteEntity>> completeRegistration({
+    required String password,
+    required String role,
+    required String registrationToken,
+    bool pushNotificationsEnabled,
+  });
+
+  // ========== Original Methods ==========
+  
   /// Login with email and password
   Future<Either<Failure, AuthTokenEntity>> login({
     required String email,

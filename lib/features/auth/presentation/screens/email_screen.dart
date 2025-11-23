@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/registration_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/back_button_widget.dart';
 
@@ -45,8 +46,39 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
     }
   }
 
+  Future<void> _handleContinue() async {
+    if (!_isEmailValid) return;
+
+    FocusScope.of(context).unfocus();
+    
+    // Call the registration viewmodel
+    await ref.read(registrationViewModelProvider.notifier).registerEmail(_emailController.text);
+    
+    // Check the result
+    final state = ref.read(registrationViewModelProvider);
+    state.stepState.when(
+      initial: () {},
+      loading: () {},
+      success: (_) {
+        // Navigate to OTP screen
+        context.goNamed(RouteManager.authPinName);
+      },
+      error: (failure) {
+        // Show error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(failure.message)),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final registrationState = ref.watch(registrationViewModelProvider);
+    final isLoading = registrationState.stepState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
     return Scaffold(
       backgroundColor: context.colors.surface,
       body: GestureDetector(
@@ -142,14 +174,10 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
               
               // Continue button
               AuthButton(
-                text: 'Continue',
+                text: isLoading ? 'Sending...' : 'Continue',
                 height: 59.h, // Responsive height
-                onPressed: () {
-                  if (_isEmailValid) {
-                    context.goNamed(RouteManager.authPinName);
-                  }
-                },
-                isEnabled: _isEmailValid,
+                onPressed: isLoading ? null : _handleContinue,
+                isEnabled: _isEmailValid && !isLoading,
               ),
               
               SizedBox(height: 32.h), // Responsive bottom padding

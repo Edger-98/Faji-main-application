@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/registration_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/back_button_widget.dart';
 
@@ -266,20 +267,40 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
                         AnimatedOpacity(
                           opacity: _isPhoneValid ? 1.0 : 0.5,
                           duration: const Duration(milliseconds: 300),
-                          child: AuthButton(
-                            text: 'Continue',
-                            height: 59,
-                            onPressed: () {
-                              if (_isPhoneValid) {
-                                try {
-                                  context.goNamed(RouteManager.authPinName);
-                                } catch (e) {
-                                  // Fallback to path-based navigation
-                                  context.go(RouteManager.authPin);
-                                }
-                              }
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final registrationState = ref.watch(registrationViewModelProvider);
+                              final isLoading = registrationState.stepState.maybeWhen(
+                                loading: () => true,
+                                orElse: () => false,
+                              );
+                              
+                              return AuthButton(
+                                text: isLoading ? 'Saving...' : 'Continue',
+                                height: 59,
+                                onPressed: isLoading ? null : () async {
+                                  if (_isPhoneValid) {
+                                    final fullPhone = '+${_selectedCountry.phoneCode}${_phoneController.text}';
+                                    await ref.read(registrationViewModelProvider.notifier).addPhone(fullPhone);
+                                    
+                                    final state = ref.read(registrationViewModelProvider);
+                                    state.stepState.when(
+                                      initial: () {},
+                                      loading: () {},
+                                      success: (_) {
+                                        context.goNamed(RouteManager.authNameName);
+                                      },
+                                      error: (failure) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(failure.message)),
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                isEnabled: _isPhoneValid && !isLoading,
+                              );
                             },
-                            isEnabled: _isPhoneValid,
                           ),
                         ),
                         

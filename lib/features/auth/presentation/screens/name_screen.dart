@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/registration_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/back_button_widget.dart';
 
@@ -92,6 +93,12 @@ class _NameScreenState extends ConsumerState<NameScreen>
 
   @override
   Widget build(BuildContext context) {
+    final registrationState = ref.watch(registrationViewModelProvider);
+    final isLoading = registrationState.stepState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
+    
     return Scaffold(
       backgroundColor: context.colors.surface,
       body: GestureDetector(
@@ -183,13 +190,13 @@ class _NameScreenState extends ConsumerState<NameScreen>
 
                         // Continue button - positioned at x: 24, y: 717
                         AnimatedOpacity(
-                          opacity: _isFormValid ? 1.0 : 0.5,
+                          opacity: _isFormValid && !isLoading ? 1.0 : 0.5,
                           duration: const Duration(milliseconds: 300),
                           child: AuthButton(
-                            text: 'Continue',
+                            text: isLoading ? 'Saving...' : 'Continue',
                             height: 59.h,
-                            onPressed: _isFormValid ? _handleContinue : null,
-                            isEnabled: _isFormValid,
+                            onPressed: (_isFormValid && !isLoading) ? _handleContinue : null,
+                            isEnabled: _isFormValid && !isLoading,
                           ),
                         ),
 
@@ -206,9 +213,32 @@ class _NameScreenState extends ConsumerState<NameScreen>
     );
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
+    if (!_isFormValid) return;
+    
     FocusScope.of(context).unfocus();
-    // Navigate to password screen
-    context.goNamed(RouteManager.authPasswordName);
+    
+    // Call the registration viewmodel
+    await ref.read(registrationViewModelProvider.notifier).addName(
+      _firstNameController.text.trim(),
+      _lastNameController.text.trim(),
+    );
+    
+    // Check the result
+    final state = ref.read(registrationViewModelProvider);
+    state.stepState.when(
+      initial: () {},
+      loading: () {},
+      success: (_) {
+        // Navigate to password screen
+        context.goNamed(RouteManager.authPasswordName);
+      },
+      error: (failure) {
+        // Show error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(failure.message)),
+        );
+      },
+    );
   }
 }

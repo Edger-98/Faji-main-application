@@ -6,11 +6,17 @@ import 'package:dio/dio.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/auth_token_entity.dart';
+import '../../domain/entities/registration_complete_entity.dart';
+import '../../domain/entities/registration_session_entity.dart';
+import '../../domain/entities/registration_token_entity.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/auth_token_model.dart';
+import '../models/registration_complete_model.dart';
+import '../models/registration_session_model.dart';
+import '../models/registration_token_model.dart';
 import '../models/user_model.dart';
 
 /// Auth repository implementation
@@ -24,6 +30,182 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.localDataSource,
     required this.networkInfo,
   });
+
+  // ========== Multi-Step Registration Flow ==========
+
+  @override
+  Future<Either<Failure, RegistrationSessionEntity>> registerEmail({
+    required String email,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final response = await remoteDataSource.registerEmail({'email': email});
+
+      if (response.response.statusCode == 200) {
+        final responseData = response.data as Map<String, dynamic>;
+        final data = responseData['data'] ?? responseData;
+        final model = RegistrationSessionModel.fromJson(data);
+        return Right(model.toEntity());
+      } else {
+        return Left(ServerFailure(message: 'Failed to register email'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RegistrationTokenEntity>> verifyRegistrationOtp({
+    required String email,
+    required String otp,
+    required String sessionId,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final response = await remoteDataSource.verifyRegistrationOtp({
+        'email': email,
+        'otp': otp,
+        'sessionId': sessionId,
+      });
+
+      if (response.response.statusCode == 200) {
+        final responseData = response.data as Map<String, dynamic>;
+        final data = responseData['data'] ?? responseData;
+        final model = RegistrationTokenModel.fromJson(data);
+        return Right(model.toEntity());
+      } else {
+        return Left(ServerFailure(message: 'Failed to verify OTP'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RegistrationTokenEntity>> addPhone({
+    required String phoneNo,
+    required String registrationToken,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final response = await remoteDataSource.addPhone({
+        'phoneNo': phoneNo,
+        'registrationToken': registrationToken,
+      });
+
+      if (response.response.statusCode == 200) {
+        final responseData = response.data as Map<String, dynamic>;
+        final data = responseData['data'] ?? responseData;
+        final model = RegistrationTokenModel.fromJson(data);
+        return Right(model.toEntity());
+      } else {
+        return Left(ServerFailure(message: 'Failed to add phone number'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RegistrationTokenEntity>> addName({
+    required String firstName,
+    required String lastName,
+    required String registrationToken,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final response = await remoteDataSource.addName({
+        'firstName': firstName,
+        'lastName': lastName,
+        'registrationToken': registrationToken,
+      });
+
+      if (response.response.statusCode == 200) {
+        final responseData = response.data as Map<String, dynamic>;
+        final data = responseData['data'] ?? responseData;
+        final model = RegistrationTokenModel.fromJson(data);
+        return Right(model.toEntity());
+      } else {
+        return Left(ServerFailure(message: 'Failed to add name'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, RegistrationCompleteEntity>> completeRegistration({
+    required String password,
+    required String role,
+    required String registrationToken,
+    bool pushNotificationsEnabled = false,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final response = await remoteDataSource.completeRegistration({
+        'password': password,
+        'role': role,
+        'registrationToken': registrationToken,
+        'pushNotificationsEnabled': pushNotificationsEnabled,
+      });
+
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        final responseData = response.data as Map<String, dynamic>;
+        
+        // The normalizer wraps the response as: {success: true, message: "...", data: {...}}
+        // Extract the data field which contains the actual registration response
+        final data = responseData['data'] as Map<String, dynamic>? ?? responseData;
+        
+        // Parse the registration complete model
+        final model = RegistrationCompleteModel.fromJson(data);
+        
+        // Save auth data
+        await saveAuthData(model.token, model.userId);
+        
+        // Save user data locally
+        await localDataSource.saveUserData(
+          model.user.firstName,
+          model.user.lastName,
+          model.user.email,
+          phoneNo: model.user.phoneNo,
+        );
+        
+        return Right(model.toEntity());
+      } else {
+        return Left(ServerFailure(message: 'Failed to complete registration'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  // ========== Original Methods ==========
+
 
   @override
   Future<Either<Failure, AuthTokenEntity>> login({

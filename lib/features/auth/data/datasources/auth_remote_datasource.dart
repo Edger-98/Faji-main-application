@@ -14,6 +14,40 @@ abstract class AuthRemoteDataSource {
   factory AuthRemoteDataSource(Dio dio, {String baseUrl}) =
       _AuthRemoteDataSource;
 
+  // ========== Multi-Step Registration Flow ==========
+
+  /// Step 1: Register email
+  @POST('/api/auth/register/email')
+  Future<HttpResponse<dynamic>> registerEmail(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Step 2: Verify OTP
+  @POST('/api/auth/register/verify-otp')
+  Future<HttpResponse<dynamic>> verifyRegistrationOtp(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Step 3: Add phone number
+  @POST('/api/auth/register/phone')
+  Future<HttpResponse<dynamic>> addPhone(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Step 4: Add name
+  @POST('/api/auth/register/name')
+  Future<HttpResponse<dynamic>> addName(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Step 5: Complete registration
+  @POST('/api/auth/register/complete')
+  Future<HttpResponse<dynamic>> completeRegistration(
+    @Body() Map<String, dynamic> body,
+  );
+
+  // ========== Original Methods ==========
+
   /// Sign in with email and password
   @POST('/api/auth/login')
   Future<HttpResponse<dynamic>> login(

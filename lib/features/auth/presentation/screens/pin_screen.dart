@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/services/toast_service.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/registration_viewmodel.dart';
 
 // Haptic feedback helper
 void _triggerHaptic() {
@@ -62,10 +63,24 @@ class _PinScreenState extends ConsumerState<PinScreen>
     });
   }
 
-  void _resendCode() {
+  Future<void> _resendCode() async {
     if (!_canResend) return;
 
     HapticFeedback.mediumImpact();
+    
+    // Get email from registration state
+    final email = ref.read(registrationViewModelProvider).email;
+    if (email == null) {
+      ToastService.showError(
+        context: context,
+        message: 'Email not found. Please start over.',
+      );
+      return;
+    }
+
+    // Resend OTP
+    await ref.read(registrationViewModelProvider.notifier).registerEmail(email);
+    
     setState(() {
       _canResend = false;
       _resendCountdown = 60;
@@ -76,6 +91,36 @@ class _PinScreenState extends ConsumerState<PinScreen>
       context: context,
       message: 'Verification code sent!',
       duration: const Duration(seconds: 2),
+    );
+  }
+
+  Future<void> _verifyOtp(String otp) async {
+    // Call the registration viewmodel
+    await ref.read(registrationViewModelProvider.notifier).verifyOtp(otp);
+    
+    // Check the result
+    final state = ref.read(registrationViewModelProvider);
+    state.stepState.when(
+      initial: () {},
+      loading: () {},
+      success: (_) {
+        // Navigate to phone screen
+        if (mounted) {
+          context.goNamed(RouteManager.authPhoneName);
+        }
+      },
+      error: (failure) {
+        // Show error and clear PIN
+        if (mounted) {
+          ToastService.showError(
+            context: context,
+            message: failure.message,
+          );
+          setState(() {
+            _pinController.clear();
+          });
+        }
+      },
     );
   }
 
@@ -144,14 +189,19 @@ class _PinScreenState extends ConsumerState<PinScreen>
 
                     const SizedBox(height: 16),
 
-                    const Text(
-                      'We sent a verification code to your email\nchineme@gmail.com',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w100,
-                        height: 1.2,
-                        color: Color(0xFFA1A1A1),
-                      ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final email = ref.watch(registrationViewModelProvider).email ?? 'your email';
+                        return Text(
+                          'We sent a verification code to your email\n$email',
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w100,
+                            height: 1.2,
+                            color: Color(0xFFA1A1A1),
+                          ),
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 81),
@@ -267,14 +317,8 @@ class _PinScreenState extends ConsumerState<PinScreen>
                                             .then((_) {
                                           _successAnimationController.reverse();
                                         });
-                                        Future.delayed(
-                                            const Duration(milliseconds: 400),
-                                                () {
-                                              if (mounted) {
-                                                context.goNamed(
-                                                    RouteManager.authNameName);
-                                              }
-                                            });
+                                        // Verify OTP
+                                        _verifyOtp(value);
                                       }
                                     },
                                     style: const TextStyle(
@@ -339,7 +383,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
                     // Continue button
                     GestureDetector(
                       onTap: pin.length == 6
-                          ? () => context.goNamed(RouteManager.authNameName)
+                          ? () => _verifyOtp(pin)
                           : null,
                       child: Container(
                         width: double.infinity,

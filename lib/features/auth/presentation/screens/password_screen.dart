@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_complete_entity.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
+import 'package:fajimobileapp/features/auth/presentation/viewmodels/registration_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/auth_button.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/back_button_widget.dart';
 
@@ -88,6 +91,12 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
 
   @override
   Widget build(BuildContext context) {
+    final registrationState = ref.watch(registrationViewModelProvider);
+    final isLoading = registrationState.stepState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
+    
     return Scaffold(
       backgroundColor: context.colors.surface,
       body: GestureDetector(
@@ -220,13 +229,13 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
 
                         // Continue button - positioned at x: 24, y: 717
                         AnimatedOpacity(
-                          opacity: _isPasswordValid ? 1.0 : 0.5,
+                          opacity: _isPasswordValid && !isLoading ? 1.0 : 0.5,
                           duration: const Duration(milliseconds: 300),
                           child: AuthButton(
-                            text: 'Continue',
+                            text: isLoading ? 'Creating Account...' : 'Continue',
                             height: 59.h,
-                            onPressed: _isPasswordValid ? _handleContinue : null,
-                            isEnabled: _isPasswordValid,
+                            onPressed: (_isPasswordValid && !isLoading) ? _handleContinue : null,
+                            isEnabled: _isPasswordValid && !isLoading,
                           ),
                         ),
 
@@ -243,9 +252,46 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
     );
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
+    if (!_isPasswordValid) return;
+    
     FocusScope.of(context).unfocus();
-    // Navigate to home or complete registration
-    context.goNamed(RouteManager.homeName);
+    
+    // Complete registration with password
+    // Default role is "Attendee" - you can add a role selector if needed
+    await ref.read(registrationViewModelProvider.notifier).completeRegistration(
+      _passwordController.text,
+      'Attendee', // Default role
+    );
+    
+    // Check the result
+    final state = ref.read(registrationViewModelProvider);
+    state.stepState.when(
+      initial: () {},
+      loading: () {},
+      success: (complete) async {
+        // Registration complete! Update auth state
+        if (complete is RegistrationCompleteEntity) {
+          // Set the user in auth state
+          ref.read(authStateViewModelProvider.notifier).setUser(complete.user);
+          
+          // Verify auth status is updated
+          await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
+          
+          // Navigate to home screen (replace entire stack)
+          if (mounted) {
+            context.goNamed(RouteManager.homeName);
+          }
+        }
+      },
+      error: (failure) {
+        // Show error
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(failure.message)),
+          );
+        }
+      },
+    );
   }
 }
