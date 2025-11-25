@@ -1,0 +1,893 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/event_creation_providers.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/widgets/step_progress_indicator.dart';
+
+/// Step 1: Create Event Details Screen
+class CreateEventDetailsScreen extends ConsumerStatefulWidget {
+  const CreateEventDetailsScreen({super.key});
+
+  @override
+  ConsumerState<CreateEventDetailsScreen> createState() =>
+      _CreateEventDetailsScreenState();
+}
+
+class _CreateEventDetailsScreenState
+    extends ConsumerState<CreateEventDetailsScreen>
+    with SingleTickerProviderStateMixin {
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _websiteLinkController = TextEditingController();
+  final _rsvpButtonController =
+      TextEditingController(text: 'Celebrate With Us');
+  DateTime? _startDate;
+  DateTime? _endDate;
+  bool _setDateLater = false;
+
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic),
+      ),
+    );
+
+    _animationController.forward();
+
+    // Load saved data if any
+    final state = ref.read(eventCreationViewModelProvider);
+    if (state.eventData.title != null) {
+      _titleController.text = state.eventData.title!;
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _websiteLinkController.dispose();
+    _rsvpButtonController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectStartDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _startDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.primary,
+              onPrimary: AppColors.onPrimary,
+              surface: AppColors.surface,
+              onSurface: AppColors.onSurface,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _startDate = picked;
+      });
+      ref.read(eventCreationViewModelProvider.notifier).updateEventDate(picked);
+    }
+  }
+
+  Future<void> _selectEndDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _endDate ?? _startDate ?? DateTime.now(),
+      firstDate: _startDate ?? DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.primary,
+              onPrimary: AppColors.onPrimary,
+              surface: AppColors.surface,
+              onSurface: AppColors.onSurface,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _endDate = picked;
+      });
+    }
+  }
+
+  void _handleNext() {
+    final viewModel = ref.read(eventCreationViewModelProvider.notifier);
+
+    // Update all fields
+    viewModel.updateTitle(_titleController.text);
+    viewModel.updateDescription(_descriptionController.text);
+
+    // Validate
+    if (_titleController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please give your event a name'),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        ),
+      );
+      return;
+    }
+
+    if (!_setDateLater && _startDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              const Text('Please set a start date or choose "Set a date later"'),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        ),
+      );
+      return;
+    }
+
+    viewModel.nextStep();
+  }
+
+  void _handlePrevious() {
+    ref.read(eventCreationViewModelProvider.notifier).previousStep();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(eventCreationViewModelProvider);
+    final eventType = state.eventData.eventType ?? 'Event';
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Column(
+            children: [
+              // Header with back button and progress
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        color:
+                            AppColors.surfaceContainerHighest.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_ios_new, size: 18.sp),
+                        color: AppColors.onSurface,
+                        padding: EdgeInsets.zero,
+                        onPressed: _handlePrevious,
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    const Expanded(
+                      child: StepProgressIndicator(
+                        currentStep: 1,
+                        totalSteps: 5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    children: [
+                      SizedBox(height: 20.h),
+
+                      // Title
+                      Text(
+                        'Bring your\nmoment to life',
+                        style: TextStyle(
+                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontSize: 42.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.onSurface,
+                          height: 1.1,
+                          letterSpacing: -1.2,
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+
+                      // Subtitle
+                      Text(
+                        'Fill in the details to craft your perfect $eventType\nand create lasting memories.',
+                        style: TextStyle(
+                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.onSurfaceVariant.withOpacity(0.8),
+                          height: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 40.h),
+
+                      // Event Name Field
+                      _buildAnimatedField(
+                        delay: 100,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Give this $eventType a name',
+                              style: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primary,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            _buildStyledTextField(
+                              controller: _titleController,
+                              hintText: 'Give this $eventType a name',
+                              hintStyle: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.onSurfaceVariant
+                                    .withOpacity(0.4),
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // Date + Time Section
+                      _buildAnimatedField(
+                        delay: 200,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Date + Time',
+                                  style: TextStyle(
+                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        AppColors.onSurface.withOpacity(0.7),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _setDateLater = !_setDateLater;
+                                      if (_setDateLater) {
+                                        _startDate = null;
+                                        _endDate = null;
+                                      }
+                                    });
+                                  },
+                                  child: Text(
+                                    'Set a date later',
+                                    style: TextStyle(
+                                      fontFamily: AppTypography.ppNeueMontreal,
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: _setDateLater
+                                          ? AppColors.primary
+                                          : const Color(0xFFFF8C42),
+                                      decoration: _setDateLater
+                                          ? TextDecoration.underline
+                                          : null,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+                            Container(
+                              padding: EdgeInsets.all(20.w),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2A2A2A),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                  color: const Color(0xFF3A3A3A),
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildDateRow(
+                                    label: 'Start',
+                                    date: _startDate,
+                                    dateLabel: 'Start Date',
+                                    onTap: _setDateLater
+                                        ? null
+                                        : _selectStartDate,
+                                    isStart: true,
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  _buildDateRow(
+                                    label: 'End',
+                                    date: _endDate,
+                                    dateLabel: 'End Date',
+                                    onTap:
+                                        _setDateLater ? null : _selectEndDate,
+                                    isStart: false,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // Event Website Link
+                      _buildAnimatedField(
+                        delay: 300,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Event Website Link (shared with guests)',
+                              style: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.onSurface.withOpacity(0.7),
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            _buildWebsiteLinkField(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // RSVP Button Title
+                      _buildAnimatedField(
+                        delay: 400,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'RSVP Button Title (for your event link)',
+                              style: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.onSurface.withOpacity(0.7),
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            _buildRSVPButtonField(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // Description
+                      _buildAnimatedField(
+                        delay: 500,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Describe your event',
+                              style: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.onSurface.withOpacity(0.7),
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            _buildDescriptionField(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 60.h),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Bottom Navigation
+              Container(
+                padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
+                decoration: BoxDecoration(
+                  color: AppColors.background,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, -5),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: _handlePrevious,
+                        child: Container(
+                          height: 56.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceContainerHighest
+                                .withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(28.r),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Previous',
+                              style: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.onSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                        onTap: _handleNext,
+                        child: Container(
+                          height: 56.h,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(28.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withOpacity(0.3),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Next',
+                              style: TextStyle(
+                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimatedField({required int delay, required Widget child}) {
+    return TweenAnimationBuilder<double>(
+      duration: Duration(milliseconds: 600 + delay),
+      tween: Tween(begin: 0.0, end: 1.0),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: child,
+    );
+  }
+
+  Widget _buildStyledTextField({
+    required TextEditingController controller,
+    required String hintText,
+    TextStyle? hintStyle,
+    Widget? suffixIcon,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A), // Darker, more visible background
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: const Color(0xFF3A3A3A), // Subtle border for definition
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              style: TextStyle(
+                fontFamily: AppTypography.ppNeueMontreal,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.onSurface,
+              ),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: hintStyle ??
+                    TextStyle(
+                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.onSurfaceVariant.withOpacity(0.5),
+                    ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+                isDense: true,
+              ),
+              onChanged: (value) => setState(() {}),
+            ),
+          ),
+          if (suffixIcon != null) suffixIcon,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateRow({
+    required String label,
+    required DateTime? date,
+    required String dateLabel,
+    required VoidCallback? onTap,
+    required bool isStart,
+  }) {
+    return Row(
+      children: [
+        Column(
+          children: [
+            Container(
+              width: 12.w,
+              height: 12.h,
+              decoration: BoxDecoration(
+                color: date != null
+                    ? AppColors.primary
+                    : AppColors.onSurface.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+            ),
+            if (!isStart)
+              Container(
+                width: 2.w,
+                height: 20.h,
+                color: AppColors.onSurface.withOpacity(0.2),
+                margin: EdgeInsets.symmetric(vertical: 4.h),
+              ),
+          ],
+        ),
+        SizedBox(width: 16.w),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: AppTypography.ppNeueMontreal,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: date != null
+                  ? AppColors.primary.withOpacity(0.15)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(
+                color: date != null
+                    ? AppColors.primary.withOpacity(0.3)
+                    : AppColors.onSurface.withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              date != null
+                  ? '${date.day}/${date.month}/${date.year}'
+                  : dateLabel,
+              style: TextStyle(
+                fontFamily: AppTypography.ppNeueMontreal,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: date != null
+                    ? AppColors.primary
+                    : AppColors.onSurface.withOpacity(0.5),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWebsiteLinkField() {
+    final isLinkValid = _websiteLinkController.text.isNotEmpty;
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: const Color(0xFF3A3A3A),
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.link_rounded,
+                color: const Color(0xFFFF8C42),
+                size: 20.sp,
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                'pv.rsvp/',
+                style: TextStyle(
+                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.onSurface.withOpacity(0.7),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _websiteLinkController,
+                  style: TextStyle(
+                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.onSurface,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'sdggy',
+                    hintStyle: TextStyle(
+                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.onSurfaceVariant.withOpacity(0.4),
+                    ),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.zero,
+                    isDense: true,
+                  ),
+                  onChanged: (value) => setState(() {}),
+                ),
+              ),
+              if (isLinkValid)
+                Icon(
+                  Icons.check_circle,
+                  color: const Color(0xFF4CAF50),
+                  size: 20.sp,
+                ),
+            ],
+          ),
+          if (isLinkValid) ...[
+            SizedBox(height: 12.h),
+            Row(
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: const Color(0xFF4CAF50),
+                  size: 16.sp,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  'This link is available!',
+                  style: TextStyle(
+                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFF4CAF50),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRSVPButtonField() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: const Color(0xFF3A3A3A),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _rsvpButtonController,
+              style: TextStyle(
+                fontFamily: AppTypography.ppNeueMontreal,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.onSurface,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Celebrate With Us',
+                hintStyle: TextStyle(
+                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.onSurfaceVariant.withOpacity(0.5),
+                ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+                isDense: true,
+              ),
+            ),
+          ),
+          Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: AppColors.onSurface.withOpacity(0.5),
+            size: 24.sp,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDescriptionField() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2A2A),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: const Color(0xFF3A3A3A),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _descriptionController,
+              maxLines: 3,
+              minLines: 1,
+              style: TextStyle(
+                fontFamily: AppTypography.ppNeueMontreal,
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.onSurface,
+              ),
+              decoration: InputDecoration(
+                hintText: 'What would you like to say about it (optional)',
+                hintStyle: TextStyle(
+                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.onSurfaceVariant.withOpacity(0.4),
+                  fontStyle: FontStyle.italic,
+                ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+                isDense: true,
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
+          GestureDetector(
+            onTap: () {
+              // TODO: Implement AI generation
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF7B68EE), Color(0xFF9B7FFF)],
+                ),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Generate',
+                    style: TextStyle(
+                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 4.w),
+                  Icon(
+                    Icons.auto_awesome,
+                    color: Colors.white,
+                    size: 14.sp,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

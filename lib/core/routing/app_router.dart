@@ -17,6 +17,10 @@ import 'package:fajimobileapp/features/events/presentation/screens/my_events_scr
 import 'package:fajimobileapp/features/events/presentation/screens/favorites_screen.dart' as events_favorites;
 import 'package:fajimobileapp/features/tickets/tickets.dart';
 import 'package:fajimobileapp/features/organize_event/organize_event.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/screens/event_creation_flow_screen.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/resource_categories_screen.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/cohost_list_screen.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resource_category.dart';
 import 'package:fajimobileapp/features/chat/chat.dart';
 import 'package:fajimobileapp/features/profile/profile.dart';
 import 'package:fajimobileapp/features/support/support.dart';
@@ -302,7 +306,7 @@ class AppRouter {
         ),
       ),
       
-      // Organize Event route
+      // Organize Event route (legacy)
       GoRoute(
         path: RouteManager.organizeEvent,
         name: RouteManager.organizeEventName,
@@ -311,6 +315,42 @@ class AppRouter {
           state,
           const OrganizeEventScreen(),
         ),
+      ),
+      
+      // Event Creation Flow route (new multi-step flow)
+      GoRoute(
+        path: RouteManager.eventCreationFlow,
+        name: RouteManager.eventCreationFlowName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const EventCreationFlowScreen(),
+        ),
+      ),
+      
+      // Resource Categories route (Co-host marketplace)
+      GoRoute(
+        path: RouteManager.resourceCategories,
+        name: RouteManager.resourceCategoriesName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const ResourceCategoriesScreen(),
+        ),
+      ),
+      
+      // Co-host List route
+      GoRoute(
+        path: RouteManager.cohostList,
+        name: RouteManager.cohostListName,
+        pageBuilder: (context, state) {
+          final category = state.extra as ResourceCategory;
+          return _buildPageWithTransition(
+            context,
+            state,
+            CohostListScreen(category: category),
+          );
+        },
       ),
       
       // Favorites route

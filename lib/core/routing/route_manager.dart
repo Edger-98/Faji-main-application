@@ -26,6 +26,9 @@ class RouteManager {
   static const String search = '/search';
   static const String myTickets = '/my-tickets';
   static const String organizeEvent = '/organize-event';
+  static const String eventCreationFlow = '/event-creation-flow';
+  static const String resourceCategories = '/resource-categories';
+  static const String cohostList = '/cohost-list';
   static const String favorites = '/favorites';
   static const String chatList = '/chat-list';
   static const String chatDetail = '/chat-detail';
@@ -64,6 +67,9 @@ class RouteManager {
   static const String searchName = 'search';
   static const String myTicketsName = 'my-tickets';
   static const String organizeEventName = 'organize-event';
+  static const String eventCreationFlowName = 'event-creation-flow';
+  static const String resourceCategoriesName = 'resource-categories';
+  static const String cohostListName = 'cohost-list';
   static const String favoritesName = 'favorites';
   static const String chatListName = 'chat-list';
   static const String chatDetailName = 'chat-detail';

@@ -90,7 +90,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
               child: AnimatedButton(
                 onTap: () {
                   HapticFeedback.mediumImpact();
-                  context.push(RouteManager.organizeEvent);
+                  context.push(RouteManager.eventCreationFlow);
                 },
                 child: Container(
                   height: 69,

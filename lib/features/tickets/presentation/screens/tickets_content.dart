@@ -49,9 +49,12 @@ class TicketsContent extends StatelessWidget {
           SizedBox(height: 6.h),
           // Organize event button
           Padding(
+
+            //     HapticFeedback.mediumImpact();
+            //                   context.push(RouteManager.eventCreationFlow);
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: GestureDetector(
-              onTap: () => context.push(RouteManager.organizeEvent),
+              onTap: () => context.push(RouteManager.eventCreationFlow),
               child: Container(
                 height: 69.h,
                 decoration: BoxDecoration(
