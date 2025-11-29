@@ -60,20 +60,109 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
   void _handleContinue() {
     if (_selectedCategories.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one category'),
+        SnackBar(
+          content: const Text('Please select at least one category'),
           backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
         ),
       );
       return;
     }
 
-    // Navigate to co-host list for the first selected category
-    // In a full implementation, we'd handle multiple categories
-    final ResourceCategory firstCategory = _selectedCategories.first;
-    context.push(
-      RouteManager.cohostList,
-      extra: firstCategory,
+    // Show options: Browse vendors or Skip
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1A1A1A),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (context) => Container(
+        padding: EdgeInsets.all(24.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'What would you like to do?',
+              style: TextStyle(
+                fontFamily: AppTypography.ppNeueMontreal,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.onSurface,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            
+            // Browse vendors button
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                final ResourceCategory firstCategory = _selectedCategories.first;
+                context.push(
+                  RouteManager.cohostList,
+                  extra: firstCategory,
+                ).then((_) {
+                  // After browsing vendors, go back and continue event creation
+                  Navigator.pop(context);
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 18.h),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Center(
+                  child: Text(
+                    'Browse Vendors Now',
+                    style: TextStyle(
+                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 12.h),
+            
+            // Skip and continue button
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context); // Close bottom sheet
+                Navigator.pop(context); // Go back to event config screen
+                // The event config screen will automatically continue to next step
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 18.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2A2A2A),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: const Color(0xFF3A3A3A),
+                    width: 1.5,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    'Skip for Now & Continue',
+                    style: TextStyle(
+                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resource_category.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/cohost_resource_entity.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/data/mock_cohost_data.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/vendor_profile_screen.dart';
 
 /// Screen showing list of co-hosts for a specific category
 class CohostListScreen extends StatefulWidget {
@@ -114,11 +115,12 @@ class _CohostListScreenState extends State<CohostListScreen> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20.r),
                         onTap: () {
-                          // TODO: Navigate to co-host profile screen
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('View ${resource.cohostName}\'s profile'),
-                              backgroundColor: AppColors.primary,
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VendorProfileScreen(
+                                resource: resource,
+                              ),
                             ),
                           );
                         },

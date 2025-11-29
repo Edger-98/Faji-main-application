@@ -36,16 +36,23 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
       // Check if co-host marketplace is enabled
       if (state.eventData.enableCohostMarketplace) {
         // Navigate to resource categories screen using GoRouter
-        context.push(RouteManager.resourceCategories);
+        context.push(RouteManager.resourceCategories).then((_) {
+          // After returning from vendor selection, continue to next step
+          viewModel.nextStep();
+        });
       } else {
         // Continue to next step (poster selection)
         viewModel.nextStep();
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter expected number of guests'),
+        SnackBar(
+          content: const Text('Please enter expected number of guests'),
           backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
         ),
       );
     }
@@ -279,7 +286,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                   ),
                   SizedBox(height: 32.h),
 
-                  // Features section
+                  // Features sectionf
                   AppText.bodyMedium(
                     'Features you might need',
                     color: AppColors.onSurface,

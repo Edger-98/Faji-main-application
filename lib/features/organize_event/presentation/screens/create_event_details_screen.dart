@@ -315,18 +315,48 @@ class _CreateEventDetailsScreenState
                                       }
                                     });
                                   },
-                                  child: Text(
-                                    'Set a date later',
-                                    style: TextStyle(
-                                      fontFamily: AppTypography.ppNeueMontreal,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500,
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                      vertical: 6.h,
+                                    ),
+                                    decoration: BoxDecoration(
                                       color: _setDateLater
-                                          ? AppColors.primary
-                                          : const Color(0xFFFF8C42),
-                                      decoration: _setDateLater
-                                          ? TextDecoration.underline
-                                          : null,
+                                          ? AppColors.primary.withOpacity(0.15)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: _setDateLater
+                                            ? AppColors.primary
+                                            : const Color(0xFFFF8C42),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (_setDateLater)
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 6.w),
+                                            child: Icon(
+                                              Icons.check_circle,
+                                              size: 16.sp,
+                                              color: AppColors.primary,
+                                            ),
+                                          ),
+                                        Text(
+                                          'Set a date later',
+                                          style: TextStyle(
+                                            fontFamily: AppTypography.ppNeueMontreal,
+                                            fontSize: 13.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: _setDateLater
+                                                ? AppColors.primary
+                                                : const Color(0xFFFF8C42),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -762,49 +792,97 @@ class _CreateEventDetailsScreenState
   }
 
   Widget _buildRSVPButtonField() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2A2A2A),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: const Color(0xFF3A3A3A),
-          width: 1.5,
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _rsvpButtonController,
-              style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.onSurface,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Celebrate With Us',
-                hintStyle: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.onSurfaceVariant.withOpacity(0.5),
+    final rsvpOptions = [
+      'Celebrate With Us',
+      'Join Us',
+      'RSVP Now',
+      'Save Your Spot',
+      'Count Me In',
+      'Be There',
+    ];
+
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          backgroundColor: const Color(0xFF1A1A1A),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          ),
+          builder: (context) => Container(
+            padding: EdgeInsets.symmetric(vertical: 24.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Text(
+                    'Choose RSVP Button Text',
+                    style: TextStyle(
+                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.onSurface,
+                    ),
+                  ),
                 ),
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                isDense: true,
-              ),
+                SizedBox(height: 20.h),
+                ...rsvpOptions.map((option) => ListTile(
+                      title: Text(
+                        option,
+                        style: TextStyle(
+                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.onSurface,
+                        ),
+                      ),
+                      trailing: _rsvpButtonController.text == option
+                          ? Icon(Icons.check, color: AppColors.primary)
+                          : null,
+                      onTap: () {
+                        setState(() {
+                          _rsvpButtonController.text = option;
+                        });
+                        Navigator.pop(context);
+                      },
+                    )),
+                SizedBox(height: 20.h),
+              ],
             ),
           ),
-          Icon(
-            Icons.keyboard_arrow_down_rounded,
-            color: AppColors.onSurface.withOpacity(0.5),
-            size: 24.sp,
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2A2A2A),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: const Color(0xFF3A3A3A),
+            width: 1.5,
           ),
-        ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                _rsvpButtonController.text,
+                style: TextStyle(
+                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.onSurface,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: AppColors.onSurface.withOpacity(0.5),
+              size: 24.sp,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -826,7 +904,7 @@ class _CreateEventDetailsScreenState
           Expanded(
             child: TextField(
               controller: _descriptionController,
-              maxLines: 3,
+              maxLines: null,
               minLines: 1,
               style: TextStyle(
                 fontFamily: AppTypography.ppNeueMontreal,
@@ -849,12 +927,23 @@ class _CreateEventDetailsScreenState
                 contentPadding: EdgeInsets.zero,
                 isDense: true,
               ),
+              onChanged: (value) => setState(() {}),
             ),
           ),
           SizedBox(width: 12.w),
           GestureDetector(
             onTap: () {
               // TODO: Implement AI generation
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('AI generation coming soon!'),
+                  backgroundColor: AppColors.primary,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),

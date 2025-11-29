@@ -248,7 +248,7 @@ enum _CardShape {
   roundedSquare,
 }
 
-class _EventTypeCard extends StatelessWidget {
+class _EventTypeCard extends StatefulWidget {
   const _EventTypeCard({
     required this.label,
     required this.shape,
@@ -260,22 +260,83 @@ class _EventTypeCard extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_EventTypeCard> createState() => _EventTypeCardState();
+}
+
+class _EventTypeCardState extends State<_EventTypeCard>
+    with SingleTickerProviderStateMixin {
+  bool _isPressed = false;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surfaceContainerHighest.withOpacity(0.6),
-          borderRadius: _getBorderRadius(),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.onSurface,
+      onTapDown: (_) {
+        setState(() => _isPressed = true);
+        _controller.forward();
+      },
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        _controller.reverse();
+        Future.delayed(const Duration(milliseconds: 100), widget.onTap);
+      },
+      onTapCancel: () {
+        setState(() => _isPressed = false);
+        _controller.reverse();
+      },
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: _isPressed
+                ? AppColors.primary.withOpacity(0.2)
+                : AppColors.surfaceContainerHighest.withOpacity(0.6),
+            borderRadius: _getBorderRadius(),
+            border: Border.all(
+              color: _isPressed
+                  ? AppColors.primary.withOpacity(0.5)
+                  : Colors.transparent,
+              width: 2,
+            ),
+            boxShadow: _isPressed
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontFamily: AppTypography.ppNeueMontreal,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.onSurface,
+              ),
             ),
           ),
         ),
@@ -284,7 +345,7 @@ class _EventTypeCard extends StatelessWidget {
   }
 
   BorderRadius _getBorderRadius() {
-    switch (shape) {
+    switch (widget.shape) {
       case _CardShape.pentagon:
         return BorderRadius.only(
           topLeft: Radius.circular(60.r),
