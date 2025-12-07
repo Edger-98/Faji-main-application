@@ -188,7 +188,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
                     child: TextField(
                       controller: _messageController,
                       style: TextStyle(
-                        fontFamily: AppTypography.neueHaasDisplay,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w100,
                         color: context.colors.onSurface,
@@ -196,7 +196,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
                       decoration: InputDecoration(
                         hintText: 'Message',
                         hintStyle: TextStyle(
-                          fontFamily: AppTypography.neueHaasDisplay,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w100,
                           color: context.colors.onSurface.withOpacity(0.5),
@@ -270,7 +270,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
               Text(
                 message,
                 style: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w100,
                   color: context.colors.onSurface,
@@ -283,7 +283,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
                 child: Text(
                   time,
                   style: TextStyle(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: isUser ? 10.sp : 12.sp,
                     fontWeight: FontWeight.w100,
                     color: context.colors.onSurface,

@@ -72,7 +72,7 @@ class _FeatureTooltipState extends State<FeatureTooltip> {
                     child: Text(
                       widget.message,
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.onSurface,

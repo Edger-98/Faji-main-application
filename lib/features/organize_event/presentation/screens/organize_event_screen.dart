@@ -217,7 +217,7 @@ class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
               controller: _descriptionController,
               maxLines: null,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
                 color: AppColors.onSurface,
@@ -225,7 +225,7 @@ class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
               decoration: InputDecoration(
                 hintText: 'Add description about your event.',
                 hintStyle: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.onSurfaceVariant,

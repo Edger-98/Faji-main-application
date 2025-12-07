@@ -198,7 +198,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                       Text(
                         subtitle,
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w100,
                           height: 1.2,

@@ -75,7 +75,7 @@ class _CreateEventDetailsScreenState
   }
 
   Future<void> _selectStartDate() async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime.now(),
@@ -95,16 +95,48 @@ class _CreateEventDetailsScreenState
       },
     );
 
-    if (picked != null) {
+    if (pickedDate != null) {
+      // Now pick the time
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: _startDate != null 
+            ? TimeOfDay.fromDateTime(_startDate!)
+            : TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: AppColors.primary,
+                onPrimary: AppColors.onPrimary,
+                surface: AppColors.surface,
+                onSurface: AppColors.onSurface,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      // Use picked time or default to current time if cancelled
+      final timeToUse = pickedTime ?? TimeOfDay.now();
+      
+      final DateTime fullDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        timeToUse.hour,
+        timeToUse.minute,
+      );
+      
       setState(() {
-        _startDate = picked;
+        _startDate = fullDateTime;
       });
-      ref.read(eventCreationViewModelProvider.notifier).updateEventDate(picked);
+      ref.read(eventCreationViewModelProvider.notifier).updateEventDate(fullDateTime);
     }
   }
 
   Future<void> _selectEndDate() async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _endDate ?? _startDate ?? DateTime.now(),
       firstDate: _startDate ?? DateTime.now(),
@@ -124,9 +156,51 @@ class _CreateEventDetailsScreenState
       },
     );
 
-    if (picked != null) {
+    if (pickedDate != null) {
+      // Now pick the time
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: _endDate != null 
+            ? TimeOfDay.fromDateTime(_endDate!)
+            : (_startDate != null 
+                ? TimeOfDay.fromDateTime(_startDate!.add(const Duration(hours: 2)))
+                : TimeOfDay.now()),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.dark(
+                primary: AppColors.primary,
+                onPrimary: AppColors.onPrimary,
+                surface: AppColors.surface,
+                onSurface: AppColors.onSurface,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      // Use picked time or default to 2 hours after start (or current time) if cancelled
+      final TimeOfDay timeToUse;
+      if (pickedTime != null) {
+        timeToUse = pickedTime;
+      } else if (_startDate != null) {
+        final defaultEnd = _startDate!.add(const Duration(hours: 2));
+        timeToUse = TimeOfDay.fromDateTime(defaultEnd);
+      } else {
+        timeToUse = TimeOfDay.now();
+      }
+      
+      final DateTime fullDateTime = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        timeToUse.hour,
+        timeToUse.minute,
+      );
+      
       setState(() {
-        _endDate = picked;
+        _endDate = fullDateTime;
       });
     }
   }
@@ -137,6 +211,16 @@ class _CreateEventDetailsScreenState
     // Update all fields
     viewModel.updateTitle(_titleController.text);
     viewModel.updateDescription(_descriptionController.text);
+    viewModel.updateWebsiteLink(_websiteLinkController.text);
+    viewModel.updateRsvpButtonText(_rsvpButtonController.text);
+
+    // Store dates
+    if (_startDate != null) {
+      viewModel.updateStartDate(_startDate!);
+    }
+    if (_endDate != null) {
+      viewModel.updateEndDate(_endDate!);
+    }
 
     // Validate
     if (_titleController.text.isEmpty) {
@@ -229,7 +313,7 @@ class _CreateEventDetailsScreenState
                       Text(
                         'Bring your\nmoment to life',
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 42.sp,
                           fontWeight: FontWeight.w700,
                           color: AppColors.onSurface,
@@ -243,7 +327,7 @@ class _CreateEventDetailsScreenState
                       Text(
                         'Fill in the details to craft your perfect $eventType\nand create lasting memories.',
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.onSurfaceVariant.withOpacity(0.8),
@@ -261,7 +345,7 @@ class _CreateEventDetailsScreenState
                             Text(
                               'Give this $eventType a name',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.primary,
@@ -273,7 +357,7 @@ class _CreateEventDetailsScreenState
                               controller: _titleController,
                               hintText: 'Give this $eventType a name',
                               hintStyle: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.onSurfaceVariant
@@ -298,7 +382,7 @@ class _CreateEventDetailsScreenState
                                 Text(
                                   'Date + Time',
                                   style: TextStyle(
-                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.w500,
                                     color:
@@ -348,7 +432,7 @@ class _CreateEventDetailsScreenState
                                         Text(
                                           'Set a date later',
                                           style: TextStyle(
-                                            fontFamily: AppTypography.ppNeueMontreal,
+                                            fontFamily: AppTypography.modicaPro,
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.w600,
                                             color: _setDateLater
@@ -410,7 +494,7 @@ class _CreateEventDetailsScreenState
                             Text(
                               'Event Website Link (shared with guests)',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.onSurface.withOpacity(0.7),
@@ -432,7 +516,7 @@ class _CreateEventDetailsScreenState
                             Text(
                               'RSVP Button Title (for your event link)',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.onSurface.withOpacity(0.7),
@@ -454,7 +538,7 @@ class _CreateEventDetailsScreenState
                             Text(
                               'Describe your event',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.onSurface.withOpacity(0.7),
@@ -500,7 +584,7 @@ class _CreateEventDetailsScreenState
                             child: Text(
                               'Previous',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.onSurface,
@@ -518,7 +602,7 @@ class _CreateEventDetailsScreenState
                         child: Container(
                           height: 56.h,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.primary,
                             borderRadius: BorderRadius.circular(28.r),
                             boxShadow: [
                               BoxShadow(
@@ -532,7 +616,7 @@ class _CreateEventDetailsScreenState
                             child: Text(
                               'Next',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black,
@@ -592,7 +676,7 @@ class _CreateEventDetailsScreenState
             child: TextField(
               controller: controller,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.onSurface,
@@ -601,7 +685,7 @@ class _CreateEventDetailsScreenState
                 hintText: hintText,
                 hintStyle: hintStyle ??
                     TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.onSurfaceVariant.withOpacity(0.5),
@@ -656,7 +740,7 @@ class _CreateEventDetailsScreenState
           child: Text(
             label,
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 15.sp,
               fontWeight: FontWeight.w500,
               color: AppColors.onSurface.withOpacity(0.7),
@@ -681,10 +765,10 @@ class _CreateEventDetailsScreenState
             ),
             child: Text(
               date != null
-                  ? '${date.day}/${date.month}/${date.year}'
+                  ? '${date.day}/${date.month}/${date.year} ${_formatTime(date)}'
                   : dateLabel,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 color: date != null
@@ -696,6 +780,13 @@ class _CreateEventDetailsScreenState
         ),
       ],
     );
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour > 12 ? dateTime.hour - 12 : (dateTime.hour == 0 ? 12 : dateTime.hour);
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:$minute $period';
   }
 
   Widget _buildWebsiteLinkField() {
@@ -724,7 +815,7 @@ class _CreateEventDetailsScreenState
               Text(
                 'pv.rsvp/',
                 style: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.onSurface.withOpacity(0.7),
@@ -734,7 +825,7 @@ class _CreateEventDetailsScreenState
                 child: TextField(
                   controller: _websiteLinkController,
                   style: TextStyle(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.onSurface,
@@ -742,7 +833,7 @@ class _CreateEventDetailsScreenState
                   decoration: InputDecoration(
                     hintText: 'sdggy',
                     hintStyle: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.onSurfaceVariant.withOpacity(0.4),
@@ -777,7 +868,7 @@ class _CreateEventDetailsScreenState
                 Text(
                   'This link is available!',
                   style: TextStyle(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF4CAF50),
@@ -819,7 +910,7 @@ class _CreateEventDetailsScreenState
                   child: Text(
                     'Choose RSVP Button Text',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.onSurface,
@@ -831,7 +922,7 @@ class _CreateEventDetailsScreenState
                       title: Text(
                         option,
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.onSurface,
@@ -869,7 +960,7 @@ class _CreateEventDetailsScreenState
               child: Text(
                 _rsvpButtonController.text,
                 style: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.onSurface,
@@ -907,7 +998,7 @@ class _CreateEventDetailsScreenState
               maxLines: null,
               minLines: 1,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w400,
                 color: AppColors.onSurface,
@@ -915,7 +1006,7 @@ class _CreateEventDetailsScreenState
               decoration: InputDecoration(
                 hintText: 'What would you like to say about it (optional)',
                 hintStyle: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.onSurfaceVariant.withOpacity(0.4),
@@ -959,7 +1050,7 @@ class _CreateEventDetailsScreenState
                   Text(
                     'Generate',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,

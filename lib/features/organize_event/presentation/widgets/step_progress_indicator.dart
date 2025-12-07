@@ -60,7 +60,7 @@ class StepProgressIndicator extends StatelessWidget {
         Text(
           '${currentStep + 1}/$totalSteps',
           style: TextStyle(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.onSurface,

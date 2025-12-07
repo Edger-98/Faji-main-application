@@ -69,7 +69,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Text(
                   'Search',
                   style: TextStyle(
-                    fontFamily: AppTypography.neueHaasDisplay,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 22.sp,
                     fontWeight: FontWeight.w500,
                     height: 1.2,
@@ -116,7 +116,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: TextField(
                       controller: _searchController,
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w100,
                         height: 1.2,
@@ -125,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search on Faji',
                         hintStyle: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w100,
                           height: 1.2,
@@ -161,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Text(
                         'Clear all',
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w100,
                           height: 1.2,
@@ -190,7 +190,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Text(
                         'View all',
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w100,
                           height: 1.2,
@@ -221,7 +221,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Text(
                         'View all',
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w100,
                           height: 1.2,
@@ -266,7 +266,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Text(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
+          fontFamily: AppTypography.modicaPro,
           fontSize: 16.sp,
           fontWeight: FontWeight.w400,
           height: 1.2,
@@ -296,7 +296,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Text(
             name,
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 13.sp,
               fontWeight: FontWeight.w400,
               height: 1.2,

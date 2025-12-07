@@ -132,7 +132,7 @@ class _NameScreenState extends ConsumerState<NameScreen>
                         Text(
                           'What is your name?',
                           style: TextStyle(
-                            fontFamily: AppTypography.neueHaasDisplay,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 28.sp,
                             fontWeight: FontWeight.w600,
                             height: 1.2,
@@ -147,7 +147,7 @@ class _NameScreenState extends ConsumerState<NameScreen>
                         Text(
                           'What do your friend call you?',
                           style: TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w100,
                             height: 1.2,

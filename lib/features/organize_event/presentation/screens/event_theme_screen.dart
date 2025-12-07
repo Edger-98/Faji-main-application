@@ -3,8 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_creation_providers.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/theme_poster_providers.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/step_progress_indicator.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/event_providers.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/screens/event_details_tabbed_screen.dart';
+import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart' as events_providers;
 
 /// Step 4: Event Theme Selection Screen
 class EventThemeScreen extends ConsumerStatefulWidget {
@@ -16,101 +21,247 @@ class EventThemeScreen extends ConsumerStatefulWidget {
 
 class _EventThemeScreenState extends ConsumerState<EventThemeScreen> {
   String? _selectedThemeId;
+  bool _isCreating = false;
 
-  // Mock theme data (will be replaced with API data)
-  final List<Map<String, dynamic>> _themes = <Map<String, dynamic>>[
-    <String, dynamic>{
-      'id': 'theme_1',
-      'name': 'Silver',
-      'gradient': <Color>[const Color(0xFFE0E0E0), const Color(0xFF9E9E9E)],
-    },
-    {
-      'id': 'theme_2',
-      'name': 'Sunset',
-      'gradient': [Color(0xFFFF6B6B), Color(0xFFFFD93D)],
-    },
-    {
-      'id': 'theme_3',
-      'name': 'Pastel Rainbow',
-      'gradient': [Color(0xFFB4E7CE), Color(0xFFFFF4B7), Color(0xFFFFB4E7)],
-    },
-    {
-      'id': 'theme_4',
-      'name': 'Coral',
-      'gradient': [Color(0xFFFF9A8B), Color(0xFFFF6A88)],
-    },
-    {
-      'id': 'theme_5',
-      'name': 'Ocean Blue',
-      'gradient': [Color(0xFF4A90E2), Color(0xFF7B68EE)],
-    },
-    {
-      'id': 'theme_6',
-      'name': 'Neon Orange',
-      'gradient': [Color(0xFFFF6B35), Color(0xFFFF8C42)],
-    },
-    {
-      'id': 'theme_7',
-      'name': 'Mint Green',
-      'gradient': [Color(0xFF98D8C8), Color(0xFFF6F7D7)],
-    },
-    {
-      'id': 'theme_8',
-      'name': 'Pink Gradient',
-      'gradient': [Color(0xFFFF6B9D), Color(0xFFFFC3A0)],
-    },
-    {
-      'id': 'theme_9',
-      'name': 'Tangerine',
-      'gradient': [Color(0xFFFF9966), Color(0xFFFF5E62)],
-    },
-    {
-      'id': 'theme_10',
-      'name': 'Aqua Mint',
-      'gradient': [Color(0xFFB2FEFA), Color(0xFF0ED2F7)],
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Load themes on init
+    Future.microtask(() => ref.read(themesProvider));
+  }
 
   void _handleCreateEvent() async {
-    final viewModel = ref.read(eventCreationViewModelProvider.notifier);
-    
-    if (_selectedThemeId != null) {
-      viewModel.selectTheme(_selectedThemeId!);
-      
-      // Show loading
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
-          ),
-        ),
-      );
-      
-      // Create event
-      await viewModel.createEvent();
-      
-      // Close loading
-      if (mounted) {
-        Navigator.pop(context);
-        
-        // Show success and navigate back
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Event created successfully!'),
-            backgroundColor: AppColors.success,
-          ),
-        );
-        
-        // Navigate to home or event details
-        context.go('/home');
-      }
-    } else {
+    if (_selectedThemeId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please select a theme'),
           backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    if (_isCreating) return;
+
+    setState(() {
+      _isCreating = true;
+    });
+
+    try {
+      print('🎯 Starting event creation...');
+      final viewModel = ref.read(eventCreationViewModelProvider.notifier);
+      final state = ref.read(eventCreationViewModelProvider);
+      
+      viewModel.selectTheme(_selectedThemeId!);
+      
+      final startDate = state.eventData.eventDate;
+      DateTime? endDate;
+      if (state.eventData.eventTime != null) {
+        try {
+          endDate = DateTime.parse(state.eventData.eventTime!);
+        } catch (e) {
+          print('⚠️ Failed to parse end date: $e');
+          endDate = startDate?.add(const Duration(hours: 3));
+        }
+      }
+      
+      final websiteLink = state.eventData.location;
+      
+      print('📤 Calling createEvent API...');
+      print('   Title: ${state.eventData.title}');
+      print('   Start: $startDate');
+      print('   End: $endDate');
+      print('   Theme: $_selectedThemeId');
+      print('   Poster: ${state.eventData.selectedPosterId}');
+      
+      final createdEvent = await viewModel.createEvent(
+        startDate: startDate,
+        endDate: endDate,
+        websiteLink: websiteLink,
+        rsvpButtonText: 'Celebrate With Us',
+      );
+      
+      print('📥 API Response received');
+      print('   Event: ${createdEvent?.id}');
+      print('   Name: ${createdEvent?.name}');
+      
+      if (!mounted) {
+        print('⚠️ Widget not mounted, aborting navigation');
+        return;
+      }
+      
+      if (createdEvent != null) {
+        print('✅ Event created successfully, refreshing lists...');
+        
+        // Invalidate and refetch all event providers
+        ref.invalidate(filteredEventsProvider);
+        ref.invalidate(events_providers.userEventsProvider);
+        
+        // Trigger immediate refetch
+        ref.read(events_providers.userEventsProvider.notifier).getUserEvents();
+        
+        // Reset event creation state for next time
+        ref.read(eventCreationViewModelProvider.notifier).reset();
+        
+        if (mounted) {
+          // Show success dialog instead of navigating to a new screen
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (dialogContext) => AlertDialog(
+              backgroundColor: AppColors.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 80.w,
+                    height: 80.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.check_circle,
+                      size: 50.sp,
+                      color: AppColors.success,
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  Text(
+                    'Event Created!',
+                    style: TextStyle(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    '"${createdEvent.name}"',
+                    style: TextStyle(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Your event has been created successfully!',
+                    style: TextStyle(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 14.sp,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 24.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop();
+                            context.go('/home');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.surfaceContainerHighest,
+                            foregroundColor: AppColors.onSurface,
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: Text(
+                            'Go Home',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop();
+                            // Navigate to the tabbed event details screen for organized events
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (ctx) => EventDetailsTabbedScreen(
+                                  eventId: createdEvent.id,
+                                  eventName: createdEvent.name,
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.onPrimary,
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: Text(
+                            'View Event',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        print('✅ Navigation complete');
+      } else {
+        print('❌ Event creation returned null');
+        setState(() {
+          _isCreating = false;
+        });
+        
+        final error = ref.read(eventCreationViewModelProvider).error;
+        print('❌ Error: $error');
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error ?? 'Failed to create event'),
+              backgroundColor: AppColors.error,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      print('💥 EXCEPTION in _handleCreateEvent: $e');
+      print('Stack trace: $stackTrace');
+      
+      if (!mounted) return;
+      
+      setState(() {
+        _isCreating = false;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+          duration: const Duration(seconds: 4),
         ),
       );
     }
@@ -181,61 +332,130 @@ class _EventThemeScreenState extends ConsumerState<EventThemeScreen> {
 
                   // Theme grid
                   Expanded(
-                    child: GridView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 24.w),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16.w,
-                        mainAxisSpacing: 16.h,
-                        childAspectRatio: 1.2,
-                      ),
-                      itemCount: _themes.length,
-                      itemBuilder: (context, index) {
-                        final Map<String, dynamic> theme = _themes[index];
-                        final bool isSelected = _selectedThemeId == theme['id'] as String?;
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedThemeId = theme['id'] as String?;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.r),
-                              gradient: LinearGradient(
-                                colors: theme['gradient'] as List<Color>,
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final themesAsync = ref.watch(themesProvider);
+                        
+                        return themesAsync.when(
+                          data: (themes) {
+                            if (themes.isEmpty) {
+                              return Center(
+                                child: AppText.bodyMedium(
+                                  'No themes available',
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              );
+                            }
+                            
+                            return GridView.builder(
+                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16.w,
+                                mainAxisSpacing: 16.h,
+                                childAspectRatio: 1.2,
                               ),
-                              border: isSelected
-                                  ? Border.all(
-                                      color: AppColors.primary,
-                                      width: 3,
-                                    )
-                                  : null,
-                            ),
-                            child: Stack(
-                              children: [
-                                // Selection indicator
-                                if (isSelected)
-                                  Positioned(
-                                    top: 12.h,
-                                    right: 12.w,
-                                    child: Container(
-                                      width: 28.w,
-                                      height: 28.h,
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.primary,
-                                        shape: BoxShape.circle,
+                              itemCount: themes.length,
+                              itemBuilder: (context, index) {
+                                final theme = themes[index];
+                                final bool isSelected = _selectedThemeId == theme.id;
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedThemeId = theme.id;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      gradient: LinearGradient(
+                                        colors: theme.gradientColors,
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
                                       ),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: AppColors.onPrimary,
-                                        size: 18.sp,
-                                      ),
+                                      border: isSelected
+                                          ? Border.all(
+                                              color: AppColors.primary,
+                                              width: 3,
+                                            )
+                                          : null,
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        // Theme name
+                                        Positioned(
+                                          bottom: 12.h,
+                                          left: 12.w,
+                                          right: 12.w,
+                                          child: Text(
+                                            theme.name,
+                                            style: TextStyle(
+                                              fontFamily: AppTypography.modicaPro,
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.black.withOpacity(0.3),
+                                                  blurRadius: 4,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        
+                                        // Selection indicator
+                                        if (isSelected)
+                                          Positioned(
+                                            top: 12.h,
+                                            right: 12.w,
+                                            child: Container(
+                                              width: 28.w,
+                                              height: 28.h,
+                                              decoration: const BoxDecoration(
+                                                color: AppColors.primary,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: AppColors.onPrimary,
+                                                size: 18.sp,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
+                                );
+                              },
+                            );
+                          },
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          error: (error, stack) => Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  size: 48.sp,
+                                  color: AppColors.error,
+                                ),
+                                SizedBox(height: 16.h),
+                                AppText.bodyMedium(
+                                  'Failed to load themes',
+                                  color: AppColors.error,
+                                ),
+                                SizedBox(height: 8.h),
+                                AppText.bodySmall(
+                                  error.toString(),
+                                  color: AppColors.onSurfaceVariant,
+                                  textAlign: TextAlign.center,
+                                ),
                               ],
                             ),
                           ),
@@ -256,18 +476,29 @@ class _EventThemeScreenState extends ConsumerState<EventThemeScreen> {
                         ),
                         SizedBox(height: 16.h),
                         GestureDetector(
-                          onTap: _handleCreateEvent,
+                          onTap: _isCreating ? null : _handleCreateEvent,
                           child: Container(
                             height: 69.h,
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: _isCreating 
+                                  ? AppColors.primary.withOpacity(0.6)
+                                  : AppColors.primary,
                               borderRadius: BorderRadius.circular(34.5.r),
                             ),
                             child: Center(
-                              child: AppText.labelLarge(
-                                'Create Event',
-                                color: AppColors.onPrimary,
-                              ),
+                              child: _isCreating
+                                  ? SizedBox(
+                                      width: 24.w,
+                                      height: 24.h,
+                                      child: const CircularProgressIndicator(
+                                        color: AppColors.onPrimary,
+                                        strokeWidth: 2.5,
+                                      ),
+                                    )
+                                  : AppText.labelLarge(
+                                      'Create Event',
+                                      color: AppColors.onPrimary,
+                                    ),
                             ),
                           ),
                         ),

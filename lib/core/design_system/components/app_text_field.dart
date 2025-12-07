@@ -39,68 +39,64 @@ class AppTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 69.h, // Responsive height from Figma
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: context.colors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(34.5.r), // Responsive border radius
+        color: const Color(0xFF2A2A2A), // Darker, more visible background
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: const Color(0xFF3A3A3A), // Subtle border for definition
+          width: 1.5,
+        ),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w), // Responsive padding
-        child: Row(
-          children: [
-            if (prefixWidget != null) ...[
-              prefixWidget!,
-              SizedBox(width: 12.w),
-            ],
-            Expanded(
-              child: TextField(
-                controller: controller,
-                focusNode: focusNode,
-                keyboardType: keyboardType,
-                inputFormatters: inputFormatters,
-                onChanged: onChanged,
-                onSubmitted: onSubmitted,
-                enabled: enabled,
-                obscureText: obscureText,
-                textCapitalization: textCapitalization,
-                style: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
-                  fontSize: 17.sp, // Responsive font size
-                  fontWeight: FontWeight.w100,
-                  height: 1.2,
-                  letterSpacing: 0,
-                  color: context.colors.onSurface,
+      child: Row(
+        children: [
+          if (prefixWidget != null) ...[
+            prefixWidget!,
+            SizedBox(width: 12.w),
+          ],
+          Expanded(
+            child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              keyboardType: keyboardType,
+              inputFormatters: inputFormatters,
+              onChanged: onChanged,
+              onSubmitted: onSubmitted,
+              enabled: enabled,
+              obscureText: obscureText,
+              textCapitalization: textCapitalization,
+              style: TextStyle(
+                fontFamily: AppTypography.modicaPro,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+                color: context.colors.onSurface,
+              ),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  fontFamily: AppTypography.modicaPro,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: context.colors.onSurfaceVariant.withOpacity(0.4),
+                  fontStyle: FontStyle.italic,
                 ),
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  hintStyle: TextStyle(
-                    fontFamily: AppTypography.ppNeueMontreal,
-                    fontSize: 17.sp, // Responsive font size
-                    fontWeight: FontWeight.w100,
-                    height: 1.2,
-                    letterSpacing: 0,
-                    color: context.colors.onSurfaceVariant,
-                  ),
-                  filled: false,
-                  fillColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  focusedErrorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+                isDense: true,
               ),
             ),
-            if (suffixWidget != null) ...[
-              SizedBox(width: 12.w),
-              suffixWidget!,
-            ],
+          ),
+          if (suffixWidget != null) ...[
+            SizedBox(width: 12.w),
+            SizedBox(
+              height: 24.h,
+              width: 24.w,
+              child: suffixWidget!,
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

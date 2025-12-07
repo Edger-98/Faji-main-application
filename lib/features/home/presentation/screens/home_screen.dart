@@ -86,6 +86,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
         
+        // Your Events (moved to top for better visibility)
+        SliverToBoxAdapter(
+          child: YourEventsSection(),
+        ),
+        
+        SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+        
         // Trending Events
         SliverToBoxAdapter(
           child: TrendingEventsSection(),
@@ -110,13 +117,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         // Flash Deal
         SliverToBoxAdapter(
           child: FlashDealSection(),
-        ),
-        
-        SliverToBoxAdapter(child: SizedBox(height: 24.h)),
-        
-        // Your Events
-        SliverToBoxAdapter(
-          child: YourEventsSection(),
         ),
         
         SliverToBoxAdapter(child: SizedBox(height: 24.h)),

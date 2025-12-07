@@ -65,7 +65,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
         'Live Now',
         style: widget.textStyle ??
             TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.liveRed,
@@ -86,7 +86,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
           _formatDuration(_timeLeft),
           style: widget.textStyle ??
               TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.primary,

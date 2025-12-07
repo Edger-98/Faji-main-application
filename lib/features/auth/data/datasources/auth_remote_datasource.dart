@@ -17,31 +17,31 @@ abstract class AuthRemoteDataSource {
   // ========== Multi-Step Registration Flow ==========
 
   /// Step 1: Register email
-  @POST('/api/auth/register/email')
+  @POST('/auth/register/email')
   Future<HttpResponse<dynamic>> registerEmail(
     @Body() Map<String, dynamic> body,
   );
 
   /// Step 2: Verify OTP
-  @POST('/api/auth/register/verify-otp')
+  @POST('/auth/register/verify-otp')
   Future<HttpResponse<dynamic>> verifyRegistrationOtp(
     @Body() Map<String, dynamic> body,
   );
 
   /// Step 3: Add phone number
-  @POST('/api/auth/register/phone')
+  @POST('/auth/register/phone')
   Future<HttpResponse<dynamic>> addPhone(
     @Body() Map<String, dynamic> body,
   );
 
   /// Step 4: Add name
-  @POST('/api/auth/register/name')
+  @POST('/auth/register/name')
   Future<HttpResponse<dynamic>> addName(
     @Body() Map<String, dynamic> body,
   );
 
   /// Step 5: Complete registration
-  @POST('/api/auth/register/complete')
+  @POST('/auth/register/complete')
   Future<HttpResponse<dynamic>> completeRegistration(
     @Body() Map<String, dynamic> body,
   );
@@ -49,50 +49,50 @@ abstract class AuthRemoteDataSource {
   // ========== Original Methods ==========
 
   /// Sign in with email and password
-  @POST('/api/auth/login')
+  @POST('/auth/login')
   Future<HttpResponse<dynamic>> login(
     @Body() Map<String, dynamic> body,
   );
 
   /// Sign up new user
-  @POST('/api/auth/signup')
+  @POST('/auth/signup')
   Future<HttpResponse<dynamic>> signup(
     @Body() Map<String, dynamic> body,
   );
 
   /// Send OTP to email
-  @POST('/api/auth/send-otp')
+  @POST('/auth/send-otp')
   Future<HttpResponse<dynamic>> sendOtp(
     @Body() Map<String, dynamic> body,
   );
 
   /// Verify OTP
-  @POST('/api/auth/verify-otp')
+  @POST('/auth/verify-otp')
   Future<HttpResponse<dynamic>> verifyOtp(
     @Body() Map<String, dynamic> body,
   );
 
   /// Forget password
-  @POST('/api/auth/forget-password')
+  @POST('/auth/forget-password')
   Future<HttpResponse<dynamic>> forgetPassword(
     @Body() Map<String, dynamic> body,
   );
 
   /// Update password with token
-  @POST('/api/auth/update-password/{token}')
+  @POST('/auth/update-password/{token}')
   Future<HttpResponse<dynamic>> updatePassword(
     @Path('token') String token,
     @Body() Map<String, dynamic> body,
   );
 
   /// Get user by ID
-  @GET('/api/auth/users/{id}')
+  @GET('/auth/users/{id}')
   Future<HttpResponse<dynamic>> getUserById(
     @Path('id') String id,
   );
 
   /// Update account settings
-  @PUT('/api/auth/updateSettings/{id}')
+  @PUT('/auth/updateSettings/{id}')
   @MultiPart()
   Future<ApiResponse<UserModel>> updateSettings(
     @Path('id') String id,
@@ -103,7 +103,7 @@ abstract class AuthRemoteDataSource {
   );
 
   /// Delete account
-  @DELETE('/api/auth/deleteAccount/{id}')
+  @DELETE('/auth/deleteAccount/{id}')
   Future<HttpResponse<dynamic>> deleteAccount(
     @Path('id') String id,
   );

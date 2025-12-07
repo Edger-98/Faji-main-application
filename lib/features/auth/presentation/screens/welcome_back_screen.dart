@@ -178,6 +178,8 @@ class _WelcomeBackScreenState extends ConsumerState<WelcomeBackScreen> {
                       color: context.colors.onSurfaceVariant,
                       size: 20.sp,
                     ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                     onPressed: () {
                       setState(() {
                         _obscurePassword = !_obscurePassword;

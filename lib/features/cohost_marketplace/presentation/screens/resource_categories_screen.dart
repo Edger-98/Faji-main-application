@@ -87,7 +87,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
             Text(
               'What would you like to do?',
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.onSurface,
@@ -118,7 +118,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                   child: Text(
                     'Browse Vendors Now',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -150,7 +150,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                   child: Text(
                     'Skip for Now & Continue',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.onSurface,
@@ -204,7 +204,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                   Text(
                     'What do you\nneed help with?',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 42.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.onSurface,
@@ -216,7 +216,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                   Text(
                     'Pick the services you need to make your event\nunforgettable. You can select multiple.',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.onSurfaceVariant.withOpacity(0.8),
@@ -281,7 +281,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                                 Text(
                                   category.displayName,
                                   style: TextStyle(
-                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.onSurface,
@@ -297,7 +297,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                                   child: Text(
                                     category.description,
                                     style: TextStyle(
-                                      fontFamily: AppTypography.ppNeueMontreal,
+                                      fontFamily: AppTypography.modicaPro,
                                       fontSize: 11.sp,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.onSurfaceVariant.withOpacity(0.7),
@@ -363,7 +363,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
                                   ? 'Select at least one'
                                   : 'Continue with ${_selectedCategories.length} ${_selectedCategories.length == 1 ? "service" : "services"}',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
                                 color: _selectedCategories.isEmpty

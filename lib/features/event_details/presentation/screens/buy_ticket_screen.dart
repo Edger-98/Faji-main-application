@@ -124,7 +124,7 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
                             child: Text(
                               '-',
                               style: TextStyle(
-                                fontFamily: AppTypography.neueHaasDisplay,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
@@ -137,7 +137,7 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
                         Text(
                           '0$ticketCount',
                           style: TextStyle(
-                            fontFamily: AppTypography.neueHaasDisplay,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 20.sp,
                             fontWeight: FontWeight.w500,
                             height: 1.2,
@@ -160,7 +160,7 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
                             child: Text(
                               '+',
                               style: TextStyle(
-                                fontFamily: AppTypography.neueHaasDisplay,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
@@ -201,7 +201,7 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
                         child: Text(
                           'Promo Code',
                           style: TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w100,
                             height: 1.2,
@@ -220,7 +220,7 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
                         child: Text(
                           'Apply',
                           style: TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                             height: 1.2,

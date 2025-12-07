@@ -105,7 +105,7 @@ class _AuthButtonState extends State<AuthButton>
                     child: Text(
                       widget.text,
                       style: TextStyle(
-                        fontFamily: AppTypography.neueHaasDisplay,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 18.sp, // Responsive font size from Figma
                         fontWeight: FontWeight.w600, // EXACT from Figma
                         height: 1.2,

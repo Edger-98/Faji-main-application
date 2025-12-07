@@ -61,7 +61,7 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
           Text(
             'Withdraw Successful',
             style: theme.textTheme.headlineLarge?.copyWith(
-              fontFamily: AppTypography.neueHaasDisplay,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 28,
               fontWeight: AppTypography.medium,
               color: AppColors.onSurface,
@@ -74,7 +74,7 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
               'You have successfully withdraw USD\$ $amount\nto your Republic bank account. *** *** 454',
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 15,
                 fontWeight: AppTypography.regular,
                 color: AppColors.textSecondary,
@@ -124,7 +124,7 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
             child: Text(
               'Done',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.neueHaasDisplay,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 18,
                 fontWeight: AppTypography.semiBold,
                 color: AppColors.onPrimary,

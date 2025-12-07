@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 class AppTypography {
   AppTypography._();
 
-  // Base font families (From Figma - EXACT NAMES)
-  static const String neueHaasDisplay = 'Neue Haas Grotesk Display Pro';
-  static const String ppNeueMontreal = 'PP Neue Montreal';
+  // Base font family - Modica Pro
+  static const String modicaPro = 'Modica Pro';
 
   // Font weights (matching actual font files)
   static const FontWeight thin = FontWeight.w100;
@@ -18,34 +17,34 @@ class AppTypography {
   static const FontWeight bold = FontWeight.w700;
   static const FontWeight black = FontWeight.w900;
 
-  // EXACT FIGMA STYLES - Display (Neue Haas Display Pro, 37px, 600 weight)
+  // Display styles - Using Modica Pro Bold for impact
   static const TextStyle displayLarge = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 37,
-    fontWeight: semiBold, // 600
+    fontWeight: bold, // 700
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle displayMedium = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 32,
-    fontWeight: semiBold,
+    fontWeight: bold,
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle displaySmall = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 28,
-    fontWeight: semiBold,
+    fontWeight: bold,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // EXACT FIGMA STYLES - Headlines (Neue Haas Display Pro, 28px, 600 weight)
+  // Headlines - Using Modica Pro SemiBold for hierarchy
   static const TextStyle headlineLarge = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 28,
     fontWeight: semiBold, // 600
     height: 1.2,
@@ -53,7 +52,7 @@ class AppTypography {
   );
 
   static const TextStyle headlineMedium = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 24,
     fontWeight: semiBold,
     height: 1.2,
@@ -61,16 +60,16 @@ class AppTypography {
   );
 
   static const TextStyle headlineSmall = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 20,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // EXACT FIGMA STYLES - Titles (Neue Haas Display Pro for buttons)
+  // Titles - Using Modica Pro Medium for emphasis
   static const TextStyle titleLarge = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 22,
     fontWeight: semiBold,
     height: 1.2,
@@ -78,24 +77,24 @@ class AppTypography {
   );
 
   static const TextStyle titleMedium = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 18,
-    fontWeight: semiBold,
+    fontWeight: medium,
     height: 1.2,
     letterSpacing: 0,
   );
 
   static const TextStyle titleSmall = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 16,
-    fontWeight: semiBold,
+    fontWeight: medium,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // EXACT FIGMA STYLES - Labels/Buttons (Neue Haas Display Pro, 18px, 600 weight)
+  // Labels/Buttons - Using Modica Pro SemiBold for clarity
   static const TextStyle labelLarge = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 18,
     fontWeight: semiBold, // 600
     height: 1.2,
@@ -103,7 +102,7 @@ class AppTypography {
   );
 
   static const TextStyle labelMedium = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 16,
     fontWeight: semiBold,
     height: 1.2,
@@ -111,35 +110,35 @@ class AppTypography {
   );
 
   static const TextStyle labelSmall = TextStyle(
-    fontFamily: neueHaasDisplay,
+    fontFamily: modicaPro,
     fontSize: 14,
-    fontWeight: semiBold,
+    fontWeight: medium,
     height: 1.2,
     letterSpacing: 0,
   );
 
-  // EXACT FIGMA STYLES - Body Text (PP Neue Montreal, 17px, 100 weight)
+  // Body Text - Using Modica Pro Regular for readability
   static const TextStyle bodyLarge = TextStyle(
-    fontFamily: ppNeueMontreal,
+    fontFamily: modicaPro,
     fontSize: 17,
-    fontWeight: thin, // 100
-    height: 1.2,
+    fontWeight: regular, // 400
+    height: 1.5,
     letterSpacing: 0,
   );
 
   static const TextStyle bodyMedium = TextStyle(
-    fontFamily: ppNeueMontreal,
+    fontFamily: modicaPro,
     fontSize: 16,
-    fontWeight: thin, // 100
-    height: 1.2,
+    fontWeight: regular, // 400
+    height: 1.5,
     letterSpacing: 0,
   );
 
   static const TextStyle bodySmall = TextStyle(
-    fontFamily: ppNeueMontreal,
+    fontFamily: modicaPro,
     fontSize: 14,
-    fontWeight: thin, // 100
-    height: 1.2,
+    fontWeight: regular, // 400
+    height: 1.5,
     letterSpacing: 0,
   );
 

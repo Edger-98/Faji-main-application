@@ -132,7 +132,7 @@ class EventModel {
       isTrending: (json['is_trending'] ?? json['isTrending']) as bool? ?? false,
       isFlashDeal: (json['is_flash_deal'] ?? json['isFlashDeal']) as bool? ?? false,
       isCancelled: (json['status'] as String?) == 'cancelled',
-      discountPercentage: (json['discount_percentage'] ?? json['discountPercentage'] as num?)?.toDouble(),
+      discountPercentage: (json['discount_percentage'] ?? json['discountPercentage'] as num?)!.toDouble(),
       rating: (json['rating'] as num?)?.toDouble(),
       reviewCount: (json['review_count'] ?? json['reviewCount']) as int?,
       tags: json['tags'] == null

@@ -131,7 +131,7 @@ class PaymentSuccessfulScreen extends StatelessWidget {
                   Text(
                     'Payment Successful',
                     style: TextStyle(
-                      fontFamily: AppTypography.neueHaasDisplay,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 28.sp,
                       fontWeight: FontWeight.w500,
                       height: 1.2,

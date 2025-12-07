@@ -31,7 +31,7 @@ class AppText extends StatelessWidget {
     );
   }
 
-  // Predefined text styles with responsive sizing
+  // Predefined text styles with responsive sizing - Using Modica Pro
   static Widget headlineLarge(
     String text, {
     Color? color,
@@ -42,8 +42,8 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.neueHaasDisplay,
-          fontSize: 28.sp, // Responsive font size
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 28.sp,
           fontWeight: FontWeight.w600,
           height: 1.2,
           letterSpacing: 0,
@@ -65,9 +65,9 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.neueHaasDisplay,
-          fontSize: 34.sp, // Responsive font size - EXACT from Figma for "Hi, Chineme!"
-          fontWeight: FontWeight.w600,
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 34.sp,
+          fontWeight: FontWeight.w700,
           height: 1.2,
           letterSpacing: 0,
           color: color ?? context.colors.onSurface,
@@ -88,10 +88,10 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
-          fontSize: 17.sp, // Responsive font size
-          fontWeight: FontWeight.w400, // EXACT from Figma
-          height: 1.2,
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 17.sp,
+          fontWeight: FontWeight.w400,
+          height: 1.5,
           letterSpacing: 0,
           color: color ?? context.colors.onSurfaceVariant,
         ),
@@ -111,10 +111,10 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
-          fontSize: 15.sp, // Responsive font size - EXACT from Figma for event titles
-          fontWeight: FontWeight.w400, // EXACT from Figma
-          height: 1.2,
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 15.sp,
+          fontWeight: FontWeight.w400,
+          height: 1.5,
           letterSpacing: 0,
           color: color ?? context.colors.onSurfaceVariant,
         ),
@@ -134,8 +134,8 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.neueHaasDisplay,
-          fontSize: 18.sp, // Responsive font size
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 18.sp,
           fontWeight: FontWeight.w600,
           height: 1.2,
           letterSpacing: 0,
@@ -157,8 +157,8 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.neueHaasDisplay,
-          fontSize: 22.sp, // Responsive font size
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 22.sp,
           fontWeight: FontWeight.w600,
           height: 1.2,
           letterSpacing: 0,
@@ -180,9 +180,9 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.neueHaasDisplay,
-          fontSize: 25.sp, // Responsive font size - EXACT from Figma
-          fontWeight: FontWeight.w500, // EXACT from Figma
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 25.sp,
+          fontWeight: FontWeight.w500,
           height: 1.2,
           letterSpacing: 0,
           color: color ?? context.colors.onSurface,
@@ -203,9 +203,9 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
-          fontSize: 32.sp, // Responsive font size - EXACT from Figma for "Tap for $20"
-          fontWeight: FontWeight.w500, // EXACT from Figma
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 32.sp,
+          fontWeight: FontWeight.w600,
           height: 1.2,
           letterSpacing: 0,
           color: color ?? context.colors.onSurface,
@@ -228,10 +228,10 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
-          fontSize: 12.sp, // Responsive font size - EXACT from Figma for date/time
-          fontWeight: FontWeight.w400, // EXACT from Figma
-          height: 1.2,
+          fontFamily: AppTypography.modicaPro,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w400,
+          height: 1.5,
           letterSpacing: 0,
           color: color ?? context.colors.onSurfaceVariant,
           decoration: decoration,
@@ -254,9 +254,9 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
+          fontFamily: AppTypography.modicaPro,
           fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
           height: 1.3,
           letterSpacing: 0,
           color: color ?? context.colors.onSurface,
@@ -279,9 +279,9 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
+          fontFamily: AppTypography.modicaPro,
           fontSize: 14.sp,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
           height: 1.3,
           letterSpacing: 0,
           color: color ?? context.colors.onSurface,
@@ -304,9 +304,9 @@ class AppText extends StatelessWidget {
       builder: (context) => AppText(
         text,
         style: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
+          fontFamily: AppTypography.modicaPro,
           fontSize: 20.sp,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
           height: 1.2,
           letterSpacing: 0,
           color: color ?? context.colors.onSurface,

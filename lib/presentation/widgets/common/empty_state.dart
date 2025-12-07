@@ -43,7 +43,7 @@ class EmptyState extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                fontFamily: AppTypography.neueHaasDisplay,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 22,
                 fontWeight: FontWeight.w600,
                 color: AppColors.onSurface,
@@ -54,7 +54,7 @@ class EmptyState extends StatelessWidget {
             Text(
               message,
               style: const TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: AppColors.textSecondary,
@@ -77,7 +77,7 @@ class EmptyState extends StatelessWidget {
                   child: Text(
                     actionText!,
                     style: const TextStyle(
-                      fontFamily: AppTypography.neueHaasDisplay,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: AppColors.onPrimary,

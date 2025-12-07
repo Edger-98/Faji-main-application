@@ -133,7 +133,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   style: TextStyle(
-                                    fontFamily: AppTypography.neueHaasDisplay,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 37.sp, // Responsive font size from Figma
                                     fontWeight: FontWeight.w600, // EXACT from Figma
                                     height: 1.2,
@@ -161,10 +161,10 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                               child: Text(
                                 'Register for events subscribe to calendars\nand manage events you\'re going to',
                                 style: TextStyle(
-                                  fontFamily: AppTypography.ppNeueMontreal,
-                                  fontSize: 16.sp, // Responsive font size from Figma
+                                  fontFamily: AppTypography.modicaPro,
+                                  fontSize: 14.sp, // Responsive font size from Figma
                                   fontWeight: FontWeight.w100, // EXACT from Figma
-                                  height: 1.2,
+                                  height: 1.1,
                                   letterSpacing: 0,
                                   color: context.colors.onSurfaceVariant,
                                 ),
@@ -199,7 +199,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                                 child: Text(
                                   'Already have an account? Sign in',
                                   style: TextStyle(
-                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 16.sp, // Responsive font size from Figma
                                     fontWeight: FontWeight.w100, // EXACT from Figma
                                     height: 1.2,

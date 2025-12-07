@@ -87,7 +87,7 @@ class _EnterWithdrawalAmountScreenState
           Text(
             'Withdrawals',
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontFamily: AppTypography.neueHaasDisplay,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 25,
               fontWeight: AppTypography.medium,
               color: AppColors.onSurface,
@@ -110,7 +110,7 @@ class _EnterWithdrawalAmountScreenState
         child: Text(
           'Enter Withdrawal amount',
           style: theme.textTheme.titleLarge?.copyWith(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 20,
             fontWeight: AppTypography.regular,
             color: AppColors.onBackground,
@@ -131,7 +131,7 @@ class _EnterWithdrawalAmountScreenState
         Text(
           displayAmount,
           style: theme.textTheme.displayLarge?.copyWith(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 50,
             fontWeight: AppTypography.medium,
             color: AppColors.eventCardYellow,
@@ -144,7 +144,7 @@ class _EnterWithdrawalAmountScreenState
           child: Text(
             'USD\$',
             style: theme.textTheme.titleMedium?.copyWith(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 18,
               fontWeight: AppTypography.regular,
               color: AppColors.onSurface,
@@ -217,7 +217,7 @@ class _EnterWithdrawalAmountScreenState
               : Text(
                   value,
                   style: theme.textTheme.headlineMedium?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 25,
                     fontWeight: AppTypography.regular,
                     color: AppColors.onSurface,
@@ -253,7 +253,7 @@ class _EnterWithdrawalAmountScreenState
             child: Text(
               'Review',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.neueHaasDisplay,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 18,
                 fontWeight: AppTypography.semiBold,
                 color: AppColors.onPrimary,

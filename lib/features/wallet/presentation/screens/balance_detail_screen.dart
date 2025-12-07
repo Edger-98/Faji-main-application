@@ -78,7 +78,7 @@ class BalanceDetailScreen extends StatelessWidget {
           Text(
             'Balance Detail',
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontFamily: AppTypography.neueHaasDisplay,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 25,
               fontWeight: AppTypography.medium,
               color: AppColors.onSurface,
@@ -135,7 +135,7 @@ class BalanceDetailScreen extends StatelessWidget {
           Text(
             'Current Balance',
             style: theme.textTheme.titleLarge?.copyWith(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 22,
               fontWeight: AppTypography.regular,
               color: AppColors.onSurface,
@@ -148,7 +148,7 @@ class BalanceDetailScreen extends StatelessWidget {
               Text(
                 '230.00',
                 style: theme.textTheme.displayLarge?.copyWith(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 30,
                   fontWeight: AppTypography.medium,
                   color: AppColors.onBackground,
@@ -161,7 +161,7 @@ class BalanceDetailScreen extends StatelessWidget {
                 child: Text(
                   'USD\$',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 18,
                     fontWeight: AppTypography.regular,
                     color: AppColors.eventCardYellow,
@@ -181,7 +181,7 @@ class BalanceDetailScreen extends StatelessWidget {
     return Text(
       'Withdraw to Bank.',
       style: theme.textTheme.headlineSmall?.copyWith(
-        fontFamily: AppTypography.ppNeueMontreal,
+        fontFamily: AppTypography.modicaPro,
         fontSize: 25,
         fontWeight: AppTypography.medium,
         color: AppColors.onSurface,
@@ -199,7 +199,7 @@ class BalanceDetailScreen extends StatelessWidget {
         Text(
           'Select your Bank',
           style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 17,
             fontWeight: AppTypography.regular,
             color: AppColors.onSurface,
@@ -262,7 +262,7 @@ class BalanceDetailScreen extends StatelessWidget {
                 Text(
                   bankName,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 18,
                     fontWeight: AppTypography.medium,
                     color: AppColors.onSurface,
@@ -272,7 +272,7 @@ class BalanceDetailScreen extends StatelessWidget {
                 Text(
                   accountInfo,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 15,
                     fontWeight: AppTypography.regular,
                     color: AppColors.textSecondary,
@@ -330,7 +330,7 @@ class BalanceDetailScreen extends StatelessWidget {
           child: Text(
             'Add New Bank',
             style: theme.textTheme.bodyLarge?.copyWith(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 16,
               fontWeight: AppTypography.regular,
               color: AppColors.primary,
@@ -361,7 +361,7 @@ class BalanceDetailScreen extends StatelessWidget {
             child: Text(
               'Review',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.neueHaasDisplay,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 18,
                 fontWeight: AppTypography.semiBold,
                 color: AppColors.onPrimary,

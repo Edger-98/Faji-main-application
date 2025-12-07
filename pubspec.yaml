@@ -101,58 +101,53 @@ flutter:
     - .env.staging
     - .env.production
   
-  # Fonts
+  # Fonts - Using Modica Pro exclusively
   fonts:
-    - family: PP Neue Montreal
+    - family: Modica Pro
       fonts:
-        - asset: assets/fonts/ppneuemontreal-thin.otf
+        - asset: assets/fonts/ModicaPro-Normal-Hairline.otf
           weight: 100
-        - asset: assets/fonts/ppneuemontreal-book.otf
-          weight: 400
-        - asset: assets/fonts/ppneuemontreal-medium.otf
-          weight: 500
-        - asset: assets/fonts/ppneuemontreal-bold.otf
-          weight: 700
-        - asset: assets/fonts/ppneuemontreal-italic.otf
-          style: italic
-        - asset: assets/fonts/ppneuemontreal-semibolditalic.otf
-          weight: 600
-          style: italic
-    
-    - family: Neue Haas Grotesk Display Pro
-      fonts:
-        - asset: assets/fonts/NeueHaasDisplayXXThin.ttf
-          weight: 100
-        - asset: assets/fonts/NeueHaasDisplayXThin.ttf
+        - asset: assets/fonts/ModicaPro-Normal-Thin.otf
           weight: 200
-        - asset: assets/fonts/NeueHaasDisplayThin.ttf
+        - asset: assets/fonts/ModicaPro-Normal-Light.otf
           weight: 300
-        - asset: assets/fonts/NeueHaasDisplayLight.ttf
+        - asset: assets/fonts/ModicaPro-Normal-Regular.otf
           weight: 400
-        - asset: assets/fonts/NeueHaasDisplayRoman.ttf
+        - asset: assets/fonts/ModicaPro-Normal-Medium.otf
           weight: 500
-        - asset: assets/fonts/NeueHaasDisplayMediu.ttf
+        - asset: assets/fonts/ModicaPro-Normal-SemiBold.otf
           weight: 600
-        - asset: assets/fonts/NeueHaasDisplayBold.ttf
+        - asset: assets/fonts/ModicaPro-Normal-Bold.otf
           weight: 700
-        - asset: assets/fonts/NeueHaasDisplayBlack.ttf
+        - asset: assets/fonts/ModicaPro-Normal-Black.otf
+          weight: 800
+        - asset: assets/fonts/ModicaPro-Normal-Ultra.otf
           weight: 900
-        - asset: assets/fonts/NeueHaasDisplayThinItalic.ttf
+        - asset: assets/fonts/ModicaPro-Normal-HairlineItalic.otf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/ModicaPro-Normal-ThinItalic.otf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/ModicaPro-Normal-LightItalic.otf
           weight: 300
           style: italic
-        - asset: assets/fonts/NeueHaasDisplayLightItalic.ttf
+        - asset: assets/fonts/ModicaPro-Normal-RegularItalic.otf
           weight: 400
           style: italic
-        - asset: assets/fonts/NeueHaasDisplayRomanItalic.ttf
+        - asset: assets/fonts/ModicaPro-Normal-MediumItalic.otf
           weight: 500
           style: italic
-        - asset: assets/fonts/NeueHaasDisplayMediumItalic.ttf
+        - asset: assets/fonts/ModicaPro-Normal-SemiBoldItalic.otf
           weight: 600
           style: italic
-        - asset: assets/fonts/NeueHaasDisplayBoldItalic.ttf
+        - asset: assets/fonts/ModicaPro-Normal-BoldItalic.otf
           weight: 700
           style: italic
-        - asset: assets/fonts/NeueHaasDisplayBlackItalic.ttf
+        - asset: assets/fonts/ModicaPro-Normal-BlackItalic.otf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/ModicaPro-Normal-UltraItalic.otf
           weight: 900
           style: italic
   

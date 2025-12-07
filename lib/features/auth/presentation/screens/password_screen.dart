@@ -130,7 +130,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
                         Text(
                           'Create password',
                           style: TextStyle(
-                            fontFamily: AppTypography.neueHaasDisplay,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 28.sp,
                             fontWeight: FontWeight.w600,
                             height: 1.2,
@@ -145,7 +145,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
                         Text(
                           'Create a password with at least 6 letters or\nnumbers. It should be something others\ncan\'t guess.',
                           style: TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w100,
                             height: 1.2,
@@ -212,7 +212,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
                                       ? 'Strong password'
                                       : 'At least 6 characters required',
                                   style: TextStyle(
-                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w100,
                                     color: _isPasswordValid

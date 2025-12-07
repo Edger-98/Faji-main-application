@@ -7,6 +7,8 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity_extensions.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/screens/event_details_tabbed_screen.dart';
 
 /// Your events horizontal scrollable section - Connected to API
 class YourEventsSection extends ConsumerStatefulWidget {
@@ -17,11 +19,16 @@ class YourEventsSection extends ConsumerStatefulWidget {
 }
 
 class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
+  bool _hasInitialized = false;
+  
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(userEventsProvider.notifier).getUserEvents();
+      if (!_hasInitialized) {
+        ref.read(userEventsProvider.notifier).getUserEvents();
+        _hasInitialized = true;
+      }
     });
   }
 
@@ -57,17 +64,24 @@ class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
                 separatorBuilder: (context, index) => SizedBox(width: 16.w),
                 itemBuilder: (context, index) {
                   final event = events[index];
+                  
                   return EventCard(
-                    imageUrl: event.imageUrl,
+                    imageUrl: event.displayImageUrl,
                     title: event.title,
                     date: _formatDate(event.startDate),
                     time: _formatTime(event.startDate),
-                    price: event.price > 0 
-                        ? 'From \${event.price.toStringAsFixed(2)}' 
-                        : 'Free',
-                    isLive: event.isTrending == true,
+                    price: event.displayPrice,
+                    isLive: event.isLiveOrTrending,
                     onTap: () {
-                      context.push('${RouteManager.eventDetails}/${event.id}');
+                      // Navigate to tabbed event details for organized events
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => EventDetailsTabbedScreen(
+                            eventId: event.id,
+                            eventName: event.title,
+                          ),
+                        ),
+                      );
                     },
                     onFavorite: () {
                       // TODO: Implement favorite toggle

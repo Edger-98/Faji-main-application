@@ -140,7 +140,7 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 15.sp, // Responsive font size
                         fontWeight: FontWeight.w100,
                         height: 1.3,

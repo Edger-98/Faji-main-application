@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_creation_providers.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/theme_poster_providers.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/step_progress_indicator.dart';
 
 /// Step 3: Event Poster Selection Screen
@@ -16,39 +17,12 @@ class EventPosterScreen extends ConsumerStatefulWidget {
 class _EventPosterScreenState extends ConsumerState<EventPosterScreen> {
   String? _selectedPosterId;
 
-  // Mock poster data (will be replaced with API data)
-  final List<Map<String, dynamic>> _posters = <Map<String, dynamic>>[
-    <String, dynamic>{
-      'id': 'poster_1',
-      'name': 'Show Up & Turn Up',
-      'gradient': <Color>[const Color(0xFF6B4FBB), const Color(0xFFFF6B9D), const Color(0xFFFFA500)],
-    },
-    {
-      'id': 'poster_2',
-      'name': 'You Are Specially Invited',
-      'gradient': [Color(0xFFFFFFFF), Color(0xFFE0E0E0)],
-    },
-    {
-      'id': 'poster_3',
-      'name': 'You Are Invited - Rainbow',
-      'gradient': [Color(0xFF00D4FF), Color(0xFFFF00FF), Color(0xFFFFFF00)],
-    },
-    {
-      'id': 'poster_4',
-      'name': 'You Are Specially Invited - Colorful',
-      'gradient': [Color(0xFFFF0080), Color(0xFF7928CA), Color(0xFFFF0080)],
-    },
-    {
-      'id': 'poster_5',
-      'name': 'Cute Characters',
-      'gradient': [Color(0xFFFF6B9D), Color(0xFFFF1744)],
-    },
-    {
-      'id': 'poster_6',
-      'name': 'Be Our Special Guest',
-      'gradient': [Color(0xFF6B4FBB), Color(0xFFFF6B9D)],
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Load posters on init
+    Future.microtask(() => ref.read(postersProvider(null)));
+  }
 
   void _handleNext() {
     final viewModel = ref.read(eventCreationViewModelProvider.notifier);
@@ -131,78 +105,155 @@ class _EventPosterScreenState extends ConsumerState<EventPosterScreen> {
 
                   // Poster grid
                   Expanded(
-                    child: GridView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 24.w),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16.w,
-                        mainAxisSpacing: 16.h,
-                        childAspectRatio: 0.75,
-                      ),
-                      itemCount: _posters.length,
-                      itemBuilder: (context, index) {
-                        final Map<String, dynamic> poster = _posters[index];
-                        final bool isSelected = _selectedPosterId == poster['id'] as String?;
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedPosterId = poster['id'] as String?;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.r),
-                              gradient: LinearGradient(
-                                colors: poster['gradient'] as List<Color>,
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              border: isSelected
-                                  ? Border.all(
-                                      color: AppColors.primary,
-                                      width: 3,
-                                    )
-                                  : null,
-                            ),
-                            child: Stack(
-                              children: [
-                                // Poster content placeholder
-                                Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.w),
-                                    child: Text(
-                                      poster['name'] as String,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: AppTypography.neueHaasDisplay,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final postersAsync = ref.watch(postersProvider(null));
+                        
+                        return postersAsync.when(
+                          data: (posters) {
+                            if (posters.isEmpty) {
+                              return Center(
+                                child: AppText.bodyMedium(
+                                  'No posters available',
+                                  color: AppColors.onSurfaceVariant,
                                 ),
+                              );
+                            }
+                            
+                            return GridView.builder(
+                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16.w,
+                                mainAxisSpacing: 16.h,
+                                childAspectRatio: 0.75,
+                              ),
+                              itemCount: posters.length,
+                              itemBuilder: (context, index) {
+                                final poster = posters[index];
+                                final bool isSelected = _selectedPosterId == poster.id;
 
-                                // Selection indicator
-                                if (isSelected)
-                                  Positioned(
-                                    top: 12.h,
-                                    right: 12.w,
-                                    child: Container(
-                                      width: 28.w,
-                                      height: 28.h,
-                                      decoration: const BoxDecoration(
-                                        color: AppColors.primary,
-                                        shape: BoxShape.circle,
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedPosterId = poster.id;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      gradient: LinearGradient(
+                                        colors: poster.gradientColors,
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
                                       ),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: AppColors.onPrimary,
-                                        size: 18.sp,
-                                      ),
+                                      border: isSelected
+                                          ? Border.all(
+                                              color: AppColors.primary,
+                                              width: 3,
+                                            )
+                                          : null,
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        // Poster content
+                                        Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(16.w),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  poster.name,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontFamily: AppTypography.modicaPro,
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      Shadow(
+                                                        color: Colors.black.withOpacity(0.3),
+                                                        blurRadius: 4,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                if (poster.description != null) ...[
+                                                  SizedBox(height: 8.h),
+                                                  Text(
+                                                    poster.description!,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontFamily: AppTypography.modicaPro,
+                                                      fontSize: 12.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: Colors.white.withOpacity(0.9),
+                                                      shadows: [
+                                                        Shadow(
+                                                          color: Colors.black.withOpacity(0.3),
+                                                          blurRadius: 4,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+
+                                        // Selection indicator
+                                        if (isSelected)
+                                          Positioned(
+                                            top: 12.h,
+                                            right: 12.w,
+                                            child: Container(
+                                              width: 28.w,
+                                              height: 28.h,
+                                              decoration: const BoxDecoration(
+                                                color: AppColors.primary,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: AppColors.onPrimary,
+                                                size: 18.sp,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
+                                );
+                              },
+                            );
+                          },
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          error: (error, stack) => Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  size: 48.sp,
+                                  color: AppColors.error,
+                                ),
+                                SizedBox(height: 16.h),
+                                AppText.bodyMedium(
+                                  'Failed to load posters',
+                                  color: AppColors.error,
+                                ),
+                                SizedBox(height: 8.h),
+                                AppText.bodySmall(
+                                  error.toString(),
+                                  color: AppColors.onSurfaceVariant,
+                                  textAlign: TextAlign.center,
+                                ),
                               ],
                             ),
                           ),

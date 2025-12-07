@@ -80,7 +80,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
           Text(
             'Withdrawals',
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontFamily: AppTypography.neueHaasDisplay,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 25,
               fontWeight: AppTypography.medium,
               color: AppColors.onSurface,
@@ -99,7 +99,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
     return Text(
       'Withdrawing To: ',
       style: theme.textTheme.titleLarge?.copyWith(
-        fontFamily: AppTypography.ppNeueMontreal,
+        fontFamily: AppTypography.modicaPro,
         fontSize: 20,
         fontWeight: AppTypography.regular,
         color: AppColors.onBackground,
@@ -135,7 +135,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
               Text(
                 'Republic Bank',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 18,
                   fontWeight: AppTypography.medium,
                   color: AppColors.onSurface,
@@ -145,7 +145,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
               Text(
                 'John Doe ********454',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 15,
                   fontWeight: AppTypography.regular,
                   color: AppColors.onBackground,
@@ -194,7 +194,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
                     Text(
                       'Withdrawal Amount',
                       style: theme.textTheme.titleLarge?.copyWith(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 22,
                         fontWeight: AppTypography.medium,
                         color: AppColors.onSurface,
@@ -204,7 +204,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
                     Text(
                       'John Doe ********454',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 15,
                         fontWeight: AppTypography.regular,
                         color: AppColors.onSurface,
@@ -224,7 +224,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
               Text(
                 amount,
                 style: theme.textTheme.displayLarge?.copyWith(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 50,
                   fontWeight: AppTypography.medium,
                   color: AppColors.eventCardYellow,
@@ -237,7 +237,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
                 child: Text(
                   'TTD\$',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 18,
                     fontWeight: AppTypography.regular,
                     color: AppColors.onSurface,
@@ -294,7 +294,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 18,
             fontWeight: AppTypography.regular,
             color: AppColors.onSurface,
@@ -304,7 +304,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
         Text(
           value,
           style: theme.textTheme.bodyLarge?.copyWith(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 18,
             fontWeight: AppTypography.regular,
             color: AppColors.onSurface,
@@ -335,7 +335,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
             child: Text(
               'Withdaw',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.neueHaasDisplay,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 18,
                 fontWeight: AppTypography.semiBold,
                 color: AppColors.onPrimary,

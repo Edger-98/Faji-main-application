@@ -144,7 +144,7 @@ class _CohostListScreenState extends State<CohostListScreen> {
                                       child: Text(
                                         resource.cohostName[0],
                                         style: TextStyle(
-                                          fontFamily: AppTypography.neueHaasDisplay,
+                                          fontFamily: AppTypography.modicaPro,
                                           fontSize: 20.sp,
                                           fontWeight: FontWeight.w600,
                                           color: AppColors.primary,

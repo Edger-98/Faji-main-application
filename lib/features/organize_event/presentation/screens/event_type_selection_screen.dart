@@ -58,7 +58,7 @@ class EventTypeSelectionScreen extends ConsumerWidget {
                   Text(
                     "What's the\nmoment?",
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.onSurface,
@@ -72,7 +72,7 @@ class EventTypeSelectionScreen extends ConsumerWidget {
                   Text(
                     "Pick the type of event you're planning,\nand we'll help you make lasting memories from\nit.",
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.onSurfaceVariant.withOpacity(0.8),
@@ -118,7 +118,7 @@ class EventTypeSelectionScreen extends ConsumerWidget {
                   Text(
                     'Other Event Types',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.onSurface.withOpacity(0.6),
@@ -332,7 +332,7 @@ class _EventTypeCardState extends State<_EventTypeCard>
             child: Text(
               widget.label,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.onSurface,
@@ -399,7 +399,7 @@ class _EventTypeChip extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 14.sp,
             fontWeight: FontWeight.w400,
             color: AppColors.onSurface.withOpacity(0.8),

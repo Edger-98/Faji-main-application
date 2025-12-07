@@ -106,19 +106,19 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
         borderRadius: BorderRadius.circular(16),
         backgroundColor: context.colors.surface,
         textStyle: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
+          fontFamily: AppTypography.modicaPro,
           fontSize: 16,
           color: context.colors.onSurface,
         ),
         searchTextStyle: TextStyle(
-          fontFamily: AppTypography.ppNeueMontreal,
+          fontFamily: AppTypography.modicaPro,
           fontSize: 16,
           color: context.colors.onSurface,
         ),
         inputDecoration: InputDecoration(
           hintText: 'Search country',
           hintStyle: TextStyle(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             color: context.colors.onSurfaceVariant,
           ),
           prefixIcon: Icon(
@@ -178,7 +178,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
                         Text(
                           'Add your phone',
                           style: const TextStyle(
-                            fontFamily: AppTypography.neueHaasDisplay,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 28,
                             fontWeight: FontWeight.w600,
                             height: 1.2,
@@ -194,7 +194,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
                         Text(
                           'Enter your phone number to get yourself \nverified and increase account security.',
                           style: const TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 17,
                             fontWeight: FontWeight.w100,
                             height: 1.2,

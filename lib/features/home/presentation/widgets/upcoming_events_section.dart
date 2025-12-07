@@ -7,6 +7,7 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity_extensions.dart';
 
 /// Upcoming events horizontal scrollable section - Connected to API
 class UpcomingEventsSection extends ConsumerWidget {
@@ -46,13 +47,13 @@ class UpcomingEventsSection extends ConsumerWidget {
                   final event = events[index];
                   final months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
                   return UpcomingEventCard(
-                    imageUrl: event.imageUrl,
+                    imageUrl: event.displayImageUrl,
                     month: months[event.startDate.month - 1],
                     day: event.startDate.day.toString(),
                     organizerName: event.organizerName,
                     organizerLocation: event.location,
                     organizerAvatar: event.organizerImage ?? '',
-                    isLive: false,
+                    isLive: event.isLiveOrTrending,
                     onTap: () {
                       context.push('${RouteManager.eventDetails}/${event.id}');
                     },

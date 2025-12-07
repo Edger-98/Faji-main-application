@@ -63,7 +63,7 @@ class TransactionHistoryScreen extends StatelessWidget {
           Text(
             'History',
             style: theme.textTheme.headlineMedium?.copyWith(
-              fontFamily: AppTypography.neueHaasDisplay,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 25,
               fontWeight: AppTypography.medium,
               color: AppColors.onSurface,
@@ -82,7 +82,7 @@ class TransactionHistoryScreen extends StatelessWidget {
     return Text(
       'Peoples who have bought tickets for your party.',
       style: theme.textTheme.bodyMedium?.copyWith(
-        fontFamily: AppTypography.ppNeueMontreal,
+        fontFamily: AppTypography.modicaPro,
         fontSize: 14,
         fontWeight: AppTypography.thin,
         color: AppColors.onBackground,
@@ -179,7 +179,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                 Text(
                   transaction.name,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 16,
                     fontWeight: AppTypography.regular,
                     color: AppColors.onSurface,
@@ -190,7 +190,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                 Text(
                   transaction.description,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 13,
                     fontWeight: AppTypography.regular,
                     color: AppColors.textSecondary,
@@ -205,7 +205,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                     Text(
                       transaction.date,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 12,
                         fontWeight: AppTypography.regular,
                         color: AppColors.textSecondary,
@@ -224,7 +224,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                     Text(
                       transaction.time,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 12,
                         fontWeight: AppTypography.regular,
                         color: AppColors.textSecondary,
@@ -243,7 +243,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                     Text(
                       transaction.amount,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 12,
                         fontWeight: AppTypography.regular,
                         color: AppColors.primary,
@@ -279,7 +279,7 @@ class TransactionHistoryScreen extends StatelessWidget {
             child: Text(
               'Done',
               style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.neueHaasDisplay,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 18,
                 fontWeight: AppTypography.semiBold,
                 color: AppColors.onPrimary,

@@ -7,6 +7,7 @@ import 'package:toastification/toastification.dart';
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/presentation/presentation.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
+import 'package:fajimobileapp/core/services/auth_token_service.dart';
 
 void main() async {
   // Initialize the application
@@ -15,13 +16,21 @@ void main() async {
   // Initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   
+  // Create ProviderContainer to initialize auth token
+  final container = ProviderContainer(
+    overrides: [
+      // Override SharedPreferences provider
+      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+    ],
+  );
+  
+  // Initialize auth token (load from storage and set in API service)
+  await container.read(authTokenServiceProvider).initialize();
+  
   // Run the app with Riverpod
   runApp(
-    ProviderScope(
-      overrides: [
-        // Override SharedPreferences provider
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ],
+    UncontrolledProviderScope(
+      container: container,
       child: const MyApp(),
     ),
   );

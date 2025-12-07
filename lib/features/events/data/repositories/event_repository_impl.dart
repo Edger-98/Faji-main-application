@@ -113,19 +113,30 @@ class EventRepositoryImpl implements EventRepository {
     }
 
     try {
-      final response = await remoteDataSource.getTrendingEvents(limit);
-      
-      if (response.success) {
-        final data = response.data ?? [];
-        final events = data.map((e) => e.toEntity()).toList();
-        return Right(events);
-      } else {
-        return Left(ServerFailure(message: response.message));
+      // Try to get trending events, but if endpoint doesn't exist, return empty list
+      try {
+        final response = await remoteDataSource.getTrendingEvents(limit);
+        
+        if (response.success) {
+          final data = response.data ?? [];
+          final events = data.map((e) => e.toEntity()).toList();
+          return Right(events);
+        } else {
+          // If not successful, return empty list instead of error
+          return const Right([]);
+        }
+      } on DioException catch (e) {
+        // If endpoint doesn't exist (404), return empty list
+        if (e.response?.statusCode == 404) {
+          return const Right([]);
+        }
+        rethrow;
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e, stackTrace) {
-      return Left(ServerFailure(message: 'Error loading events: ${e.toString()}'));
+      // Return empty list instead of error for better UX
+      return const Right([]);
     }
   }
 
@@ -138,19 +149,30 @@ class EventRepositoryImpl implements EventRepository {
     }
 
     try {
-      final response = await remoteDataSource.getUpcomingEvents(limit);
-      
-      if (response.success) {
-        final data = response.data ?? [];
-        final events = data.map((e) => e.toEntity()).toList();
-        return Right(events);
-      } else {
-        return Left(ServerFailure(message: response.message));
+      // Try to get upcoming events, but if endpoint doesn't exist, return empty list
+      try {
+        final response = await remoteDataSource.getUpcomingEvents(limit);
+        
+        if (response.success) {
+          final data = response.data ?? [];
+          final events = data.map((e) => e.toEntity()).toList();
+          return Right(events);
+        } else {
+          // If not successful, return empty list instead of error
+          return const Right([]);
+        }
+      } on DioException catch (e) {
+        // If endpoint doesn't exist (404), return empty list
+        if (e.response?.statusCode == 404) {
+          return const Right([]);
+        }
+        rethrow;
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
-      return Left(ServerFailure(message: e.toString()));
+      // Return empty list instead of error for better UX
+      return const Right([]);
     }
   }
 
@@ -259,18 +281,105 @@ class EventRepositoryImpl implements EventRepository {
     try {
       final response = await remoteDataSource.getUserEvents();
       
-      if (response.success) {
-        final data = response.data ?? [];
-        final events = data.map((e) => e.toEntity()).toList();
-        return Right(events);
-      } else {
-        return Left(ServerFailure(message: response.message));
+      if (response.response.statusCode != 200) {
+        return Left(ServerFailure(message: 'Failed to load events'));
       }
+
+      final responseData = response.data;
+      if (responseData == null) {
+        return Left(ServerFailure(message: 'No data received'));
+      }
+
+      // Handle the response: {success: true, data: {events: [...], pagination: {...}}}
+      Map<String, dynamic> responseMap;
+      if (responseData is Map<String, dynamic>) {
+        responseMap = responseData;
+      } else if (responseData is Map) {
+        responseMap = Map<String, dynamic>.from(responseData);
+      } else {
+        return Left(ServerFailure(message: 'Invalid response format'));
+      }
+
+      // Extract the data field
+      final data = responseMap['data'];
+      if (data == null) {
+        return Left(ServerFailure(message: 'No events data'));
+      }
+
+      // Extract events array from data.events
+      List<dynamic> eventsJson;
+      if (data is Map<String, dynamic> && data.containsKey('events')) {
+        final events = data['events'];
+        if (events is List) {
+          eventsJson = events;
+        } else {
+          return Left(ServerFailure(message: 'Invalid events format'));
+        }
+      } else if (data is List) {
+        // Fallback: if data is directly an array
+        eventsJson = data;
+      } else {
+        return Left(ServerFailure(message: 'Invalid data structure'));
+      }
+
+      // Convert to EventEntity list
+      // The /events/my-events endpoint returns organized events with different structure
+      final events = eventsJson
+          .map((json) {
+            try {
+              if (json is Map<String, dynamic>) {
+                // Convert organize_event format to EventEntity
+                return _convertOrganizedEventToEntity(json);
+              } else if (json is Map) {
+                return _convertOrganizedEventToEntity(Map<String, dynamic>.from(json));
+              } else {
+                throw Exception('Invalid event format');
+              }
+            } catch (e) {
+              print('Error parsing event: $e');
+              print('Event JSON: $json');
+              rethrow;
+            }
+          })
+          .toList();
+
+      return Right(events);
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
+      print('getUserEvents error: $e');
       return Left(ServerFailure(message: e.toString()));
     }
+  }
+  
+  // Helper method to convert organized event format to EventEntity
+  EventEntity _convertOrganizedEventToEntity(Map<String, dynamic> json) {
+    final host = json['host'] as Map<String, dynamic>?;
+    final location = json['location'] as Map<String, dynamic>?;
+    final media = json['media'] as Map<String, dynamic>?;
+    
+    return EventEntity(
+      id: json['id'] as String,
+      title: json['name'] as String,
+      description: json['description'] as String? ?? '',
+      organizerId: host?['id'] as String? ?? '',
+      organizerName: host?['name'] as String? ?? 'Unknown',
+      organizerImage: host?['avatar'] as String?,
+      category: json['category'] as String? ?? 'Other',
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      location: location?['address'] as String? ?? '',
+      latitude: (location?['latitude'] as num?)?.toDouble() ?? 0.0,
+      longitude: (location?['longitude'] as num?)?.toDouble() ?? 0.0,
+      imageUrl: media?['poster'] as String? ?? '',
+      price: 0.0, // Organized events don't have price
+      totalTickets: 0,
+      availableTickets: 0,
+      isTrending: false,
+      isFeatured: false,
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt'] as String) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt'] as String) : null,
+    );
   }
 
   @override

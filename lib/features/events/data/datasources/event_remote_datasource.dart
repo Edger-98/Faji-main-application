@@ -12,48 +12,48 @@ abstract class EventRemoteDataSource {
   factory EventRemoteDataSource(Dio dio, {String baseUrl}) =
       _EventRemoteDataSource;
 
-  @GET('/api/events')
+  @GET('/events')
   Future<HttpResponse<dynamic>> getEvents(
     @Queries() Map<String, dynamic> queries,
   );
 
-  @GET('/api/events/trending')
+  @GET('/events/trending')
   Future<ApiResponse<List<EventModel>>> getTrendingEvents(
     @Query('limit') int? limit,
   );
 
-  @GET('/api/events/upcoming')
+  @GET('/events/upcoming')
   Future<ApiResponse<List<EventModel>>> getUpcomingEvents(
     @Query('limit') int? limit,
   );
 
-  @GET('/api/events/flash-deals')
+  @GET('/events/flash-deals')
   Future<ApiResponse<List<EventModel>>> getFlashDealEvents(
     @Query('limit') int? limit,
   );
 
-  @GET('/api/events/{id}')
+  @GET('/events/{id}')
   Future<HttpResponse<dynamic>> getEventById(
     @Path('id') String id,
   );
 
-  @GET('/api/events/my-events')
-  Future<ApiResponse<List<EventModel>>> getUserEvents();
+  @GET('/events/my-events')
+  Future<HttpResponse<dynamic>> getUserEvents();
 
-  @GET('/api/events/favorites')
+  @GET('/events/favorites')
   Future<ApiResponse<List<EventModel>>> getFavoriteEvents();
 
-  @POST('/api/events/{id}/favorite')
+  @POST('/events/{id}/favorite')
   Future<ApiResponse<bool>> addToFavorites(
     @Path('id') String eventId,
   );
 
-  @DELETE('/api/events/{id}/favorite')
+  @DELETE('/events/{id}/favorite')
   Future<ApiResponse<bool>> removeFromFavorites(
     @Path('id') String eventId,
   );
 
-  @GET('/api/events/search')
+  @GET('/events/search')
   Future<ApiResponse<List<EventModel>>> searchEvents(
     @Query('q') String query,
   );

@@ -52,7 +52,7 @@ class AuthInputField extends StatelessWidget {
                 inputFormatters: inputFormatters,
                 onChanged: onChanged,
                 style: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 17.sp, // Responsive font size
                   fontWeight: FontWeight.w100,
                   height: 1.2,
@@ -62,7 +62,7 @@ class AuthInputField extends StatelessWidget {
                 decoration: InputDecoration(
                   hintText: hintText,
                   hintStyle: TextStyle(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 17.sp, // Responsive font size
                     fontWeight: FontWeight.w100,
                     height: 1.2,

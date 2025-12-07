@@ -7,6 +7,8 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart';
+import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart' as events_providers;
+import 'package:fajimobileapp/features/events/domain/entities/event_entity_extensions.dart';
 
 /// Trending events horizontal scrollable section - Connected to API
 class TrendingEventsSection extends ConsumerWidget {
@@ -29,11 +31,49 @@ class TrendingEventsSection extends ConsumerWidget {
           height: 267.h,
           child: trendingEvents.when(
             data: (events) {
+              // If no trending events, show user's events instead
               if (events.isEmpty) {
-                return Center(
-                  child: AppText.bodyMedium(
-                    'No trending events available',
-                    color: context.colors.onSurfaceVariant,
+                final userEvents = ref.watch(events_providers.userEventsProvider);
+                return userEvents.when(
+                  data: (myEvents) {
+                    if (myEvents.isEmpty) {
+                      return Center(
+                        child: AppText.bodyMedium(
+                          'No events available',
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      );
+                    }
+                    return ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: myEvents.length,
+                      separatorBuilder: (context, index) => SizedBox(width: 16.w),
+                      itemBuilder: (context, index) {
+                        final event = myEvents[index];
+                        return EventCard(
+                          imageUrl: event.displayImageUrl,
+                          title: event.title,
+                          date: _formatDate(event.startDate),
+                          time: _formatTime(event.startDate),
+                          price: event.displayPrice,
+                          isLive: false,
+                          onTap: () {
+                            context.push('${RouteManager.eventDetails}/${event.id}');
+                          },
+                          onFavorite: () {},
+                        );
+                      },
+                    );
+                  },
+                  loading: () => Center(
+                    child: CircularProgressIndicator(color: context.colors.primary),
+                  ),
+                  error: (_, __) => Center(
+                    child: AppText.bodyMedium(
+                      'No events available',
+                      color: context.colors.onSurfaceVariant,
+                    ),
                   ),
                 );
               }
@@ -45,13 +85,11 @@ class TrendingEventsSection extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final event = events[index];
                   return EventCard(
-                    imageUrl: event.imageUrl,
+                    imageUrl: event.displayImageUrl,
                     title: event.title,
                     date: _formatDate(event.startDate),
                     time: _formatTime(event.startDate),
-                    price: event.price > 0 
-                        ? 'From \$${event.price.toStringAsFixed(2)}' 
-                        : 'Free',
+                    price: event.displayPrice,
                     isLive: event.isTrending == true,
                     onTap: () {
                       context.push('${RouteManager.eventDetails}/${event.id}');

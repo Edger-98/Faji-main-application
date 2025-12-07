@@ -644,7 +644,7 @@ class EventDetailsScreen extends StatelessWidget {
                 Text(
                   rating.toString(),
                   style: TextStyle(
-                    fontFamily: AppTypography.ppNeueMontreal,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
                     height: 1.2,
@@ -657,7 +657,7 @@ class EventDetailsScreen extends StatelessWidget {
             Text(
               '"$review',
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w100,
                 height: 1.2,

@@ -132,7 +132,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                           child: Text(
                             widget.resource.cohostName[0],
                             style: TextStyle(
-                              fontFamily: AppTypography.ppNeueMontreal,
+                              fontFamily: AppTypography.modicaPro,
                               fontSize: 32.sp,
                               fontWeight: FontWeight.w700,
                               color: widget.resource.category.color,
@@ -151,7 +151,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                                   child: Text(
                                     widget.resource.cohostName,
                                     style: TextStyle(
-                                      fontFamily: AppTypography.ppNeueMontreal,
+                                      fontFamily: AppTypography.modicaPro,
                                       fontSize: 26.sp,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.onSurface,
@@ -189,7 +189,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                               child: Text(
                                 widget.resource.category.displayName,
                                 style: TextStyle(
-                                  fontFamily: AppTypography.ppNeueMontreal,
+                                  fontFamily: AppTypography.modicaPro,
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w600,
                                   color: widget.resource.category.color,
@@ -243,7 +243,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                             Text(
                               widget.resource.title,
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 22.sp,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.onSurface,
@@ -256,7 +256,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                                 Text(
                                   _formatPrice(widget.resource.basePrice),
                                   style: TextStyle(
-                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 24.sp,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.onSurface,
@@ -265,7 +265,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                                 Text(
                                   ' /event',
                                   style: TextStyle(
-                                    fontFamily: AppTypography.ppNeueMontreal,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.onSurfaceVariant,
@@ -304,7 +304,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                             Text(
                               widget.resource.isAvailable ? 'Open' : 'Busy',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
                                 color: widget.resource.isAvailable
@@ -324,7 +324,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                     firstChild: Text(
                       widget.resource.description,
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.onSurfaceVariant.withOpacity(0.9),
@@ -336,7 +336,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                     secondChild: Text(
                       widget.resource.description,
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.onSurfaceVariant.withOpacity(0.9),
@@ -358,7 +358,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                             Text(
                               _isExpanded ? 'Show less' : 'Read more',
                               style: TextStyle(
-                                fontFamily: AppTypography.ppNeueMontreal,
+                                fontFamily: AppTypography.modicaPro,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.onSurface.withOpacity(0.6),
@@ -446,7 +446,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                     Text(
                       'Send Booking Request',
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
@@ -485,7 +485,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           Text(
             value,
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 18.sp,
               fontWeight: FontWeight.w700,
               color: AppColors.onSurface,
@@ -495,7 +495,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           Text(
             label,
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 11.sp,
               fontWeight: FontWeight.w500,
               color: AppColors.onSurfaceVariant.withOpacity(0.7),
@@ -528,7 +528,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
             child: Text(
               label,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: isSelected
@@ -600,7 +600,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                       child: Text(
                         review['name'].toString()[0],
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,
@@ -616,7 +616,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                         Text(
                           review['name'] as String,
                           style: TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.onSurface,
@@ -625,7 +625,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                         Text(
                           review['date'] as String,
                           style: TextStyle(
-                            fontFamily: AppTypography.ppNeueMontreal,
+                            fontFamily: AppTypography.modicaPro,
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
                             color: AppColors.onSurfaceVariant,
@@ -645,7 +645,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                       Text(
                         review['rating'].toString(),
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.onSurface,
@@ -659,7 +659,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
               Text(
                 review['comment'] as String,
                 style: TextStyle(
-                  fontFamily: AppTypography.ppNeueMontreal,
+                  fontFamily: AppTypography.modicaPro,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.onSurfaceVariant,
@@ -721,7 +721,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           Text(
             'Services Included',
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.onSurface,
@@ -746,7 +746,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                     Text(
                       service,
                       style: TextStyle(
-                        fontFamily: AppTypography.ppNeueMontreal,
+                        fontFamily: AppTypography.modicaPro,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.onSurfaceVariant,
@@ -777,7 +777,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           Text(
             label,
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: AppColors.onSurfaceVariant,
@@ -786,7 +786,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
           Text(
             value,
             style: TextStyle(
-              fontFamily: AppTypography.ppNeueMontreal,
+              fontFamily: AppTypography.modicaPro,
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.onSurface,

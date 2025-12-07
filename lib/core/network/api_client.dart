@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../config/api_config.dart';
 
 import 'interceptors/auth_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
@@ -13,7 +13,8 @@ class ApiClient {
   late final Dio _dio;
 
   ApiClient() {
-    final baseUrl = dotenv.env['API_BASE_URL'] ?? dotenv.env['BASE_URL'] ?? 'http://10.0.2.2:5001';
+    // Use ApiConfig for consistent URL across the app
+    final baseUrl = ApiConfig.baseUrl;
     
     _dio = Dio(
       BaseOptions(

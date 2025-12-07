@@ -28,7 +28,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/register/email',
+            '/auth/register/email',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -53,7 +53,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/register/verify-otp',
+            '/auth/register/verify-otp',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -76,7 +76,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/register/phone',
+            '/auth/register/phone',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -99,7 +99,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/register/name',
+            '/auth/register/name',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -124,7 +124,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/register/complete',
+            '/auth/register/complete',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -147,7 +147,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/login',
+            '/auth/login',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -170,7 +170,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/signup',
+            '/auth/signup',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -193,7 +193,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/send-otp',
+            '/auth/send-otp',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -216,7 +216,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/verify-otp',
+            '/auth/verify-otp',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -241,7 +241,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/forget-password',
+            '/auth/forget-password',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -267,7 +267,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/update-password/${token}',
+            '/auth/update-password/${token}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -289,7 +289,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/users/${id}',
+            '/auth/users/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -343,7 +343,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
           )
           .compose(
             _dio.options,
-            '/api/auth/updateSettings/${id}',
+            '/auth/updateSettings/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -373,7 +373,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/auth/deleteAccount/${id}',
+            '/auth/deleteAccount/${id}',
             queryParameters: queryParameters,
             data: _data,
           )

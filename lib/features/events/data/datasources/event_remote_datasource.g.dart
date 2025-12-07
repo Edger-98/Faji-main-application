@@ -28,7 +28,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events',
+            '/events',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -51,7 +51,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/trending',
+            '/events/trending',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -88,7 +88,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/upcoming',
+            '/events/upcoming',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -125,7 +125,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/flash-deals',
+            '/events/flash-deals',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -161,7 +161,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/${id}',
+            '/events/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -174,39 +174,25 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
   }
 
   @override
-  Future<ApiResponse<List<EventModel>>> getUserEvents() async {
+  Future<HttpResponse<dynamic>> getUserEvents() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ApiResponse<List<EventModel>>>(
+    final _options = _setStreamType<HttpResponse<dynamic>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/my-events',
+            '/events/my-events',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<List<EventModel>> _value;
-    try {
-      _value = ApiResponse<List<EventModel>>.fromJson(
-        _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<EventModel>(
-                    (i) => EventModel.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
   }
 
   @override
@@ -219,7 +205,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/favorites',
+            '/events/favorites',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -255,7 +241,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/${eventId}/favorite',
+            '/events/${eventId}/favorite',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -285,7 +271,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'DELETE', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/${eventId}/favorite',
+            '/events/${eventId}/favorite',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -315,7 +301,7 @@ class _EventRemoteDataSource implements EventRemoteDataSource {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/events/search',
+            '/events/search',
             queryParameters: queryParameters,
             data: _data,
           )

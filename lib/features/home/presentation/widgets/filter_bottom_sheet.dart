@@ -108,7 +108,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 Text(
                   'Sort and Filters',
                   style: TextStyle(
-                    fontFamily: AppTypography.neueHaasDisplay,
+                    fontFamily: AppTypography.modicaPro,
                     fontSize: 22.sp,
                     fontWeight: FontWeight.w500,
                     height: 1.2,
@@ -172,7 +172,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   Text(
                     'See events based on your current location',
                     style: TextStyle(
-                      fontFamily: AppTypography.ppNeueMontreal,
+                      fontFamily: AppTypography.modicaPro,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w100,
                       height: 1.2,
@@ -211,7 +211,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       Text(
                         '${_distance.toInt()}km',
                         style: TextStyle(
-                          fontFamily: AppTypography.ppNeueMontreal,
+                          fontFamily: AppTypography.modicaPro,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w100,
                           height: 1.2,
@@ -282,7 +282,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             Text(
               option,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w100,
                 height: 1.2,
@@ -341,7 +341,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         child: Text(
           price,
           style: TextStyle(
-            fontFamily: AppTypography.ppNeueMontreal,
+            fontFamily: AppTypography.modicaPro,
             fontSize: 16.sp,
             fontWeight: FontWeight.w100,
             height: 1.2,
@@ -371,7 +371,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             Text(
               option,
               style: TextStyle(
-                fontFamily: AppTypography.ppNeueMontreal,
+                fontFamily: AppTypography.modicaPro,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w100,
                 height: 1.2,

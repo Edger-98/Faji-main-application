@@ -111,7 +111,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
 
                   // Expected guests input
                   Container(
-                    height: 75.h,
+                    height: 80.h,
                     padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                     decoration: BoxDecoration(
                       color: const Color(0xFF2A2A2A),
@@ -158,7 +158,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                                   }
                                 },
                                 style: TextStyle(
-                                  fontFamily: AppTypography.neueHaasDisplay,
+                                  fontFamily: AppTypography.modicaPro,
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.onSurface,
@@ -166,7 +166,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                                 decoration: InputDecoration(
                                   hintText: '0',
                                   hintStyle: TextStyle(
-                                    fontFamily: AppTypography.neueHaasDisplay,
+                                    fontFamily: AppTypography.modicaPro,
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.onSurfaceVariant.withOpacity(0.5),
@@ -200,7 +200,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
 
                   // Budget input
                   Container(
-                    height: 75.h,
+                    height: 80.h,
                     padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                     decoration: BoxDecoration(
                       color: const Color(0xFF2A2A2A),
@@ -237,7 +237,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                               Row(
                                 children: [
                                   AppText.titleMedium(
-                                    '₦',
+                                    'NGN',
                                     color: AppColors.onSurface,
                                   ),
                                   SizedBox(width: 4.w),
@@ -255,7 +255,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                                         }
                                       },
                                       style: TextStyle(
-                                        fontFamily: AppTypography.neueHaasDisplay,
+                                        fontFamily: AppTypography.modicaPro,
                                         fontSize: 18.sp,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.onSurface,
@@ -263,7 +263,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                                       decoration: InputDecoration(
                                         hintText: '0',
                                         hintStyle: TextStyle(
-                                          fontFamily: AppTypography.neueHaasDisplay,
+                                          fontFamily: AppTypography.modicaPro,
                                           fontSize: 18.sp,
                                           fontWeight: FontWeight.w600,
                                           color: AppColors.onSurfaceVariant.withOpacity(0.5),
