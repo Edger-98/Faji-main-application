@@ -33,8 +33,7 @@ class EventCreationRepository {
     required DateTime endDate,
     String? description,
     String? emoji,
-    String? themeId,
-    String? posterId,
+    String? imageUrl, // NEW: Replaces themeId and posterId
     String? websiteLink,
     String? rsvpButtonText,
     int? expectedGuests,
@@ -56,11 +55,8 @@ class EventCreationRepository {
       if (emoji != null) {
         eventData['emoji'] = emoji;
       }
-      if (themeId != null) {
-        eventData['themeId'] = themeId;
-      }
-      if (posterId != null) {
-        eventData['posterId'] = posterId;
+      if (imageUrl != null && imageUrl.isNotEmpty) {
+        eventData['imageUrl'] = imageUrl; // NEW: Send Cloudinary URL
       }
       if (websiteLink != null && websiteLink.isNotEmpty) {
         eventData['websiteLink'] = websiteLink;

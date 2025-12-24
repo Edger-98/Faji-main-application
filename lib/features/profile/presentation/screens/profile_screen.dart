@@ -183,7 +183,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 ),
                               ),
                               Text(
-                                '\$230.00',
+                                '\$230d00000.00',
                                 style: AppTypography.headlineMedium.copyWith(
                                   color: const Color(0xFFFEB822),
                                   fontWeight: AppTypography.regular,
@@ -206,6 +206,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Personal section
                   _buildSectionHeader('Personal'),
                   const SizedBox(height: 3),
+                  _buildMenuItem(
+                    Icons.storefront_rounded, 
+                    'Become a Vendor',
+                    onTap: () => context.push(RouteManager.vendorRegistration),
+                  ),
                   _buildMenuItem(
                     Icons.person_outline, 
                     'Account settings',

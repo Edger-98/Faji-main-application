@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/cohost_resource_entity.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/booking_negotiation_screen.dart';
 
 /// Screen showing detailed vendor profile with ratings and reviews
 class VendorProfileScreen extends StatefulWidget {
   const VendorProfileScreen({
     required this.resource,
+    this.eventId,
     super.key,
   });
 
   final CohostResourceEntity resource;
+  final String? eventId;
 
   @override
   State<VendorProfileScreen> createState() => _VendorProfileScreenState();
@@ -422,16 +425,30 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
         child: SafeArea(
           child: GestureDetector(
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Sending request to ${widget.resource.cohostName}...'),
-                  backgroundColor: const Color(0xFF4CAF50),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
+              if (widget.eventId != null) {
+                // Navigate to booking negotiation screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookingNegotiationScreen(
+                      resource: widget.resource,
+                      eventId: widget.eventId!,
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                // Show message if no event ID
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Please create an event first'),
+                    backgroundColor: AppColors.error,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                  ),
+                );
+              }
             },
             child: Container(
               height: 56.h,

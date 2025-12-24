@@ -22,7 +22,10 @@ mixin _$EventCreationEntity {
       throw _privateConstructorUsedError; // Step 1: Event Details
   String? get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-  String? get coverPhotoPath => throw _privateConstructorUsedError;
+  String? get imageUrl =>
+      throw _privateConstructorUsedError; // Cloudinary image URL (replaces poster/theme)
+  String? get localImagePath =>
+      throw _privateConstructorUsedError; // Local file path before upload
   DateTime? get eventDate => throw _privateConstructorUsedError;
   String? get eventTime => throw _privateConstructorUsedError;
   String? get location => throw _privateConstructorUsedError;
@@ -34,10 +37,6 @@ mixin _$EventCreationEntity {
   bool get enableWishlist => throw _privateConstructorUsedError;
   bool get enableBudgetTracking => throw _privateConstructorUsedError;
   bool get enableCohostMarketplace =>
-      throw _privateConstructorUsedError; // Step 3: Poster Selection
-  String? get selectedPosterId =>
-      throw _privateConstructorUsedError; // Step 4: Theme Selection
-  String? get selectedThemeId =>
       throw _privateConstructorUsedError; // Co-host data (if enabled)
   List<String>? get selectedCohostIds => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -46,7 +45,8 @@ mixin _$EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
-      String? coverPhotoPath,
+      String? imageUrl,
+      String? localImagePath,
       DateTime? eventDate,
       String? eventTime,
       String? location,
@@ -57,8 +57,6 @@ mixin _$EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
-      String? selectedPosterId,
-      String? selectedThemeId,
       List<String>? selectedCohostIds,
     )
     $default,
@@ -69,7 +67,8 @@ mixin _$EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
-      String? coverPhotoPath,
+      String? imageUrl,
+      String? localImagePath,
       DateTime? eventDate,
       String? eventTime,
       String? location,
@@ -80,8 +79,6 @@ mixin _$EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
-      String? selectedPosterId,
-      String? selectedThemeId,
       List<String>? selectedCohostIds,
     )?
     $default,
@@ -92,7 +89,8 @@ mixin _$EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
-      String? coverPhotoPath,
+      String? imageUrl,
+      String? localImagePath,
       DateTime? eventDate,
       String? eventTime,
       String? location,
@@ -103,8 +101,6 @@ mixin _$EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
-      String? selectedPosterId,
-      String? selectedThemeId,
       List<String>? selectedCohostIds,
     )?
     $default, {
@@ -142,7 +138,8 @@ abstract class $EventCreationEntityCopyWith<$Res> {
     String? eventType,
     String? title,
     String? description,
-    String? coverPhotoPath,
+    String? imageUrl,
+    String? localImagePath,
     DateTime? eventDate,
     String? eventTime,
     String? location,
@@ -153,8 +150,6 @@ abstract class $EventCreationEntityCopyWith<$Res> {
     bool enableWishlist,
     bool enableBudgetTracking,
     bool enableCohostMarketplace,
-    String? selectedPosterId,
-    String? selectedThemeId,
     List<String>? selectedCohostIds,
   });
 }
@@ -177,7 +172,8 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
     Object? eventType = freezed,
     Object? title = freezed,
     Object? description = freezed,
-    Object? coverPhotoPath = freezed,
+    Object? imageUrl = freezed,
+    Object? localImagePath = freezed,
     Object? eventDate = freezed,
     Object? eventTime = freezed,
     Object? location = freezed,
@@ -188,8 +184,6 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
     Object? enableWishlist = null,
     Object? enableBudgetTracking = null,
     Object? enableCohostMarketplace = null,
-    Object? selectedPosterId = freezed,
-    Object? selectedThemeId = freezed,
     Object? selectedCohostIds = freezed,
   }) {
     return _then(
@@ -206,9 +200,13 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
                       as String?,
-            coverPhotoPath: freezed == coverPhotoPath
-                ? _value.coverPhotoPath
-                : coverPhotoPath // ignore: cast_nullable_to_non_nullable
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            localImagePath: freezed == localImagePath
+                ? _value.localImagePath
+                : localImagePath // ignore: cast_nullable_to_non_nullable
                       as String?,
             eventDate: freezed == eventDate
                 ? _value.eventDate
@@ -250,14 +248,6 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
                 ? _value.enableCohostMarketplace
                 : enableCohostMarketplace // ignore: cast_nullable_to_non_nullable
                       as bool,
-            selectedPosterId: freezed == selectedPosterId
-                ? _value.selectedPosterId
-                : selectedPosterId // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            selectedThemeId: freezed == selectedThemeId
-                ? _value.selectedThemeId
-                : selectedThemeId // ignore: cast_nullable_to_non_nullable
-                      as String?,
             selectedCohostIds: freezed == selectedCohostIds
                 ? _value.selectedCohostIds
                 : selectedCohostIds // ignore: cast_nullable_to_non_nullable
@@ -281,7 +271,8 @@ abstract class _$$EventCreationEntityImplCopyWith<$Res>
     String? eventType,
     String? title,
     String? description,
-    String? coverPhotoPath,
+    String? imageUrl,
+    String? localImagePath,
     DateTime? eventDate,
     String? eventTime,
     String? location,
@@ -292,8 +283,6 @@ abstract class _$$EventCreationEntityImplCopyWith<$Res>
     bool enableWishlist,
     bool enableBudgetTracking,
     bool enableCohostMarketplace,
-    String? selectedPosterId,
-    String? selectedThemeId,
     List<String>? selectedCohostIds,
   });
 }
@@ -315,7 +304,8 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
     Object? eventType = freezed,
     Object? title = freezed,
     Object? description = freezed,
-    Object? coverPhotoPath = freezed,
+    Object? imageUrl = freezed,
+    Object? localImagePath = freezed,
     Object? eventDate = freezed,
     Object? eventTime = freezed,
     Object? location = freezed,
@@ -326,8 +316,6 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
     Object? enableWishlist = null,
     Object? enableBudgetTracking = null,
     Object? enableCohostMarketplace = null,
-    Object? selectedPosterId = freezed,
-    Object? selectedThemeId = freezed,
     Object? selectedCohostIds = freezed,
   }) {
     return _then(
@@ -344,9 +332,13 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
                   as String?,
-        coverPhotoPath: freezed == coverPhotoPath
-            ? _value.coverPhotoPath
-            : coverPhotoPath // ignore: cast_nullable_to_non_nullable
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        localImagePath: freezed == localImagePath
+            ? _value.localImagePath
+            : localImagePath // ignore: cast_nullable_to_non_nullable
                   as String?,
         eventDate: freezed == eventDate
             ? _value.eventDate
@@ -388,14 +380,6 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
             ? _value.enableCohostMarketplace
             : enableCohostMarketplace // ignore: cast_nullable_to_non_nullable
                   as bool,
-        selectedPosterId: freezed == selectedPosterId
-            ? _value.selectedPosterId
-            : selectedPosterId // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        selectedThemeId: freezed == selectedThemeId
-            ? _value.selectedThemeId
-            : selectedThemeId // ignore: cast_nullable_to_non_nullable
-                  as String?,
         selectedCohostIds: freezed == selectedCohostIds
             ? _value._selectedCohostIds
             : selectedCohostIds // ignore: cast_nullable_to_non_nullable
@@ -412,7 +396,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     this.eventType,
     this.title,
     this.description,
-    this.coverPhotoPath,
+    this.imageUrl,
+    this.localImagePath,
     this.eventDate,
     this.eventTime,
     this.location,
@@ -423,8 +408,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     this.enableWishlist = false,
     this.enableBudgetTracking = false,
     this.enableCohostMarketplace = false,
-    this.selectedPosterId,
-    this.selectedThemeId,
     final List<String>? selectedCohostIds,
   }) : _selectedCohostIds = selectedCohostIds;
 
@@ -437,7 +420,11 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
   @override
   final String? description;
   @override
-  final String? coverPhotoPath;
+  final String? imageUrl;
+  // Cloudinary image URL (replaces poster/theme)
+  @override
+  final String? localImagePath;
+  // Local file path before upload
   @override
   final DateTime? eventDate;
   @override
@@ -462,12 +449,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
   @override
   @JsonKey()
   final bool enableCohostMarketplace;
-  // Step 3: Poster Selection
-  @override
-  final String? selectedPosterId;
-  // Step 4: Theme Selection
-  @override
-  final String? selectedThemeId;
   // Co-host data (if enabled)
   final List<String>? _selectedCohostIds;
   // Co-host data (if enabled)
@@ -483,7 +464,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
 
   @override
   String toString() {
-    return 'EventCreationEntity(eventType: $eventType, title: $title, description: $description, coverPhotoPath: $coverPhotoPath, eventDate: $eventDate, eventTime: $eventTime, location: $location, totalSeats: $totalSeats, ticketPrice: $ticketPrice, expectedGuests: $expectedGuests, budget: $budget, enableWishlist: $enableWishlist, enableBudgetTracking: $enableBudgetTracking, enableCohostMarketplace: $enableCohostMarketplace, selectedPosterId: $selectedPosterId, selectedThemeId: $selectedThemeId, selectedCohostIds: $selectedCohostIds)';
+    return 'EventCreationEntity(eventType: $eventType, title: $title, description: $description, imageUrl: $imageUrl, localImagePath: $localImagePath, eventDate: $eventDate, eventTime: $eventTime, location: $location, totalSeats: $totalSeats, ticketPrice: $ticketPrice, expectedGuests: $expectedGuests, budget: $budget, enableWishlist: $enableWishlist, enableBudgetTracking: $enableBudgetTracking, enableCohostMarketplace: $enableCohostMarketplace, selectedCohostIds: $selectedCohostIds)';
   }
 
   @override
@@ -496,8 +477,10 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.coverPhotoPath, coverPhotoPath) ||
-                other.coverPhotoPath == coverPhotoPath) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
+            (identical(other.localImagePath, localImagePath) ||
+                other.localImagePath == localImagePath) &&
             (identical(other.eventDate, eventDate) ||
                 other.eventDate == eventDate) &&
             (identical(other.eventTime, eventTime) ||
@@ -520,10 +503,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
                   enableCohostMarketplace,
                 ) ||
                 other.enableCohostMarketplace == enableCohostMarketplace) &&
-            (identical(other.selectedPosterId, selectedPosterId) ||
-                other.selectedPosterId == selectedPosterId) &&
-            (identical(other.selectedThemeId, selectedThemeId) ||
-                other.selectedThemeId == selectedThemeId) &&
             const DeepCollectionEquality().equals(
               other._selectedCohostIds,
               _selectedCohostIds,
@@ -536,7 +515,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     eventType,
     title,
     description,
-    coverPhotoPath,
+    imageUrl,
+    localImagePath,
     eventDate,
     eventTime,
     location,
@@ -547,8 +527,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     enableWishlist,
     enableBudgetTracking,
     enableCohostMarketplace,
-    selectedPosterId,
-    selectedThemeId,
     const DeepCollectionEquality().hash(_selectedCohostIds),
   );
 
@@ -570,7 +548,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
-      String? coverPhotoPath,
+      String? imageUrl,
+      String? localImagePath,
       DateTime? eventDate,
       String? eventTime,
       String? location,
@@ -581,8 +560,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
-      String? selectedPosterId,
-      String? selectedThemeId,
       List<String>? selectedCohostIds,
     )
     $default,
@@ -591,7 +568,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       eventType,
       title,
       description,
-      coverPhotoPath,
+      imageUrl,
+      localImagePath,
       eventDate,
       eventTime,
       location,
@@ -602,8 +580,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       enableWishlist,
       enableBudgetTracking,
       enableCohostMarketplace,
-      selectedPosterId,
-      selectedThemeId,
       selectedCohostIds,
     );
   }
@@ -615,7 +591,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
-      String? coverPhotoPath,
+      String? imageUrl,
+      String? localImagePath,
       DateTime? eventDate,
       String? eventTime,
       String? location,
@@ -626,8 +603,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
-      String? selectedPosterId,
-      String? selectedThemeId,
       List<String>? selectedCohostIds,
     )?
     $default,
@@ -636,7 +611,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       eventType,
       title,
       description,
-      coverPhotoPath,
+      imageUrl,
+      localImagePath,
       eventDate,
       eventTime,
       location,
@@ -647,8 +623,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       enableWishlist,
       enableBudgetTracking,
       enableCohostMarketplace,
-      selectedPosterId,
-      selectedThemeId,
       selectedCohostIds,
     );
   }
@@ -660,7 +634,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
-      String? coverPhotoPath,
+      String? imageUrl,
+      String? localImagePath,
       DateTime? eventDate,
       String? eventTime,
       String? location,
@@ -671,8 +646,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
-      String? selectedPosterId,
-      String? selectedThemeId,
       List<String>? selectedCohostIds,
     )?
     $default, {
@@ -683,7 +656,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
         eventType,
         title,
         description,
-        coverPhotoPath,
+        imageUrl,
+        localImagePath,
         eventDate,
         eventTime,
         location,
@@ -694,8 +668,6 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
         enableWishlist,
         enableBudgetTracking,
         enableCohostMarketplace,
-        selectedPosterId,
-        selectedThemeId,
         selectedCohostIds,
       );
     }
@@ -736,7 +708,8 @@ abstract class _EventCreationEntity implements EventCreationEntity {
     final String? eventType,
     final String? title,
     final String? description,
-    final String? coverPhotoPath,
+    final String? imageUrl,
+    final String? localImagePath,
     final DateTime? eventDate,
     final String? eventTime,
     final String? location,
@@ -747,8 +720,6 @@ abstract class _EventCreationEntity implements EventCreationEntity {
     final bool enableWishlist,
     final bool enableBudgetTracking,
     final bool enableCohostMarketplace,
-    final String? selectedPosterId,
-    final String? selectedThemeId,
     final List<String>? selectedCohostIds,
   }) = _$EventCreationEntityImpl;
 
@@ -760,7 +731,9 @@ abstract class _EventCreationEntity implements EventCreationEntity {
   @override
   String? get description;
   @override
-  String? get coverPhotoPath;
+  String? get imageUrl; // Cloudinary image URL (replaces poster/theme)
+  @override
+  String? get localImagePath; // Local file path before upload
   @override
   DateTime? get eventDate;
   @override
@@ -780,11 +753,7 @@ abstract class _EventCreationEntity implements EventCreationEntity {
   @override
   bool get enableBudgetTracking;
   @override
-  bool get enableCohostMarketplace; // Step 3: Poster Selection
-  @override
-  String? get selectedPosterId; // Step 4: Theme Selection
-  @override
-  String? get selectedThemeId; // Co-host data (if enabled)
+  bool get enableCohostMarketplace; // Co-host data (if enabled)
   @override
   List<String>? get selectedCohostIds;
 

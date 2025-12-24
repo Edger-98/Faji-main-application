@@ -26,6 +26,11 @@ import 'package:fajimobileapp/features/profile/profile.dart';
 import 'package:fajimobileapp/features/support/support.dart';
 import 'package:fajimobileapp/features/terms/terms.dart';
 import 'package:fajimobileapp/features/wallet/wallet.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_registration_screen.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_resources_list_screen.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_add_resource_screen_v2.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_bookings_list_screen.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_dashboard_screen.dart';
 
 /// Application router configuration
 class AppRouter {
@@ -487,6 +492,53 @@ class AppRouter {
           context,
           state,
           const TransactionHistoryScreen(),
+        ),
+      ),
+
+      // Vendor routes
+      GoRoute(
+        path: RouteManager.vendorRegistration,
+        name: RouteManager.vendorRegistrationName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const VendorRegistrationScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.vendorResourcesList,
+        name: RouteManager.vendorResourcesListName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const VendorResourcesListScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.vendorAddResource,
+        name: RouteManager.vendorAddResourceName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const VendorAddResourceScreenV2(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.vendorBookingsList,
+        name: RouteManager.vendorBookingsListName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const VendorBookingsListScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.vendorDashboardScreen,
+        name: RouteManager.vendorDashboardScreenName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const VendorDashboardScreen(),
         ),
       ),
     ],

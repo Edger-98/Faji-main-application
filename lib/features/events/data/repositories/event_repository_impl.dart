@@ -358,6 +358,16 @@ class EventRepositoryImpl implements EventRepository {
     final location = json['location'] as Map<String, dynamic>?;
     final media = json['media'] as Map<String, dynamic>?;
     
+    // Get imageUrl - check direct field first, then media.poster, then fallback
+    String imageUrl = '';
+    if (json['imageUrl'] != null && (json['imageUrl'] as String).isNotEmpty) {
+      // NEW: Direct imageUrl field (Cloudinary URL)
+      imageUrl = json['imageUrl'] as String;
+    } else if (media?['poster'] != null && (media!['poster'] as String).isNotEmpty) {
+      // Fallback: Old poster field
+      imageUrl = media['poster'] as String;
+    }
+    
     return EventEntity(
       id: json['id'] as String,
       title: json['name'] as String,
@@ -371,7 +381,7 @@ class EventRepositoryImpl implements EventRepository {
       location: location?['address'] as String? ?? '',
       latitude: (location?['latitude'] as num?)?.toDouble() ?? 0.0,
       longitude: (location?['longitude'] as num?)?.toDouble() ?? 0.0,
-      imageUrl: media?['poster'] as String? ?? '',
+      imageUrl: imageUrl,
       price: 0.0, // Organized events don't have price
       totalTickets: 0,
       availableTickets: 0,

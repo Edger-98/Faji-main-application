@@ -4,10 +4,16 @@ import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resource_category.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/cohost_list_screen.dart';
 
 /// Screen for selecting resource categories when creating an event
 class ResourceCategoriesScreen extends StatefulWidget {
-  const ResourceCategoriesScreen({super.key});
+  const ResourceCategoriesScreen({
+    this.eventId,
+    super.key,
+  });
+
+  final String? eventId;
 
   @override
   State<ResourceCategoriesScreen> createState() => _ResourceCategoriesScreenState();
@@ -100,9 +106,15 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
               onTap: () {
                 Navigator.pop(context);
                 final ResourceCategory firstCategory = _selectedCategories.first;
-                context.push(
-                  RouteManager.cohostList,
-                  extra: firstCategory,
+                // Navigate to cohost list with eventId
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CohostListScreen(
+                      category: firstCategory,
+                      eventId: widget.eventId,
+                    ),
+                  ),
                 ).then((_) {
                   // After browsing vendors, go back and continue event creation
                   Navigator.pop(context);

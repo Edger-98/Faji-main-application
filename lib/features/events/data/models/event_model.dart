@@ -98,11 +98,20 @@ class EventModel {
       }
     }
     
-    // Get first image from images array
+    // Get imageUrl - check direct field first, then images array, then fallback
     final imagesList = json['images'] as List<dynamic>?;
-    final imageUrl = imagesList != null && imagesList.isNotEmpty
-        ? imagesList[0].toString()
-        : 'https://via.placeholder.com/400x300';
+    final String imageUrl;
+    
+    if (json['imageUrl'] != null && (json['imageUrl'] as String).isNotEmpty) {
+      // NEW: Direct imageUrl field from backend (Cloudinary URL)
+      imageUrl = json['imageUrl'] as String;
+    } else if (imagesList != null && imagesList.isNotEmpty) {
+      // Fallback: First image from images array
+      imageUrl = imagesList[0].toString();
+    } else {
+      // Fallback: Empty (will show gradient in UI)
+      imageUrl = '';
+    }
     
     // Calculate available tickets
     final seats = (json['seats'] as num?)?.toInt() ?? 0;

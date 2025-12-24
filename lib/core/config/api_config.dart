@@ -1,7 +1,8 @@
 /// API Configuration for different environments
 class ApiConfig {
-  // Production Heroku URL - now used for all environments
-  static const String _devBaseUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
+  // For Android Emulator, use 10.0.2.2 instead of localhost
+  // For iOS Simulator or physical device on same network, use your computer's IP
+  static const String _devBaseUrl = 'http://10.0.2.2:5001/api/v1';
   static const String _stagingBaseUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
   static const String _productionBaseUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
 
@@ -13,7 +14,7 @@ class ApiConfig {
   // https://faji-backend-52878caa6589.herokuapp.com/
   /// Get base URL based on environment
   static String get baseUrl {
-    const environment = String.fromEnvironment('ENV', defaultValue: 'dev');
+    const environment = String.fromEnvironment('ENV', defaultValue: 'production');
     
     switch (environment) {
       case 'production':

@@ -8,6 +8,10 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_creation_providers.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/step_progress_indicator.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/feature_toggle_card.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/event_providers.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/screens/event_details_tabbed_screen.dart';
+import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart' as events_providers;
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/resource_categories_screen.dart';
 
 /// Step 2: Event Configuration Screen
 class EventConfigScreen extends ConsumerStatefulWidget {
@@ -28,23 +32,24 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
     super.dispose();
   }
 
+  bool _isCreatingEvent = false;
+
   void _handleNext() {
     final viewModel = ref.read(eventCreationViewModelProvider.notifier);
     final state = ref.read(eventCreationViewModelProvider);
     
+    if (_isCreatingEvent) {
+      print('⚠️ Already creating event, please wait...');
+      return;
+    }
+    
     if (viewModel.canProceedFromStep2()) {
-      // Check if co-host marketplace is enabled
-      if (state.eventData.enableCohostMarketplace) {
-        // Navigate to resource categories screen using GoRouter
-        context.push(RouteManager.resourceCategories).then((_) {
-          // After returning from vendor selection, continue to next step
-          viewModel.nextStep();
-        });
-      } else {
-        // Continue to next step (poster selection)
-        viewModel.nextStep();
-      }
+      print('✅ Validation passed, creating event...');
+      // This is the final step - create event directly
+      _createEvent();
     } else {
+      print('❌ Validation failed: Missing expected guests');
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Please enter expected number of guests'),
@@ -53,6 +58,273 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
+        ),
+      );
+    }
+  }
+  
+  // NEW: Create event method (moved from theme screen)
+  Future<void> _createEvent() async {
+    setState(() {
+      _isCreatingEvent = true;
+    });
+    
+    final viewModel = ref.read(eventCreationViewModelProvider.notifier);
+    final state = ref.read(eventCreationViewModelProvider);
+    
+    try {
+      print('🎯 Starting event creation...');
+      print('📋 Event data: ${state.eventData}');
+      
+      final startDate = state.eventData.eventDate;
+      DateTime? endDate;
+      if (state.eventData.eventTime != null) {
+        try {
+          endDate = DateTime.parse(state.eventData.eventTime!);
+        } catch (e) {
+          print('⚠️ Failed to parse end date: $e');
+          endDate = startDate?.add(const Duration(hours: 3));
+        }
+      }
+      
+      final websiteLink = state.eventData.location;
+      
+      print('📤 Calling createEvent API...');
+      
+      final createdEvent = await viewModel.createEvent(
+        startDate: startDate,
+        endDate: endDate,
+        websiteLink: websiteLink,
+        rsvpButtonText: 'Celebrate With Us',
+      );
+      
+      if (!mounted) return;
+      
+      if (createdEvent != null) {
+        print('✅ Event created successfully');
+        
+        // Invalidate event providers (will auto-refetch when needed)
+        ref.invalidate(filteredEventsProvider);
+        ref.invalidate(events_providers.userEventsProvider);
+        
+        // Reset event creation state for next time
+        ref.read(eventCreationViewModelProvider.notifier).reset();
+        
+        if (mounted) {
+          // Check if marketplace is enabled
+          if (state.eventData.enableCohostMarketplace) {
+            print('🛒 Marketplace enabled - navigating directly to marketplace...');
+            
+            // Show brief success message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Event created! Opening marketplace...'),
+                duration: Duration(seconds: 2),
+                backgroundColor: AppColors.success,
+              ),
+            );
+            
+            // Pop current screen and navigate to marketplace
+            Navigator.of(context).pop(); // Remove event creation screen
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (ctx) => ResourceCategoriesScreen(
+                  eventId: createdEvent.id,
+                ),
+              ),
+            );
+            return;
+          }
+          
+          // If marketplace not enabled, show success dialog
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (dialogContext) => AlertDialog(
+              backgroundColor: AppColors.surface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 80.w,
+                    height: 80.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.check_circle,
+                      size: 50.sp,
+                      color: AppColors.success,
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  Text(
+                    'Event Created!',
+                    style: TextStyle(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    '"${createdEvent.name}"',
+                    style: TextStyle(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Your event has been created successfully!',
+                    style: TextStyle(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 14.sp,
+                      color: AppColors.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 24.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop();
+                            context.go('/home');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.surfaceContainerHighest,
+                            foregroundColor: AppColors.onSurface,
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: Text(
+                            'Go Home',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            print('🔘 View Event button pressed');
+                            print('📍 Event ID: ${createdEvent.id}');
+                            print('📍 Event Name: ${createdEvent.name}');
+                            print('📍 Marketplace enabled: ${state.eventData.enableCohostMarketplace}');
+                            
+                            // Store context before closing dialog
+                            final navigatorContext = context;
+                            
+                            // Close dialog
+                            Navigator.of(dialogContext).pop();
+                            
+                            // Navigate immediately (no delay needed)
+                            if (state.eventData.enableCohostMarketplace) {
+                              print('🛒 Navigating to marketplace...');
+                              
+                              // Navigate to resource categories screen with event ID
+                              Navigator.of(navigatorContext).push(
+                                MaterialPageRoute(
+                                  builder: (ctx) => ResourceCategoriesScreen(
+                                    eventId: createdEvent.id,
+                                  ),
+                                ),
+                              ).then((_) {
+                                print('✅ Returned from marketplace');
+                              }).catchError((error) {
+                                print('❌ Error navigating to marketplace: $error');
+                              });
+                            } else {
+                              print('📄 Navigating directly to event details...');
+                              
+                              // Navigate directly to event details
+                              Navigator.of(navigatorContext).push(
+                                MaterialPageRoute(
+                                  builder: (ctx) => EventDetailsTabbedScreen(
+                                    eventId: createdEvent.id,
+                                    eventName: createdEvent.name,
+                                  ),
+                                ),
+                              ).catchError((error) {
+                                print('❌ Error navigating to event details: $error');
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.onPrimary,
+                            padding: EdgeInsets.symmetric(vertical: 14.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: Text(
+                            'View Event',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      } else {
+        print('❌ Event creation returned null');
+        
+        final error = ref.read(eventCreationViewModelProvider).error;
+        print('❌ Error: $error');
+        
+        if (mounted) {
+          setState(() {
+            _isCreatingEvent = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error ?? 'Failed to create event'),
+              backgroundColor: AppColors.error,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      print('💥 EXCEPTION in _createEvent: $e');
+      print('Stack trace: $stackTrace');
+      
+      if (!mounted) return;
+      
+      setState(() {
+        _isCreatingEvent = false;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+          duration: const Duration(seconds: 4),
         ),
       );
     }
@@ -95,7 +367,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                   const Expanded(
                     child: StepProgressIndicator(
                       currentStep: 2,
-                      totalSteps: 5,
+                      totalSteps: 3,
                     ),
                   ),
                 ],
@@ -346,18 +618,41 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                       Expanded(
                         flex: 2,
                         child: GestureDetector(
-                          onTap: _handleNext,
+                          onTap: _isCreatingEvent ? null : _handleNext,
                           child: Container(
                             height: 69.h,
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: _isCreatingEvent 
+                                  ? AppColors.primary.withOpacity(0.5)
+                                  : AppColors.primary,
                               borderRadius: BorderRadius.circular(34.5.r),
                             ),
                             child: Center(
-                              child: AppText.labelLarge(
-                                'Continue',
-                                color: AppColors.onPrimary,
-                              ),
+                              child: _isCreatingEvent
+                                  ? Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: 20.w,
+                                          height: 20.h,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(
+                                              AppColors.onPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 12.w),
+                                        AppText.labelLarge(
+                                          'Creating...',
+                                          color: AppColors.onPrimary,
+                                        ),
+                                      ],
+                                    )
+                                  : AppText.labelLarge(
+                                      'Create Event',
+                                      color: AppColors.onPrimary,
+                                    ),
                             ),
                           ),
                         ),

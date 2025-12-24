@@ -79,7 +79,7 @@ class SettingsTab extends ConsumerWidget {
 
   Widget _buildEventLinkSection(BuildContext context, event) {
     final websiteLink = event.settings.websiteLink;
-    final fullLink = 'https://pv.rsvp/$websiteLink';
+    final fullLink = 'https://faji.com/$websiteLink';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +117,7 @@ class SettingsTab extends ConsumerWidget {
                 Icon(Icons.link, size: 20.sp, color: const Color(0xFFFF8C42)),
                 SizedBox(width: 8.w),
                 Text(
-                  'pv.rsvp/',
+                  'faji.com/',
                   style: TextStyle(
                     fontFamily: AppTypography.modicaPro,
                     fontSize: 14.sp,

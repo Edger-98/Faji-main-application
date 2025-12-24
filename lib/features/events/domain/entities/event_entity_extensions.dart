@@ -7,7 +7,8 @@ extension EventEntityDisplay on EventEntity {
     if (imageUrl.isNotEmpty) {
       return imageUrl;
     }
-    return 'https://via.placeholder.com/300x200?text=${Uri.encodeComponent(title)}';
+    // Return empty string - UI will show gradient fallback
+    return '';
   }
   
   /// Get formatted price string

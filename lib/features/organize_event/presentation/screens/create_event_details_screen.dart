@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/services/image_upload_service.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_creation_providers.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/step_progress_indicator.dart';
 
@@ -25,6 +28,11 @@ class _CreateEventDetailsScreenState
   DateTime? _startDate;
   DateTime? _endDate;
   bool _setDateLater = false;
+  
+  // Image upload state
+  File? _selectedImage;
+  bool _isUploadingImage = false;
+  String? _uploadError;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -293,7 +301,7 @@ class _CreateEventDetailsScreenState
                     const Expanded(
                       child: StepProgressIndicator(
                         currentStep: 1,
-                        totalSteps: 5,
+                        totalSteps: 3,
                       ),
                     ),
                   ],
@@ -529,9 +537,31 @@ class _CreateEventDetailsScreenState
                       ),
                       SizedBox(height: 32.h),
 
-                      // Description
+                      // Event Image Upload (NEW)
                       _buildAnimatedField(
                         delay: 500,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Event Image (Optional)',
+                              style: TextStyle(
+                                fontFamily: AppTypography.modicaPro,
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.onSurface.withOpacity(0.7),
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            _buildImageUploadField(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // Description
+                      _buildAnimatedField(
+                        delay: 600,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -813,7 +843,7 @@ class _CreateEventDetailsScreenState
               ),
               SizedBox(width: 12.w),
               Text(
-                'pv.rsvp/',
+                'faji.com/',
                 style: TextStyle(
                   fontFamily: AppTypography.modicaPro,
                   fontSize: 15.sp,
@@ -1069,5 +1099,286 @@ class _CreateEventDetailsScreenState
         ],
       ),
     );
+  }
+
+  // NEW: Image upload widget
+  Widget _buildImageUploadField() {
+    return GestureDetector(
+      onTap: _isUploadingImage ? null : _pickAndUploadImage,
+      child: Container(
+        height: 200.h,
+        decoration: BoxDecoration(
+          color: const Color(0xFF2A2A2A),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: _uploadError != null 
+                ? AppColors.error 
+                : const Color(0xFF3A3A3A),
+            width: 1.5,
+          ),
+          image: _selectedImage != null
+              ? DecorationImage(
+                  image: FileImage(_selectedImage!),
+                  fit: BoxFit.cover,
+                )
+              : null,
+        ),
+        child: _selectedImage == null
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_isUploadingImage)
+                      Column(
+                        children: [
+                          CircularProgressIndicator(color: AppColors.primary),
+                          SizedBox(height: 12.h),
+                          Text(
+                            'Uploading image...',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 14.sp,
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      )
+                    else ...[
+                      Icon(
+                        Icons.add_photo_alternate_outlined,
+                        size: 48.sp,
+                        color: AppColors.onSurfaceVariant.withOpacity(0.6),
+                      ),
+                      SizedBox(height: 12.h),
+                      Text(
+                        'Tap to add event image',
+                        style: TextStyle(
+                          fontFamily: AppTypography.modicaPro,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Gallery or Camera',
+                        style: TextStyle(
+                          fontFamily: AppTypography.modicaPro,
+                          fontSize: 12.sp,
+                          color: AppColors.onSurfaceVariant.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              )
+            : Stack(
+                children: [
+                  // Remove button
+                  Positioned(
+                    top: 12.h,
+                    right: 12.w,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedImage = null;
+                          _uploadError = null;
+                        });
+                        ref.read(eventCreationViewModelProvider.notifier)
+                            .updateImageUrl('');
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8.w),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Success indicator
+                  Positioned(
+                    bottom: 12.h,
+                    left: 12.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.success.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.white,
+                            size: 16.sp,
+                          ),
+                          SizedBox(width: 6.w),
+                          Text(
+                            'Image uploaded',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  // NEW: Pick and upload image method
+  Future<void> _pickAndUploadImage() async {
+    // Show options: Gallery or Camera
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: const Color(0xFF1A1A1A),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (context) => Container(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Choose Image Source',
+              style: TextStyle(
+                fontFamily: AppTypography.modicaPro,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.onSurface,
+              ),
+            ),
+            SizedBox(height: 20.h),
+            ListTile(
+              leading: Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(Icons.photo_library, color: AppColors.primary),
+              ),
+              title: Text(
+                'Choose from Gallery',
+                style: TextStyle(
+                  fontFamily: AppTypography.modicaPro,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.onSurface,
+                ),
+              ),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+            SizedBox(height: 8.h),
+            ListTile(
+              leading: Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(Icons.camera_alt, color: AppColors.primary),
+              ),
+              title: Text(
+                'Take Photo',
+                style: TextStyle(
+                  fontFamily: AppTypography.modicaPro,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.onSurface,
+                ),
+              ),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null) return;
+
+    setState(() {
+      _isUploadingImage = true;
+      _uploadError = null;
+    });
+
+    try {
+      final imageUploadService = ref.read(imageUploadServiceProvider);
+      
+      // Pick image
+      final file = source == ImageSource.gallery
+          ? await imageUploadService.pickImageFromGallery()
+          : await imageUploadService.pickImageFromCamera();
+
+      if (file == null) {
+        setState(() => _isUploadingImage = false);
+        return;
+      }
+
+      // Upload to backend (which uploads to Cloudinary)
+      final imageUrl = await imageUploadService.uploadEventImage(file);
+
+      // Save to viewmodel
+      ref.read(eventCreationViewModelProvider.notifier).updateImageUrl(imageUrl);
+      ref.read(eventCreationViewModelProvider.notifier).updateLocalImagePath(file.path);
+
+      setState(() {
+        _selectedImage = file;
+        _isUploadingImage = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 12.w),
+                const Text('Image uploaded successfully!'),
+              ],
+            ),
+            backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _uploadError = e.toString();
+        _isUploadingImage = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to upload image: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    }
   }
 }

@@ -556,6 +556,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> saveAuthData(String token, String userId) async {
     await localDataSource.saveToken(token);
     await localDataSource.saveUserId(userId);
+    // Note: Token will be synced with API service via AuthTokenService.initialize()
+    // This is called after registration/login in the presentation layer
   }
 
   @override

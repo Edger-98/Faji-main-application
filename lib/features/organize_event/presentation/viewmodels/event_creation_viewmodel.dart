@@ -66,9 +66,15 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
     );
   }
 
-  void updateCoverPhoto(String path) {
+  void updateLocalImagePath(String path) {
     state = state.copyWith(
-      eventData: state.eventData.copyWith(coverPhotoPath: path),
+      eventData: state.eventData.copyWith(localImagePath: path),
+    );
+  }
+  
+  void updateImageUrl(String url) {
+    state = state.copyWith(
+      eventData: state.eventData.copyWith(imageUrl: url),
     );
   }
 
@@ -162,23 +168,11 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
     );
   }
 
-  // Step 3: Update poster selection
-  void selectPoster(String posterId) {
-    state = state.copyWith(
-      eventData: state.eventData.copyWith(selectedPosterId: posterId),
-    );
-  }
+  // Image upload removed poster/theme selection
 
-  // Step 4: Update theme selection
-  void selectTheme(String themeId) {
-    state = state.copyWith(
-      eventData: state.eventData.copyWith(selectedThemeId: themeId),
-    );
-  }
-
-  // Navigation
+  // Navigation (now only 3 steps: 0=Type, 1=Details, 2=Config)
   void nextStep() {
-    if (state.currentStep < 4) {
+    if (state.currentStep < 2) {
       state = state.copyWith(currentStep: state.currentStep + 1);
     }
   }
@@ -190,7 +184,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
   }
 
   void goToStep(int step) {
-    if (step >= 0 && step <= 4) {
+    if (step >= 0 && step <= 2) {
       state = state.copyWith(currentStep: step);
     }
   }
@@ -211,14 +205,6 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
   bool canProceedFromStep2() {
     final data = state.eventData;
     return data.expectedGuests != null && data.expectedGuests! > 0;
-  }
-
-  bool canProceedFromStep3() {
-    return state.eventData.selectedPosterId != null;
-  }
-
-  bool canProceedFromStep4() {
-    return state.eventData.selectedThemeId != null;
   }
 
   // Submit event - REAL API CALL
@@ -255,8 +241,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
         emoji: _getEmojiForEventType(data.eventType),
         startDate: finalStartDate,
         endDate: finalEndDate,
-        themeId: data.selectedThemeId,
-        posterId: data.selectedPosterId,
+        imageUrl: data.imageUrl, // NEW: Cloudinary image URL
         websiteLink: websiteLink,
         rsvpButtonText: rsvpButtonText ?? 'Celebrate With Us',
         expectedGuests: data.expectedGuests,

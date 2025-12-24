@@ -174,7 +174,7 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
                               ),
                             ),
                             Text(
-                              '\$230.00',
+                              '\$23000.00',
                               style: TextStyle(
                                 fontFamily: 'PP Neue Montreal',
                                 fontSize: 25.sp,
@@ -195,9 +195,39 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
                   ),
                 ),
                 SizedBox(height: 16.h),
+                // Become a Vendor Card
+                _buildVendorCard(context),
+                SizedBox(height: 16.h),
                 // Personal section
                 _buildSectionHeader('Personal'),
                 SizedBox(height: 3.h),
+                _buildMenuItem(
+                  context, 
+                  Icons.dashboard_outlined, 
+                  'Vendor Dashboard',
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.push(RouteManager.vendorDashboardScreen);
+                  },
+                ),
+                _buildMenuItem(
+                  context, 
+                  Icons.inventory_2_outlined, 
+                  'My Services',
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.push(RouteManager.vendorResourcesList);
+                  },
+                ),
+                _buildMenuItem(
+                  context, 
+                  Icons.request_page_outlined, 
+                  'Booking Requests',
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.push(RouteManager.vendorBookingsList);
+                  },
+                ),
                 _buildMenuItem(
                   context, 
                   Icons.person_outline, 
@@ -326,6 +356,49 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
       height: 0.6,
       margin: EdgeInsets.only(left: 25.w),
       color: const Color(0xFF2E2E2E),
+    );
+  }
+
+  Widget _buildVendorCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        context.push(RouteManager.vendorRegistration);
+      },
+      child: Container(
+        height: 71.h,
+        padding: EdgeInsets.symmetric(horizontal: 35.w),
+        decoration: BoxDecoration(
+          color: AppColors.searchBarBackground,
+          borderRadius: BorderRadius.circular(39.5.r),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.storefront_rounded,
+              color: AppColors.primary,
+              size: 20.sp,
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Text(
+                'Become a Vendor',
+                style: TextStyle(
+                  fontFamily: 'PP Neue Montreal',
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.onSurface,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: AppColors.onSurface,
+              size: 10.sp,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

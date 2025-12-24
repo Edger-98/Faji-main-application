@@ -1,32 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resource_category.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/cohost_resource_entity.dart';
-import 'package:fajimobileapp/features/cohost_marketplace/data/mock_cohost_data.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/presentation/providers/marketplace_providers.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/vendor_profile_screen.dart';
 
 /// Screen showing list of co-hosts for a specific category
-class CohostListScreen extends StatefulWidget {
+class CohostListScreen extends ConsumerWidget {
   const CohostListScreen({
     required this.category,
+    this.eventId,
     super.key,
   });
 
   final ResourceCategory category;
-
-  @override
-  State<CohostListScreen> createState() => _CohostListScreenState();
-}
-
-class _CohostListScreenState extends State<CohostListScreen> {
-  late List<CohostResourceEntity> _resources;
-
-  @override
-  void initState() {
-    super.initState();
-    _resources = MockCohostData.getMockResources(category: widget.category);
-  }
+  final String? eventId;
 
   String _formatPrice(double price) {
     if (price >= 1000000) {
@@ -38,7 +28,13 @@ class _CohostListScreenState extends State<CohostListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final params = VendorFetchParams(
+      eventId: eventId,
+      category: category,
+    );
+    final resourcesAsync = ref.watch(vendorsProvider(params));
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -72,22 +68,32 @@ class _CohostListScreenState extends State<CohostListScreen> {
                             Container(
                               padding: EdgeInsets.all(8.w),
                               decoration: BoxDecoration(
-                                color: widget.category.color.withOpacity(0.15),
+                                color: category.color.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Icon(
-                                widget.category.iconData,
-                                color: widget.category.color,
+                                category.iconData,
+                                color: category.color,
                                 size: 20.sp,
                               ),
                             ),
                             SizedBox(width: 12.w),
-                            AppText.headlineSmall(widget.category.displayName),
+                            AppText.headlineSmall(category.displayName),
                           ],
                         ),
-                        AppText.bodySmall(
-                          '${_resources.length} available',
-                          color: AppColors.onSurfaceVariant,
+                        resourcesAsync.when(
+                          data: (resources) => AppText.bodySmall(
+                            '${resources.length} available',
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          loading: () => AppText.bodySmall(
+                            'Loading...',
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          error: (_, __) => AppText.bodySmall(
+                            'Error loading',
+                            color: AppColors.error,
+                          ),
                         ),
                       ],
                     ),
@@ -98,12 +104,39 @@ class _CohostListScreenState extends State<CohostListScreen> {
 
             // Content
             Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
-                itemCount: _resources.length,
-                separatorBuilder: (context, index) => SizedBox(height: 16.h),
-                itemBuilder: (context, index) {
-                  final CohostResourceEntity resource = _resources[index];
+              child: resourcesAsync.when(
+                data: (resources) {
+                  if (resources.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.inbox_outlined,
+                            size: 64.sp,
+                            color: AppColors.onSurfaceVariant.withOpacity(0.5),
+                          ),
+                          SizedBox(height: 16.h),
+                          AppText.bodyLarge(
+                            'No vendors available',
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          SizedBox(height: 8.h),
+                          AppText.bodySmall(
+                            'Check back later for ${category.displayName} vendors',
+                            color: AppColors.onSurfaceVariant.withOpacity(0.7),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                    itemCount: resources.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 16.h),
+                    itemBuilder: (context, index) {
+                      final CohostResourceEntity resource = resources[index];
 
                   return Container(
                     decoration: BoxDecoration(
@@ -120,6 +153,7 @@ class _CohostListScreenState extends State<CohostListScreen> {
                             MaterialPageRoute(
                               builder: (context) => VendorProfileScreen(
                                 resource: resource,
+                                eventId: eventId,
                               ),
                             ),
                           );
@@ -250,6 +284,72 @@ class _CohostListScreenState extends State<CohostListScreen> {
                           ),
                         ),
                       ),
+                    ),
+                  );
+                },
+              );
+            },
+            loading: () => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(color: AppColors.primary),
+                      SizedBox(height: 16.h),
+                      AppText.bodyMedium(
+                        'Loading vendors...',
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                ),
+                error: (error, stackTrace) {
+                  print('❌ UI Error: $error');
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64.sp,
+                          color: AppColors.error,
+                        ),
+                        SizedBox(height: 16.h),
+                        AppText.bodyLarge(
+                          'Failed to load vendors',
+                          color: AppColors.error,
+                        ),
+                        SizedBox(height: 8.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 48.w),
+                          child: AppText.bodySmall(
+                            error.toString(),
+                            color: AppColors.onSurfaceVariant,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(height: 24.h),
+                        ElevatedButton(
+                          onPressed: () {
+                            final params = VendorFetchParams(
+                              eventId: eventId,
+                              category: category,
+                            );
+                            ref.invalidate(vendorsProvider(params));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.onPrimary,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 12.h,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: AppText.labelLarge('Retry'),
+                        ),
+                      ],
                     ),
                   );
                 },

@@ -40,7 +40,7 @@ class EventTypeSelectionScreen extends ConsumerWidget {
                   const Expanded(
                     child: StepProgressIndicator(
                       currentStep: 0,
-                      totalSteps: 5,
+                      totalSteps: 3,
                     ),
                   ),
                 ],

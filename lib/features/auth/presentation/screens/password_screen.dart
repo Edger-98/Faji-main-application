@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/services/auth_token_service.dart';
 import 'package:fajimobileapp/features/auth/domain/entities/registration_complete_entity.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/registration_viewmodel.dart';
@@ -272,6 +273,10 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
       success: (complete) async {
         // Registration complete! Update auth state
         if (complete is RegistrationCompleteEntity) {
+          // CRITICAL FIX: Initialize auth token service to sync token with API service
+          // This ensures the token is available for all subsequent API calls
+          await ref.read(authTokenServiceProvider).initialize();
+          
           // Set the user in auth state
           ref.read(authStateViewModelProvider.notifier).setUser(complete.user);
           

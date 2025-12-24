@@ -42,6 +42,14 @@ class RouteManager {
   static const String walletReview = '/wallet/review';
   static const String walletConfirmation = '/wallet/confirmation';
   static const String walletHistory = '/wallet/history';
+  static const String vendorRegistration = '/vendor/registration';
+  static const String vendorDashboard = '/vendor/dashboard';
+  static const String vendorResources = '/vendor/resources';
+  static const String vendorAddResource = '/vendor/add-resource';
+  static const String vendorBookings = '/vendor/bookings';
+  static const String vendorResourcesList = '/vendor/resources-list';
+  static const String vendorBookingsList = '/vendor/bookings-list';
+  static const String vendorDashboardScreen = '/vendor/dashboard-screen';
 
   // Route names
   static const String splashName = 'splash';
@@ -83,4 +91,12 @@ class RouteManager {
   static const String walletReviewName = 'wallet-review';
   static const String walletConfirmationName = 'wallet-confirmation';
   static const String walletHistoryName = 'wallet-history';
+  static const String vendorRegistrationName = 'vendor-registration';
+  static const String vendorDashboardName = 'vendor-dashboard';
+  static const String vendorResourcesName = 'vendor-resources';
+  static const String vendorAddResourceName = 'vendor-add-resource';
+  static const String vendorBookingsName = 'vendor-bookings';
+  static const String vendorResourcesListName = 'vendor-resources-list';
+  static const String vendorBookingsListName = 'vendor-bookings-list';
+  static const String vendorDashboardScreenName = 'vendor-dashboard-screen';
 }
