@@ -19,44 +19,57 @@ class HomeSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onSearchTap ?? () => _showSearch(context),
-      child: Container(
-        height: 69.h,
-        decoration: BoxDecoration(
-          color: context.colors.searchBarBackground,
-          borderRadius: BorderRadius.circular(34.5.r),
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 24.w),
-            Icon(
-              Icons.search,
-              color: context.colors.onSurfaceVariant,
-              size: 18.sp,
-            ),
-            SizedBox(width: 15.w),
-            Expanded(
-              child: AppText.labelLarge(
-                'Search on Faji',
-                color: context.colors.onSurfaceVariant,
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: onSearchTap ?? () => _showSearch(context),
+            child: Container(
+              height: 50.h,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search,
+                    color: context.colors.onSurfaceVariant,
+                    size: 20.sp,
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Text(
+                      'Search events, hosts...',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            GestureDetector(
-              onTap: onFilterTap ?? () => _showFilter(context),
-              child: Container(
-                padding: EdgeInsets.all(8.w),
-                child: Icon(
-                  Icons.tune,
-                  color: context.colors.iconGray,
-                  size: 18.sp,
-                ),
-              ),
-            ),
-            SizedBox(width: 16.w),
-          ],
+          ),
         ),
-      ),
+        SizedBox(width: 12.w),
+        GestureDetector(
+          onTap: onFilterTap ?? () => _showFilter(context),
+          child: Container(
+            width: 50.w,
+            height: 50.h,
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(25.r),
+            ),
+            child: Icon(
+              Icons.tune_rounded,
+              color: context.colors.onSurface,
+              size: 20.sp,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

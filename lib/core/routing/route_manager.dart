@@ -13,6 +13,8 @@ class RouteManager {
   static const String login = '/login';
   static const String welcomeBack = '/welcome-back';
   static const String home = '/home';
+  static const String dashboard = '/dashboard';
+  static const String vendorMarketplace = '/vendors';
   static const String eventsList = '/events';
   static const String eventDetails = '/event-details';
   static const String searchEvents = '/events/search';
@@ -62,6 +64,8 @@ class RouteManager {
   static const String loginName = 'login';
   static const String welcomeBackName = 'welcome-back';
   static const String homeName = 'home';
+  static const String dashboardName = 'dashboard';
+  static const String vendorMarketplaceName = 'vendor-marketplace';
   static const String eventsListName = 'events-list';
   static const String eventDetailsName = 'event-details';
   static const String searchEventsName = 'search-events';

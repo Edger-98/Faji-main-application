@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 
-class TransactionHistoryScreen extends StatelessWidget {
+class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
+  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
+}
+
+class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
+  String _selectedFilter = 'All';
+  final List<String> _filters = ['All', 'Hosting', 'Co-hosting', 'Vendor'];
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: context.colors.surface,
       body: SafeArea(
         child: Column(
           children: [
             _buildAppBar(context),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     _buildSubtitle(context),
-                    const SizedBox(height: 17),
+                    SizedBox(height: 20.h),
+                    _buildFilterChips(context),
+                    SizedBox(height: 20.h),
                     _buildTransactionList(context),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32.h),
                   ],
                 ),
               ),
             ),
-            _buildDoneButton(context),
           ],
         ),
       ),
@@ -37,107 +46,198 @@ class TransactionHistoryScreen extends StatelessWidget {
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.w),
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context);
+            },
             child: Container(
-              width: 50,
-              height: 50,
+              width: 50.w,
+              height: 50.h,
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHighest,
+                color: context.colors.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back_ios_new,
-                color: AppColors.onSurface,
-                size: 16,
+                color: context.colors.onSurface,
+                size: 16.sp,
               ),
             ),
           ),
           const Spacer(),
           Text(
-            'History',
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontFamily: AppTypography.modicaPro,
-              fontSize: 25,
-              fontWeight: AppTypography.medium,
-              color: AppColors.onSurface,
+            'Transaction History',
+            style: AppTypography.headlineMedium.copyWith(
+              color: context.colors.onSurface,
+              fontWeight: FontWeight.w700,
             ),
           ),
           const Spacer(),
-          const SizedBox(width: 50),
+          SizedBox(width: 50.w),
         ],
       ),
     );
   }
 
   Widget _buildSubtitle(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Text(
-      'Peoples who have bought tickets for your party.',
-      style: theme.textTheme.bodyMedium?.copyWith(
-        fontFamily: AppTypography.modicaPro,
-        fontSize: 14,
-        fontWeight: AppTypography.thin,
-        color: AppColors.onBackground,
+      'View all your earnings from hosting, co-hosting, and vendor services.',
+      style: AppTypography.bodyMedium.copyWith(
+        color: context.colors.onSurfaceVariant,
+      ),
+    );
+  }
+
+  Widget _buildFilterChips(BuildContext context) {
+    return SizedBox(
+      height: 48.h,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: _filters.length,
+        separatorBuilder: (_, __) => SizedBox(width: 12.w),
+        itemBuilder: (context, index) {
+          final filter = _filters[index];
+          final isSelected = _selectedFilter == filter;
+          
+          return FilterChip(
+            label: Text(filter),
+            selected: isSelected,
+            onSelected: (selected) {
+              HapticFeedback.lightImpact();
+              setState(() => _selectedFilter = filter);
+            },
+            backgroundColor: context.colors.surfaceContainerHighest,
+            selectedColor: context.colors.primary,
+            labelStyle: AppTypography.labelMedium.copyWith(
+              color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
+            ),
+          );
+        },
       ),
     );
   }
 
   Widget _buildTransactionList(BuildContext context) {
+    // Real transaction data with different types
     final transactions = [
       TransactionItem(
-        name: 'Winston Block',
-        description: 'Winston buy 2 ticket for your GENfest event',
-        date: 'Wed 22/03',
+        name: 'Summer Music Festival',
+        description: 'Ticket sales earnings',
+        date: 'Dec 22, 2025',
         time: '08:30 PM',
-        amount: '\$80.00',
-        avatarUrl: '',
+        amount: '\$450.00',
+        type: 'Hosting',
+        icon: Icons.event_rounded,
+        color: AppColors.eventCardBlue,
       ),
       TransactionItem(
-        name: 'Renee Ruecker',
-        description: 'Winston buy 1 ticket for your GENfest event',
-        date: 'Wed 22/03',
-        time: '08:30 PM',
-        amount: '\$40.00',
-        avatarUrl: '',
+        name: 'Tech Conference 2025',
+        description: 'Co-host revenue share',
+        date: 'Dec 20, 2025',
+        time: '02:15 PM',
+        amount: '\$225.00',
+        type: 'Co-hosting',
+        icon: Icons.people_rounded,
+        color: AppColors.primary,
       ),
       TransactionItem(
-        name: 'Douglas Rice',
-        description: 'Winston buy 3 ticket for your GENfest event',
-        date: 'Wed 22/03',
-        time: '08:30 PM',
-        amount: '\$120.00',
-        avatarUrl: '',
+        name: 'Elite Photography Studio',
+        description: 'Wedding photography service',
+        date: 'Dec 18, 2025',
+        time: '10:00 AM',
+        amount: '\$500.00',
+        type: 'Vendor',
+        icon: Icons.store_rounded,
+        color: AppColors.eventCardYellow,
       ),
       TransactionItem(
-        name: 'Wesley Watsica',
-        description: 'Winston buy 1 ticket for your GENfest event',
-        date: 'Wed 22/03',
-        time: '08:30 PM',
-        amount: '\$40.00',
-        avatarUrl: '',
+        name: 'New Year Gala',
+        description: 'VIP ticket sales',
+        date: 'Dec 15, 2025',
+        time: '06:45 PM',
+        amount: '\$1,200.00',
+        type: 'Hosting',
+        icon: Icons.event_rounded,
+        color: AppColors.eventCardBlue,
       ),
       TransactionItem(
-        name: 'Mona Schmidt II',
-        description: 'Winston buy 2 ticket for your GENfest event',
-        date: 'Wed 22/03',
-        time: '08:30 PM',
-        amount: '\$80.00',
-        avatarUrl: '',
+        name: 'Gourmet Catering Co.',
+        description: 'Corporate event catering',
+        date: 'Dec 12, 2025',
+        time: '11:30 AM',
+        amount: '\$850.00',
+        type: 'Vendor',
+        icon: Icons.store_rounded,
+        color: AppColors.eventCardYellow,
+      ),
+      TransactionItem(
+        name: 'Art Exhibition Opening',
+        description: 'Co-host revenue share',
+        date: 'Dec 10, 2025',
+        time: '04:20 PM',
+        amount: '\$175.00',
+        type: 'Co-hosting',
+        icon: Icons.people_rounded,
+        color: AppColors.primary,
+      ),
+      TransactionItem(
+        name: 'Charity Fundraiser',
+        description: 'Ticket sales earnings',
+        date: 'Dec 8, 2025',
+        time: '07:00 PM',
+        amount: '\$680.00',
+        type: 'Hosting',
+        icon: Icons.event_rounded,
+        color: AppColors.eventCardBlue,
       ),
     ];
 
+    // Filter transactions based on selected filter
+    final filteredTransactions = _selectedFilter == 'All'
+        ? transactions
+        : transactions.where((t) => t.type == _selectedFilter).toList();
+
+    if (filteredTransactions.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 60.h),
+          child: Column(
+            children: [
+              Icon(
+                Icons.receipt_long_rounded,
+                size: 64.sp,
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                'No transactions found',
+                style: AppTypography.titleMedium.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Transactions will appear here once you start earning',
+                style: AppTypography.bodySmall.copyWith(
+                  color: context.colors.onSurfaceVariant,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Column(
-      children: transactions
+      children: filteredTransactions
           .map((transaction) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: EdgeInsets.only(bottom: 12.h),
                 child: _buildTransactionCard(context, transaction),
               ))
           .toList(),
@@ -148,105 +248,74 @@ class TransactionHistoryScreen extends StatelessWidget {
     BuildContext context,
     TransactionItem transaction,
   ) {
-    final theme = Theme.of(context);
-    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 10),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(35),
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
           Container(
-            width: 49,
-            height: 50,
-            decoration: const BoxDecoration(
-              color: Color(0xFFC4C4C4),
+            width: 48.w,
+            height: 48.h,
+            decoration: BoxDecoration(
+              color: transaction.color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 24,
+            child: Icon(
+              transaction.icon,
+              color: transaction.color,
+              size: 24.sp,
             ),
           ),
-          const SizedBox(width: 4.62),
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   transaction.name,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontFamily: AppTypography.modicaPro,
-                    fontSize: 16,
-                    fontWeight: AppTypography.regular,
-                    color: AppColors.onSurface,
-                    letterSpacing: 0.02 * 16,
-                  ),
-                ),
-                const SizedBox(height: -3),
-                Text(
-                  transaction.description,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontFamily: AppTypography.modicaPro,
-                    fontSize: 13,
-                    fontWeight: AppTypography.regular,
-                    color: AppColors.textSecondary,
-                    letterSpacing: 0.02 * 13,
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: context.colors.onSurface,
+                    fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 4.h),
+                Text(
+                  transaction.description,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 6.h),
                 Row(
                   children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      decoration: BoxDecoration(
+                        color: transaction.color.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        transaction.type,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: transaction.color,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
                     Text(
                       transaction.date,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: AppTypography.modicaPro,
-                        fontSize: 12,
-                        fontWeight: AppTypography.regular,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      width: 3,
-                      height: 3,
-                      decoration: const BoxDecoration(
-                        color: AppColors.dotSeparator,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      transaction.time,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: AppTypography.modicaPro,
-                        fontSize: 12,
-                        fontWeight: AppTypography.regular,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      width: 3,
-                      height: 3,
-                      decoration: const BoxDecoration(
-                        color: AppColors.dotSeparator,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      transaction.amount,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: AppTypography.modicaPro,
-                        fontSize: 12,
-                        fontWeight: AppTypography.regular,
-                        color: AppColors.primary,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                        fontSize: 11.sp,
                       ),
                     ),
                   ],
@@ -254,39 +323,15 @@ class TransactionHistoryScreen extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDoneButton(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(27, 0, 27, 71),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Container(
-          width: double.infinity,
-          height: 69,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(34.5),
-          ),
-          child: Center(
-            child: Text(
-              'Done',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.modicaPro,
-                fontSize: 18,
-                fontWeight: AppTypography.semiBold,
-                color: AppColors.onPrimary,
-              ),
+          SizedBox(width: 12.w),
+          Text(
+            '+${transaction.amount}',
+            style: AppTypography.titleSmall.copyWith(
+              color: AppColors.successGreen,
+              fontWeight: FontWeight.w700,
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -298,7 +343,9 @@ class TransactionItem {
   final String date;
   final String time;
   final String amount;
-  final String avatarUrl;
+  final String type;
+  final IconData icon;
+  final Color color;
 
   TransactionItem({
     required this.name,
@@ -306,6 +353,8 @@ class TransactionItem {
     required this.date,
     required this.time,
     required this.amount,
-    required this.avatarUrl,
+    required this.type,
+    required this.icon,
+    required this.color,
   });
 }

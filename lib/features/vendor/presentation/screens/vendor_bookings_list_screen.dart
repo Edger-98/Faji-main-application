@@ -277,7 +277,7 @@ class _VendorBookingsListScreenState
           ),
         ),
         content: Text(
-          'Accept booking for ${booking['eventName']} at ₦${_formatPrice(booking['offeredPrice'] as int)}?',
+          'Accept booking for ${booking['eventName']} at \$${_formatPrice(booking['offeredPrice'] as int)}?',
           style: AppTypography.bodyMedium.copyWith(
             color: AppColors.textSecondary,
           ),
@@ -419,7 +419,7 @@ class _VendorBookingsListScreenState
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Original offer: ₦${_formatPrice(booking['offeredPrice'] as int)}',
+              'Original offer: \$${_formatPrice(booking['offeredPrice'] as int)}',
               style: AppTypography.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -433,7 +433,7 @@ class _VendorBookingsListScreenState
               ),
               decoration: InputDecoration(
                 labelText: 'Your Counter Offer',
-                prefixText: '₦ ',
+                prefixText: '\$ ',
                 filled: true,
                 fillColor: const Color(0xFF2E2E2E),
                 border: OutlineInputBorder(
@@ -583,7 +583,7 @@ class _BookingCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '₦${_formatPrice(price)}',
+                '\$${_formatPrice(price)}',
                 style: AppTypography.titleMedium.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w700,
@@ -640,56 +640,66 @@ class _BookingCard extends StatelessWidget {
             ),
           ],
           if (status == 'pending') ...[
-            const SizedBox(height: 12),
-            Row(
+            const SizedBox(height: 16),
+            Column(
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onDecline,
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppColors.error),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onDecline,
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          side: const BorderSide(color: AppColors.error),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Decline',
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.error,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Text(
-                      'Decline',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.error,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onCounterOffer,
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          side: BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Counter',
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.primary,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onCounterOffer,
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Counter',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
                   child: ElevatedButton(
                     onPressed: onAccept,
                     style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: Text(
-                      'Accept',
+                      'Accept Booking',
                       style: AppTypography.bodyMedium.copyWith(
                         color: AppColors.onPrimary,
                         fontWeight: FontWeight.w600,
@@ -737,7 +747,7 @@ class _BookingCard extends StatelessWidget {
                   Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'Earned: ₦${_formatPrice(earnings!)}',
+                    'Earned: \$${_formatPrice(earnings!)}',
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,

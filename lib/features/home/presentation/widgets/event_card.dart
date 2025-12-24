@@ -32,171 +32,171 @@ class EventCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 306.w,
-        height: 267.h,
-        decoration: BoxDecoration(
-          color: context.colors.eventCardBlue,
-          borderRadius: BorderRadius.circular(40.r),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(40.r),
-          child: Stack(
-            children: [
-              // Event image - clipped to only show top portion
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40.r),
-                    topRight: Radius.circular(40.r),
-                  ),
-                  child: Image.network(
-                    imageUrl,
-                    width: 306.w,
-                    height: 244.h,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      width: 306.w,
-                      height: 244.h,
-                      color: context.colors.eventCardBlue,
-                      child: Icon(
-                        Icons.image_outlined,
-                        size: 48.sp,
-                        color: Colors.white24,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              
-              // Live badge - no background, just text
-              if (isLive)
-                Positioned(
-                  left: 27.w,
-                  top: 20.h,
-                  child: AppText.bodySmall(
-                    'Live',
-                    color: context.colors.liveRed,
-                  ),
-                ),
-              
-              // Favorite button - outlined heart on semi-transparent circle
-              Positioned(
-                right: 15.w,
-                top: 15.h,
-                child: GestureDetector(
-                  onTap: onFavorite,
-                  child: Container(
-                    width: 42.w,
-                    height: 42.h,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.21),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      color: context.colors.onSurface,
-                      size: 18.sp,
-                    ),
-                  ),
-                ),
-              ),
-              
-              // Event details overlay with glassy effect
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                height: 90.h,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(40.r),
-                    bottomRight: Radius.circular(40.r),
-                    topLeft: Radius.circular(30.r),
-                    topRight: Radius.circular(30.r),
-                  ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(22.w, 20.h, 22.w, 18.h),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.3),
-                            Colors.black.withOpacity(0.6),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(40.r),
-                          bottomRight: Radius.circular(40.r),
-                          topLeft: Radius.circular(35.r),
-                          topRight: Radius.circular(35.r),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // Title - no overflow, natural wrap
-                          Flexible(
-                            child: AppText.bodyMedium(
-                              title,
-                              maxLines: 2,
-                              color: context.colors.onSurface,
+        width: 200.w,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Event image with gradient overlay
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16.r),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        imageUrl,
+                        width: 200.w,
+                        height: 240.h,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: 200.w,
+                          height: 240.h,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppColors.eventCardBlue,
+                                AppColors.eventCardYellow,
+                              ],
                             ),
                           ),
-                          SizedBox(height: 4.h),
-                          // Date, time, price row
-                          Row(
-                            children: [
-                              Flexible(
-                                child: AppText.bodySmall(
-                                  date,
-                                  color: context.colors.textSecondary,
-                                ),
-                              ),
-                              _buildDot(context),
-                              Flexible(
-                                child: AppText.bodySmall(
-                                  time,
-                                  color: context.colors.textSecondary,
-                                ),
-                              ),
-                              _buildDot(context),
-                              Flexible(
-                                child: AppText.bodySmall(
-                                  price,
-                                  color: context.colors.primary,
-                                ),
-                              ),
-                            ],
+                          child: Icon(
+                            Icons.image_outlined,
+                            size: 40.sp,
+                            color: Colors.white.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
+                      // Gradient overlay at bottom
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 120.h,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.black.withValues(alpha: 0.8),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Live badge
+                if (isLive)
+                  Positioned(
+                    left: 12.w,
+                    top: 12.h,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.liveRed,
+                        borderRadius: BorderRadius.circular(8.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.liveRed.withValues(alpha: 0.4),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 6.w,
+                            height: 6.h,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            'LIVE',
+                            style: AppTypography.labelSmall.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10.sp,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
+                
+                // Content overlay
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: EdgeInsets.all(12.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title
+                        Text(
+                          title,
+                          style: AppTypography.titleSmall.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        
+                        SizedBox(height: 6.h),
+                        
+                        // Date
+                        Text(
+                          date,
+                          style: AppTypography.bodySmall.copyWith(
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                        
+                        SizedBox(height: 6.h),
+                        
+                        // Price with background
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          decoration: BoxDecoration(
+                            color: context.colors.primary,
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            price,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDot(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 6.w),
-      child: Container(
-        width: 3.w,
-        height: 3.h,
-        decoration: BoxDecoration(
-          color: context.colors.dotSeparator,
-          shape: BoxShape.circle,
+              ],
+            ),
+          ],
         ),
       ),
     );

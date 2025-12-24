@@ -8,6 +8,7 @@ import 'package:fajimobileapp/core/routing/auth_guard.dart';
 import 'package:fajimobileapp/features/auth/auth_feature.dart';
 import 'package:fajimobileapp/features/auth/presentation/screens/welcome_back_screen.dart';
 import 'package:fajimobileapp/features/home/home_feature.dart';
+import 'package:fajimobileapp/features/dashboard/presentation/screens/main_dashboard_screen.dart';
 import 'package:fajimobileapp/features/event_details/event_details_feature.dart';
 import 'package:fajimobileapp/features/home/presentation/screens/search_screen.dart';
 import 'package:fajimobileapp/features/events/presentation/screens/events_list_screen.dart';
@@ -175,14 +176,25 @@ class AppRouter {
         ),
       ),
       
-      // Home route
+      // Home route (legacy - redirects to dashboard)
       GoRoute(
         path: RouteManager.home,
         name: RouteManager.homeName,
         pageBuilder: (context, state) => _buildPageWithTransition(
           context,
           state,
-          const HomeScreen(),
+          const MainDashboardScreen(),
+        ),
+      ),
+      
+      // Main Dashboard route (new 5-tab navigation)
+      GoRoute(
+        path: RouteManager.dashboard,
+        name: RouteManager.dashboardName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const MainDashboardScreen(),
         ),
       ),
       

@@ -14,9 +14,11 @@ class AuthGuard {
     // List of protected routes
     final protectedRoutes = [
       RouteManager.home,
+      RouteManager.dashboard,
       RouteManager.profile,
       RouteManager.accountSettings,
       RouteManager.myTickets,
+      RouteManager.myEvents,
       RouteManager.favorites,
       RouteManager.chatList,
       RouteManager.chatDetail,
@@ -28,11 +30,16 @@ class AuthGuard {
       RouteManager.makePayment,
       RouteManager.paymentSuccessful,
       RouteManager.organizeEvent,
+      RouteManager.eventCreationFlow,
       RouteManager.walletBalance,
       RouteManager.walletEnterAmount,
       RouteManager.walletReview,
       RouteManager.walletConfirmation,
       RouteManager.walletHistory,
+      RouteManager.vendorDashboardScreen,
+      RouteManager.vendorResourcesList,
+      RouteManager.vendorAddResource,
+      RouteManager.vendorBookingsList,
     ];
     
     final isProtectedRoute = protectedRoutes.contains(state.matchedLocation);

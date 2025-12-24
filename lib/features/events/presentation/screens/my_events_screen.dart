@@ -50,38 +50,72 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
 
     return Scaffold(
       backgroundColor: context.colors.surface,
-      appBar: AppBar(
-        backgroundColor: context.colors.surface,
-        elevation: 0,
-        title: AppText.titleLarge(
-          'My Events',
-          color: context.colors.onSurface,
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: context.colors.primary,
-          unselectedLabelColor: context.colors.onSurfaceVariant,
-          indicatorColor: context.colors.primary,
-          tabs: const [
-            Tab(text: 'Upcoming'),
-            Tab(text: 'Past'),
-            Tab(text: 'Cancelled'),
-          ],
-        ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          _loadUserEvents();
-        },
-        child: TabBarView(
-          controller: _tabController,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
           children: [
-            // Upcoming Events
-            _buildEventsList(userEventsState, 'upcoming'),
+            // Header
+            AppHeader(
+              title: 'My Events',
+              subtitle: 'Your upcoming and past events',
+            ),
+            
+            // Tabs
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 24.w),
+              height: 48.h,
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: TabBar(
+                controller: _tabController,
+                indicator: BoxDecoration(
+                  color: context.colors.primary,
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: Colors.transparent,
+                labelColor: context.colors.onPrimary,
+                unselectedLabelColor: context.colors.onSurfaceVariant,
+                labelStyle: AppTypography.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                ),
+                unselectedLabelStyle: AppTypography.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.sp,
+                ),
+                tabs: const [
+                  Tab(text: 'Upcoming'),
+                  Tab(text: 'Past'),
+                  Tab(text: 'Cancelled'),
+                ],
+              ),
+            ),
+            
+            SizedBox(height: 16.h),
+            
+            // Content
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  _loadUserEvents();
+                },
+                color: context.colors.primary,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Upcoming Events
+                    _buildEventsList(userEventsState, 'upcoming'),
             // Past Events
             _buildEventsList(userEventsState, 'past'),
             // Cancelled Events
             _buildEventsList(userEventsState, 'cancelled'),
+          ],
+        ),
+              ),
+            ),
           ],
         ),
       ),

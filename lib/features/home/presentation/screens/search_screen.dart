@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
-import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -16,367 +15,380 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _recentSearches = [
-    'Lorem',
-    'Ispum di',
-    'duie',
-    'vuty',
-    'gtfwqop',
-    'sda',
-    'upaya',
+  String _selectedCategory = 'All';
+  
+  final List<String> _categories = [
+    'All',
+    'Events',
+    'Hosts',
+    'Venues',
   ];
-
-  final List<Map<String, String>> _artists = [
-    {'name': 'Neil Collins', 'image': 'https://i.pravatar.cc/150?img=11'},
-    {'name': 'Willis Casper', 'image': 'https://i.pravatar.cc/150?img=12'},
-    {'name': 'Dexter Crist', 'image': 'https://i.pravatar.cc/150?img=13'},
-    {'name': 'Eunice Ebert', 'image': 'https://i.pravatar.cc/150?img=14'},
+  
+  final List<String> _recentSearches = [
+    'Music Festival',
+    'Tech Conference',
+    'Food & Wine',
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colors.background,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 64.h),
-          // Header
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Row(
-              children: [
-                AnimatedButton(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.pop();
-                  },
-                  child: Container(
-                    width: 50.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHighest,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: context.colors.onSurface,
-                      size: 16.sp,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  'Search',
-                  style: TextStyle(
-                    fontFamily: AppTypography.modicaPro,
-                    fontSize: 22.sp,
-                    fontWeight: FontWeight.w500,
-                    height: 1.2,
-                    color: context.colors.onSurface,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  width: 50.w,
-                  height: 50.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerHighest,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.filter_list,
-                    color: const Color(0xFFDCDCDC),
-                    size: 18.sp,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.h),
-          // Search bar
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w),
-            child: Container(
-              height: 69.h,
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(34.5.r),
-              ),
+      backgroundColor: context.colors.surface,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with back button
+            Padding(
+              padding: EdgeInsets.all(24.w),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.search,
-                    color: const Color(0xFFA1A1A1),
-                    size: 18.sp,
-                  ),
-                  SizedBox(width: 15.w),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      style: TextStyle(
-                        fontFamily: AppTypography.modicaPro,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w100,
-                        height: 1.2,
-                        color: context.colors.onSurface,
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      context.pop();
+                    },
+                    child: Container(
+                      width: 50.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerHighest,
+                        shape: BoxShape.circle,
                       ),
-                      decoration: InputDecoration(
-                        hintText: 'Search on Faji',
-                        hintStyle: TextStyle(
-                          fontFamily: AppTypography.modicaPro,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w100,
-                          height: 1.2,
-                          color: const Color(0xFFA1A1A1),
-                        ),
-                        border: InputBorder.none,
+                      child: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: context.colors.onSurface,
+                        size: 16.sp,
                       ),
                     ),
                   ),
-                  AppText.labelLarge(
-                    'Cancel',
-                    color: context.colors.onSurface,
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Container(
+                      height: 50.h,
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(25.r),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: context.colors.onSurfaceVariant,
+                            size: 20.sp,
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              autofocus: true,
+                              style: AppTypography.bodyMedium.copyWith(
+                                color: context.colors.onSurface,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'Search events, hosts, venues...',
+                                hintStyle: AppTypography.bodyMedium.copyWith(
+                                  color: context.colors.onSurfaceVariant,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (value) => setState(() {}),
+                            ),
+                          ),
+                          if (_searchController.text.isNotEmpty)
+                            GestureDetector(
+                              onTap: () {
+                                HapticFeedback.lightImpact();
+                                _searchController.clear();
+                                setState(() {});
+                              },
+                              child: Icon(
+                                Icons.clear,
+                                color: context.colors.onSurfaceVariant,
+                                size: 20.sp,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-          SizedBox(height: 23.h),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Recent Searches
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText.headlineMedium(
-                        'Recent Searches',
-                        color: context.colors.onSurface,
-                      ),
-                      Text(
-                        'Clear all',
-                        style: TextStyle(
-                          fontFamily: AppTypography.modicaPro,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w100,
-                          height: 1.2,
-                          color: const Color(0xFFA1A1A1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 17.h),
-                  Wrap(
-                    spacing: 5.w,
-                    runSpacing: 5.h,
-                    children: _recentSearches.map((search) {
-                      return _buildSearchChip(search);
-                    }).toList(),
-                  ),
-                  SizedBox(height: 25.h),
-                  // Artists recommend
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText.headlineMedium(
-                        'Artists recommend',
-                        color: context.colors.onSurface,
-                      ),
-                      Text(
-                        'View all',
-                        style: TextStyle(
-                          fontFamily: AppTypography.modicaPro,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w100,
-                          height: 1.2,
-                          color: const Color(0xFFA1A1A1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _artists.map((artist) {
-                      return _buildArtistAvatar(
-                        artist['name']!,
-                        artist['image']!,
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 24.h),
-                  // Popular near you
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText.headlineMedium(
-                        'Popular near you',
-                        color: context.colors.onSurface,
-                      ),
-                      Text(
-                        'View all',
-                        style: TextStyle(
-                          fontFamily: AppTypography.modicaPro,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w100,
-                          height: 1.2,
-                          color: const Color(0xFFA1A1A1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15.h),
-                  _buildEventCard(
-                    'https://picsum.photos/163/119?random=300',
-                    'GENfest Music Festival 2024 - Multi -  sensorial Audio Interface',
-                    'Wed 22/03',
-                    '08:30 PM',
-                    'From \$40.00',
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildEventCard(
-                    'https://picsum.photos/163/119?random=301',
-                    'GENfest Music Festival 2024 - Multi -  sensorial Audio Interface',
-                    'Wed 22/03',
-                    '08:30 PM',
-                    'From \$40.00',
-                  ),
-                  SizedBox(height: 100.h),
-                ],
+
+            // Category filters
+            SizedBox(
+              height: 48.h,
+              child: ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                scrollDirection: Axis.horizontal,
+                itemCount: _categories.length,
+                separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                itemBuilder: (context, index) {
+                  final category = _categories[index];
+                  final isSelected = _selectedCategory == category;
+                  
+                  return FilterChip(
+                    label: Text(category),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      HapticFeedback.lightImpact();
+                      setState(() => _selectedCategory = category);
+                    },
+                    backgroundColor: context.colors.surfaceContainerHighest,
+                    selectedColor: context.colors.primary,
+                    labelStyle: AppTypography.labelMedium.copyWith(
+                      color: isSelected ? context.colors.onPrimary : context.colors.onSurface,
+                    ),
+                  );
+                },
               ),
             ),
+
+            SizedBox(height: 24.h),
+
+            // Content
+            Expanded(
+              child: _searchController.text.isEmpty
+                  ? _buildRecentSearches()
+                  : _buildSearchResults(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentSearches() {
+    if (_recentSearches.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_rounded,
+              size: 64.sp,
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Search for events',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Find events, hosts, and venues',
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Recent Searches',
+                style: AppTypography.titleMedium.copyWith(
+                  color: context.colors.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  setState(() => _recentSearches.clear());
+                },
+                child: Text(
+                  'Clear',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: context.colors.primary,
+                  ),
+                ),
+              ),
+            ],
           ),
+          SizedBox(height: 12.h),
+          ..._recentSearches.map((search) => _buildRecentSearchItem(search)),
         ],
       ),
     );
   }
 
-  Widget _buildSearchChip(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(37.r),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontFamily: AppTypography.modicaPro,
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w400,
-          height: 1.2,
-          color: const Color(0xFFD6D6D6),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildArtistAvatar(String name, String imageUrl) {
-    return Column(
-      children: [
-        Container(
-          width: 61.2.w,
-          height: 61.2.h,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        SizedBox(height: 5.h),
-        SizedBox(
-          width: 71.w,
-          child: Text(
-            name,
-            style: TextStyle(
-              fontFamily: AppTypography.modicaPro,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w400,
-              height: 1.2,
-              color: const Color(0xFFD6D6D6),
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEventCard(
-      String imageUrl,
-      String title,
-      String date,
-      String time,
-      String price,
-      ) {
+  Widget _buildRecentSearchItem(String search) {
     return GestureDetector(
       onTap: () {
-        context.push(RouteManager.eventDetails);
+        HapticFeedback.lightImpact();
+        _searchController.text = search;
+        setState(() {});
       },
-      child: Row(
-        children: [
-          Container(
-            width: 163.w,
-            height: 119.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(26.r),
-              image: DecorationImage(
-                image: NetworkImage(imageUrl),
-                fit: BoxFit.cover,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 12.h),
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.history_rounded,
+              color: context.colors.onSurfaceVariant,
+              size: 20.sp,
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                search,
+                style: AppTypography.bodyMedium.copyWith(
+                  color: context.colors.onSurface,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 13.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText.bodyMedium(
-                  title,
-                  color: context.colors.onSurface,
-                  maxLines: 3,
+            Icon(
+              Icons.arrow_outward_rounded,
+              color: context.colors.onSurfaceVariant,
+              size: 16.sp,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    // Mock search results
+    final results = [
+      {
+        'title': 'Summer Music Festival 2025',
+        'subtitle': 'Central Park, New York',
+        'date': 'Jul 15, 2025',
+        'price': '\$45.00',
+        'image': 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400',
+      },
+      {
+        'title': 'Tech Innovation Summit',
+        'subtitle': 'Convention Center, SF',
+        'date': 'Aug 20, 2025',
+        'price': '\$120.00',
+        'image': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400',
+      },
+      {
+        'title': 'Food & Wine Tasting',
+        'subtitle': 'Downtown Plaza',
+        'date': 'Sep 5, 2025',
+        'price': '\$65.00',
+        'image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
+      },
+    ];
+
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      itemCount: results.length,
+      separatorBuilder: (_, __) => SizedBox(height: 16.h),
+      itemBuilder: (context, index) {
+        final result = results[index];
+        return _buildResultCard(result);
+      },
+    );
+  }
+
+  Widget _buildResultCard(Map<String, String> result) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        context.push(RouteManager.eventDetails);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 100.w,
+              height: 100.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.horizontal(left: Radius.circular(16.r)),
+                image: DecorationImage(
+                  image: NetworkImage(result['image']!),
+                  fit: BoxFit.cover,
                 ),
-                SizedBox(height: 11.h),
-                Row(
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText.bodySmall(
-                      date,
-                      color: AppColors.textSecondary,
-                    ),
-                    SizedBox(width: 6.w),
-                    Container(
-                      width: 3.w,
-                      height: 3.h,
-                      decoration: const BoxDecoration(
-                        color: AppColors.dotSeparator,
-                        shape: BoxShape.circle,
+                    Text(
+                      result['title']!,
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: context.colors.onSurface,
+                        fontWeight: FontWeight.w600,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(width: 6.w),
-                    AppText.bodySmall(
-                      time,
-                      color: AppColors.textSecondary,
+                    SizedBox(height: 6.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_rounded,
+                          size: 14.sp,
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            result['subtitle']!,
+                            style: AppTypography.bodySmall.copyWith(
+                              color: context.colors.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          result['date']!,
+                          style: AppTypography.bodySmall.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          'From ${result['price']!}',
+                          style: AppTypography.bodySmall.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                SizedBox(height: 2.h),
-                AppText.bodySmall(
-                  price,
-                  color: context.colors.primary,
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

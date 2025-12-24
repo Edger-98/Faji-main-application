@@ -7,6 +7,7 @@ export 'colors/app_colors.dart';
 // Components
 export 'components/app_text.dart';
 export 'components/app_text_field.dart';
+export 'components/app_header.dart';
 
 // Elevation
 export 'elevation/app_elevation.dart';

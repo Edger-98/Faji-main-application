@@ -17,20 +17,26 @@ class SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 27.w),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AppText.headlineMedium(
+          Text(
             title,
-            color: context.colors.onSurface,
+            style: AppTypography.titleLarge.copyWith(
+              color: context.colors.onSurface,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           if (onViewAll != null)
             GestureDetector(
               onTap: onViewAll,
-              child: AppText.labelLarge(
+              child: Text(
                 'View all',
-                color: context.colors.onSurfaceVariant,
+                style: AppTypography.bodySmall.copyWith(
+                  color: context.colors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
         ],

@@ -13,6 +13,7 @@ dependencies:
 
   # UI and Icons
   cupertino_icons: ^1.0.8
+  flutter_remix: ^0.0.3
   
   # State Management
   flutter_riverpod: ^2.5.1

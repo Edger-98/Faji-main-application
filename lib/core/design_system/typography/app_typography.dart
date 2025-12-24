@@ -20,23 +20,23 @@ class AppTypography {
   // Display styles - Using Modica Pro Bold for impact
   static const TextStyle displayLarge = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 37,
+    fontSize: 32,
     fontWeight: bold, // 700
     height: 1.2,
-    letterSpacing: 0,
+    letterSpacing: -0.5,
   );
 
   static const TextStyle displayMedium = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: bold,
     height: 1.2,
-    letterSpacing: 0,
+    letterSpacing: -0.5,
   );
 
   static const TextStyle displaySmall = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: bold,
     height: 1.2,
     letterSpacing: 0,
@@ -45,15 +45,15 @@ class AppTypography {
   // Headlines - Using Modica Pro SemiBold for hierarchy
   static const TextStyle headlineLarge = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: semiBold, // 600
     height: 1.2,
-    letterSpacing: 0,
+    letterSpacing: -0.5,
   );
 
   static const TextStyle headlineMedium = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
@@ -61,7 +61,7 @@ class AppTypography {
 
   static const TextStyle headlineSmall = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
@@ -70,32 +70,32 @@ class AppTypography {
   // Titles - Using Modica Pro Medium for emphasis
   static const TextStyle titleLarge = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: semiBold,
-    height: 1.2,
+    height: 1.3,
     letterSpacing: 0,
   );
 
   static const TextStyle titleMedium = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: medium,
-    height: 1.2,
+    height: 1.3,
     letterSpacing: 0,
   );
 
   static const TextStyle titleSmall = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: medium,
-    height: 1.2,
+    height: 1.3,
     letterSpacing: 0,
   );
 
   // Labels/Buttons - Using Modica Pro SemiBold for clarity
   static const TextStyle labelLarge = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: semiBold, // 600
     height: 1.2,
     letterSpacing: 0,
@@ -103,7 +103,7 @@ class AppTypography {
 
   static const TextStyle labelMedium = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: semiBold,
     height: 1.2,
     letterSpacing: 0,
@@ -111,7 +111,7 @@ class AppTypography {
 
   static const TextStyle labelSmall = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: medium,
     height: 1.2,
     letterSpacing: 0,
@@ -120,7 +120,7 @@ class AppTypography {
   // Body Text - Using Modica Pro Regular for readability
   static const TextStyle bodyLarge = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: regular, // 400
     height: 1.5,
     letterSpacing: 0,
@@ -128,7 +128,7 @@ class AppTypography {
 
   static const TextStyle bodyMedium = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: regular, // 400
     height: 1.5,
     letterSpacing: 0,
@@ -136,7 +136,7 @@ class AppTypography {
 
   static const TextStyle bodySmall = TextStyle(
     fontFamily: modicaPro,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: regular, // 400
     height: 1.5,
     letterSpacing: 0,
