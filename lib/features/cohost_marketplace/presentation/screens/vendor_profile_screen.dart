@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/cohost_resource_entity.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/booking_negotiation_screen.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Screen showing detailed vendor profile with ratings and reviews
 class VendorProfileScreen extends StatefulWidget {
@@ -43,6 +44,44 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
       return '₦${(price / 1000).toStringAsFixed(0)}K';
     }
     return '₦${price.toStringAsFixed(0)}';
+  }
+
+  Future<void> _shareVendorProfile() async {
+    try {
+      // Create shareable content
+      final String shareText = '''
+🎉 Check out ${widget.resource.cohostName} on Faji!
+
+${widget.resource.category.displayName} • ${widget.resource.rating}⭐ Rating
+${widget.resource.eventsCompleted ?? 0}+ Events Completed
+
+${widget.resource.description}
+
+Starting from ${_formatPrice(widget.resource.basePrice)} per event
+
+Book now on Faji App!
+''';
+
+      // Share the content
+      await Share.share(
+        shareText,
+        subject: '${widget.resource.cohostName} - ${widget.resource.category.displayName}',
+      );
+    } catch (e) {
+      // Show error if sharing fails
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Failed to share profile'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -87,7 +126,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
                 child: IconButton(
                   icon: const Icon(Icons.ios_share_rounded, size: 18),
                   color: AppColors.onSurface,
-                  onPressed: () {},
+                  onPressed: _shareVendorProfile,
                 ),
               ),
             ],

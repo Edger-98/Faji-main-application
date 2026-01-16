@@ -8,10 +8,16 @@ import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/presentation/presentation.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 import 'package:fajimobileapp/core/services/auth_token_service.dart';
+import 'package:fajimobileapp/core/services/session_timeout_service.dart';
+import 'package:fajimobileapp/core/services/inactivity_timeout_service.dart';
+import 'package:fajimobileapp/core/services/stripe_service.dart';
 
 void main() async {
   // Initialize the application
   await AppInitializer.initialize();
+  
+  // Initialize Stripe
+  await StripeService.initialize();
   
   // Initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -50,6 +56,12 @@ class MyApp extends ConsumerWidget {
       ref.read(themeProvider.notifier).updateSystemBrightness(
         isSystemDark: brightness == Brightness.dark,
       );
+      
+      // Initialize session timeout service with context
+      SessionTimeoutService().initialize(context);
+      
+      // Initialize inactivity timeout service with context
+      InactivityTimeoutService().initialize(context);
     });
 
     return ScreenUtilInit(
@@ -58,13 +70,19 @@ class MyApp extends ConsumerWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return ToastificationWrapper(
-          child: MaterialApp.router(
-            title: AppConstants.appName,
-            theme: FajiAppTheme.lightTheme,
-            darkTheme: FajiAppTheme.darkTheme,
-            themeMode: ThemeMode.dark, // Default to dark mode
-            routerConfig: AppRouter.router,
-            debugShowCheckedModeBanner: false,
+          child: GestureDetector(
+            // Track user interactions to reset inactivity timer
+            onTap: () => InactivityTimeoutService().resetTimer(),
+            onPanDown: (_) => InactivityTimeoutService().resetTimer(),
+            onScaleStart: (_) => InactivityTimeoutService().resetTimer(),
+            child: MaterialApp.router(
+              title: AppConstants.appName,
+              theme: FajiAppTheme.lightTheme,
+              darkTheme: FajiAppTheme.darkTheme,
+              themeMode: ThemeMode.dark, // Default to dark mode
+              routerConfig: AppRouter.router,
+              debugShowCheckedModeBanner: false,
+            ),
           ),
         );
       },

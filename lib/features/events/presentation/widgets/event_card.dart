@@ -11,7 +11,7 @@ class EventCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
   final bool isFavorite;
-  final bool showFavoriteButton;
+  final bool showFavoriteButton; // Defaults to false now
 
   const EventCard({
     super.key,
@@ -19,7 +19,7 @@ class EventCard extends StatelessWidget {
     this.onTap,
     this.onFavorite,
     this.isFavorite = false,
-    this.showFavoriteButton = true,
+    this.showFavoriteButton = false, // Changed default to false
   });
 
   @override
@@ -234,6 +234,70 @@ class EventCard extends StatelessWidget {
         text,
         color: Colors.white,
       ),
+    );
+  }
+
+  Widget _buildPriceDisplay(BuildContext context) {
+    // Check if event has price info
+    final price = event.price;
+    final isFree = price == 0;
+    
+    if (isFree) {
+      return AppText.titleSmall(
+        'FREE',
+        color: AppColors.success,
+      );
+    }
+    
+    // Show price with discount if applicable
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (event.hasDiscount)
+          AppText.bodySmall(
+            '\$${event.price.toStringAsFixed(2)}',
+            decoration: TextDecoration.lineThrough,
+            color: context.colors.onSurfaceVariant,
+          ),
+        AppText.titleSmall(
+          event.hasDiscount
+              ? '\$${event.discountedPrice.toStringAsFixed(2)}'
+              : '\$${event.price.toStringAsFixed(2)}',
+          color: AppColors.primary,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAvailabilityDisplay(BuildContext context) {
+    if (event.isSoldOut) {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+        decoration: BoxDecoration(
+          color: AppColors.error.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        child: AppText.bodySmall(
+          'SOLD OUT',
+          color: AppColors.error,
+        //  fontWeight: FontWeight.w600,
+        ),
+      );
+    }
+    
+    final available = event.availableTickets;
+    if (available <= 10) {
+      // Show urgency for low availability
+      return AppText.bodySmall(
+        '$available left',
+        color: AppColors.warning,
+       // fontWeight: FontWeight.w600,
+      );
+    }
+    
+    return AppText.bodySmall(
+      '$available left',
+      color: context.colors.onSurfaceVariant,
     );
   }
 

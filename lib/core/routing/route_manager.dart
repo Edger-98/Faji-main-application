@@ -4,6 +4,7 @@ class RouteManager {
 
   // Route paths
   static const String splash = '/splash';
+  static const String onboarding = '/onboarding';
   static const String intro = '/intro';
   static const String authEmail = '/auth/email';
   static const String authPin = '/auth/pin';
@@ -39,6 +40,7 @@ class RouteManager {
   static const String accountSettings = '/account-settings';
   static const String support = '/support';
   static const String terms = '/terms';
+  static const String notificationSettings = '/notification-settings';
   static const String walletBalance = '/wallet/balance';
   static const String walletEnterAmount = '/wallet/enter-amount';
   static const String walletReview = '/wallet/review';
@@ -55,6 +57,7 @@ class RouteManager {
 
   // Route names
   static const String splashName = 'splash';
+  static const String onboardingName = 'onboarding';
   static const String introName = 'intro';
   static const String authEmailName = 'auth-email';
   static const String authPinName = 'auth-pin';
@@ -90,6 +93,7 @@ class RouteManager {
   static const String accountSettingsName = 'account-settings';
   static const String supportName = 'support';
   static const String termsName = 'terms';
+  static const String notificationSettingsName = 'notification-settings';
   static const String walletBalanceName = 'wallet-balance';
   static const String walletEnterAmountName = 'wallet-enter-amount';
   static const String walletReviewName = 'wallet-review';

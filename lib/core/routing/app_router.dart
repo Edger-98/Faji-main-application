@@ -7,6 +7,7 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/routing/auth_guard.dart';
 import 'package:fajimobileapp/features/auth/auth_feature.dart';
 import 'package:fajimobileapp/features/auth/presentation/screens/welcome_back_screen.dart';
+import 'package:fajimobileapp/features/onboarding/presentation/screens/onboarding_screens.dart';
 import 'package:fajimobileapp/features/home/home_feature.dart';
 import 'package:fajimobileapp/features/dashboard/presentation/screens/main_dashboard_screen.dart';
 import 'package:fajimobileapp/features/event_details/event_details_feature.dart';
@@ -26,6 +27,7 @@ import 'package:fajimobileapp/features/chat/chat.dart';
 import 'package:fajimobileapp/features/profile/profile.dart';
 import 'package:fajimobileapp/features/support/support.dart';
 import 'package:fajimobileapp/features/terms/terms.dart';
+import 'package:fajimobileapp/features/notifications/presentation/screens/notification_settings_screen.dart';
 import 'package:fajimobileapp/features/wallet/wallet.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_registration_screen.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_resources_list_screen.dart';
@@ -93,6 +95,17 @@ class AppRouter {
           context,
           state,
           const SplashScreen(),
+        ),
+      ),
+      
+      // Onboarding screen
+      GoRoute(
+        path: RouteManager.onboarding,
+        name: RouteManager.onboardingName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const OnboardingScreen(),
         ),
       ),
       
@@ -370,16 +383,16 @@ class AppRouter {
         },
       ),
       
-      // Favorites route
-      GoRoute(
-        path: RouteManager.favorites,
-        name: RouteManager.favoritesName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
-          context,
-          state,
-          const events_favorites.FavoritesScreen(),
-        ),
-      ),
+      // Favorites route - DISABLED (feature removed)
+      // GoRoute(
+      //   path: RouteManager.favorites,
+      //   name: RouteManager.favoritesName,
+      //   pageBuilder: (context, state) => _buildPageWithTransition(
+      //     context,
+      //     state,
+      //     const events_favorites.FavoritesScreen(),
+      //   ),
+      // ),
       
       // Chat routes
       GoRoute(
@@ -451,6 +464,17 @@ class AppRouter {
           context,
           state,
           const TermsScreen(),
+        ),
+      ),
+      
+      // Notification Settings route
+      GoRoute(
+        path: RouteManager.notificationSettings,
+        name: RouteManager.notificationSettingsName,
+        pageBuilder: (context, state) => _buildPageWithTransition(
+          context,
+          state,
+          const NotificationSettingsScreen(),
         ),
       ),
       

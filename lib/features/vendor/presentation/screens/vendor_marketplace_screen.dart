@@ -1,63 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_detail_screen.dart';
+import 'package:fajimobileapp/features/marketplace/presentation/providers/marketplace_providers.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/marketplace_resource.dart';
 
 /// Vendor Marketplace - Public discovery only
 /// Purpose: Fiverr/Airbnb-style marketplace for discovering vendors and services
 /// Contains: Public vendor profiles, vendor services, search and filters
 /// Does NOT contain: Vendor onboarding, service creation, booking management
-class VendorMarketplaceScreen extends ConsumerStatefulWidget {
+class VendorMarketplaceScreen extends HookConsumerWidget {
   const VendorMarketplaceScreen({super.key});
 
   @override
-  ConsumerState<VendorMarketplaceScreen> createState() => _VendorMarketplaceScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final marketplaceViewModel = ref.watch(marketplaceViewModelProvider.notifier);
+    final marketplaceState = ref.watch(marketplaceViewModelProvider);
+    final selectedCategory = useState('All');
+    final isGridView = useState(true);
+    final searchController = useTextEditingController();
 
-class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScreen> 
-    with AutomaticKeepAliveClientMixin {
-  
-  @override
-  bool get wantKeepAlive => true;
+    final categories = [
+      'All',
+      'Photography',
+      'Catering',
+      'Decoration',
+      'Entertainment',
+      'Security',
+      'Transportation',
+    ];
 
-  String _selectedCategory = 'All';
-  bool _isGridView = true; // Toggle between grid and list
-  final TextEditingController _searchController = TextEditingController();
+    // Load resources on mount
+    useEffect(() {
+      Future.microtask(() => marketplaceViewModel.getMarketplaceResources(
+        category: selectedCategory.value == 'All' ? 'all' : selectedCategory.value,
+      ));
+      return null;
+    }, []);
 
-  final List<String> _categories = [
-    'All',
-    'Photography',
-    'Catering',
-    'Decoration',
-    'Entertainment',
-    'Security',
-    'Transportation',
-  ];
+    Future<void> refreshVendors() async {
+      HapticFeedback.lightImpact();
+      await marketplaceViewModel.getMarketplaceResources(
+        category: selectedCategory.value == 'All' ? 'all' : selectedCategory.value,
+      );
+    }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+    void onCategoryChanged(String category) {
+      HapticFeedback.lightImpact();
+      selectedCategory.value = category;
+      marketplaceViewModel.getMarketplaceResources(
+        category: category == 'All' ? 'all' : category,
+      );
+    }
 
-  Future<void> _refreshVendors() async {
-    HapticFeedback.lightImpact();
-    // TODO: Implement vendor refresh
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    
     return Scaffold(
       backgroundColor: context.colors.surface,
       body: SafeArea(
         bottom: false,
         child: RefreshIndicator(
-          onRefresh: _refreshVendors,
+          onRefresh: refreshVendors,
           color: AppColors.primary,
           backgroundColor: AppColors.surfaceContainerHighest,
           child: CustomScrollView(
@@ -77,21 +82,21 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                         IconButton(
                           icon: Icon(
                             Icons.grid_view_rounded,
-                            color: _isGridView ? context.colors.primary : context.colors.onSurfaceVariant,
+                            color: isGridView.value ? context.colors.primary : context.colors.onSurfaceVariant,
                           ),
                           onPressed: () {
                             HapticFeedback.lightImpact();
-                            setState(() => _isGridView = true);
+                            isGridView.value = true;
                           },
                         ),
                         IconButton(
                           icon: Icon(
                             Icons.view_list_rounded,
-                            color: !_isGridView ? context.colors.primary : context.colors.onSurfaceVariant,
+                            color: !isGridView.value ? context.colors.primary : context.colors.onSurfaceVariant,
                           ),
                           onPressed: () {
                             HapticFeedback.lightImpact();
-                            setState(() => _isGridView = false);
+                            isGridView.value = false;
                           },
                         ),
                       ],
@@ -105,21 +110,19 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
                   child: TextField(
-                    controller: _searchController,
+                    controller: searchController,
                     decoration: InputDecoration(
                       hintText: 'Search vendors or services...',
                       prefixIcon: Icon(Icons.search, color: context.colors.onSurfaceVariant),
-                      suffixIcon: _searchController.text.isNotEmpty
+                      suffixIcon: searchController.text.isNotEmpty
                           ? IconButton(
                               icon: Icon(Icons.clear, color: context.colors.onSurfaceVariant),
                               onPressed: () {
-                                _searchController.clear();
-                                setState(() {});
+                                searchController.clear();
                               },
                             )
                           : null,
                     ),
-                    onChanged: (value) => setState(() {}),
                   ),
                 ),
               ),
@@ -131,19 +134,16 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                   child: ListView.separated(
                     padding: EdgeInsets.symmetric(horizontal: 24.w),
                     scrollDirection: Axis.horizontal,
-                    itemCount: _categories.length,
+                    itemCount: categories.length,
                     separatorBuilder: (_, __) => SizedBox(width: 12.w),
                     itemBuilder: (context, index) {
-                      final category = _categories[index];
-                      final isSelected = _selectedCategory == category;
+                      final category = categories[index];
+                      final isSelected = selectedCategory.value == category;
                       
                       return FilterChip(
                         label: Text(category),
                         selected: isSelected,
-                        onSelected: (selected) {
-                          HapticFeedback.lightImpact();
-                          setState(() => _selectedCategory = category);
-                        },
+                        onSelected: (selected) => onCategoryChanged(category),
                         backgroundColor: context.colors.surfaceContainerHighest,
                         selectedColor: context.colors.primary,
                         labelStyle: AppTypography.labelMedium.copyWith(
@@ -158,32 +158,19 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
               SliverToBoxAdapter(child: SizedBox(height: 24.h)),
 
               // Vendor Grid or List
-              if (_isGridView)
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  sliver: SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16.w,
-                      mainAxisSpacing: 16.h,
-                      childAspectRatio: 0.68, // Adjusted from 0.72 to prevent overflow
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildVendorCard(context, index),
-                      childCount: 8,
-                    ),
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => _buildVendorListTile(context, index),
-                      childCount: 8,
-                    ),
-                  ),
-                ),
+              marketplaceState.resourcesState.when(
+                initial: () => _buildEmptyState(context),
+                loading: () => _buildLoadingState(context, isGridView.value),
+                success: (resourcesResponse) {
+                  if (resourcesResponse.resources.isEmpty) {
+                    return _buildEmptyState(context);
+                  }
+                  return isGridView.value
+                      ? _buildVendorGrid(context, resourcesResponse.resources)
+                      : _buildVendorList(context, resourcesResponse.resources);
+                },
+                error: (failure) => _buildErrorState(context, failure.message, refreshVendors),
+              ),
 
               // Bottom padding for nav bar
               SliverToBoxAdapter(child: SizedBox(height: 120.h)),
@@ -194,92 +181,246 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
     );
   }
 
-  Widget _buildVendorCard(BuildContext context, int index) {
-    // Real vendor data
-    final vendors = [
-      {
-        'name': 'Elite Photography Studio',
-        'category': 'Photography',
-        'rating': 4.9,
-        'reviews': 127,
-        'price': 'From \$500',
-        'image': 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'Gourmet Catering Co.',
-        'category': 'Catering',
-        'rating': 4.8,
-        'reviews': 89,
-        'price': 'From \$1,200',
-        'image': 'https://images.unsplash.com/photo-1555244162-803834f70033?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'Bloom & Petal Decor',
-        'category': 'Decoration',
-        'rating': 4.7,
-        'reviews': 64,
-        'price': 'From \$800',
-        'image': 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400',
-        'verified': false,
-      },
-      {
-        'name': 'SoundWave Entertainment',
-        'category': 'Entertainment',
-        'rating': 4.9,
-        'reviews': 156,
-        'price': 'From \$600',
-        'image': 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'SecureGuard Services',
-        'category': 'Security',
-        'rating': 4.6,
-        'reviews': 43,
-        'price': 'From \$400',
-        'image': 'https://images.unsplash.com/photo-1557862921-37829c790f19?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'Luxury Transport Co.',
-        'category': 'Transportation',
-        'rating': 4.8,
-        'reviews': 92,
-        'price': 'From \$350',
-        'image': 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400',
-        'verified': false,
-      },
-      {
-        'name': 'Moments Photography',
-        'category': 'Photography',
-        'rating': 4.7,
-        'reviews': 78,
-        'price': 'From \$450',
-        'image': 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400',
-        'verified': false,
-      },
-      {
-        'name': 'Taste of Heaven Catering',
-        'category': 'Catering',
-        'rating': 4.9,
-        'reviews': 134,
-        'price': 'From \$1,500',
-        'image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
-        'verified': true,
-      },
-    ];
+  Widget _buildVendorGrid(BuildContext context, List<MarketplaceResource> resources) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      sliver: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.w,
+          mainAxisSpacing: 16.h,
+          childAspectRatio: 0.68,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => _buildVendorCard(context, resources[index]),
+          childCount: resources.length,
+        ),
+      ),
+    );
+  }
 
-    final vendor = vendors[index % vendors.length];
+  Widget _buildVendorList(BuildContext context, List<MarketplaceResource> resources) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => _buildVendorListTile(context, resources[index]),
+          childCount: resources.length,
+        ),
+      ),
+    );
+  }
 
+  Widget _buildLoadingState(BuildContext context, bool isGrid) {
+    if (isGrid) {
+      return SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16.w,
+            mainAxisSpacing: 16.h,
+            childAspectRatio: 0.68,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => _buildVendorCardSkeleton(context),
+            childCount: 6,
+          ),
+        ),
+      );
+    } else {
+      return SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => _buildVendorListSkeleton(context),
+            childCount: 5,
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 80.h, horizontal: 40.w),
+        child: Column(
+          children: [
+            Icon(
+              Icons.store_outlined,
+              size: 64.sp,
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'No vendors found',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Try adjusting your filters or check back later',
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, String message, VoidCallback onRetry) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 80.h, horizontal: 40.w),
+        child: Column(
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64.sp,
+              color: context.colors.error,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Failed to load vendors',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              message,
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.h),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: Text('Retry'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVendorCardSkeleton(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 120.h,
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 14.h,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  width: 80.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVendorListSkeleton(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 100.w,
+            height: 100.h,
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 16.h,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  width: 100.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVendorCard(BuildContext context, MarketplaceResource resource) {
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
+        // TODO: Navigate to vendor detail with resource data
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VendorDetailScreen(vendor: vendor),
+            builder: (context) => VendorDetailScreen(vendor: {
+              'name': resource.vendorName,
+              'category': resource.category,
+              'rating': resource.rating,
+              'reviews': resource.reviewCount,
+              'price': 'From \$${resource.basePrice.toStringAsFixed(0)}',
+              'image': resource.photos.isNotEmpty ? resource.photos.first : '',
+              'verified': resource.isVerified,
+            }),
           ),
         );
       },
@@ -295,17 +436,28 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
             Stack(
               children: [
                 Container(
-                  height: 120.h, // Further reduced to prevent overflow
+                  height: 120.h,
                   decoration: BoxDecoration(
                     color: context.colors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-                    image: DecorationImage(
-                      image: NetworkImage(vendor['image'] as String),
-                      fit: BoxFit.cover,
-                    ),
+                    image: resource.photos.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(resource.photos.first),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
+                  child: resource.photos.isEmpty
+                      ? Center(
+                          child: Icon(
+                            Icons.store,
+                            size: 40.sp,
+                            color: context.colors.primary,
+                          ),
+                        )
+                      : null,
                 ),
-                if (vendor['verified'] as bool)
+                if (resource.isVerified)
                   Positioned(
                     top: 8.h,
                     right: 8.w,
@@ -336,6 +488,26 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                       ),
                     ),
                   ),
+                if (!resource.isAvailable)
+                  Positioned(
+                    top: 8.h,
+                    left: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.error,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Text(
+                        'Unavailable',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: Colors.white,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
             
@@ -352,7 +524,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            vendor['name'] as String,
+                            resource.title,
                             style: AppTypography.titleSmall.copyWith(
                               color: context.colors.onSurface,
                               fontWeight: FontWeight.w600,
@@ -363,7 +535,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                           ),
                           SizedBox(height: 3.h),
                           Text(
-                            vendor['category'] as String,
+                            resource.category,
                             style: AppTypography.bodySmall.copyWith(
                               color: context.colors.onSurfaceVariant,
                               fontSize: 11.sp,
@@ -387,7 +559,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                             ),
                             SizedBox(width: 3.w),
                             Text(
-                              '${vendor['rating']}',
+                              resource.rating.toStringAsFixed(1),
                               style: AppTypography.bodySmall.copyWith(
                                 color: context.colors.onSurface,
                                 fontWeight: FontWeight.w600,
@@ -397,7 +569,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                             SizedBox(width: 3.w),
                             Flexible(
                               child: Text(
-                                '(${vendor['reviews']})',
+                                '(${resource.reviewCount})',
                                 style: AppTypography.bodySmall.copyWith(
                                   color: context.colors.onSurfaceVariant,
                                   fontSize: 10.sp,
@@ -409,7 +581,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                         ),
                         SizedBox(height: 3.h),
                         Text(
-                          vendor['price'] as String,
+                          'From \$${resource.basePrice.toStringAsFixed(0)}',
                           style: AppTypography.bodySmall.copyWith(
                             color: context.colors.primary,
                             fontWeight: FontWeight.w700,
@@ -428,92 +600,22 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
     );
   }
 
-  Widget _buildVendorListTile(BuildContext context, int index) {
-    // Real vendor data (same as card)
-    final vendors = [
-      {
-        'name': 'Elite Photography Studio',
-        'category': 'Photography',
-        'rating': 4.9,
-        'reviews': 127,
-        'price': 'From \$500',
-        'image': 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'Gourmet Catering Co.',
-        'category': 'Catering',
-        'rating': 4.8,
-        'reviews': 89,
-        'price': 'From \$1,200',
-        'image': 'https://images.unsplash.com/photo-1555244162-803834f70033?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'Bloom & Petal Decor',
-        'category': 'Decoration',
-        'rating': 4.7,
-        'reviews': 64,
-        'price': 'From \$800',
-        'image': 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400',
-        'verified': false,
-      },
-      {
-        'name': 'SoundWave Entertainment',
-        'category': 'Entertainment',
-        'rating': 4.9,
-        'reviews': 156,
-        'price': 'From \$600',
-        'image': 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'SecureGuard Services',
-        'category': 'Security',
-        'rating': 4.6,
-        'reviews': 43,
-        'price': 'From \$400',
-        'image': 'https://images.unsplash.com/photo-1557862921-37829c790f19?w=400',
-        'verified': true,
-      },
-      {
-        'name': 'Luxury Transport Co.',
-        'category': 'Transportation',
-        'rating': 4.8,
-        'reviews': 92,
-        'price': 'From \$350',
-        'image': 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400',
-        'verified': false,
-      },
-      {
-        'name': 'Moments Photography',
-        'category': 'Photography',
-        'rating': 4.7,
-        'reviews': 78,
-        'price': 'From \$450',
-        'image': 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400',
-        'verified': false,
-      },
-      {
-        'name': 'Taste of Heaven Catering',
-        'category': 'Catering',
-        'rating': 4.9,
-        'reviews': 134,
-        'price': 'From \$1,500',
-        'image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
-        'verified': true,
-      },
-    ];
-
-    final vendor = vendors[index % vendors.length];
-
+  Widget _buildVendorListTile(BuildContext context, MarketplaceResource resource) {
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VendorDetailScreen(vendor: vendor),
+            builder: (context) => VendorDetailScreen(vendor: {
+              'name': resource.vendorName,
+              'category': resource.category,
+              'rating': resource.rating,
+              'reviews': resource.reviewCount,
+              'price': 'From \$${resource.basePrice.toStringAsFixed(0)}',
+              'image': resource.photos.isNotEmpty ? resource.photos.first : '',
+              'verified': resource.isVerified,
+            }),
           ),
         );
       },
@@ -534,13 +636,25 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                   height: 100.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.r),
-                    image: DecorationImage(
-                      image: NetworkImage(vendor['image'] as String),
-                      fit: BoxFit.cover,
-                    ),
+                    color: context.colors.primary.withValues(alpha: 0.1),
+                    image: resource.photos.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(resource.photos.first),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
+                  child: resource.photos.isEmpty
+                      ? Center(
+                          child: Icon(
+                            Icons.store,
+                            size: 40.sp,
+                            color: context.colors.primary,
+                          ),
+                        )
+                      : null,
                 ),
-                if (vendor['verified'] as bool)
+                if (resource.isVerified)
                   Positioned(
                     top: 6.h,
                     right: 6.w,
@@ -568,7 +682,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    vendor['name'] as String,
+                    resource.title,
                     style: AppTypography.titleMedium.copyWith(
                       color: context.colors.onSurface,
                       fontWeight: FontWeight.w600,
@@ -578,7 +692,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    vendor['category'] as String,
+                    resource.category,
                     style: AppTypography.bodySmall.copyWith(
                       color: context.colors.onSurfaceVariant,
                     ),
@@ -593,7 +707,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        '${vendor['rating']}',
+                        resource.rating.toStringAsFixed(1),
                         style: AppTypography.bodySmall.copyWith(
                           color: context.colors.onSurface,
                           fontWeight: FontWeight.w600,
@@ -601,7 +715,7 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        '(${vendor['reviews']})',
+                        '(${resource.reviewCount})',
                         style: AppTypography.bodySmall.copyWith(
                           color: context.colors.onSurfaceVariant,
                           fontSize: 11.sp,
@@ -610,12 +724,34 @@ class _VendorMarketplaceScreenState extends ConsumerState<VendorMarketplaceScree
                     ],
                   ),
                   SizedBox(height: 8.h),
-                  Text(
-                    vendor['price'] as String,
-                    style: AppTypography.bodyMedium.copyWith(
-                      color: context.colors.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'From \$${resource.basePrice.toStringAsFixed(0)}',
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (!resource.isAvailable) ...[
+                        SizedBox(width: 8.w),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.error.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            'Unavailable',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: AppColors.error,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ),

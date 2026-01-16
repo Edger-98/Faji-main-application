@@ -1,5 +1,6 @@
 import 'theme_model.dart';
 import 'poster_model.dart';
+import 'ticketing_model.dart';
 
 class EventModel {
   final String id;
@@ -23,6 +24,7 @@ class EventModel {
   final String colorTheme;
   final ThemeModel? theme;
   final PosterModel? poster;
+  final TicketingModel? ticketing; // NEW: Ticketing information
 
   EventModel({
     required this.id,
@@ -46,27 +48,56 @@ class EventModel {
     required this.colorTheme,
     this.theme,
     this.poster,
+    this.ticketing, // NEW
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
-    return EventModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      category: json['category'] as String? ?? 'Other',
-      emoji: json['emoji'] as String? ?? '🎉',
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      status: json['status'] as String? ?? 'upcoming',
-      role: json['role'] as String? ?? 'creator',
-      isBookmarked: json['isBookmarked'] as bool? ?? false,
-      host: HostModel.fromJson(json['host'] as Map<String, dynamic>),
-      location: json['location'] != null 
+    try {
+      print('🔍 Parsing EventModel from JSON...');
+      print('   Raw JSON keys: ${json.keys.toList()}');
+      
+      // Parse each field with error handling
+      final id = json['id'] as String;
+      print('   ✓ id: $id');
+      
+      final name = json['name'] as String;
+      print('   ✓ name: $name');
+      
+      final description = json['description'] as String?;
+      final category = json['category'] as String? ?? 'Other';
+      final emoji = json['emoji'] as String? ?? '🎉';
+      
+      print('   📅 Parsing dates...');
+      print('      startDate type: ${json['startDate'].runtimeType}');
+      print('      startDate value: ${json['startDate']}');
+      final startDate = _parseDateTime(json['startDate']);
+      print('   ✓ startDate: $startDate');
+      
+      final endDate = _parseDateTime(json['endDate']);
+      print('   ✓ endDate: $endDate');
+      
+      final createdAt = _parseDateTime(json['createdAt']);
+      print('   ✓ createdAt: $createdAt');
+      
+      final updatedAt = _parseDateTime(json['updatedAt']);
+      print('   ✓ updatedAt: $updatedAt');
+      
+      final status = json['status'] as String? ?? 'upcoming';
+      final role = json['role'] as String? ?? 'creator';
+      final isBookmarked = json['isBookmarked'] as bool? ?? false;
+      
+      print('   👤 Parsing host...');
+      final host = HostModel.fromJson(json['host'] as Map<String, dynamic>);
+      print('   ✓ host: ${host.name}');
+      
+      print('   📍 Parsing location...');
+      final location = json['location'] != null 
           ? LocationModel.fromJson(json['location'] as Map<String, dynamic>)
-          : null,
-      budget: json['budget'] != null
+          : null;
+      print('   ✓ location: ${location?.address ?? "none"}');
+      
+      print('   💰 Parsing budget...');
+      final budget = json['budget'] != null
           ? BudgetModel.fromJson(json['budget'] as Map<String, dynamic>)
           : BudgetModel(
               total: 0,
@@ -74,8 +105,11 @@ class EventModel {
               remaining: 0,
               currency: 'NGN',
               currencySymbol: '₦',
-            ),
-      settings: json['settings'] != null
+            );
+      print('   ✓ budget: ${budget.total}');
+      
+      print('   ⚙️ Parsing settings...');
+      final settings = json['settings'] != null
           ? EventSettingsModel.fromJson(json['settings'] as Map<String, dynamic>)
           : EventSettingsModel(
               isPublic: false,
@@ -86,11 +120,17 @@ class EventModel {
               acceptGuestContributions: true,
               disablePublicRSVP: false,
               enableWebhook: false,
-            ),
-      media: json['media'] != null
+            );
+      print('   ✓ settings parsed');
+      
+      print('   🎬 Parsing media...');
+      final media = json['media'] != null
           ? EventMediaModel.fromJson(json['media'] as Map<String, dynamic>)
-          : EventMediaModel(preEventMedia: []),
-      stats: json['stats'] != null
+          : EventMediaModel(preEventMedia: []);
+      print('   ✓ media parsed');
+      
+      print('   📊 Parsing stats...');
+      final stats = json['stats'] != null
           ? EventStatsModel.fromJson(json['stats'] as Map<String, dynamic>)
           : EventStatsModel(
               expectedGuests: 0,
@@ -100,15 +140,58 @@ class EventModel {
               completedTasks: 0,
               vendorCount: 0,
               plannerCount: 0,
-            ),
-      colorTheme: json['colorTheme'] as String? ?? json['theme']?['id'] as String? ?? 'green',
-      theme: json['theme'] != null
+            );
+      print('   ✓ stats parsed');
+      
+      final colorTheme = json['colorTheme'] as String? ?? json['theme']?['id'] as String? ?? 'green';
+      
+      final theme = json['theme'] != null
           ? ThemeModel.fromJson(json['theme'] as Map<String, dynamic>)
-          : null,
-      poster: json['poster'] != null
+          : null;
+      
+      final poster = json['poster'] != null
           ? PosterModel.fromJson(json['poster'] as Map<String, dynamic>)
-          : null,
-    );
+          : null;
+      print('   ✓ poster: ${poster != null ? "present" : "none"}');
+      
+      print('   🎫 Parsing ticketing...');
+      final ticketing = json['ticketing'] != null
+          ? TicketingModel.fromJson(json['ticketing'] as Map<String, dynamic>)
+          : null;
+      print('   ✓ ticketing: ${ticketing != null ? "enabled=${ticketing.enabled}, price=${ticketing.price}" : "none"}');
+      
+      print('✅ EventModel parsed successfully');
+      
+      return EventModel(
+        id: id,
+        name: name,
+        description: description,
+        category: category,
+        emoji: emoji,
+        startDate: startDate,
+        endDate: endDate,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        status: status,
+        role: role,
+        isBookmarked: isBookmarked,
+        host: host,
+        location: location,
+        budget: budget,
+        settings: settings,
+        media: media,
+        stats: stats,
+        colorTheme: colorTheme,
+        theme: theme,
+        poster: poster,
+        ticketing: ticketing, // NEW
+      );
+    } catch (e, stackTrace) {
+      print('❌ ERROR parsing EventModel: $e');
+      print('   Stack trace: $stackTrace');
+      print('   JSON data: $json');
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -126,6 +209,48 @@ class EventModel {
       'colorTheme': colorTheme,
     };
   }
+
+  // Helper method to safely parse DateTime from various formats
+  static DateTime _parseDateTime(dynamic value) {
+    if (value == null) {
+      return DateTime.now();
+    }
+    
+    // If it's already a DateTime, return it
+    if (value is DateTime) {
+      return value;
+    }
+    
+    // If it's a string, parse it
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (e) {
+        print('⚠️ Failed to parse date string: $value');
+        return DateTime.now();
+      }
+    }
+    
+    // If it's a Map (empty object {}), return current time
+    if (value is Map) {
+      print('⚠️ Received empty date object, using current time');
+      return DateTime.now();
+    }
+    
+    // If it's a number (timestamp), convert it
+    if (value is num) {
+      try {
+        return DateTime.fromMillisecondsSinceEpoch(value.toInt());
+      } catch (e) {
+        print('⚠️ Failed to parse timestamp: $value');
+        return DateTime.now();
+      }
+    }
+    
+    // Fallback to current time
+    print('⚠️ Unknown date format: $value (${value.runtimeType})');
+    return DateTime.now();
+  }
 }
 
 class HostModel {
@@ -140,11 +265,44 @@ class HostModel {
   });
 
   factory HostModel.fromJson(Map<String, dynamic> json) {
-    return HostModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      avatar: json['avatar'] as String?,
-    );
+    try {
+      print('      🔍 Parsing HostModel...');
+      print('         Raw host JSON: $json');
+      
+      // Handle various id formats (string, buffer object, etc.)
+      String hostId;
+      final idValue = json['id'];
+      print('         id type: ${idValue.runtimeType}');
+      print('         id value: $idValue');
+      
+      if (idValue is String) {
+        hostId = idValue;
+      } else if (idValue is Map && idValue.containsKey('buffer')) {
+        // MongoDB ObjectId buffer - convert to hex string
+        print('         Converting buffer to hex...');
+        final buffer = idValue['buffer'] as Map<String, dynamic>;
+        hostId = buffer.values.map((v) => v.toRadixString(16).padLeft(2, '0')).join();
+        print('         Converted ID: $hostId');
+      } else {
+        hostId = idValue?.toString() ?? 'unknown';
+        print('         Using fallback ID: $hostId');
+      }
+      
+      final name = json['name'] as String? ?? json['email'] as String? ?? 'Unknown';
+      final avatar = json['avatar'] as String?;
+      
+      print('      ✓ HostModel parsed: id=$hostId, name=$name');
+      
+      return HostModel(
+        id: hostId,
+        name: name,
+        avatar: avatar,
+      );
+    } catch (e, stackTrace) {
+      print('      ❌ ERROR parsing HostModel: $e');
+      print('         Stack trace: $stackTrace');
+      rethrow;
+    }
   }
 }
 
@@ -162,10 +320,20 @@ class LocationModel {
   });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
+    // Handle empty location object
+    if (json.isEmpty) {
+      return LocationModel(
+        address: '',
+        latitude: 0.0,
+        longitude: 0.0,
+        placeId: null,
+      );
+    }
+    
     return LocationModel(
-      address: json['address'] as String,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      address: json['address'] as String? ?? '',
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
       placeId: json['placeId'] as String?,
     );
   }

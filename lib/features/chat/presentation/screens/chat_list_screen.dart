@@ -118,7 +118,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     setState(() => _showEventsChat = true);
                   }),
                   const SizedBox(width: 9),
-                  _buildFilterChip('Organizers', !_showEventsChat, () {
+                  _buildFilterChip('Hosts', !_showEventsChat, () {
                     setState(() => _showEventsChat = false);
                   }),
                 ],
@@ -138,7 +138,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       ? EmptyState(
                           icon: Icons.chat_bubble_outline,
                           title: 'No chats yet',
-                          message: 'Start a conversation with event organizers',
+                          message: 'Start a conversation with event hosts',
                         )
                       : RefreshIndicator(
                       onRefresh: _refreshChats,

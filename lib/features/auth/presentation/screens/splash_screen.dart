@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:fajimobileapp/core/core.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
@@ -68,21 +69,26 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     
     if (!mounted) return;
     
+    // Check if onboarding has been completed
+    final prefs = await SharedPreferences.getInstance();
+    final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+    
     // Check if user has saved credentials
     final localDataSource = ref.read(authLocalDataSourceProvider);
     final userData = await localDataSource.getUserData();
     final hasUserData = userData['email'] != null && userData['email']!.isNotEmpty;
     
+    if (!mounted) return;
+    
     if (hasUserData) {
       // User has logged in before, show welcome back screen
-      if (mounted) {
-        context.go(RouteManager.welcomeBack);
-      }
+      context.go(RouteManager.welcomeBack);
+    } else if (!onboardingComplete) {
+      // First time user, show onboarding
+      context.go(RouteManager.onboarding);
     } else {
-      // First time user, show intro
-      if (mounted) {
-        context.go(RouteManager.intro);
-      }
+      // Onboarding complete but not logged in, show intro
+      context.go(RouteManager.intro);
     }
   }
 
@@ -106,75 +112,34 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: AnimatedBuilder(
-            animation: Listenable.merge([_fadeAnimation, _scaleAnimation]),
-            builder: (context, child) {
-              return FadeTransition(
-                opacity: _fadeAnimation,
-                child: ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Container(
-                    width: 100.w, // Responsive width
-                    height: 100.h, // Responsive height
-                    decoration: BoxDecoration(
-                      color: context.colors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: AppText.labelLarge(
-                        'FAJI',
-                        color: context.colors.surface,
-                      ),
-                    ),
-                  ),
-                  // TODO: Replace with actual logo when assets are available
-                  // child: SizedBox(
-                  //   width: 100.18,
-                  //   height: 140.43,
-                  //   child: Stack(
-                  //     children: [
-                  //       // Main logo
-                  //       Positioned(
-                  //         left: 6.99,
-                  //         top: 0,
-                  //         child: Image.asset(
-                  //           'assets/images/faji_logo.svg',
-                  //           width: 93.19,
-                  //           height: 140.43,
-                  //           color: context.colors.primary,
-                  //         ),
-                  //       ),
-                  //       // Logo dot
-                  //       Positioned(
-                  //         left: 0,
-                  //         top: 121.29,
-                  //         child: Image.asset(
-                  //           'assets/images/faji_logo_dot.svg',
-                  //           width: 13.8,
-                  //           height: 13.8,
-                  //           color: context.colors.primary,
-                  //         ),
-                  //       ),
-                  //       // Logo accent
-                  //       Positioned(
-                  //         left: 31.14,
-                  //         top: 93.66,
-                  //         child: Image.asset(
-                  //           'assets/images/faji_logo_accent.svg',
-                  //           width: 22.22,
-                  //           height: 16.42,
-                  //           color: context.colors.primary,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                ),
-              );
-            },
-          ),
-        ),
+        // child: Center(
+        //   child: AnimatedBuilder(
+        //     animation: Listenable.merge([_fadeAnimation, _scaleAnimation]),
+        //     builder: (context, child) {
+        //       // return
+        //         // FadeTransition(
+        //         // opacity: _fadeAnimation,
+        //         // child: ScaleTransition(
+        //         //   scale: _scaleAnimation,
+        //         //   child: Container(
+        //         //     width: 100.w, // Responsive width
+        //         //     height: 100.h, // Responsive height
+        //         //     decoration: BoxDecoration(
+        //         //       color: context.colors.primary,
+        //         //       shape: BoxShape.circle,
+        //         //     ),
+        //         //     child: Center(
+        //         //       child: AppText.labelLarge(
+        //         //         'FAJI',
+        //         //         color: context.colors.surface,
+        //         //       ),
+        //         //     ),
+        //         //   ),
+        //
+        //
+        //     },
+        //   ),
+        // ),
       ),
     );
   }

@@ -34,22 +34,23 @@ class AppBottomNav extends StatelessWidget {
                 index: 0,
                 route: RouteManager.home,
               ),
-              _buildNavItem(
-                context,
-                icon: Icons.favorite_border,
-                index: 1,
-                route: RouteManager.favorites,
-              ),
+              // Favorites removed - feature disabled
+              // _buildNavItem(
+              //   context,
+              //   icon: Icons.favorite_border,
+              //   index: 1,
+              //   route: RouteManager.favorites,
+              // ),
               _buildNavItem(
                 context,
                 icon: Icons.confirmation_number_outlined,
-                index: 2,
+                index: 1, // Changed from 2 to 1
                 route: RouteManager.myTickets,
               ),
               _buildNavItem(
                 context,
                 icon: Icons.person_outline,
-                index: 3,
+                index: 2, // Changed from 3 to 2
                 route: RouteManager.profile,
               ),
             ],

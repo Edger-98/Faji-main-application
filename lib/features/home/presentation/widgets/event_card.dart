@@ -32,7 +32,17 @@ class EventCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 200.w,
+        width: 220.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -40,17 +50,43 @@ class EventCard extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(16.r),
+                  borderRadius: BorderRadius.circular(20.r),
                   child: Stack(
                     children: [
-                      Image.network(
-                        imageUrl,
-                        width: 200.w,
-                        height: 240.h,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 200.w,
-                          height: 240.h,
+                      // Only load image if URL is valid
+                      if (imageUrl.isNotEmpty)
+                        Image.network(
+                          imageUrl,
+                          width: 220.w,
+                          height: 260.h,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            width: 220.w,
+                            height: 260.h,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppColors.eventCardBlue,
+                                  AppColors.eventCardYellow,
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.image_outlined,
+                                size: 48.sp,
+                                color: Colors.white.withValues(alpha: 0.5),
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        // Fallback for empty/null imageUrl
+                        Container(
+                          width: 220.w,
+                          height: 260.h,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -61,27 +97,28 @@ class EventCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          child: Icon(
-                            Icons.image_outlined,
-                            size: 40.sp,
-                            color: Colors.white.withValues(alpha: 0.5),
+                          child: Center(
+                            child: Icon(
+                              Icons.event,
+                              size: 48.sp,
+                              color: Colors.white.withValues(alpha: 0.7),
+                            ),
                           ),
                         ),
-                      ),
-                      // Gradient overlay at bottom
+                      // Enhanced gradient overlay
                       Positioned(
                         bottom: 0,
                         left: 0,
                         right: 0,
                         child: Container(
-                          height: 120.h,
+                          height: 140.h,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
                                 Colors.transparent,
-                                Colors.black.withValues(alpha: 0.8),
+                                Colors.black.withValues(alpha: 0.85),
                               ],
                             ),
                           ),
@@ -91,21 +128,22 @@ class EventCard extends StatelessWidget {
                   ),
                 ),
                 
-                // Live badge
+                // Live badge with pulse animation
                 if (isLive)
                   Positioned(
                     left: 12.w,
                     top: 12.h,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
                       decoration: BoxDecoration(
                         color: AppColors.liveRed,
-                        borderRadius: BorderRadius.circular(8.r),
+                        borderRadius: BorderRadius.circular(10.r),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.liveRed.withValues(alpha: 0.4),
-                            blurRadius: 8,
+                            color: AppColors.liveRed.withValues(alpha: 0.5),
+                            blurRadius: 12,
                             offset: const Offset(0, 2),
+                            spreadRadius: 1,
                           ),
                         ],
                       ),
@@ -113,20 +151,21 @@ class EventCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            width: 6.w,
-                            height: 6.h,
+                            width: 7.w,
+                            height: 7.h,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
                             ),
                           ),
-                          SizedBox(width: 4.w),
+                          SizedBox(width: 5.w),
                           Text(
                             'LIVE',
                             style: AppTypography.labelSmall.copyWith(
                               color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 11.sp,
+                              letterSpacing: 0.5,
                             ),
                           ),
                         ],
@@ -134,26 +173,52 @@ class EventCard extends StatelessWidget {
                     ),
                   ),
                 
+                // Favorite button
+                Positioned(
+                  right: 12.w,
+                  top: 12.h,
+                  child: GestureDetector(
+                    onTap: onFavorite,
+                    child: Container(
+                      padding: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.3),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.favorite_border_rounded,
+                        color: Colors.white,
+                        size: 18.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                
                 // Content overlay
                 Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: Padding(
-                    padding: EdgeInsets.all(12.w),
+                    padding: EdgeInsets.all(14.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Title
                         Text(
                           title,
-                          style: AppTypography.titleSmall.copyWith(
+                          style: AppTypography.titleMedium.copyWith(
                             color: Colors.white,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w800,
+                            height: 1.2,
                             shadows: [
                               Shadow(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                blurRadius: 4,
+                                color: Colors.black.withValues(alpha: 0.4),
+                                blurRadius: 6,
                               ),
                             ],
                           ),
@@ -161,32 +226,52 @@ class EventCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         
-                        SizedBox(height: 6.h),
+                        SizedBox(height: 8.h),
                         
-                        // Date
-                        Text(
-                          date,
-                          style: AppTypography.bodySmall.copyWith(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 11.sp,
-                          ),
+                        // Date with icon
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today_rounded,
+                              color: Colors.white.withValues(alpha: 0.9),
+                              size: 13.sp,
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              date,
+                              style: AppTypography.bodySmall.copyWith(
+                                color: Colors.white.withValues(alpha: 0.95),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                         
-                        SizedBox(height: 6.h),
+                        SizedBox(height: 10.h),
                         
-                        // Price with background
+                        // Price with enhanced background
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
                           decoration: BoxDecoration(
-                            color: context.colors.primary,
-                            borderRadius: BorderRadius.circular(6.r),
+                            color: price == 'FREE' 
+                                ? Colors.green
+                                : context.colors.primary,
+                            borderRadius: BorderRadius.circular(8.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (price == 'FREE' ? Colors.green : context.colors.primary).withValues(alpha: 0.4),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
                           child: Text(
                             price,
-                            style: AppTypography.bodySmall.copyWith(
+                            style: AppTypography.bodyMedium.copyWith(
                               color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13.sp,
                             ),
                           ),
                         ),

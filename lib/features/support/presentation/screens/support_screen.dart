@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/support/presentation/screens/faqs_screen.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key});
@@ -75,14 +78,28 @@ class SupportScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 61),
-                  // Contact live chat
-                  _buildSupportOption('Contact live chat'),
-                  const SizedBox(height: 17),
                   // Send us an email
-                  _buildSupportOption('Send us an email'),
-                  const SizedBox(height: 17),
+                  _buildSupportOption(
+                    context,
+                    'Send us an email',
+                    'support@faji.app',
+                    Icons.email_outlined,
+                    onTap: () => _sendEmail(context),
+                  ),
+                  SizedBox(height: 17.h),
                   // FAQs
-                  _buildSupportOption('FAQs'),
+                  _buildSupportOption(
+                    context,
+                    'FAQs',
+                    'Frequently Asked Questions',
+                    Icons.help_outline,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FaqsScreen(),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -93,30 +110,95 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSupportOption(String title) {
-    return Container(
-      height: 69,
-      padding: const EdgeInsets.symmetric(horizontal: 27),
-      decoration: BoxDecoration(
-        color: AppColors.searchBarBackground,
-        borderRadius: BorderRadius.circular(34.5),
-      ),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: AppTypography.bodyLarge.copyWith(
-              color: AppColors.onSurface,
-              fontWeight: AppTypography.thin,
+  static Future<void> _sendEmail(BuildContext context) async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'support@faji.app',
+      query: 'subject=Faji Support Request',
+    );
+
+    try {
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri);
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Could not open email client. Please email support@faji.app'),
+              backgroundColor: AppColors.error,
+              behavior: SnackBarBehavior.floating,
             ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
           ),
-          const Spacer(),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: AppColors.onSurface,
-            size: 10,
-          ),
-        ],
+        );
+      }
+    }
+  }
+
+  Widget _buildSupportOption(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon, {
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(34.5),
+      child: Container(
+        height: 69,
+        padding: const EdgeInsets.symmetric(horizontal: 27),
+        decoration: BoxDecoration(
+          color: AppColors.searchBarBackground,
+          borderRadius: BorderRadius.circular(34.5),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: AppColors.primary,
+              size: 24,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTypography.bodyLarge.copyWith(
+                      color: AppColors.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: AppColors.onSurface,
+              size: 10,
+            ),
+          ],
+        ),
       ),
     );
   }

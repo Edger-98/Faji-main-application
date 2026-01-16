@@ -2,6 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../../../core/network/api_response.dart';
+import '../../domain/entities/check_in_request.dart';
+import '../../domain/entities/my_ticket.dart';
+import '../../domain/entities/promo_code_validation.dart';
+import '../../domain/entities/purchase_ticket_request.dart';
+import '../../domain/entities/purchase_ticket_response.dart';
 import '../models/ticket_model.dart';
 
 part 'ticket_remote_datasource.g.dart';
@@ -11,6 +16,36 @@ part 'ticket_remote_datasource.g.dart';
 abstract class TicketRemoteDataSource {
   factory TicketRemoteDataSource(Dio dio, {String baseUrl}) =
       _TicketRemoteDataSource;
+
+  // ========== NEW API METHODS ==========
+
+  /// Purchase tickets
+  @POST('/tickets/purchase')
+  Future<ApiResponse<PurchaseTicketResponse>> purchaseTickets(
+    @Body() PurchaseTicketRequest request,
+  );
+
+  /// Validate promo code
+  @POST('/tickets/validate-promo')
+  Future<ApiResponse<PromoCodeValidation>> validatePromoCode(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Get my tickets
+  @GET('/tickets/my-tickets')
+  Future<ApiResponse<MyTicketsResponse>> getMyTickets(
+    @Query('status') String? status,
+    @Query('page') int page,
+    @Query('limit') int limit,
+  );
+
+  /// Check-in guest
+  @POST('/tickets/check-in')
+  Future<ApiResponse<CheckInResponse>> checkInGuest(
+    @Body() CheckInRequest request,
+  );
+
+  // ========== OLD METHODS (Keep for backward compatibility) ==========
 
   /// Get all tickets
   @GET('/api/tickets')

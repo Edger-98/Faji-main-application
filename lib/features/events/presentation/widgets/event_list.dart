@@ -17,7 +17,7 @@ class EventList extends StatelessWidget {
   final Function(EventEntity)? onFavoriteTap;
   final Set<String> favoriteEventIds;
   final VoidCallback? onRetry;
-  final bool showFavoriteButton;
+  final bool showFavoriteButton; // Defaults to false now
 
   const EventList({
     super.key,
@@ -29,7 +29,7 @@ class EventList extends StatelessWidget {
     this.onFavoriteTap,
     this.favoriteEventIds = const {},
     this.onRetry,
-    this.showFavoriteButton = true,
+    this.showFavoriteButton = false, // Changed default to false
   });
 
   @override

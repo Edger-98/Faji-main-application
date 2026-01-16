@@ -1,10 +1,43 @@
 import 'package:dartz/dartz.dart';
 
 import '../../../../core/error/failures.dart';
+import '../entities/check_in_request.dart';
+import '../entities/my_ticket.dart';
+import '../entities/promo_code_validation.dart';
+import '../entities/purchase_ticket_request.dart';
+import '../entities/purchase_ticket_response.dart';
 import '../entities/ticket_entity.dart';
 
 /// Ticket repository interface - domain layer
 abstract class TicketRepository {
+  // ========== NEW API METHODS ==========
+  
+  /// Purchase tickets
+  Future<Either<Failure, PurchaseTicketResponse>> purchaseTickets(
+    PurchaseTicketRequest request,
+  );
+
+  /// Validate promo code
+  Future<Either<Failure, PromoCodeValidation>> validatePromoCode({
+    required String eventId,
+    required String promoCode,
+    double? amount,
+  });
+
+  /// Get my tickets
+  Future<Either<Failure, MyTicketsResponse>> getMyTickets({
+    String? status,
+    int page = 1,
+    int limit = 20,
+  });
+
+  /// Check-in guest
+  Future<Either<Failure, CheckInResponse>> checkInGuest(
+    CheckInRequest request,
+  );
+
+  // ========== OLD METHODS (Keep for backward compatibility) ==========
+
   /// Get all tickets
   Future<Either<Failure, List<TicketEntity>>> getAllTickets();
 

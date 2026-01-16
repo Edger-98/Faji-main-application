@@ -1,21 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import '../providers/wallet_providers.dart';
+import '../../domain/entities/wallet_transaction.dart';
 
-class TransactionHistoryScreen extends StatefulWidget {
+class TransactionHistoryScreen extends HookConsumerWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  State<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final walletViewModel = ref.watch(walletViewModelProvider.notifier);
+    final walletState = ref.watch(walletViewModelProvider);
+    final selectedFilter = useState('All');
+    final filters = ['All', 'Hosting', 'Co-hosting', 'Vendor'];
+    final scrollController = useScrollController();
 
-class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  String _selectedFilter = 'All';
-  final List<String> _filters = ['All', 'Hosting', 'Co-hosting', 'Vendor'];
+    // Load transactions on mount
+    useEffect(() {
+      Future.microtask(() => walletViewModel.getWalletTransactions());
+      return null;
+    }, []);
 
-  @override
-  Widget build(BuildContext context) {
+    // Pagination listener
+    useEffect(() {
+      void onScroll() {
+        if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 200) {
+          walletViewModel.loadMoreTransactions();
+        }
+      }
+      
+      scrollController.addListener(onScroll);
+      return () => scrollController.removeListener(onScroll);
+    }, [scrollController]);
+
+    void onFilterChanged(String filter) {
+      HapticFeedback.lightImpact();
+      selectedFilter.value = filter;
+      
+      // Map filter to API type
+      String? apiType;
+      if (filter == 'Hosting') {
+        apiType = 'ticket_sale';
+      } else if (filter == 'Co-hosting') {
+        apiType = 'cohost_earning';
+      } else if (filter == 'Vendor') {
+        apiType = 'vendor_earning';
+      }
+      
+      walletViewModel.filterTransactionsByType(apiType ?? '');
+    }
+
     return Scaffold(
       backgroundColor: context.colors.surface,
       body: SafeArea(
@@ -24,6 +61,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             _buildAppBar(context),
             Expanded(
               child: SingleChildScrollView(
+                controller: scrollController,
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,9 +69,17 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     SizedBox(height: 16.h),
                     _buildSubtitle(context),
                     SizedBox(height: 20.h),
-                    _buildFilterChips(context),
+                    _buildFilterChips(context, filters, selectedFilter.value, onFilterChanged),
                     SizedBox(height: 20.h),
-                    _buildTransactionList(context),
+                    walletState.transactionsState.when(
+                      initial: () => _buildTransactionsEmpty(context),
+                      loading: () => _buildTransactionsLoading(context),
+                      success: (transactionsResponse) => _buildTransactionList(
+                        context,
+                        transactionsResponse.transactions,
+                      ),
+                      error: (failure) => _buildTransactionsError(context, failure.message),
+                    ),
                     SizedBox(height: 32.h),
                   ],
                 ),
@@ -93,24 +139,26 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildFilterChips(BuildContext context) {
+  Widget _buildFilterChips(
+    BuildContext context,
+    List<String> filters,
+    String selectedFilter,
+    Function(String) onFilterChanged,
+  ) {
     return SizedBox(
       height: 48.h,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _filters.length,
+        itemCount: filters.length,
         separatorBuilder: (_, __) => SizedBox(width: 12.w),
         itemBuilder: (context, index) {
-          final filter = _filters[index];
-          final isSelected = _selectedFilter == filter;
+          final filter = filters[index];
+          final isSelected = selectedFilter == filter;
           
           return FilterChip(
             label: Text(filter),
             selected: isSelected,
-            onSelected: (selected) {
-              HapticFeedback.lightImpact();
-              setState(() => _selectedFilter = filter);
-            },
+            onSelected: (selected) => onFilterChanged(filter),
             backgroundColor: context.colors.surfaceContainerHighest,
             selectedColor: context.colors.primary,
             labelStyle: AppTypography.labelMedium.copyWith(
@@ -122,120 +170,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildTransactionList(BuildContext context) {
-    // Real transaction data with different types
-    final transactions = [
-      TransactionItem(
-        name: 'Summer Music Festival',
-        description: 'Ticket sales earnings',
-        date: 'Dec 22, 2025',
-        time: '08:30 PM',
-        amount: '\$450.00',
-        type: 'Hosting',
-        icon: Icons.event_rounded,
-        color: AppColors.eventCardBlue,
-      ),
-      TransactionItem(
-        name: 'Tech Conference 2025',
-        description: 'Co-host revenue share',
-        date: 'Dec 20, 2025',
-        time: '02:15 PM',
-        amount: '\$225.00',
-        type: 'Co-hosting',
-        icon: Icons.people_rounded,
-        color: AppColors.primary,
-      ),
-      TransactionItem(
-        name: 'Elite Photography Studio',
-        description: 'Wedding photography service',
-        date: 'Dec 18, 2025',
-        time: '10:00 AM',
-        amount: '\$500.00',
-        type: 'Vendor',
-        icon: Icons.store_rounded,
-        color: AppColors.eventCardYellow,
-      ),
-      TransactionItem(
-        name: 'New Year Gala',
-        description: 'VIP ticket sales',
-        date: 'Dec 15, 2025',
-        time: '06:45 PM',
-        amount: '\$1,200.00',
-        type: 'Hosting',
-        icon: Icons.event_rounded,
-        color: AppColors.eventCardBlue,
-      ),
-      TransactionItem(
-        name: 'Gourmet Catering Co.',
-        description: 'Corporate event catering',
-        date: 'Dec 12, 2025',
-        time: '11:30 AM',
-        amount: '\$850.00',
-        type: 'Vendor',
-        icon: Icons.store_rounded,
-        color: AppColors.eventCardYellow,
-      ),
-      TransactionItem(
-        name: 'Art Exhibition Opening',
-        description: 'Co-host revenue share',
-        date: 'Dec 10, 2025',
-        time: '04:20 PM',
-        amount: '\$175.00',
-        type: 'Co-hosting',
-        icon: Icons.people_rounded,
-        color: AppColors.primary,
-      ),
-      TransactionItem(
-        name: 'Charity Fundraiser',
-        description: 'Ticket sales earnings',
-        date: 'Dec 8, 2025',
-        time: '07:00 PM',
-        amount: '\$680.00',
-        type: 'Hosting',
-        icon: Icons.event_rounded,
-        color: AppColors.eventCardBlue,
-      ),
-    ];
-
-    // Filter transactions based on selected filter
-    final filteredTransactions = _selectedFilter == 'All'
-        ? transactions
-        : transactions.where((t) => t.type == _selectedFilter).toList();
-
-    if (filteredTransactions.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 60.h),
-          child: Column(
-            children: [
-              Icon(
-                Icons.receipt_long_rounded,
-                size: 64.sp,
-                color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                'No transactions found',
-                style: AppTypography.titleMedium.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                'Transactions will appear here once you start earning',
-                style: AppTypography.bodySmall.copyWith(
-                  color: context.colors.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
+  Widget _buildTransactionList(BuildContext context, List<WalletTransaction> transactions) {
+    if (transactions.isEmpty) {
+      return _buildTransactionsEmpty(context);
     }
 
     return Column(
-      children: filteredTransactions
+      children: transactions
           .map((transaction) => Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
                 child: _buildTransactionCard(context, transaction),
@@ -244,10 +185,19 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildTransactionCard(
-    BuildContext context,
-    TransactionItem transaction,
-  ) {
+  Widget _buildTransactionsLoading(BuildContext context) {
+    return Column(
+      children: List.generate(
+        5,
+        (index) => Padding(
+          padding: EdgeInsets.only(bottom: 12.h),
+          child: _buildTransactionSkeleton(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTransactionSkeleton(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -260,12 +210,176 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             width: 48.w,
             height: 48.h,
             decoration: BoxDecoration(
-              color: transaction.color.withValues(alpha: 0.2),
+              color: context.colors.surfaceContainerHighest,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 150.w,
+                  height: 16.h,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  width: 100.w,
+                  height: 12.h,
+                  decoration: BoxDecoration(
+                    color: context.colors.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 60.w,
+            height: 20.h,
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(4.r),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionsEmpty(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 60.h),
+        child: Column(
+          children: [
+            Icon(
+              Icons.receipt_long_rounded,
+              size: 64.sp,
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'No transactions found',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'Transactions will appear here once you start earning',
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTransactionsError(BuildContext context, String message) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 60.h),
+        child: Column(
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64.sp,
+              color: context.colors.error,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Failed to load transactions',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              message,
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTransactionCard(
+    BuildContext context,
+    WalletTransaction transaction,
+  ) {
+    // Determine icon and color based on transaction type
+    IconData icon;
+    Color color;
+    String typeLabel;
+    String amountPrefix;
+
+    if (transaction.type == 'ticket_sale') {
+      icon = Icons.event_rounded;
+      color = AppColors.eventCardBlue;
+      typeLabel = 'Hosting';
+      amountPrefix = '+';
+    } else if (transaction.type == 'cohost_earning') {
+      icon = Icons.people_rounded;
+      color = AppColors.primary;
+      typeLabel = 'Co-hosting';
+      amountPrefix = '+';
+    } else if (transaction.type == 'vendor_earning') {
+      icon = Icons.store_rounded;
+      color = AppColors.eventCardYellow;
+      typeLabel = 'Vendor';
+      amountPrefix = '+';
+    } else if (transaction.type == 'withdrawal') {
+      icon = Icons.arrow_upward_rounded;
+      color = AppColors.error;
+      typeLabel = 'Withdrawal';
+      amountPrefix = '-';
+    } else {
+      icon = Icons.receipt_long_outlined;
+      color = context.colors.primary;
+      typeLabel = transaction.type;
+      amountPrefix = '+';
+    }
+
+    // Format date
+    String formattedDate;
+    try {
+      final date = DateTime.parse(transaction.createdAt);
+      formattedDate = '${_getMonthName(date.month)} ${date.day}, ${date.year}';
+    } catch (e) {
+      formattedDate = transaction.createdAt;
+    }
+
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48.w,
+            height: 48.h,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
-              transaction.icon,
-              color: transaction.color,
+              icon,
+              color: color,
               size: 24.sp,
             ),
           ),
@@ -275,7 +389,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.name,
+                  transaction.description,
                   style: AppTypography.bodyMedium.copyWith(
                     color: context.colors.onSurface,
                     fontWeight: FontWeight.w600,
@@ -285,7 +399,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  transaction.description,
+                  'Ref: ${transaction.reference}',
                   style: AppTypography.bodySmall.copyWith(
                     color: context.colors.onSurfaceVariant,
                   ),
@@ -298,13 +412,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       decoration: BoxDecoration(
-                        color: transaction.color.withValues(alpha: 0.15),
+                        color: color.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
-                        transaction.type,
+                        typeLabel,
                         style: AppTypography.bodySmall.copyWith(
-                          color: transaction.color,
+                          color: color,
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w600,
                         ),
@@ -312,7 +426,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      transaction.date,
+                      formattedDate,
                       style: AppTypography.bodySmall.copyWith(
                         color: context.colors.onSurfaceVariant,
                         fontSize: 11.sp,
@@ -325,9 +439,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           ),
           SizedBox(width: 12.w),
           Text(
-            '+${transaction.amount}',
+            '$amountPrefix${transaction.currency} ${transaction.amount.toStringAsFixed(2)}',
             style: AppTypography.titleSmall.copyWith(
-              color: AppColors.successGreen,
+              color: amountPrefix == '+' ? AppColors.successGreen : AppColors.error,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -335,26 +449,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       ),
     );
   }
-}
 
-class TransactionItem {
-  final String name;
-  final String description;
-  final String date;
-  final String time;
-  final String amount;
-  final String type;
-  final IconData icon;
-  final Color color;
-
-  TransactionItem({
-    required this.name,
-    required this.description,
-    required this.date,
-    required this.time,
-    required this.amount,
-    required this.type,
-    required this.icon,
-    required this.color,
-  });
+  String _getMonthName(int month) {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[month - 1];
+  }
 }

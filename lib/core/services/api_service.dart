@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../config/api_config.dart';
+import '../network/interceptors/auth_interceptor.dart';
 
 class ApiService {
   final Dio _dio;
@@ -14,6 +15,9 @@ class ApiService {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
+    
+    // Add auth interceptor FIRST (to add token to requests)
+    _dio.interceptors.add(AuthInterceptor());
     
     // Add interceptors for logging and error handling
     _dio.interceptors.add(

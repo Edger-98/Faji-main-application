@@ -17,6 +17,12 @@ abstract class VendorRemoteDataSource {
     @Body() Map<String, dynamic> body,
   );
 
+  /// Upload vendor image (profile or cover)
+  @POST('/vendor-registration/upload-image')
+  Future<HttpResponse<dynamic>> uploadImage(
+    @Body() FormData formData,
+  );
+
   /// Upload vendor documents
   @POST('/vendor-registration/documents')
   Future<HttpResponse<dynamic>> uploadDocument(

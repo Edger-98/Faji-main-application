@@ -123,7 +123,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                         child: _StatCard(
                           icon: Icons.monetization_on,
                           label: 'Total Earnings',
-                          value: '₦${_formatPrice(mockStats['totalEarnings'] as int)}',
+                          value: '₦${_formatPrice((mockStats['totalEarnings'] as num?)?.toInt() ?? 0)}',
                           color: AppColors.primary,
                         ),
                       ),
@@ -132,7 +132,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                         child: _StatCard(
                           icon: Icons.event_available,
                           label: 'Total Bookings',
-                          value: '${mockStats['totalBookings']}',
+                          value: '${mockStats['totalBookings'] ?? 0}',
                           color: AppColors.success,
                         ),
                       ),
@@ -146,7 +146,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                         child: _StatCard(
                           icon: Icons.pending_actions,
                           label: 'Pending Requests',
-                          value: '${mockStats['pendingRequests']}',
+                          value: '${mockStats['pendingRequests'] ?? 0}',
                           color: const Color(0xFFFEB822),
                         ),
                       ),
@@ -155,7 +155,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                         child: _StatCard(
                           icon: Icons.inventory_2,
                           label: 'Active Services',
-                          value: '${mockStats['activeResources']}',
+                          value: '${mockStats['activeResources'] ?? 0}',
                           color: const Color(0xFF6C63FF),
                         ),
                       ),
@@ -184,7 +184,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                   _QuickActionCard(
                     icon: Icons.request_page,
                     title: 'View Booking Requests',
-                    subtitle: '${mockStats['pendingRequests']} pending requests',
+                    subtitle: '${mockStats['pendingRequests'] ?? 0} pending requests',
                     onTap: () {
                       HapticFeedback.lightImpact();
                       context.push(RouteManager.vendorBookingsList);

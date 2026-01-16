@@ -7,7 +7,9 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
-import 'package:fajimobileapp/debug_data_screen.dart';
+import '../widgets/rate_app_bottom_sheet.dart';
+// Debug data screen import removed - feature disabled
+// import 'package:fajimobileapp/debug_data_screen.dart';
 
 class ProfileContent extends ConsumerStatefulWidget {
   const ProfileContent({super.key});
@@ -53,6 +55,27 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
     });
   }
 
+  Future<void> _performLogout() async {
+    try {
+      // Call logout
+      await ref.read(authStateViewModelProvider.notifier).logout();
+      
+      // Navigate to intro/login screen
+      if (mounted) {
+        context.go(RouteManager.intro);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Logout failed: ${e.toString()}'),
+            backgroundColor: AppColors.liveRed,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(currentUserProvider, (previous, next) {
@@ -72,30 +95,7 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
           AppHeader(
             title: 'Profile',
             subtitle: 'Manage your account and settings',
-            trailing: GestureDetector(
-              onTap: () {
-                HapticFeedback.lightImpact();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DebugDataScreen(),
-                  ),
-                );
-              },
-              child: Container(
-                width: 50.w,
-                height: 50.h,
-                decoration: BoxDecoration(
-                  color: context.colors.surfaceContainerHighest,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.settings_outlined,
-                  size: 20.sp,
-                  color: context.colors.onSurface,
-                ),
-              ),
-            ),
+            // Settings button removed - debug data screen disabled
           ),
           
           // Content
@@ -115,22 +115,22 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
                   children: [
                     Expanded(
                       child: _buildQuickAction(
-                        icon: Icons.account_balance_wallet_rounded,
-                        label: 'Wallet',
+                        icon: Icons.storefront_rounded,
+                        label: 'Become Vendor',
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          context.push(RouteManager.walletBalance);
+                          context.push(RouteManager.vendorRegistration);
                         },
                       ),
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
                       child: _buildQuickAction(
-                        icon: Icons.storefront_rounded,
-                        label: 'Become Vendor',
+                        icon: Icons.history_rounded,
+                        label: 'Events History',
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          context.push(RouteManager.vendorRegistration);
+                          context.push(RouteManager.myEvents);
                         },
                       ),
                     ),
@@ -188,32 +188,6 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
                     context.push(RouteManager.myEvents);
                   },
                 ),
-                _buildMenuItem(
-                  icon: Icons.payment_rounded,
-                  title: 'Payment Methods',
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Payment Methods - Coming soon'),
-                        backgroundColor: context.colors.surfaceContainerHighest,
-                      ),
-                    );
-                  },
-                ),
-                _buildMenuItem(
-                  icon: Icons.notifications_rounded,
-                  title: 'Notifications',
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Notifications - Coming soon'),
-                        backgroundColor: context.colors.surfaceContainerHighest,
-                      ),
-                    );
-                  },
-                ),
                 
                 SizedBox(height: 24.h),
                 
@@ -241,12 +215,7 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
                   title: 'Rate App',
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Thank you for your support!'),
-                        backgroundColor: context.colors.surfaceContainerHighest,
-                      ),
-                    );
+                    RateAppBottomSheet.show(context);
                   },
                 ),
                 
@@ -473,7 +442,8 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  // TODO: Implement actual logout
+                  // Implement actual logout
+                  _performLogout();
                 },
                 child: Text(
                   'Log Out',

@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../utils/logger.dart';
+import '../services/firebase_notification_service.dart';
 import 'config.dart';
 
 /// Handles application initialization and setup
@@ -17,6 +20,13 @@ class AppInitializer {
     try {
       // Ensure Flutter binding is initialized
       WidgetsFlutterBinding.ensureInitialized();
+
+      // Initialize Firebase
+      await Firebase.initializeApp();
+      Logger.info('Firebase initialized');
+
+      // Set up background message handler
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
       // Set preferred orientations
       await SystemChrome.setPreferredOrientations([
@@ -80,8 +90,12 @@ class AppInitializer {
   /// Initialize other services
   static Future<void> _initializeServices() async {
     try {
+      // Initialize Firebase Notification Service
+      await FirebaseNotificationService().initialize();
+      Logger.info('Firebase Notification Service initialized');
+      
       // Initialize any additional services here
-      // For example: notification services, analytics, etc.
+      // For example: analytics, etc.
       
       Logger.info('Additional services initialized');
     } catch (e) {

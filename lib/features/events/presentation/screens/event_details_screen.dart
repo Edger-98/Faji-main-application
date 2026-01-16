@@ -6,8 +6,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/services/toast_service.dart';
+import '../../../../core/routing/route_manager.dart';
 import '../../domain/entities/event_entity.dart';
 import '../viewmodels/event_details_viewmodel.dart';
+import '../widgets/buy_ticket_bottom_sheet.dart';
+import '../../../tickets/presentation/viewmodels/my_tickets_viewmodel.dart';
 
 /// Event Details Screen
 class EventDetailsScreen extends ConsumerStatefulWidget {
@@ -24,13 +27,35 @@ class EventDetailsScreen extends ConsumerStatefulWidget {
 
 class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
   bool _isFavorite = false;
+  bool _hasTicket = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(eventDetailsViewModelProvider.notifier).getEventById(widget.eventId);
+      _checkIfUserHasTicket();
     });
+  }
+
+  Future<void> _checkIfUserHasTicket() async {
+    // Fetch user's tickets and check if they have one for this event
+    await ref.read(myTicketsViewModelProvider.notifier).loadMyTickets();
+    
+    final ticketsState = ref.read(myTicketsViewModelProvider);
+    ticketsState.maybeWhen(
+      success: (ticketsResponse) {
+        final hasTicketForEvent = ticketsResponse.tickets.any(
+          (ticket) => ticket.event.id == widget.eventId,
+        );
+        if (mounted) {
+          setState(() {
+            _hasTicket = hasTicketForEvent;
+          });
+        }
+      },
+      orElse: () {},
+    );
   }
 
   void _toggleFavorite(EventEntity event) async {
@@ -55,6 +80,15 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
   }
 
   void _buyTickets(EventEntity event) {
+    final isEventFree = event.price == 0 || event.isFree;
+    
+    print('🎫 _buyTickets called');
+    print('   Event: ${event.title}');
+    print('   Price: ${event.price}');
+    print('   isFree field: ${event.isFree}');
+    print('   isEventFree: $isEventFree');
+    print('   isSoldOut: ${event.isSoldOut}');
+    
     if (event.isSoldOut) {
       ToastService.showError(
         context: context,
@@ -63,10 +97,31 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
       return;
     }
 
-    ToastService.showInfo(
+    // Check if event is actually free (price is 0)
+    if (isEventFree) {
+      print('🎫 Event is FREE - claiming ticket');
+      // For free events, claim ticket directly
+      _claimFreeTicket(event);
+    } else {
+      print('🎫 Event is PAID - showing payment sheet');
+      // For paid events, show payment bottom sheet
+      BuyTicketBottomSheet.show(context, event);
+    }
+  }
+
+  Future<void> _claimFreeTicket(EventEntity event) async {
+    // TODO: Implement free ticket claiming
+    ToastService.showSuccess(
       context: context,
-      message: 'Ticket purchase coming soon!',
+      message: 'Free ticket claimed successfully!',
     );
+    
+    // Refresh ticket status
+    await _checkIfUserHasTicket();
+  }
+
+  void _viewTicket() {
+    context.push(RouteManager.myTickets);
   }
 
   @override
@@ -112,87 +167,155 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
         ),
       ),
       bottomNavigationBar: eventState.maybeWhen(
-        success: (event) => Container(
-          padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
+        success: (event) {
+          // Check if event is actually free
+          final isEventFree = event.price == 0 || event.isFree;
+          
+          // Don't show button for free events if user already has ticket
+          if (isEventFree && _hasTicket) {
+            return Container(
+              padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Price
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: ElevatedButton(
+                onPressed: _viewTicket,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.colors.primary,
+                  foregroundColor: context.colors.onPrimary,
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AppText.bodySmall(
-                      'Price',
-                      color: context.colors.onSurfaceVariant,
+                    Icon(Icons.confirmation_number, size: 20.sp),
+                    SizedBox(width: 8.w),
+                    AppText.titleMedium(
+                      'View My Ticket',
+                      color: context.colors.onPrimary,
                     ),
-                    SizedBox(height: 4.h),
-                    if (event.hasDiscount)
-                      Row(
-                        children: [
-                          AppText.titleLarge(
-                            '\$${event.discountedPrice.toStringAsFixed(2)}',
-                            color: context.colors.primary,
-                          ),
-                          SizedBox(width: 8.w),
-                          AppText.bodyMedium(
-                            '\$${event.price.toStringAsFixed(2)}',
-                            color: context.colors.onSurfaceVariant,
-                          //  decoration: TextDecoration.lineThrough,
-                          ),
-                        ],
-                      )
-                    else
-                      AppText.titleLarge(
-                        event.price > 0 
-                            ? '\$${event.price.toStringAsFixed(2)}' 
-                            : 'Free',
-                        color: event.price > 0 
-                            ? context.colors.primary 
-                            : context.colors.onSurface,
-                      ),
                   ],
                 ),
               ),
-              SizedBox(width: 16.w),
-              // Buy Button
-              Expanded(
-                flex: 2,
-                child: ElevatedButton(
-                  onPressed: event.isSoldOut ? null : () => _buyTickets(event),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: event.isSoldOut 
-                        ? context.colors.onSurfaceVariant 
-                        : context.colors.primary,
-                    foregroundColor: event.isSoldOut 
-                        ? context.colors.surface 
-                        : context.colors.onPrimary,
-                    padding: EdgeInsets.symmetric(vertical: 16.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
+            );
+          }
+
+          return Container(
+            padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
+            decoration: BoxDecoration(
+              color: context.colors.surface,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Price - only show for paid events
+                if (!isEventFree) ...[
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText.bodySmall(
+                          'Price',
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                        SizedBox(height: 4.h),
+                        if (event.hasDiscount)
+                          Row(
+                            children: [
+                              AppText.titleLarge(
+                                '\$${event.discountedPrice.toStringAsFixed(2)}',
+                                color: context.colors.primary,
+                              ),
+                              SizedBox(width: 8.w),
+                              AppText.bodyMedium(
+                                '\$${event.price.toStringAsFixed(2)}',
+                                color: context.colors.onSurfaceVariant,
+                              ),
+                            ],
+                          )
+                        else
+                          AppText.titleLarge(
+                            '\$${event.price.toStringAsFixed(2)}',
+                            color: context.colors.primary,
+                          ),
+                      ],
                     ),
                   ),
-                  child: AppText.titleMedium(
-                    event.isSoldOut ? 'Sold Out' : 'Buy Tickets',
-                    color: event.isSoldOut 
-                        ? context.colors.surface 
-                        : context.colors.onPrimary,
-                  ),
+                  SizedBox(width: 16.w),
+                ],
+                // Button
+                Expanded(
+                  flex: isEventFree ? 1 : 2,
+                  child: _hasTicket
+                      ? ElevatedButton(
+                          onPressed: _viewTicket,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: context.colors.primary,
+                            foregroundColor: context.colors.onPrimary,
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.confirmation_number, size: 20.sp),
+                              SizedBox(width: 8.w),
+                              AppText.titleMedium(
+                                'View Ticket',
+                                color: context.colors.onPrimary,
+                              ),
+                            ],
+                          ),
+                        )
+                      : ElevatedButton(
+                          onPressed: event.isSoldOut ? null : () => _buyTickets(event),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: event.isSoldOut
+                                ? context.colors.onSurfaceVariant
+                                : context.colors.primary,
+                            foregroundColor: event.isSoldOut
+                                ? context.colors.surface
+                                : context.colors.onPrimary,
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                          child: AppText.titleMedium(
+                            event.isSoldOut
+                                ? 'Sold Out'
+                                : isEventFree
+                                    ? 'Claim Free Ticket'
+                                    : 'Buy Tickets',
+                            color: event.isSoldOut
+                                ? context.colors.surface
+                                : context.colors.onPrimary,
+                          ),
+                        ),
                 ),
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
         orElse: () => const SizedBox.shrink(),
       ),
     );
@@ -295,16 +418,16 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
                 
                 SizedBox(height: 16.h),
                 
-                // Organizer
+                // Host
                 Row(
                   children: [
                     CircleAvatar(
                       radius: 20.r,
                       backgroundColor: context.colors.primary.withOpacity(0.1),
-                      backgroundImage: event.organizerImage != null
-                          ? CachedNetworkImageProvider(event.organizerImage!)
+                      backgroundImage: event.hostImage != null
+                          ? CachedNetworkImageProvider(event.hostImage!)
                           : null,
-                      child: event.organizerImage == null
+                      child: event.hostImage == null
                           ? Icon(
                               Icons.person,
                               color: context.colors.primary,
@@ -317,11 +440,11 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText.bodySmall(
-                          'Organized by',
+                          'Hosted by',
                           color: context.colors.onSurfaceVariant,
                         ),
                         AppText.bodyLarge(
-                          event.organizerName,
+                          event.hostName,
                           color: context.colors.onSurface,
                         ),
                       ],

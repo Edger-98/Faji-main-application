@@ -40,6 +40,7 @@ class EventCreationRepository {
     double? budget,
     Map<String, dynamic>? location,
     Map<String, dynamic>? settings,
+    Map<String, dynamic>? ticketing, // NEW: Ticketing data
   }) async {
     try {
       final Map<String, dynamic> eventData = {
@@ -75,6 +76,9 @@ class EventCreationRepository {
       }
       if (settings != null) {
         eventData['settings'] = settings;
+      }
+      if (ticketing != null) {
+        eventData['ticketing'] = ticketing; // NEW: Send ticketing data
       }
 
       print('📤 Posting to /events with data: $eventData');

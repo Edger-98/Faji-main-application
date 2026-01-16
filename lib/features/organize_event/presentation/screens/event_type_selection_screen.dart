@@ -165,6 +165,10 @@ class EventTypeSelectionScreen extends ConsumerWidget {
                         onTap: () => _selectEventType(context, ref, 'Engagement'),
                       ),
                       _EventTypeChip(
+                        label: 'After Party',
+                        onTap: () => _selectEventType(context, ref, 'After Party'),
+                      ),
+                      _EventTypeChip(
                         label: 'Baby Shower',
                         onTap: () => _selectEventType(context, ref, 'Baby Shower'),
                       ),

@@ -4,8 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/home/presentation/widgets/widgets.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
+import 'package:go_router/go_router.dart';
 
 /// Home content - Event discovery feed
 /// Purpose: Public discovery of events and hosts
@@ -49,30 +51,57 @@ class _HomeContentState extends ConsumerState<HomeContent> with AutomaticKeepAli
         color: AppColors.primary,
         backgroundColor: AppColors.surfaceContainerHighest,
         child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
-            // Header
+            // Header with improved spacing
             SliverToBoxAdapter(
-              child: AppHeader(
-                title: 'Home',
-                subtitle: 'Discover amazing events',
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 12.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Discover Events',
+                      style: AppTypography.headlineLarge.copyWith(
+                        color: context.colors.onSurface,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Find amazing experiences near you',
+                      style: AppTypography.bodyMedium.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             
-            // Search Bar
+            // Enhanced Search Bar
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 8.h, 24.w, 20.h),
+                padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 20.h),
                 child: HomeSearchBar(),
               ),
             ),
             
-            // Hero Banner
+            // Hero Banner with better spacing
             SliverToBoxAdapter(
               child: HeroBanner(
                 onTap: () {
-                  // TODO: Navigate to featured events
+                  context.push(RouteManager.eventsList);
                 },
               ),
+            ),
+            
+            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
+            
+            // Category Filter with better positioning
+            SliverToBoxAdapter(
+              child: CategoryFilterSection(),
             ),
             
             SliverToBoxAdapter(child: SizedBox(height: 28.h)),
@@ -82,113 +111,28 @@ class _HomeContentState extends ConsumerState<HomeContent> with AutomaticKeepAli
               child: TrendingEventsSection(),
             ),
             
-            SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
             
-            // Category Filter
+            // Flash Deal - Moved up for better visibility
             SliverToBoxAdapter(
-              child: CategoryFilterSection(),
+              child: FlashDealSection(),
             ),
             
-            SliverToBoxAdapter(child: SizedBox(height: 20.h)),
-            
-            // Featured Events Section
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Featured Events',
-                      style: AppTypography.titleLarge.copyWith(
-                        color: context.colors.onSurface,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      size: 20.sp,
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
             
             // Upcoming Events (List Style)
             SliverToBoxAdapter(
               child: UpcomingEventsSection(),
             ),
             
-            SliverToBoxAdapter(child: SizedBox(height: 24.h)),
-            
-            // This Week Section
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'This Week',
-                      style: AppTypography.titleLarge.copyWith(
-                        color: context.colors.onSurface,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      size: 20.sp,
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
             
             // Your Events
             SliverToBoxAdapter(
               child: YourEventsSection(),
             ),
             
-            SliverToBoxAdapter(child: SizedBox(height: 24.h)),
-            
-            // Trending in Your Network
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Trending in Your Network',
-                      style: AppTypography.titleLarge.copyWith(
-                        color: context.colors.onSurface,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right_rounded,
-                      size: 20.sp,
-                      color: context.colors.onSurfaceVariant,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 16.h)),
-            
-            // Flash Deal
-            SliverToBoxAdapter(
-              child: FlashDealSection(),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
             
             // Trending Hosts
             SliverToBoxAdapter(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/presentation/widgets/common/app_bottom_nav.dart';
@@ -56,6 +57,77 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
           _userEmail = userData['email']!;
         });
+      }
+    }
+  }
+
+  Future<void> _rateApp(BuildContext context) async {
+    HapticFeedback.lightImpact();
+    
+    try {
+      final InAppReview inAppReview = InAppReview.instance;
+      
+      if (await inAppReview.isAvailable()) {
+        await inAppReview.requestReview();
+      } else {
+        // Fallback: Open app store page
+        await inAppReview.openStoreListing(
+          appStoreId: 'YOUR_APP_STORE_ID', // TODO: Replace with actual App Store ID
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unable to open app store: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Log Out'),
+        content: const Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await _performLogout();
+            },
+            child: const Text(
+              'Log Out',
+              style: TextStyle(color: Color(0xFFCA4638)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _performLogout() async {
+    try {
+      await ref.read(authStateViewModelProvider.notifier).logout();
+      
+      if (mounted) {
+        context.go(RouteManager.intro);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Logout failed: ${e.toString()}'),
+            backgroundColor: const Color(0xFFCA4638),
+          ),
+        );
       }
     }
   }
@@ -155,54 +227,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Balance card
-                  InkWell(
-                    onTap: () {
-                        context.push(RouteManager.walletBalance);
-                    },
-                    borderRadius: BorderRadius.circular(39.5),
-                    child: Ink(
-                      height: 71,
-                      padding: const EdgeInsets.symmetric(horizontal: 35),
-                      decoration: BoxDecoration(
-                        color: AppColors.searchBarBackground,
-                        borderRadius: BorderRadius.circular(39.5),
-                      ),
-                      child: Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Current Balance',
-                                style: AppTypography.bodySmall.copyWith(
-                                  color: AppColors.onSurface,
-                                  fontWeight: AppTypography.thin,
-                                  fontSize: 13,
-                                ),
-                              ),
-                              Text(
-                                '\$230d00000.00',
-                                style: AppTypography.headlineMedium.copyWith(
-                                  color: const Color(0xFFFEB822),
-                                  fontWeight: AppTypography.regular,
-                                  fontSize: 25,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            color: AppColors.onSurface,
-                            size: 10,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   // Personal section
                   _buildSectionHeader('Personal'),
                   const SizedBox(height: 3),
@@ -234,32 +258,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 3),
                   _buildMenuItem(Icons.support_agent_outlined, 'Contact Support', onTap: () => context.push(RouteManager.support)),
                   _buildMenuItem(Icons.description_outlined, 'Terms & Conditions', onTap: () => context.push(RouteManager.terms)),
-                  _buildMenuItem(Icons.star_border, 'Rate in App Store'),
+                  _buildMenuItem(
+                    Icons.star_border, 
+                    'Rate in App Store',
+                    onTap: () => _rateApp(context),
+                  ),
                   const SizedBox(height: 20),
                   // Log out button
-                  Container(
-                    height: 51,
-                    decoration: BoxDecoration(
-                      color: AppColors.searchBarBackground,
-                      borderRadius: BorderRadius.circular(34.5),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.logout,
-                          color: Color(0xFFCA4638),
-                          size: 14,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Log out',
-                          style: AppTypography.bodyLarge.copyWith(
-                            color: const Color(0xFFCA4638),
-                            fontWeight: AppTypography.regular,
+                  GestureDetector(
+                    onTap: () => _showLogoutDialog(),
+                    child: Container(
+                      height: 51,
+                      decoration: BoxDecoration(
+                        color: AppColors.searchBarBackground,
+                        borderRadius: BorderRadius.circular(34.5),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.logout,
+                            color: Color(0xFFCA4638),
+                            size: 14,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 5),
+                          Text(
+                            'Log out',
+                            style: AppTypography.bodyLarge.copyWith(
+                              color: const Color(0xFFCA4638),
+                              fontWeight: AppTypography.regular,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -269,7 +300,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const AppBottomNav(currentIndex: 3),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 2), // Changed from 3 to 2
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../../core/services/api_service.dart';
 import '../../domain/entities/auth_token_entity.dart';
 import '../../domain/entities/registration_complete_entity.dart';
 import '../../domain/entities/registration_session_entity.dart';
@@ -24,11 +25,13 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
+  final apiService; // Add API service for token management
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
+    required this.apiService,
   });
 
   // ========== Multi-Step Registration Flow ==========
@@ -556,8 +559,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> saveAuthData(String token, String userId) async {
     await localDataSource.saveToken(token);
     await localDataSource.saveUserId(userId);
-    // Note: Token will be synced with API service via AuthTokenService.initialize()
-    // This is called after registration/login in the presentation layer
+    // CRITICAL: Immediately set token in API service for subsequent requests
+    // This ensures the token is available right away without waiting for initialize()
+    apiService.setToken(token);
+    print('✅ Token saved and set in API service');
   }
 
   @override

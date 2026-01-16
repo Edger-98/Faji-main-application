@@ -11,29 +11,49 @@ class Logger {
 
   /// Log debug messages
   static void debug(String message, [Object? error, StackTrace? stackTrace]) {
-    if (Config.enableLogging && (kDebugMode || Config.enableDebugMode)) {
+    if (_isLoggingEnabled() && (kDebugMode || _isDebugModeEnabled())) {
       _log('DEBUG', message, error, stackTrace);
     }
   }
 
   /// Log info messages
   static void info(String message, [Object? error, StackTrace? stackTrace]) {
-    if (Config.enableLogging) {
+    if (_isLoggingEnabled()) {
       _log('INFO', message, error, stackTrace);
     }
   }
 
   /// Log warning messages
   static void warning(String message, [Object? error, StackTrace? stackTrace]) {
-    if (Config.enableLogging) {
+    if (_isLoggingEnabled()) {
       _log('WARNING', message, error, stackTrace);
     }
   }
 
   /// Log error messages
   static void error(String message, [Object? error, StackTrace? stackTrace]) {
-    if (Config.enableLogging) {
+    if (_isLoggingEnabled()) {
       _log('ERROR', message, error, stackTrace);
+    }
+  }
+
+  /// Check if logging is enabled (safe to call before config initialization)
+  static bool _isLoggingEnabled() {
+    try {
+      return Config.enableLogging;
+    } catch (e) {
+      // Config not initialized yet, default to true in debug mode
+      return kDebugMode;
+    }
+  }
+
+  /// Check if debug mode is enabled (safe to call before config initialization)
+  static bool _isDebugModeEnabled() {
+    try {
+      return Config.enableDebugMode;
+    } catch (e) {
+      // Config not initialized yet, default to false
+      return false;
     }
   }
 
@@ -58,7 +78,7 @@ class Logger {
       if (error != null) {
         print('Error: $error');
       }
-      if (stackTrace != null && Config.enableDebugMode) {
+      if (stackTrace != null && _isDebugModeEnabled()) {
         print('StackTrace: $stackTrace');
       }
     }
@@ -82,7 +102,7 @@ class Logger {
 
   /// Log API requests (with sensitive data filtering)
   static void apiRequest(String method, String url, [Map<String, dynamic>? data]) {
-    if (Config.enableLogging && (kDebugMode || Config.enableDebugMode)) {
+    if (_isLoggingEnabled() && (kDebugMode || _isDebugModeEnabled())) {
       final sanitizedData = _sanitizeData(data);
       debug('API Request: $method $url', sanitizedData);
     }
@@ -90,7 +110,7 @@ class Logger {
 
   /// Log API responses (with sensitive data filtering)
   static void apiResponse(String method, String url, int statusCode, [dynamic data]) {
-    if (Config.enableLogging && (kDebugMode || Config.enableDebugMode)) {
+    if (_isLoggingEnabled() && (kDebugMode || _isDebugModeEnabled())) {
       final sanitizedData = _sanitizeData(data);
       debug('API Response: $method $url [$statusCode]', sanitizedData);
     }
@@ -98,7 +118,15 @@ class Logger {
 
   /// Sanitize sensitive data from logs
   static dynamic _sanitizeData(dynamic data) {
-    if (!Config.isProduction) {
+    bool isProduction = false;
+    try {
+      isProduction = Config.isProduction;
+    } catch (e) {
+      // Config not initialized, assume not production
+      isProduction = false;
+    }
+
+    if (!isProduction) {
       return data; // Show all data in development
     }
 

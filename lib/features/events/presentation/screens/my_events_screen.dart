@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -54,10 +55,69 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
         bottom: false,
         child: Column(
           children: [
-            // Header
-            AppHeader(
-              title: 'My Events',
-              subtitle: 'Your upcoming and past events',
+            // Header with Create Button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText.headlineMedium(
+                        'My Events',
+                        color: context.colors.onSurface,
+                      ),
+                      SizedBox(height: 4.h),
+                      AppText.bodySmall(
+                        'Your upcoming and past events',
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ],
+                  ),
+                  // CREATE EVENT BUTTON
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      context.push(RouteManager.eventCreationFlow);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                      decoration: BoxDecoration(
+                        color: context.colors.primary,
+                        borderRadius: BorderRadius.circular(36.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: context.colors.primary.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: context.colors.onPrimary,
+                            size: 20.sp,
+                          ),
+                          SizedBox(width: 6.w),
+                          Text(
+                            'create',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w700,
+                              color: context.colors.onPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             
             // Tabs
@@ -119,6 +179,8 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
           ],
         ),
       ),
+      // FAB for Create Event
+
     );
   }
 

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/routing/route_manager.dart';
+import '../../../../core/services/location_service.dart';
 import '../../domain/entities/event_entity.dart';
 import '../viewmodels/search_viewmodel.dart';
 import '../widgets/event_search_bar.dart';
@@ -28,11 +30,73 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     'Sports events',
     'Art exhibitions',
   ];
+  
+  Position? _userLocation;
+  bool _isLoadingLocation = false;
+  bool _sortByDistance = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+  
+  Future<void> _getUserLocation() async {
+    setState(() => _isLoadingLocation = true);
+    
+    final position = await LocationService.getCurrentLocation();
+    
+    if (mounted) {
+      setState(() {
+        _userLocation = position;
+        _isLoadingLocation = false;
+        if (position != null) {
+          _sortByDistance = true;
+        }
+      });
+    }
+  }
+  
+  List<EventEntity> _sortEventsByDistance(List<EventEntity> events) {
+    if (_userLocation == null || !_sortByDistance) return events;
+    
+    final sortedEvents = List<EventEntity>.from(events);
+    sortedEvents.sort((a, b) {
+      final distA = LocationService.calculateDistance(
+        _userLocation!.latitude,
+        _userLocation!.longitude,
+        a.latitude,
+        a.longitude,
+      );
+      
+      final distB = LocationService.calculateDistance(
+        _userLocation!.latitude,
+        _userLocation!.longitude,
+        b.latitude,
+        b.longitude,
+      );
+      
+      return distA.compareTo(distB);
+    });
+    
+    return sortedEvents;
+  }
+  
+  double? _getEventDistance(EventEntity event) {
+    if (_userLocation == null) return null;
+    
+    return LocationService.calculateDistance(
+      _userLocation!.latitude,
+      _userLocation!.longitude,
+      event.latitude,
+      event.longitude,
+    );
   }
 
   void _onSearchChanged(String query) {
@@ -93,8 +157,41 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           onSubmitted: _onSearchSubmitted,
           onClear: _clearSearch,
           autofocus: true,
-          hintText: 'Search events, organizers, locations...',
+          hintText: 'Search events, hosts, locations...',
         ),
+        actions: [
+          if (_userLocation != null)
+            IconButton(
+              icon: Icon(
+                _sortByDistance ? Icons.location_on : Icons.location_off,
+                color: _sortByDistance ? context.colors.primary : context.colors.onSurfaceVariant,
+              ),
+              onPressed: () {
+                setState(() {
+                  _sortByDistance = !_sortByDistance;
+                });
+              },
+              tooltip: _sortByDistance ? 'Sorting by distance' : 'Sort by distance',
+            )
+          else if (_isLoadingLocation)
+            Padding(
+              padding: EdgeInsets.all(16.w),
+              child: SizedBox(
+                width: 20.w,
+                height: 20.h,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation(context.colors.primary),
+                ),
+              ),
+            )
+          else
+            IconButton(
+              icon: Icon(Icons.location_off, color: context.colors.onSurfaceVariant),
+              onPressed: _getUserLocation,
+              tooltip: 'Enable location',
+            ),
+        ],
       ),
       body: searchState.when(
         initial: () => _buildSuggestions(),
@@ -107,10 +204,40 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           if (events.isEmpty && _searchController.text.isNotEmpty) {
             return _buildNoResults();
           }
-          return EventList(
-            events: events,
-            isGridView: false,
-            onEventTap: _onEventTap,
+          
+          final sortedEvents = _sortEventsByDistance(events);
+          
+          return Column(
+            children: [
+              if (_userLocation != null && _sortByDistance)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 16.sp,
+                        color: context.colors.primary,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Showing nearby events',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: context.colors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              Expanded(
+                child: EventList(
+                  events: sortedEvents,
+                  isGridView: false,
+                  onEventTap: _onEventTap,
+                ),
+              ),
+            ],
           );
         },
         error: (failure) => Center(

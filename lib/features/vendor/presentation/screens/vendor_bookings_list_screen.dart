@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import '../../data/providers/vendor_providers.dart';
+import '../widgets/counter_offer_bottom_sheet.dart';
 
 class VendorBookingsListScreen extends ConsumerStatefulWidget {
   const VendorBookingsListScreen({super.key});
@@ -104,6 +105,7 @@ class _VendorBookingsListScreenState
             // Tabs
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 color: AppColors.searchBarBackground,
                 borderRadius: BorderRadius.circular(12),
@@ -112,13 +114,15 @@ class _VendorBookingsListScreenState
                 controller: _tabController,
                 indicator: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 labelColor: AppColors.onPrimary,
                 unselectedLabelColor: AppColors.textSecondary,
                 labelStyle: AppTypography.bodyMedium.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                dividerColor: Colors.transparent,
                 tabs: const [
                   Tab(text: 'Pending'),
                   Tab(text: 'Accepted'),
@@ -151,7 +155,7 @@ class _VendorBookingsListScreenState
         'customerName': 'John Doe',
         'eventName': 'Birthday Party',
         'date': '2024-12-25',
-        'offeredPrice': 450000,
+        'offeredPrice': 450,
         'service': 'Grand Ballroom',
         'message': 'We need the venue for our annual event',
       },
@@ -160,7 +164,7 @@ class _VendorBookingsListScreenState
         'customerName': 'Sarah Smith',
         'eventName': 'Wedding Reception',
         'date': '2025-01-15',
-        'offeredPrice': 800000,
+        'offeredPrice': 800,
         'service': 'Premium Venue Package',
         'message': 'Looking for a beautiful venue for our wedding',
       },
@@ -179,9 +183,7 @@ class _VendorBookingsListScreenState
           service: booking['service'] as String,
           message: booking['message'] as String,
           status: 'pending',
-          onAccept: () => _showAcceptDialog(context, booking),
-          onDecline: () => _showDeclineDialog(context, booking),
-          onCounterOffer: () => _showCounterOfferDialog(context, booking),
+          onRespond: () => _showResponseBottomSheet(context, booking),
         );
       },
     );
@@ -194,7 +196,7 @@ class _VendorBookingsListScreenState
         'customerName': 'Mike Johnson',
         'eventName': 'Corporate Event',
         'date': '2024-12-20',
-        'agreedPrice': 500000,
+        'agreedPrice': 500,
         'service': 'Conference Hall',
       },
     ];
@@ -231,9 +233,9 @@ class _VendorBookingsListScreenState
         'customerName': 'Emily Davis',
         'eventName': 'Anniversary Party',
         'date': '2024-12-10',
-        'agreedPrice': 350000,
+        'agreedPrice': 350,
         'service': 'Small Hall',
-        'earnings': 350000,
+        'earnings': 350,
       },
     ];
 
@@ -263,240 +265,50 @@ class _VendorBookingsListScreenState
           );
   }
 
-  void _showAcceptDialog(BuildContext context, Map<String, dynamic> booking) {
-    showDialog(
+  void _showResponseBottomSheet(BuildContext context, Map<String, dynamic> booking) async {
+    final result = await showCounterOfferBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.searchBarBackground,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Accept Booking',
-          style: AppTypography.titleLarge.copyWith(
-            color: AppColors.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Text(
-          'Accept booking for ${booking['eventName']} at \$${_formatPrice(booking['offeredPrice'] as int)}?',
-          style: AppTypography.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Call API POST /marketplace/bookings/:id/accept
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Booking accepted!')),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Accept',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.onPrimary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
+      bookingId: booking['id'] as String,
+      currentAmount: '\$${booking['offeredPrice']}',
+      onAccept: () {
+        // TODO: Call API POST /marketplace/bookings/:id/accept
+        print('Accepted booking ${booking['id']}');
+      },
+      onCounterOffer: (amount, message) {
+        // TODO: Call API POST /marketplace/bookings/:id/counter-offer
+        print('Counter offer: \$$amount, message: $message');
+      },
+      onDecline: (reason) {
+        // TODO: Call API POST /marketplace/bookings/:id/decline
+        print('Declined booking ${booking['id']}, reason: $reason');
+      },
     );
-  }
 
-  void _showDeclineDialog(BuildContext context, Map<String, dynamic> booking) {
-    final reasonController = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.searchBarBackground,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Decline Booking',
-          style: AppTypography.titleLarge.copyWith(
-            color: AppColors.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Please provide a reason for declining:',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: reasonController,
-              maxLines: 3,
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.onSurface,
-              ),
-              decoration: InputDecoration(
-                hintText: 'e.g., Already booked for that date',
-                filled: true,
-                fillColor: const Color(0xFF2E2E2E),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Call API POST /marketplace/bookings/:id/decline
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Booking declined')),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Decline',
-              style: AppTypography.bodyMedium.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    if (result != null && mounted) {
+      String message = '';
+      switch (result['action']) {
+        case 'accept':
+          message = 'Booking accepted!';
+          break;
+        case 'counter':
+          message = 'Counter offer sent: \$${result['amount']}';
+          break;
+        case 'decline':
+          message = 'Booking declined';
+          break;
+      }
 
-  void _showCounterOfferDialog(BuildContext context, Map<String, dynamic> booking) {
-    final counterPriceController = TextEditingController();
-    final messageController = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.searchBarBackground,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          'Send Counter Offer',
-          style: AppTypography.titleLarge.copyWith(
-            color: AppColors.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: context.colors.surfaceContainerHighest,
+          behavior: SnackBarBehavior.floating,
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Original offer: \$${_formatPrice(booking['offeredPrice'] as int)}',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: counterPriceController,
-              keyboardType: TextInputType.number,
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.onSurface,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Your Counter Offer',
-                prefixText: '\$ ',
-                filled: true,
-                fillColor: const Color(0xFF2E2E2E),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: messageController,
-              maxLines: 2,
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.onSurface,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Message (optional)',
-                hintText: 'Explain your counter offer...',
-                filled: true,
-                fillColor: const Color(0xFF2E2E2E),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Call API POST /marketplace/bookings/:id/counter-offer
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Counter offer sent!')),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Send Offer',
-              style: AppTypography.bodyMedium.copyWith(
-                color: AppColors.onPrimary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+      );
+
+      // Refresh the list
+      _fetchBookings('pending');
+    }
   }
 
   String _formatPrice(int price) {
@@ -507,6 +319,7 @@ class _VendorBookingsListScreenState
   }
 }
 
+
 class _BookingCard extends StatelessWidget {
   final String customerName;
   final String eventName;
@@ -516,9 +329,7 @@ class _BookingCard extends StatelessWidget {
   final String status;
   final String? message;
   final int? earnings;
-  final VoidCallback? onAccept;
-  final VoidCallback? onDecline;
-  final VoidCallback? onCounterOffer;
+  final VoidCallback? onRespond;
 
   const _BookingCard({
     required this.customerName,
@@ -529,10 +340,15 @@ class _BookingCard extends StatelessWidget {
     required this.status,
     this.message,
     this.earnings,
-    this.onAccept,
-    this.onDecline,
-    this.onCounterOffer,
+    this.onRespond,
   });
+
+  static String _formatPrice(int price) {
+    return price.toString().replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -583,7 +399,7 @@ class _BookingCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${_formatPrice(price)}',
+                '\${_formatPrice(price)}',
                 style: AppTypography.titleMedium.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w700,
@@ -641,73 +457,25 @@ class _BookingCard extends StatelessWidget {
           ],
           if (status == 'pending') ...[
             const SizedBox(height: 16),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: onDecline,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          side: const BorderSide(color: AppColors.error),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(
-                          'Decline',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: AppColors.error,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: onCounterOffer,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          side: BorderSide(color: AppColors.primary),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(
-                          'Counter',
-                          style: AppTypography.bodyMedium.copyWith(
-                            color: AppColors.primary,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: onAccept,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Accept Booking',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: AppColors.onPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: onRespond,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ],
+                child: Text(
+                  'Respond to Request',
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: AppColors.onPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
           ],
           if (status == 'accepted') ...[
@@ -747,7 +515,7 @@ class _BookingCard extends StatelessWidget {
                   Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'Earned: \$${_formatPrice(earnings!)}',
+                    'Earned: \${_formatPrice(earnings!)}',
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,
@@ -759,13 +527,6 @@ class _BookingCard extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-
-  String _formatPrice(int price) {
-    return price.toString().replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
     );
   }
 }

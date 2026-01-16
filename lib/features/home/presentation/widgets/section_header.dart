@@ -7,11 +7,15 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 class SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onViewAll;
+  final String? subtitle;
+  final String? viewAllText;
 
   const SectionHeader({
     super.key,
     required this.title,
     this.onViewAll,
+    this.subtitle,
+    this.viewAllText,
   });
 
   @override
@@ -20,25 +24,70 @@ class SectionHeader extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppTypography.titleLarge.copyWith(
-              color: context.colors.onSurface,
-              fontWeight: FontWeight.w700,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: AppTypography.titleLarge.copyWith(
+                    color: context.colors.onSurface,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (subtitle != null) ...[
+                  SizedBox(height: 4.h),
+                  Text(
+                    subtitle!,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
             ),
           ),
-          if (onViewAll != null)
+          if (onViewAll != null) ...[
+            SizedBox(width: 8.w),
             GestureDetector(
               onTap: onViewAll,
-              child: Text(
-                'View all',
-                style: AppTypography.bodySmall.copyWith(
-                  color: context.colors.primary,
-                  fontWeight: FontWeight.w600,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: context.colors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      viewAllText ?? 'View all',
+                      style: AppTypography.bodySmall.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      viewAllText != null && viewAllText!.contains('+') 
+                          ? Icons.add_circle_outline 
+                          : Icons.arrow_forward_rounded,
+                      color: context.colors.primary,
+                      size: 14.sp,
+                    ),
+                  ],
                 ),
               ),
             ),
+          ],
         ],
       ),
     );

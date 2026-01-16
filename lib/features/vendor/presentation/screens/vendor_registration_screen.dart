@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import 'package:fajimobileapp/core/routing/route_manager.dart';
 import '../../data/providers/vendor_providers.dart';
 
 class VendorRegistrationScreen extends ConsumerStatefulWidget {
@@ -18,8 +19,13 @@ class _VendorRegistrationScreenState
     extends ConsumerState<VendorRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _businessNameController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _locationController = TextEditingController();
   final List<String> _selectedCategories = [];
+  String? _profilePhotoUrl;
+  bool _isUploadingPhoto = false;
 
   final List<Map<String, dynamic>> _categories = [
     {'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
@@ -35,7 +41,10 @@ class _VendorRegistrationScreenState
   @override
   void dispose() {
     _businessNameController.dispose();
-    _descriptionController.dispose();
+    _bioController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -50,6 +59,62 @@ class _VendorRegistrationScreenState
     HapticFeedback.selectionClick();
   }
 
+  Future<void> _pickAndUploadPhoto() async {
+    try {
+      setState(() => _isUploadingPhoto = true);
+      
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      
+      if (image == null) {
+        setState(() => _isUploadingPhoto = false);
+        return;
+      }
+      
+      // Upload via backend API
+      final datasource = ref.read(vendorRemoteDataSourceProvider);
+      final formData = FormData.fromMap({
+        'imageType': 'profile',
+        'image': await MultipartFile.fromFile(
+          image.path,
+          filename: image.name,
+        ),
+      });
+      
+      final response = await datasource.uploadImage(formData);
+      final imageUrl = response.data['data']['imageUrl'] as String;
+      
+      setState(() {
+        _profilePhotoUrl = imageUrl;
+        _isUploadingPhoto = false;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Photo uploaded successfully'),
+            backgroundColor: AppColors.successGreen,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() => _isUploadingPhoto = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to upload photo: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
   bool _isLoading = false;
 
   Future<void> _submitRegistration() async {
@@ -59,16 +124,21 @@ class _VendorRegistrationScreenState
       setState(() => _isLoading = true);
       
       try {
-        // Prepare registration data
+        // Prepare registration data matching backend spec
         final data = {
           'businessName': _businessNameController.text,
-          'bio': _descriptionController.text,
-          'categories': _selectedCategories.join(','),
-          'location': 'Nigeria', // Default for now
-          'email': 'vendor@example.com', // TODO: Get from user profile
-          'phone': '+2348000000000', // TODO: Get from user profile
+          'bio': _bioController.text,
+          'categories': _selectedCategories,
+          'location': _locationController.text,
+          'email': _emailController.text,
+          'phone': _phoneController.text,
           'businessType': 'individual',
         };
+        
+        // Add profile photo if uploaded
+        if (_profilePhotoUrl != null) {
+          data['profilePhotoUrl'] = _profilePhotoUrl!;
+        }
         
         // Call API
         final datasource = ref.read(vendorRemoteDataSourceProvider);
@@ -79,9 +149,10 @@ class _VendorRegistrationScreenState
         setState(() => _isLoading = false);
         
         if (response.response.statusCode == 201 || response.response.statusCode == 200) {
+          final message = response.data['message']?.toString() ?? 'Vendor registration submitted successfully!';
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.data['message'] ?? 'Vendor registration submitted successfully!'),
+              content: Text(message),
               backgroundColor: AppColors.success,
               duration: const Duration(seconds: 3),
             ),
@@ -182,7 +253,7 @@ class _VendorRegistrationScreenState
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Join our marketplace and offer your services to event organizers',
+                              'Join our marketplace and offer your services to event hosts',
                               textAlign: TextAlign.center,
                               style: AppTypography.bodyMedium.copyWith(
                                 color: AppColors.textSecondary,
@@ -192,6 +263,61 @@ class _VendorRegistrationScreenState
                         ),
                       ),
                       const SizedBox(height: 32),
+                      // Profile Photo
+                      Text(
+                        'Profile Photo (Optional)',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: _isUploadingPhoto ? null : _pickAndUploadPhoto,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.searchBarBackground,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppColors.primary.withOpacity(0.3),
+                            ),
+                          ),
+                          child: _isUploadingPhoto
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                  ),
+                                )
+                              : _profilePhotoUrl != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.network(
+                                        _profilePhotoUrl!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.add_photo_alternate_rounded,
+                                          size: 40,
+                                          color: AppColors.primary,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Add Photo',
+                                          style: AppTypography.bodySmall.copyWith(
+                                            color: AppColors.textSecondary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
                       // Business Name
                       Text(
                         'Business Name',
@@ -227,23 +353,31 @@ class _VendorRegistrationScreenState
                         },
                       ),
                       const SizedBox(height: 24),
-                      // Description
+                      // Bio/Description
                       Text(
-                        'Description',
+                        'Bio',
                         style: AppTypography.labelMedium.copyWith(
                           color: AppColors.onSurface,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Tell us about your services (50-1000 characters)',
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: _descriptionController,
-                        maxLines: 4,
+                        controller: _bioController,
+                        maxLines: 5,
+                        maxLength: 1000,
                         style: AppTypography.bodyLarge.copyWith(
                           color: AppColors.onSurface,
                         ),
                         decoration: InputDecoration(
-                          hintText: 'Tell us about your services...',
+                          hintText: 'Describe your business, services, experience, and what makes you unique...',
                           filled: true,
                           fillColor: AppColors.searchBarBackground,
                           border: OutlineInputBorder(
@@ -251,10 +385,129 @@ class _VendorRegistrationScreenState
                             borderSide: BorderSide.none,
                           ),
                           contentPadding: const EdgeInsets.all(20),
+                          counterStyle: AppTypography.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a description';
+                            return 'Please enter a bio';
+                          }
+                          if (value.length < 50) {
+                            return 'Bio must be at least 50 characters (currently ${value.length})';
+                          }
+                          if (value.length > 1000) {
+                            return 'Bio must not exceed 1000 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      // Email
+                      Text(
+                        'Email',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        style: AppTypography.bodyLarge.copyWith(
+                          color: AppColors.onSurface,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'your@email.com',
+                          filled: true,
+                          fillColor: AppColors.searchBarBackground,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      // Phone
+                      Text(
+                        'Phone Number',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        style: AppTypography.bodyLarge.copyWith(
+                          color: AppColors.onSurface,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: '+234...',
+                          filled: true,
+                          fillColor: AppColors.searchBarBackground,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your phone number';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      // Location
+                      Text(
+                        'Location',
+                        style: AppTypography.labelMedium.copyWith(
+                          color: AppColors.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _locationController,
+                        style: AppTypography.bodyLarge.copyWith(
+                          color: AppColors.onSurface,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Lagos, Nigeria',
+                          filled: true,
+                          fillColor: AppColors.searchBarBackground,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 16,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your location';
                           }
                           return null;
                         },

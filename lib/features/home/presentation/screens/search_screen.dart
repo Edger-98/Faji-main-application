@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/services/location_service.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -16,6 +18,8 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _selectedCategory = 'All';
+  Position? _userLocation;
+  bool _isLoadingLocation = false;
   
   final List<String> _categories = [
     'All',
@@ -29,6 +33,25 @@ class _SearchScreenState extends State<SearchScreen> {
     'Tech Conference',
     'Food & Wine',
   ];
+  
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
+  
+  Future<void> _getUserLocation() async {
+    setState(() => _isLoadingLocation = true);
+    
+    final position = await LocationService.getCurrentLocation();
+    
+    if (mounted) {
+      setState(() {
+        _userLocation = position;
+        _isLoadingLocation = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +136,37 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                   ),
+                  SizedBox(width: 8.w),
+                  if (_userLocation != null)
+                    Container(
+                      width: 50.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: context.colors.primary.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.location_on,
+                        color: context.colors.primary,
+                        size: 20.sp,
+                      ),
+                    )
+                  else if (_isLoadingLocation)
+                    Container(
+                      width: 50.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerHighest,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(15.w),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation(context.colors.primary),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -308,7 +362,8 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        context.push(RouteManager.eventDetails);
+        // TODO: Navigate to event details with actual event ID
+        context.push('${RouteManager.eventDetails}/event_123');
       },
       child: Container(
         decoration: BoxDecoration(

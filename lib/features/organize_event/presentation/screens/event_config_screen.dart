@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_creation_providers.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/step_progress_indicator.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/widgets/feature_toggle_card.dart';
@@ -36,7 +35,6 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
 
   void _handleNext() {
     final viewModel = ref.read(eventCreationViewModelProvider.notifier);
-    final state = ref.read(eventCreationViewModelProvider);
     
     if (_isCreatingEvent) {
       print('⚠️ Already creating event, please wait...');
@@ -103,6 +101,13 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
       if (createdEvent != null) {
         print('✅ Event created successfully');
         
+        // Reset loading state
+        if (mounted) {
+          setState(() {
+            _isCreatingEvent = false;
+          });
+        }
+        
         // Invalidate event providers (will auto-refetch when needed)
         ref.invalidate(filteredEventsProvider);
         ref.invalidate(events_providers.userEventsProvider);
@@ -118,8 +123,8 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
             // Show brief success message
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Event created! Opening marketplace...'),
-                duration: Duration(seconds: 2),
+                content: const Text('Event created! Opening marketplace...'),
+                duration: const Duration(seconds: 2),
                 backgroundColor: AppColors.success,
               ),
             );
@@ -127,7 +132,7 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
             // Pop current screen and navigate to marketplace
             Navigator.of(context).pop(); // Remove event creation screen
             Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (ctx) => ResourceCategoriesScreen(
                   eventId: createdEvent.id,
                 ),
@@ -136,159 +141,224 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
             return;
           }
           
-          // If marketplace not enabled, show success dialog
-          showDialog(
+          // Show success bottom sheet with delay to ensure context is ready
+          await Future<void>.delayed(const Duration(milliseconds: 300));
+          
+          if (!mounted) {
+            print('⚠️ Widget unmounted before showing bottom sheet');
+            return;
+          }
+          
+          print('🔍 About to show bottom sheet, mounted: $mounted');
+          
+          await showModalBottomSheet<void>(
             context: context,
-            barrierDismissible: false,
-            builder: (dialogContext) => AlertDialog(
-              backgroundColor: AppColors.surface,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 80.w,
-                    height: 80.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.success.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.check_circle,
-                      size: 50.sp,
-                      color: AppColors.success,
+            isDismissible: false,
+            enableDrag: false,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (sheetContext) {
+              return PopScope(
+                canPop: false,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24.r),
                     ),
                   ),
-                  SizedBox(height: 24.h),
-                  Text(
-                    'Event Created!',
-                    style: TextStyle(
-                      fontFamily: AppTypography.modicaPro,
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.onSurface,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    '"${createdEvent.name}"',
-                    style: TextStyle(
-                      fontFamily: AppTypography.modicaPro,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Your event has been created successfully!',
-                    style: TextStyle(
-                      fontFamily: AppTypography.modicaPro,
-                      fontSize: 14.sp,
-                      color: AppColors.onSurfaceVariant,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 24.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(dialogContext).pop();
-                            context.go('/home');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.surfaceContainerHighest,
-                            foregroundColor: AppColors.onSurface,
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
+                  child: SafeArea(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(24.w, 32.h, 24.w, 40.h),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Success icon
+                          Container(
+                            width: 80.w,
+                            height: 80.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.success.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.check_circle_rounded,
+                              size: 50.sp,
+                              color: AppColors.success,
                             ),
                           ),
-                          child: Text(
-                            'Go Home',
+                          SizedBox(height: 24.h),
+                        
+                          // Title
+                          Text(
+                            'Event Created!',
                             style: TextStyle(
                               fontFamily: AppTypography.modicaPro,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 26.sp,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.onSurface,
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print('🔘 View Event button pressed');
-                            print('📍 Event ID: ${createdEvent.id}');
-                            print('📍 Event Name: ${createdEvent.name}');
-                            print('📍 Marketplace enabled: ${state.eventData.enableCohostMarketplace}');
-                            
-                            // Store context before closing dialog
-                            final navigatorContext = context;
-                            
-                            // Close dialog
-                            Navigator.of(dialogContext).pop();
-                            
-                            // Navigate immediately (no delay needed)
-                            if (state.eventData.enableCohostMarketplace) {
-                              print('🛒 Navigating to marketplace...');
-                              
-                              // Navigate to resource categories screen with event ID
-                              Navigator.of(navigatorContext).push(
-                                MaterialPageRoute(
-                                  builder: (ctx) => ResourceCategoriesScreen(
-                                    eventId: createdEvent.id,
-                                  ),
-                                ),
-                              ).then((_) {
-                                print('✅ Returned from marketplace');
-                              }).catchError((error) {
-                                print('❌ Error navigating to marketplace: $error');
-                              });
-                            } else {
-                              print('📄 Navigating directly to event details...');
-                              
-                              // Navigate directly to event details
-                              Navigator.of(navigatorContext).push(
-                                MaterialPageRoute(
-                                  builder: (ctx) => EventDetailsTabbedScreen(
-                                    eventId: createdEvent.id,
-                                    eventName: createdEvent.name,
-                                  ),
-                                ),
-                              ).catchError((error) {
-                                print('❌ Error navigating to event details: $error');
-                              });
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.onPrimary,
-                            padding: EdgeInsets.symmetric(vertical: 14.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                          child: Text(
-                            'View Event',
+                          SizedBox(height: 12.h),
+                          
+                          // Event name
+                          Text(
+                            '"${createdEvent.name}"',
                             style: TextStyle(
                               fontFamily: AppTypography.modicaPro,
-                              fontSize: 14.sp,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 8.h),
+                          
+                          // Success message
+                          Text(
+                            'Your event is ready to go!',
+                            style: TextStyle(
+                              fontFamily: AppTypography.modicaPro,
+                              fontSize: 15.sp,
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 32.h),
+                          
+                          // View Event button (primary action)
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                print('🔘 View Event button pressed');
+                                print('📍 Event ID: ${createdEvent.id}');
+                                
+                                // Close bottom sheet first
+                                Navigator.of(sheetContext).pop();
+                                
+                                // Wait a frame to ensure bottom sheet is closed
+                                await Future<void>.delayed(const Duration(milliseconds: 100));
+                                
+                                // Check if still mounted
+                                if (!mounted) {
+                                  print('⚠️ Widget unmounted, cannot navigate');
+                                  return;
+                                }
+                                
+                                // Pop the event creation screen
+                                Navigator.of(context).pop();
+                                
+                                // Wait another frame
+                                await Future<void>.delayed(const Duration(milliseconds: 100));
+                                
+                                // Check if still mounted
+                                if (!mounted) {
+                                  print('⚠️ Widget unmounted after pop');
+                                  return;
+                                }
+                                
+                                // Navigate to event details
+                                Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (ctx) => EventDetailsTabbedScreen(
+                                      eventId: createdEvent.id,
+                                      eventName: createdEvent.name,
+                                    ),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.black,
+                                padding: EdgeInsets.symmetric(vertical: 18.h),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                                elevation: 0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'View Event',
+                                    style: TextStyle(
+                                      fontFamily: AppTypography.modicaPro,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  Icon(
+                                    Icons.arrow_forward_rounded,
+                                    size: 20.sp,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(height: 12.h),
+                          
+                          // Go Home button (secondary action)
+                          SizedBox(
+                            width: double.infinity,
+                            child: TextButton(
+                              onPressed: () async {
+                                print('🏠 Go Home button pressed');
+                                
+                                // Close bottom sheet first
+                                Navigator.of(sheetContext).pop();
+                                
+                                // Wait a frame to ensure bottom sheet is closed
+                                await Future<void>.delayed(const Duration(milliseconds: 100));
+                                
+                                // Check if still mounted
+                                if (!mounted) {
+                                  print('⚠️ Widget unmounted, cannot navigate');
+                                  return;
+                                }
+                                
+                                // Pop the event creation screen and navigate to home
+                                Navigator.of(context).pop();
+                                
+                                // Wait another frame
+                                await Future<void>.delayed(const Duration(milliseconds: 100));
+                                
+                                // Check if still mounted before using context.go
+                                if (!mounted) {
+                                  print('⚠️ Widget unmounted after pop');
+                                  return;
+                                }
+                                
+                                // Navigate to home
+                                context.go('/home');
+                              },
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 18.h),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                              ),
+                              child: Text(
+                                'Go Home',
+                                style: TextStyle(
+                                  fontFamily: AppTypography.modicaPro,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.onSurfaceVariant,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         }
       } else {
@@ -559,30 +629,30 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                   SizedBox(height: 32.h),
 
                   // Features sectionf
-                  AppText.bodyMedium(
-                    'Features you might need',
-                    color: AppColors.onSurface,
-                  ),
+                  // AppText.bodyMedium(
+                  //   'Features you might need',
+                  //   color: AppColors.onSurface,
+                  // ),
                   SizedBox(height: 16.h),
 
                   // Wishlist toggle
-                  FeatureToggleCard(
-                    title: 'Enable Wishlist Feature',
-                    description: 'Let guests know what you\'d love to receive—no more guessing games!',
-                    icon: '🎁',
-                    value: state.eventData.enableWishlist,
-                    onChanged: (value) => viewModel.toggleWishlist(value),
-                  ),
-                  SizedBox(height: 12.h),
+                  // FeatureToggleCard(
+                  //   title: 'Enable Wishlist Feature',
+                  //   description: 'Let guests know what you\'d love to receive—no more guessing games!',
+                  //   icon: '🎁',
+                  //   value: state.eventData.enableWishlist,
+                  //   onChanged: (value) => viewModel.toggleWishlist(value),
+                  // ),
+                  // SizedBox(height: 12.h),
 
                   // Budget tracking toggle
-                  FeatureToggleCard(
-                    title: 'Enable Budget Feature',
-                    description: 'Turn this on if you are planning to create & manage a budget for your event',
-                    value: state.eventData.enableBudgetTracking,
-                    onChanged: (value) => viewModel.toggleBudgetTracking(value),
-                  ),
-                  SizedBox(height: 12.h),
+                  // FeatureToggleCard(
+                  //   title: 'Enable Budget Feature',
+                  //   description: 'Turn this on if you are planning to create & manage a budget for your event',
+                  //   value: state.eventData.enableBudgetTracking,
+                  //   onChanged: (value) => viewModel.toggleBudgetTracking(value),
+                  // ),
+                  // SizedBox(height: 12.h),
 
                   // Co-host marketplace toggle
                   FeatureToggleCard(

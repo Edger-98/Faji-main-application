@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import '../providers/wallet_providers.dart';
+import '../viewmodels/withdraw_viewmodel.dart';
 
-class ReviewWithdrawalScreen extends StatelessWidget {
+class ReviewWithdrawalScreen extends HookConsumerWidget {
   final String amount;
 
   const ReviewWithdrawalScreen({
@@ -11,11 +15,52 @@ class ReviewWithdrawalScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final withdrawViewModel = ref.watch(withdrawViewModelProvider.notifier);
+    
     final transactionFee = 10.0;
     final amountValue = double.tryParse(amount) ?? 0.0;
     final totalAmount = amountValue - transactionFee;
+
+    // Listen to withdrawal state changes
+    ref.listen(withdrawViewModelProvider, (previous, next) {
+      next.when(
+        initial: () {},
+        loading: () {},
+        success: (response) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Withdrawal successful!'),
+              backgroundColor: AppColors.successGreen,
+            ),
+          );
+          // Navigate back to wallet
+          context.go('/wallet');
+        },
+        error: (failure) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(failure.message),
+              backgroundColor: AppColors.error,
+            ),
+          );
+        },
+      );
+    });
+
+    void onWithdraw() {
+      // TODO: Get actual bank account details from user's saved accounts
+      // For now, using placeholder values
+      withdrawViewModel.withdrawFunds(
+        amount: amountValue,
+        accountNumber: '********454',
+        bankCode: 'REPUBLIC_BANK',
+        accountName: 'John Doe',
+      );
+    }
     
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -46,7 +91,7 @@ class ReviewWithdrawalScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _buildWithdrawButton(context),
+            _buildWithdrawButton(context, ref, onWithdraw),
           ],
         ),
       ),
@@ -315,32 +360,46 @@ class ReviewWithdrawalScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWithdrawButton(BuildContext context) {
+  Widget _buildWithdrawButton(BuildContext context, WidgetRef ref, VoidCallback onWithdraw) {
     final theme = Theme.of(context);
+    final withdrawState = ref.watch(withdrawViewModelProvider);
+    final isLoading = withdrawState.maybeWhen(
+      loading: () => true,
+      orElse: () => false,
+    );
     
     return Padding(
       padding: const EdgeInsets.fromLTRB(22, 0, 22, 20),
       child: GestureDetector(
-        onTap: () {
-          context.push('/wallet/confirmation', extra: amount);
-        },
+        onTap: isLoading ? null : onWithdraw,
         child: Container(
           width: double.infinity,
           height: 69,
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            color: isLoading 
+                ? AppColors.primary.withValues(alpha: 0.5)
+                : AppColors.primary,
             borderRadius: BorderRadius.circular(34.5),
           ),
           child: Center(
-            child: Text(
-              'Withdaw',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.modicaPro,
-                fontSize: 18,
-                fontWeight: AppTypography.semiBold,
-                color: AppColors.onPrimary,
-              ),
-            ),
+            child: isLoading
+                ? SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: AppColors.onPrimary,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(
+                    'Withdraw',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontFamily: AppTypography.modicaPro,
+                      fontSize: 18,
+                      fontWeight: AppTypography.semiBold,
+                      color: AppColors.onPrimary,
+                    ),
+                  ),
           ),
         ),
       ),

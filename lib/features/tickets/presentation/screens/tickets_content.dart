@@ -2,12 +2,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/screens/event_details_tabbed_screen.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/screens/event_creation_flow_screen.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_providers.dart';
-import 'package:fajimobileapp/core/models/event_model.dart';
 
 class TicketsContent extends ConsumerStatefulWidget {
   const TicketsContent({super.key});
@@ -435,7 +433,79 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
       right: 24.w,
       bottom: 24.h,
       child: GestureDetector(
-        onTap: () => context.push(RouteManager.eventCreationFlow),
+        onTap: () {
+          // Show bottom sheet instead of navigating
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            isDismissible: true,
+            enableDrag: true,
+            builder: (context) => Container(
+              height: MediaQuery.of(context).size.height * 0.95,
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+              ),
+              child: Column(
+                children: [
+                  // Drag handle
+                  Container(
+                    margin: EdgeInsets.only(top: 12.h),
+                    width: 40.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: context.colors.onSurfaceVariant.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
+                  ),
+                  
+                  // Header
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Create Event',
+                            style: AppTypography.headlineMedium.copyWith(
+                              color: context.colors.onSurface,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(
+                            Icons.close,
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Divider
+                  Divider(
+                    height: 1,
+                    color: context.colors.onSurfaceVariant.withOpacity(0.2),
+                  ),
+                  
+                  // Event creation flow
+                  Expanded(
+                    child: Navigator(
+                      onGenerateRoute: (settings) {
+                        return MaterialPageRoute(
+                          builder: (context) => EventCreationFlowScreen(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
           decoration: BoxDecoration(

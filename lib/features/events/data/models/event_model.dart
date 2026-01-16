@@ -17,8 +17,12 @@ class EventModel {
   final List<String>? images;
   final double price;
   final String? currency;
+  final String? currencySymbol;
   final int totalTickets;
   final int availableTickets;
+  final int? soldTickets;
+  final bool isFree;
+  final bool ticketingEnabled;
   final bool? isFeatured;
   final bool? isTrending;
   final bool? isFlashDeal;
@@ -47,8 +51,12 @@ class EventModel {
     this.images,
     required this.price,
     this.currency,
+    this.currencySymbol,
     required this.totalTickets,
     required this.availableTickets,
+    this.soldTickets,
+    this.isFree = false,
+    this.ticketingEnabled = false,
     this.isFeatured,
     this.isTrending,
     this.isFlashDeal,
@@ -61,98 +69,207 @@ class EventModel {
     this.updatedAt,
   });
 
-  factory EventModel.fromJson(Map<String, dynamic> json) {
-    // Parse date and time
-    final dateStr = json['date'] as String?;
-    final timeStr = json['time'] as String?;
+  /// Helper to safely parse dates that might be objects, strings, or null
+  static DateTime? _parseDateSafely(dynamic dateValue) {
+    if (dateValue == null) return null;
     
+    try {
+      // If it's already a DateTime
+      if (dateValue is DateTime) return dateValue;
+      
+      // If it's a string
+      if (dateValue is String) {
+        if (dateValue.isEmpty) return null;
+        return DateTime.parse(dateValue);
+      }
+      
+      // If it's a Map (Mongoose date object), try to extract the value
+      if (dateValue is Map) {
+        // Check for common date object patterns
+        if (dateValue.containsKey('\$date')) {
+          return DateTime.parse(dateValue['\$date'].toString());
+        }
+        // If it's an empty object, return null
+        if (dateValue.isEmpty) return null;
+      }
+      
+      // Try to convert to string and parse
+      final dateStr = dateValue.toString();
+      if (dateStr.isEmpty || dateStr == '{}') return null;
+      return DateTime.parse(dateStr);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  factory EventModel.fromJson(Map<String, dynamic> json) {
+    // Handle nested data structure (API returns {success: true, data: {...}})
+    final data = json['data'] ?? json;
+    
+    // Parse dates - handle both old and new API formats
     DateTime startDate = DateTime.now();
     DateTime endDate = DateTime.now();
     
-    if (dateStr != null) {
-      try {
-        // Parse the date (handles both "2025-11-20" and "2025-11-20T00:00:00.000Z")
-        startDate = DateTime.parse(dateStr);
-        
-        // If time is provided separately, update the time part
-        if (timeStr != null && timeStr.isNotEmpty) {
-          final timeParts = timeStr.split(':');
-          if (timeParts.length >= 2) {
-            final hour = int.tryParse(timeParts[0]) ?? 0;
-            final minute = int.tryParse(timeParts[1]) ?? 0;
-            startDate = DateTime(
-              startDate.year,
-              startDate.month,
-              startDate.day,
-              hour,
-              minute,
-            );
-          }
-        }
-        // Assume event lasts 3 hours
-        endDate = startDate.add(const Duration(hours: 3));
-      } catch (e) {
-        // If parsing fails, use current date
-        startDate = DateTime.now();
-        endDate = DateTime.now().add(const Duration(hours: 3));
-      }
+    final parsedStartDate = _parseDateSafely(data['startDate']) ?? _parseDateSafely(data['date']);
+    if (parsedStartDate != null) {
+      startDate = parsedStartDate;
     }
     
-    // Get imageUrl - check direct field first, then images array, then fallback
-    final imagesList = json['images'] as List<dynamic>?;
-    final String imageUrl;
-    
-    if (json['imageUrl'] != null && (json['imageUrl'] as String).isNotEmpty) {
-      // NEW: Direct imageUrl field from backend (Cloudinary URL)
-      imageUrl = json['imageUrl'] as String;
-    } else if (imagesList != null && imagesList.isNotEmpty) {
-      // Fallback: First image from images array
-      imageUrl = imagesList[0].toString();
+    final parsedEndDate = _parseDateSafely(data['endDate']);
+    if (parsedEndDate != null) {
+      endDate = parsedEndDate;
     } else {
-      // Fallback: Empty (will show gradient in UI)
+      endDate = startDate.add(const Duration(hours: 3));
+    }
+    
+    // Parse location - handle nested object
+    String locationAddress = '';
+    double latitude = 0.0;
+    double longitude = 0.0;
+    
+    if (data['location'] is Map) {
+      final locationMap = data['location'] as Map<String, dynamic>;
+      locationAddress = (locationMap['address'] as String?) ?? '';
+      latitude = (locationMap['latitude'] as num?)?.toDouble() ?? 0.0;
+      longitude = (locationMap['longitude'] as num?)?.toDouble() ?? 0.0;
+    } else if (data['location'] is String) {
+      locationAddress = data['location'] as String;
+      latitude = (data['latitude'] as num?)?.toDouble() ?? 0.0;
+      longitude = (data['longitude'] as num?)?.toDouble() ?? 0.0;
+    }
+    
+    // Parse host - handle nested object
+    String hostId = '';
+    String hostName = '';
+    String? hostImage;
+    
+    if (data['host'] is Map) {
+      final hostMap = data['host'] as Map<String, dynamic>;
+      // Handle Mongoose ObjectId with buffer
+      final rawId = hostMap['id'] ?? hostMap['_id'];
+      if (rawId is String) {
+        hostId = rawId;
+      } else if (rawId is Map && rawId.containsKey('buffer')) {
+        // Skip buffer objects - they can't be converted to string IDs easily
+        hostId = '';
+      } else if (rawId != null) {
+        hostId = rawId.toString();
+      }
+      hostName = (hostMap['name'] ?? hostMap['email'] ?? 'Unknown Host').toString();
+      hostImage = hostMap['avatar'] as String?;
+      if (hostImage != null && hostImage.isEmpty) hostImage = null;
+    } else {
+      hostId = (data['userId'] ?? data['organizer_id'] ?? data['hostId'] ?? '').toString();
+      hostName = (data['event_organizer'] ?? data['organizerName'] ?? data['hostName'] as String?) ?? 'Unknown Host';
+      hostImage = data['organizerImage'] as String?;
+    }
+    
+    // Get imageUrl
+    final String imageUrl;
+    if (data['imageUrl'] != null && (data['imageUrl'] as String).isNotEmpty) {
+      imageUrl = data['imageUrl'] as String;
+    } else if (data['media'] is Map && data['media']['poster'] != null) {
+      imageUrl = data['media']['poster'] as String;
+    } else if (data['images'] is List && (data['images'] as List).isNotEmpty) {
+      imageUrl = (data['images'] as List)[0].toString();
+    } else {
       imageUrl = '';
     }
     
-    // Calculate available tickets
-    final seats = (json['seats'] as num?)?.toInt() ?? 0;
-    final ticketsSold = (json['ticketsSold'] as num?)?.toInt() ?? 0;
-    final ticketsLeft = (json['ticketsLeft'] as num?)?.toInt() ?? (seats - ticketsSold);
+    // Parse stats for tickets - handle Mongoose document objects
+    int totalTickets = 0;
+    int availableTickets = 0;
+    int soldTickets = 0;
+    bool isFree = false;
+    bool ticketingEnabled = false;
+    String? currencySymbol;
+    double price = 0.0;
+    String? currency;
+    
+    // Check if ticketing object exists (new backend format)
+    if (data['ticketing'] is Map) {
+      final ticketingMap = data['ticketing'] as Map<String, dynamic>;
+      ticketingEnabled = ticketingMap['enabled'] as bool? ?? false;
+      price = (ticketingMap['price'] as num?)?.toDouble() ?? 0.0;
+      currency = ticketingMap['currency'] as String? ?? 'USD';
+      currencySymbol = ticketingMap['currencySymbol'] as String? ?? '\$';
+      totalTickets = ticketingMap['totalTickets'] as int? ?? 0;
+      availableTickets = ticketingMap['availableTickets'] as int? ?? 0;
+      soldTickets = ticketingMap['soldTickets'] as int? ?? 0;
+      isFree = ticketingMap['isFree'] as bool? ?? false;
+    } else {
+      // Fallback to old format
+      if (data['stats'] is Map) {
+        var statsMap = data['stats'] as Map<String, dynamic>;
+        
+        // If stats contains Mongoose internal data, extract the actual document
+        if (statsMap.containsKey('_doc')) {
+          statsMap = statsMap['_doc'] as Map<String, dynamic>;
+        }
+        
+        totalTickets = (statsMap['expectedGuests'] as num?)?.toInt() ?? 0;
+        availableTickets = totalTickets - ((statsMap['confirmedGuests'] as num?)?.toInt() ?? 0);
+      } else {
+        totalTickets = (data['seats'] ?? data['totalTickets'] as num?)?.toInt() ?? 0;
+        soldTickets = (data['ticketsSold'] as num?)?.toInt() ?? 0;
+        availableTickets = (data['ticketsLeft'] ?? data['availableTickets'] as num?)?.toInt() ?? (totalTickets - soldTickets);
+      }
+      
+      price = (data['price'] as num?)?.toDouble() ?? 0.0;
+      currency = data['currency'] as String? ?? 'USD';
+      currencySymbol = data['currencySymbol'] as String?;
+      isFree = price == 0.0;
+      ticketingEnabled = totalTickets > 0;
+    }
+    
+    // Parse category - handle emoji format
+    String category = '';
+    if (data['category'] is String) {
+      category = data['category'] as String;
+    }
+    if (data['emoji'] != null) {
+      final emoji = data['emoji'] as String;
+      category = category.isNotEmpty ? '$emoji $category' : emoji;
+    }
+    if (category.isEmpty) category = 'General';
     
     return EventModel(
-      id: (json['_id'] ?? json['id'] ?? '').toString(),
-      title: (json['eventTitle'] ?? json['title'] as String?) ?? '',
-      description: (json['description'] as String?) ?? 'No description available',
-      organizerId: (json['userId'] ?? json['organizer_id'] ?? '').toString(),
-      organizerName: (json['event_organizer'] ?? json['organizerName'] as String?) ?? 'Unknown Organizer',
-      organizerImage: null, // Not provided in API
-      category: (json['category'] as String?) ?? 'General',
+      id: (data['_id'] ?? data['id'] ?? '').toString(),
+      title: (data['name'] ?? data['eventTitle'] ?? data['title'] as String?) ?? '',
+      description: (data['description'] as String?) ?? 'No description available',
+      organizerId: hostId,
+      organizerName: hostName,
+      organizerImage: hostImage,
+      category: category,
       startDate: startDate,
       endDate: endDate,
-      location: (json['location'] as String?) ?? '',
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+      location: locationAddress,
+      latitude: latitude,
+      longitude: longitude,
       imageUrl: imageUrl,
-      images: imagesList?.map((dynamic x) => x.toString()).toList(),
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      currency: json['currency'] as String? ?? 'USD',
-      totalTickets: seats,
-      availableTickets: ticketsLeft,
-      isFeatured: (json['is_featured'] ?? json['isFeatured']) as bool? ?? false,
-      isTrending: (json['is_trending'] ?? json['isTrending']) as bool? ?? false,
-      isFlashDeal: (json['is_flash_deal'] ?? json['isFlashDeal']) as bool? ?? false,
-      isCancelled: (json['status'] as String?) == 'cancelled',
-      discountPercentage: (json['discount_percentage'] ?? json['discountPercentage'] as num?)!.toDouble(),
-      rating: (json['rating'] as num?)?.toDouble(),
-      reviewCount: (json['review_count'] ?? json['reviewCount']) as int?,
-      tags: json['tags'] == null
-          ? null
-          : List<String>.from((json['tags'] as List<dynamic>).map((dynamic x) => x.toString())),
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt'].toString())
+      images: data['images'] is List 
+          ? (data['images'] as List).map((dynamic x) => x.toString()).toList()
           : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'].toString())
+      price: price,
+      currency: currency,
+      currencySymbol: currencySymbol,
+      totalTickets: totalTickets,
+      availableTickets: availableTickets,
+      soldTickets: soldTickets,
+      isFree: isFree,
+      ticketingEnabled: ticketingEnabled,
+      isFeatured: (data['is_featured'] ?? data['isFeatured']) as bool? ?? false,
+      isTrending: (data['is_trending'] ?? data['isTrending']) as bool? ?? false,
+      isFlashDeal: (data['is_flash_deal'] ?? data['isFlashDeal']) as bool? ?? false,
+      isCancelled: (data['status'] as String?) == 'cancelled',
+      discountPercentage: (data['discount_percentage'] ?? data['discountPercentage'] as num?)?.toDouble(),
+      rating: (data['rating'] as num?)?.toDouble(),
+      reviewCount: (data['review_count'] ?? data['reviewCount']) as int?,
+      tags: data['tags'] is List
+          ? (data['tags'] as List).map((dynamic x) => x.toString()).toList()
           : null,
+      createdAt: _parseDateSafely(data['createdAt']),
+      updatedAt: _parseDateSafely(data['updatedAt']),
     );
   }
 
@@ -160,9 +277,9 @@ class EventModel {
         id: id,
         title: title,
         description: description,
-        organizerId: organizerId,
-        organizerName: organizerName,
-        organizerImage: organizerImage,
+        hostId: organizerId,
+        hostName: organizerName,
+        hostImage: organizerImage,
         category: category,
         startDate: startDate,
         endDate: endDate,
@@ -173,8 +290,12 @@ class EventModel {
         images: images,
         price: price,
         currency: currency,
+        currencySymbol: currencySymbol,
         totalTickets: totalTickets,
         availableTickets: availableTickets,
+        soldTickets: soldTickets,
+        isFree: isFree,
+        ticketingEnabled: ticketingEnabled,
         isFeatured: isFeatured,
         isTrending: isTrending,
         isFlashDeal: isFlashDeal,

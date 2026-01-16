@@ -220,12 +220,29 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
     try {
       final data = state.eventData;
       
-      // Validate required fields
+      // Validate required fields with detailed error messages
       if (data.title == null || data.title!.isEmpty) {
-        throw Exception('Event title is required');
+        final errorMsg = 'Event title is required';
+        print('❌ Validation error: $errorMsg');
+        state = state.copyWith(isLoading: false, error: errorMsg);
+        return null;
       }
       
-      final DateTime finalStartDate = startDate ?? data.eventDate ?? DateTime.now().add(const Duration(days: 7));
+      if (data.eventDate == null) {
+        final errorMsg = 'Event date is required';
+        print('❌ Validation error: $errorMsg');
+        state = state.copyWith(isLoading: false, error: errorMsg);
+        return null;
+      }
+      
+      if (data.expectedGuests == null || data.expectedGuests! <= 0) {
+        final errorMsg = 'Expected guests must be greater than 0';
+        print('❌ Validation error: $errorMsg');
+        state = state.copyWith(isLoading: false, error: errorMsg);
+        return null;
+      }
+      
+      final DateTime finalStartDate = startDate ?? data.eventDate!;
       final DateTime finalEndDate = endDate ?? finalStartDate.add(const Duration(hours: 3));
       
       print('📤 Calling repository.createEvent...');
@@ -233,6 +250,8 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
       print('   category: ${data.eventType ?? 'Other'}');
       print('   startDate: $finalStartDate');
       print('   endDate: $finalEndDate');
+      print('   expectedGuests: ${data.expectedGuests}');
+      print('   imageUrl: ${data.imageUrl ?? "none"}');
       
       final createdEvent = await _repository.createEvent(
         name: data.title!,
@@ -260,6 +279,19 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
           'acceptGuestContributions': true,
           'disablePublicRSVP': false,
         },
+        ticketing: (data.ticketPrice != null && data.ticketPrice! > 0) || (data.totalSeats != null && data.totalSeats! > 0)
+            ? {
+                'enabled': true,
+                'types': [
+                  {
+                    'name': 'General Admission',
+                    'price': data.ticketPrice ?? 0.0,
+                    'quantity': data.totalSeats ?? data.expectedGuests ?? 100,
+                    'description': 'Standard entry ticket',
+                  }
+                ],
+              }
+            : null,
       );
       
       print('✅ Repository returned event: ${createdEvent.id}');
@@ -274,9 +306,29 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
       print('❌ ViewModel.createEvent error: $e');
       print('Stack trace: $stackTrace');
       
+      // Extract meaningful error message
+      String errorMessage = 'Failed to create event';
+      if (e.toString().contains('SocketException') || e.toString().contains('Connection')) {
+        errorMessage = 'Network error. Please check your connection.';
+      } else if (e.toString().contains('401') || e.toString().contains('Unauthorized')) {
+        errorMessage = 'Session expired. Please login again.';
+      } else if (e.toString().contains('400') || e.toString().contains('Bad Request')) {
+        errorMessage = 'Invalid event data. Please check all fields.';
+      } else if (e.toString().contains('500')) {
+        errorMessage = 'Server error. Please try again later.';
+      } else if (e.toString().contains('timeout')) {
+        errorMessage = 'Request timeout. Please try again.';
+      } else {
+        // Try to extract error message from exception
+        final match = RegExp(r'Exception: (.+)').firstMatch(e.toString());
+        if (match != null) {
+          errorMessage = match.group(1) ?? errorMessage;
+        }
+      }
+      
       state = state.copyWith(
         isLoading: false,
-        error: e.toString(),
+        error: errorMessage,
       );
       return null;
     }

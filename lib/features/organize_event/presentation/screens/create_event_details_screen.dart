@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,9 +26,12 @@ class _CreateEventDetailsScreenState
   final _websiteLinkController = TextEditingController();
   final _rsvpButtonController =
       TextEditingController(text: 'Celebrate With Us');
+  final _ticketPriceController = TextEditingController();
+  final _totalSeatsController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
   bool _setDateLater = false;
+  bool _isFreeEvent = true;
   
   // Image upload state
   File? _selectedImage;
@@ -79,6 +83,8 @@ class _CreateEventDetailsScreenState
     _descriptionController.dispose();
     _websiteLinkController.dispose();
     _rsvpButtonController.dispose();
+    _ticketPriceController.dispose();
+    _totalSeatsController.dispose();
     super.dispose();
   }
 
@@ -221,6 +227,17 @@ class _CreateEventDetailsScreenState
     viewModel.updateDescription(_descriptionController.text);
     viewModel.updateWebsiteLink(_websiteLinkController.text);
     viewModel.updateRsvpButtonText(_rsvpButtonController.text);
+    
+    // Update ticket info
+    if (!_isFreeEvent && _ticketPriceController.text.isNotEmpty) {
+      viewModel.updateTicketPrice(double.parse(_ticketPriceController.text));
+    } else {
+      viewModel.updateTicketPrice(0.0);
+    }
+    
+    if (_totalSeatsController.text.isNotEmpty) {
+      viewModel.updateTotalSeats(int.parse(_totalSeatsController.text));
+    }
 
     // Store dates
     if (_startDate != null) {
@@ -576,6 +593,289 @@ class _CreateEventDetailsScreenState
                             ),
                             SizedBox(height: 12.h),
                             _buildDescriptionField(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 32.h),
+
+                      // Ticket Pricing Section (NEW)
+                      _buildAnimatedField(
+                        delay: 700,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Ticket Information',
+                                  style: TextStyle(
+                                    fontFamily: AppTypography.modicaPro,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.onSurface.withOpacity(0.7),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isFreeEvent = !_isFreeEvent;
+                                      if (_isFreeEvent) {
+                                        _ticketPriceController.clear();
+                                      }
+                                    });
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                      vertical: 6.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: _isFreeEvent
+                                          ? AppColors.success.withOpacity(0.15)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: _isFreeEvent
+                                            ? AppColors.success
+                                            : const Color(0xFFFF8C42),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (_isFreeEvent)
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 6.w),
+                                            child: Icon(
+                                              Icons.check_circle,
+                                              size: 16.sp,
+                                              color: AppColors.success,
+                                            ),
+                                          ),
+                                        Text(
+                                          'Free Event',
+                                          style: TextStyle(
+                                            fontFamily: AppTypography.modicaPro,
+                                            fontSize: 13.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: _isFreeEvent
+                                                ? AppColors.success
+                                                : const Color(0xFFFF8C42),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+                            Container(
+                              padding: EdgeInsets.all(20.w),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF2A2A2A),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                  color: const Color(0xFF3A3A3A),
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  // Ticket Price
+                                  if (!_isFreeEvent) ...[
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(10.r),
+                                          ),
+                                          child: Icon(
+                                            Icons.local_offer_outlined,
+                                            color: AppColors.primary,
+                                            size: 20.sp,
+                                          ),
+                                        ),
+                                        SizedBox(width: 16.w),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Ticket Price',
+                                                style: TextStyle(
+                                                  fontFamily: AppTypography.modicaPro,
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.onSurfaceVariant,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.h),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    'NGN',
+                                                    style: TextStyle(
+                                                      fontFamily: AppTypography.modicaPro,
+                                                      fontSize: 16.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.onSurface,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 8.w),
+                                                  Expanded(
+                                                    child: TextField(
+                                                      controller: _ticketPriceController,
+                                                      keyboardType: TextInputType.number,
+                                                      inputFormatters: [
+                                                        FilteringTextInputFormatter.digitsOnly,
+                                                      ],
+                                                      style: TextStyle(
+                                                        fontFamily: AppTypography.modicaPro,
+                                                        fontSize: 18.sp,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: AppColors.onSurface,
+                                                      ),
+                                                      decoration: InputDecoration(
+                                                        hintText: '0',
+                                                        hintStyle: TextStyle(
+                                                          fontFamily: AppTypography.modicaPro,
+                                                          fontSize: 18.sp,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: AppColors.onSurfaceVariant.withOpacity(0.5),
+                                                        ),
+                                                        border: InputBorder.none,
+                                                        contentPadding: EdgeInsets.zero,
+                                                        isDense: true,
+                                                      ),
+                                                      onChanged: (value) => setState(() {}),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 16.h),
+                                  ],
+                                  // Total Seats
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(8.w),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.eventCardYellow.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(10.r),
+                                        ),
+                                        child: Icon(
+                                          Icons.event_seat_outlined,
+                                          color: AppColors.eventCardYellow,
+                                          size: 20.sp,
+                                        ),
+                                      ),
+                                      SizedBox(width: 16.w),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Total Tickets Available',
+                                              style: TextStyle(
+                                                fontFamily: AppTypography.modicaPro,
+                                                fontSize: 13.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.onSurfaceVariant,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4.h),
+                                            TextField(
+                                              controller: _totalSeatsController,
+                                              keyboardType: TextInputType.number,
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter.digitsOnly,
+                                              ],
+                                              style: TextStyle(
+                                                fontFamily: AppTypography.modicaPro,
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.onSurface,
+                                              ),
+                                              decoration: InputDecoration(
+                                                hintText: 'Unlimited',
+                                                hintStyle: TextStyle(
+                                                  fontFamily: AppTypography.modicaPro,
+                                                  fontSize: 18.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.onSurfaceVariant.withOpacity(0.5),
+                                                ),
+                                                border: InputBorder.none,
+                                                contentPadding: EdgeInsets.zero,
+                                                isDense: true,
+                                              ),
+                                              onChanged: (value) => setState(() {}),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (_totalSeatsController.text.isNotEmpty)
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.eventCardYellow.withOpacity(0.15),
+                                            borderRadius: BorderRadius.circular(12.r),
+                                          ),
+                                          child: Text(
+                                            '${_totalSeatsController.text} tickets',
+                                            style: TextStyle(
+                                              fontFamily: AppTypography.modicaPro,
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.eventCardYellow,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (!_isFreeEvent && _ticketPriceController.text.isNotEmpty && _totalSeatsController.text.isNotEmpty) ...[
+                              SizedBox(height: 12.h),
+                              Container(
+                                padding: EdgeInsets.all(12.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.info_outline,
+                                      color: AppColors.primary,
+                                      size: 20.sp,
+                                    ),
+                                    SizedBox(width: 8.w),
+                                    Expanded(
+                                      child: Text(
+                                        'Potential revenue: NGN ${(int.parse(_ticketPriceController.text) * int.parse(_totalSeatsController.text)).toString()} (if all tickets sold)',
+                                        style: TextStyle(
+                                          fontFamily: AppTypography.modicaPro,
+                                          fontSize: 12.sp,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),

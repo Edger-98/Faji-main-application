@@ -165,7 +165,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
         ),
       ),
       // Bottom Navigation
-      bottomNavigationBar: const AppBottomNav(currentIndex: 2),
+      bottomNavigationBar: const AppBottomNav(currentIndex: 1), // Changed from 2 to 1
     );
   }
 
