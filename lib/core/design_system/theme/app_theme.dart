@@ -12,7 +12,7 @@ class AppTheme {
 
   /// Light theme configuration
   static ThemeData get lightTheme {
-    final colorScheme = AppColors.lightColorScheme;
+    final ColorScheme colorScheme = AppColors.lightColorScheme;
     
     return ThemeData(
       useMaterial3: true,
@@ -154,7 +154,7 @@ class AppTheme {
         backgroundColor: colorScheme.surface,
         surfaceTintColor: colorScheme.surfaceTint,
         indicatorColor: colorScheme.secondaryContainer,
-        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+        labelTextStyle: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return AppTypography.labelMedium.copyWith(
               color: colorScheme.onSurface,
@@ -239,13 +239,13 @@ class AppTheme {
 
       // Switch Theme
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith((states) {
+        thumbColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.onPrimary;
           }
           return colorScheme.outline;
         }),
-        trackColor: WidgetStateProperty.resolveWith((states) {
+        trackColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
@@ -255,7 +255,7 @@ class AppTheme {
 
       // Checkbox Theme
       checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.resolveWith((states) {
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
@@ -270,7 +270,7 @@ class AppTheme {
 
       // Radio Theme
       radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.resolveWith((states) {
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
@@ -282,7 +282,7 @@ class AppTheme {
 
   /// Dark theme configuration
   static ThemeData get darkTheme {
-    final colorScheme = AppColors.darkColorScheme;
+    final ColorScheme colorScheme = AppColors.darkColorScheme;
     
     return ThemeData(
       useMaterial3: true,
@@ -424,7 +424,7 @@ class AppTheme {
         backgroundColor: colorScheme.surface,
         surfaceTintColor: colorScheme.surfaceTint,
         indicatorColor: colorScheme.secondaryContainer,
-        labelTextStyle: WidgetStateProperty.resolveWith((states) {
+        labelTextStyle: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return AppTypography.labelMedium.copyWith(
               color: colorScheme.onSurface,
@@ -509,13 +509,13 @@ class AppTheme {
 
       // Switch Theme
       switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.resolveWith((states) {
+        thumbColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.onPrimary;
           }
           return colorScheme.outline;
         }),
-        trackColor: WidgetStateProperty.resolveWith((states) {
+        trackColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
@@ -525,7 +525,7 @@ class AppTheme {
 
       // Checkbox Theme
       checkboxTheme: CheckboxThemeData(
-        fillColor: WidgetStateProperty.resolveWith((states) {
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
@@ -540,7 +540,7 @@ class AppTheme {
 
       // Radio Theme
       radioTheme: RadioThemeData(
-        fillColor: WidgetStateProperty.resolveWith((states) {
+        fillColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           if (states.contains(WidgetState.selected)) {
             return colorScheme.primary;
           }
@@ -551,14 +551,12 @@ class AppTheme {
   }
 
   /// Get theme based on brightness
-  static ThemeData getTheme(Brightness brightness) {
-    return brightness == Brightness.light ? lightTheme : darkTheme;
-  }
+  static ThemeData getTheme(Brightness brightness) => brightness == Brightness.light ? lightTheme : darkTheme;
 
   /// Get responsive theme based on screen size and brightness
   static ThemeData getResponsiveTheme(BuildContext context, Brightness brightness) {
-    final baseTheme = getTheme(brightness);
-    final responsiveTextTheme = AppTypography.getResponsiveTextTheme(context);
+    final ThemeData baseTheme = getTheme(brightness);
+    final TextTheme responsiveTextTheme = AppTypography.getResponsiveTextTheme(context);
     
     return baseTheme.copyWith(
       textTheme: responsiveTextTheme,

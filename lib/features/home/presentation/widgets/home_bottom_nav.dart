@@ -6,18 +6,17 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Bottom navigation bar with blur effect
 class HomeBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
 
   const HomeBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTap,
   });
+  final int currentIndex;
+  final ValueChanged<int> onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       color: Colors.transparent, // Transparent background
       padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 20.h),
       child: SafeArea(
@@ -61,14 +60,12 @@ class HomeBottomNav extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Widget _buildNavItem({
     required IconData icon,
     required int index,
     required bool isActive,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => GestureDetector(
         onTap: () => onTap(index),
         behavior: HitTestBehavior.opaque,
@@ -87,5 +84,4 @@ class HomeBottomNav extends StatelessWidget {
         ),
       ),
     );
-  }
 }

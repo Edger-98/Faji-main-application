@@ -1,20 +1,18 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/counter_offer.dart';
-import '../repositories/marketplace_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/counter_offer.dart';
+import 'package:fajimobileapp/features/marketplace/domain/repositories/marketplace_repository.dart';
 
 class SendCounterOfferUseCase {
-  final MarketplaceRepository repository;
 
   SendCounterOfferUseCase(this.repository);
+  final MarketplaceRepository repository;
 
   Future<Either<Failure, CounterOfferResponse>> call({
     required String bookingId,
     required CounterOfferRequest request,
-  }) async {
-    return await repository.sendCounterOffer(
+  }) async => await repository.sendCounterOffer(
       bookingId: bookingId,
       request: request,
     );
-  }
 }

@@ -23,8 +23,7 @@ class ToastService {
       alignment: Alignment.topCenter,
       autoCloseDuration: duration ?? const Duration(seconds: 3),
       animationDuration: const Duration(milliseconds: 300),
-      animationBuilder: (context, animation, alignment, child) {
-        return FadeTransition(
+      animationBuilder: (BuildContext context, Animation<double> animation, Alignment alignment, Widget child) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
             position: Tween<Offset>(
@@ -33,8 +32,7 @@ class ToastService {
             ).animate(animation),
             child: child,
           ),
-        );
-      },
+        ),
       icon: const Icon(Icons.check_circle, color: Colors.white),
       primaryColor: const Color(0xFF4CAF50),
       backgroundColor: const Color(0xFF4CAF50),
@@ -42,12 +40,11 @@ class ToastService {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       borderRadius: BorderRadius.circular(12),
-      boxShadow: const [
+      boxShadow: const <BoxShadow>[
         BoxShadow(
           color: Color(0x07000000),
           blurRadius: 16,
           offset: Offset(0, 16),
-          spreadRadius: 0,
         )
       ],
       showProgressBar: true,
@@ -56,7 +53,7 @@ class ToastService {
       pauseOnHover: true,
       dragToClose: true,
       applyBlurEffect: true,
-      callbacks: callbacks ?? ToastificationCallbacks(),
+      callbacks: callbacks ?? const ToastificationCallbacks(),
     );
   }
 
@@ -77,8 +74,7 @@ class ToastService {
       alignment: Alignment.topCenter,
       autoCloseDuration: duration ?? const Duration(seconds: 4),
       animationDuration: const Duration(milliseconds: 300),
-      animationBuilder: (context, animation, alignment, child) {
-        return FadeTransition(
+      animationBuilder: (BuildContext context, Animation<double> animation, Alignment alignment, Widget child) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
             position: Tween<Offset>(
@@ -87,8 +83,7 @@ class ToastService {
             ).animate(animation),
             child: child,
           ),
-        );
-      },
+        ),
       icon: const Icon(Icons.error),
       primaryColor: Colors.red,
       backgroundColor: Colors.red,
@@ -96,12 +91,11 @@ class ToastService {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       borderRadius: BorderRadius.circular(12),
-      boxShadow: const [
+      boxShadow: const <BoxShadow>[
         BoxShadow(
           color: Color(0x07000000),
           blurRadius: 16,
           offset: Offset(0, 16),
-          spreadRadius: 0,
         )
       ],
       showProgressBar: true,
@@ -110,7 +104,7 @@ class ToastService {
       pauseOnHover: true,
       dragToClose: true,
       applyBlurEffect: true,
-      callbacks: callbacks ?? ToastificationCallbacks(),
+      callbacks: callbacks ?? const ToastificationCallbacks(),
     );
   }
 
@@ -131,8 +125,7 @@ class ToastService {
       alignment: Alignment.topCenter,
       autoCloseDuration: duration ?? const Duration(seconds: 3),
       animationDuration: const Duration(milliseconds: 300),
-      animationBuilder: (context, animation, alignment, child) {
-        return FadeTransition(
+      animationBuilder: (BuildContext context, Animation<double> animation, Alignment alignment, Widget child) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
             position: Tween<Offset>(
@@ -141,8 +134,7 @@ class ToastService {
             ).animate(animation),
             child: child,
           ),
-        );
-      },
+        ),
       icon: const Icon(Icons.warning),
       primaryColor: Colors.orange,
       backgroundColor: Colors.orange,
@@ -150,12 +142,11 @@ class ToastService {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       borderRadius: BorderRadius.circular(12),
-      boxShadow: const [
+      boxShadow: const <BoxShadow>[
         BoxShadow(
           color: Color(0x07000000),
           blurRadius: 16,
           offset: Offset(0, 16),
-          spreadRadius: 0,
         )
       ],
       showProgressBar: true,
@@ -164,7 +155,7 @@ class ToastService {
       pauseOnHover: true,
       dragToClose: true,
       applyBlurEffect: true,
-      callbacks: callbacks ?? ToastificationCallbacks(),
+      callbacks: callbacks ?? const ToastificationCallbacks(),
     );
   }
 
@@ -185,8 +176,7 @@ class ToastService {
       alignment: Alignment.topCenter,
       autoCloseDuration: duration ?? const Duration(seconds: 3),
       animationDuration: const Duration(milliseconds: 300),
-      animationBuilder: (context, animation, alignment, child) {
-        return FadeTransition(
+      animationBuilder: (BuildContext context, Animation<double> animation, Alignment alignment, Widget child) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
             position: Tween<Offset>(
@@ -195,8 +185,7 @@ class ToastService {
             ).animate(animation),
             child: child,
           ),
-        );
-      },
+        ),
       icon: const Icon(Icons.info),
       primaryColor: Colors.blue,
       backgroundColor: Colors.blue,
@@ -204,12 +193,11 @@ class ToastService {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       borderRadius: BorderRadius.circular(12),
-      boxShadow: const [
+      boxShadow: const <BoxShadow>[
         BoxShadow(
           color: Color(0x07000000),
           blurRadius: 16,
           offset: Offset(0, 16),
-          spreadRadius: 0,
         )
       ],
       showProgressBar: true,
@@ -218,7 +206,7 @@ class ToastService {
       pauseOnHover: true,
       dragToClose: true,
       applyBlurEffect: true,
-      callbacks: callbacks ?? ToastificationCallbacks(),
+      callbacks: callbacks ?? const ToastificationCallbacks(),
     );
   }
 
@@ -243,8 +231,7 @@ class ToastService {
       alignment: Alignment.topCenter,
       autoCloseDuration: duration ?? const Duration(seconds: 3),
       animationDuration: const Duration(milliseconds: 300),
-      animationBuilder: (context, animation, alignment, child) {
-        return FadeTransition(
+      animationBuilder: (BuildContext context, Animation<double> animation, Alignment alignment, Widget child) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
             position: Tween<Offset>(
@@ -253,8 +240,7 @@ class ToastService {
             ).animate(animation),
             child: child,
           ),
-        );
-      },
+        ),
       icon: icon != null ? Icon(icon) : null,
       primaryColor: backgroundColor,
       backgroundColor: backgroundColor,
@@ -262,12 +248,11 @@ class ToastService {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       borderRadius: BorderRadius.circular(12),
-      boxShadow: const [
+      boxShadow: const <BoxShadow>[
         BoxShadow(
           color: Color(0x07000000),
           blurRadius: 16,
           offset: Offset(0, 16),
-          spreadRadius: 0,
         )
       ],
       showProgressBar: true,
@@ -276,7 +261,7 @@ class ToastService {
       pauseOnHover: true,
       dragToClose: true,
       applyBlurEffect: true,
-      callbacks: callbacks ?? ToastificationCallbacks(),
+      callbacks: callbacks ?? const ToastificationCallbacks(),
     );
   }
 
@@ -285,8 +270,7 @@ class ToastService {
     required BuildContext context,
     required String message,
     String? title,
-  }) {
-    return toastification.show(
+  }) => toastification.show(
       context: context,
       type: ToastificationType.info,
       style: ToastificationStyle.fillColored,
@@ -341,7 +325,6 @@ class ToastService {
       dragToClose: false,
       applyBlurEffect: true,
     );
-  }
 
   /// Dismiss a specific toast
   static void dismiss(ToastificationItem item) {

@@ -8,7 +8,7 @@ class StripeService {
       print('🔧 Initializing Stripe...');
       
       // Get publishable key from environment
-      final publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'];
+      final String? publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'];
       
       print('🔧 Stripe key from env: ${publishableKey?.substring(0, 20) ?? "NOT FOUND"}...');
       
@@ -19,9 +19,11 @@ class StripeService {
       }
 
       // Check if it's a placeholder
-      if (publishableKey.contains('your_publishable_key_here')) {
+      if (publishableKey.contains('your_publishable_key_here') || publishableKey.contains('yourpublishablekeyhere')) {
         print('⚠️ WARNING: Stripe publishable key is a placeholder');
-        print('⚠️ Please update .env file with actual Stripe key');
+        print('⚠️ Please update .env file with actual Stripe publishable key');
+        print('⚠️ The key should start with: pk_test_51SEBQdET5lV7WPSL...');
+        print('⚠️ You can find it in your Stripe Dashboard > Developers > API keys');
         return;
       }
 
@@ -31,7 +33,7 @@ class StripeService {
       print('✅ Stripe publishable key set: ${publishableKey.substring(0, 20)}...');
       
       // Optional: Set merchant identifier for Apple Pay
-      final merchantIdentifier = dotenv.env['STRIPE_MERCHANT_IDENTIFIER'];
+      final String? merchantIdentifier = dotenv.env['STRIPE_MERCHANT_IDENTIFIER'];
       if (merchantIdentifier != null && merchantIdentifier.isNotEmpty) {
         Stripe.merchantIdentifier = merchantIdentifier;
         print('✅ Stripe merchant identifier set');
@@ -78,12 +80,37 @@ class StripeService {
       print('💳 Client Secret: ${clientSecret.substring(0, 20)}...');
       print('💳 Customer ID: $customerId');
       print('💳 Ephemeral Key: ${ephemeralKey != null ? "Present" : "None"}');
-      print('💳 Stripe Publishable Key: ${Stripe.publishableKey != null ? Stripe.publishableKey!.substring(0, 20) : "NOT SET"}...');
       
-      if (Stripe.publishableKey == null || Stripe.publishableKey.isEmpty) {
-        print('❌ Stripe publishable key is not set!');
-        throw Exception('Stripe is not initialized. Please check your .env file.');
+      // Check if Stripe is properly configured
+      final String? publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'];
+      
+      if (publishableKey == null || publishableKey.isEmpty) {
+        throw Exception('❌ STRIPE NOT CONFIGURED: Publishable key is missing from .env file');
       }
+      
+      if (publishableKey.contains('your_publishable_key_here') || 
+          publishableKey.contains('yourpublishablekeyhere')) {
+        throw Exception('''
+❌ STRIPE NOT CONFIGURED: Please update your .env file with real Stripe keys
+
+Current key: $publishableKey
+
+To fix this:
+1. Go to https://dashboard.stripe.com/test/apikeys
+2. Copy your "Publishable key" (starts with pk_test_...)
+3. Replace STRIPE_PUBLISHABLE_KEY in .env file
+4. Hot restart the app
+
+Example:
+STRIPE_PUBLISHABLE_KEY=pk_test_51ABC123...your_real_key_here
+        ''');
+      }
+      
+      // Re-initialize Stripe to ensure proper setup
+      print('💳 Setting Stripe publishable key: ${publishableKey.substring(0, 20)}...');
+      Stripe.publishableKey = publishableKey;
+      
+      print('💳 Current Stripe key: ${Stripe.publishableKey.substring(0, 20) ?? "NOT SET"}...');
       
       print('💳 Initializing payment sheet...');
       

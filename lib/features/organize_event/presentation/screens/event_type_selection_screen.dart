@@ -11,8 +11,7 @@ class EventTypeSelectionScreen extends ConsumerWidget {
   const EventTypeSelectionScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -40,7 +39,7 @@ class EventTypeSelectionScreen extends ConsumerWidget {
                   const Expanded(
                     child: StepProgressIndicator(
                       currentStep: 0,
-                      totalSteps: 3,
+                      totalSteps: 4,
                     ),
                   ),
                 ],
@@ -218,10 +217,8 @@ class EventTypeSelectionScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildCategorySection(BuildContext context, WidgetRef ref, String title, List<String> items) {
-    return Column(
+  Widget _buildCategorySection(BuildContext context, WidgetRef ref, String title, List<String> items) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (items.isNotEmpty) ...[
@@ -237,7 +234,6 @@ class EventTypeSelectionScreen extends ConsumerWidget {
         ],
       ],
     );
-  }
 
   void _selectEventType(BuildContext context, WidgetRef ref, String eventType) {
     ref.read(eventCreationViewModelProvider.notifier).updateEventType(eventType);
@@ -280,7 +276,7 @@ class _EventTypeCardState extends State<_EventTypeCard>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.95).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -292,8 +288,7 @@ class _EventTypeCardState extends State<_EventTypeCard>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTapDown: (_) {
         setState(() => _isPressed = true);
         _controller.forward();
@@ -346,7 +341,6 @@ class _EventTypeCardState extends State<_EventTypeCard>
         ),
       ),
     );
-  }
 
   BorderRadius _getBorderRadius() {
     switch (widget.shape) {
@@ -387,8 +381,7 @@ class _EventTypeChip extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -411,5 +404,4 @@ class _EventTypeChip extends StatelessWidget {
         ),
       ),
     );
-  }
 }

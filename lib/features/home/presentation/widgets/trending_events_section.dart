@@ -17,10 +17,11 @@ class TrendingEventsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final trendingEvents = ref.watch(trendingEventsProvider);
+    final AsyncValue<List<EventEntity>> trendingEvents = ref.watch(trendingEventsProvider);
+    final String? selectedCategory = ref.watch(selectedCategoryProvider);
 
     return Column(
-      children: [
+      children: <Widget>[
         SectionHeader(
           title: 'Trending Now',
           subtitle: 'Popular events in your area',
@@ -32,12 +33,17 @@ class TrendingEventsSection extends ConsumerWidget {
         SizedBox(
           height: 280.h,
           child: trendingEvents.when(
-            data: (events) {
-              // If no trending events, show user's events instead
-              if (events.isEmpty) {
-                final userEvents = ref.watch(events_providers.userEventsProvider);
+            data: (List<EventEntity> events) {
+              // If no events and a category is selected, show category-specific empty state
+              if (events.isEmpty && selectedCategory != null) {
+                return _buildCategoryEmptyState(context, selectedCategory);
+              }
+              
+              // If no trending events and "All" is selected, show user's events as fallback
+              if (events.isEmpty && selectedCategory == null) {
+                final AsyncValue<List<EventEntity>> userEvents = ref.watch(events_providers.userEventsProvider);
                 return userEvents.when(
-                  data: (myEvents) {
+                  data: (List<EventEntity> myEvents) {
                     if (myEvents.isEmpty) {
                       return _buildEmptyState(context);
                     }
@@ -50,15 +56,14 @@ class TrendingEventsSection extends ConsumerWidget {
               return _buildEventsList(context, events);
             },
             loading: () => _buildLoadingState(context),
-            error: (error, stack) => _buildErrorState(context),
+            error: (Object error, StackTrace stack) => _buildErrorState(context),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildEventsList(BuildContext context, List<EventEntity> events) {
-    return ListView.separated(
+  Widget _buildEventsList(BuildContext context, List<EventEntity> events) => ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
@@ -82,19 +87,15 @@ class TrendingEventsSection extends ConsumerWidget {
         );
       },
     );
-  }
 
-  Widget _buildLoadingState(BuildContext context) {
-    return Center(
+  Widget _buildLoadingState(BuildContext context) => Center(
       child: CircularProgressIndicator(
         color: context.colors.primary,
         strokeWidth: 3,
       ),
     );
-  }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
+  Widget _buildEmptyState(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: Column(
@@ -132,10 +133,54 @@ class TrendingEventsSection extends ConsumerWidget {
         ),
       ),
     );
+
+  Widget _buildCategoryEmptyState(BuildContext context, String categoryId) {
+    // Get category name from ID (capitalize first letter)
+    final String categoryName = categoryId.split('-').map((word) => 
+      word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1)
+    ).join(' ');
+    
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(20.w),
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.search_off_rounded,
+                color: context.colors.primary,
+                size: 40.sp,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'No Results',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'No trending $categoryName events found',
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildErrorState(BuildContext context) {
-    return Center(
+  Widget _buildErrorState(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: Column(
@@ -157,17 +202,16 @@ class TrendingEventsSection extends ConsumerWidget {
         ),
       ),
     );
-  }
 
   String _formatDate(DateTime date) {
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    final dayName = days[date.weekday - 1];
+    final List<String> days = <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final String dayName = days[date.weekday - 1];
     return '$dayName ${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}';
   }
 
   String _formatTime(DateTime date) {
-    final hour = date.hour > 12 ? date.hour - 12 : date.hour;
-    final period = date.hour >= 12 ? 'PM' : 'AM';
+    final int hour = date.hour > 12 ? date.hour - 12 : date.hour;
+    final String period = date.hour >= 12 ? 'PM' : 'AM';
     return '${hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} $period';
   }
 }

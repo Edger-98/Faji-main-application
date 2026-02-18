@@ -7,19 +7,27 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/routing/auth_guard.dart';
 import 'package:fajimobileapp/features/auth/auth_feature.dart';
 import 'package:fajimobileapp/features/auth/presentation/screens/welcome_back_screen.dart';
+import 'package:fajimobileapp/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:fajimobileapp/features/auth/presentation/screens/forgot_password_otp_screen.dart';
+import 'package:fajimobileapp/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:fajimobileapp/features/onboarding/presentation/screens/onboarding_screens.dart';
 import 'package:fajimobileapp/features/home/home_feature.dart';
 import 'package:fajimobileapp/features/dashboard/presentation/screens/main_dashboard_screen.dart';
+import 'package:fajimobileapp/core/models/event_model.dart';
 import 'package:fajimobileapp/features/event_details/event_details_feature.dart';
 import 'package:fajimobileapp/features/home/presentation/screens/search_screen.dart';
 import 'package:fajimobileapp/features/events/presentation/screens/events_list_screen.dart';
 import 'package:fajimobileapp/features/events/presentation/screens/event_details_screen.dart' as events;
 import 'package:fajimobileapp/features/events/presentation/screens/search_screen.dart' as events_search;
 import 'package:fajimobileapp/features/events/presentation/screens/my_events_screen.dart';
-import 'package:fajimobileapp/features/events/presentation/screens/favorites_screen.dart' as events_favorites;
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
 import 'package:fajimobileapp/features/tickets/tickets.dart';
+import 'package:fajimobileapp/features/tickets/presentation/screens/checkout_screen.dart';
+import 'package:fajimobileapp/features/tickets/presentation/screens/ticket_details_screen.dart';
+import 'package:fajimobileapp/features/tickets/presentation/screens/my_tickets_screen_v2.dart';
 import 'package:fajimobileapp/features/organize_event/organize_event.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/screens/event_creation_flow_screen.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/screens/event_creation_success_screen.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/resource_categories_screen.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/cohost_list_screen.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resource_category.dart';
@@ -42,8 +50,7 @@ class AppRouter {
     BuildContext context,
     GoRouterState state,
     Widget child,
-  ) {
-    return CustomTransitionPage<T>(
+  ) => CustomTransitionPage<T>(
       key: state.pageKey,
       child: child,
       transitionDuration: const Duration(milliseconds: 400),
@@ -81,17 +88,16 @@ class AppRouter {
         );
       },
     );
-  }
 
   static final GoRouter router = GoRouter(
     initialLocation: RouteManager.splash,
     redirect: AuthGuard.redirect,
-    routes: [
+    routes: <RouteBase>[
       // Splash screen
       GoRoute(
         path: RouteManager.splash,
         name: RouteManager.splashName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const SplashScreen(),
@@ -102,7 +108,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.onboarding,
         name: RouteManager.onboardingName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const OnboardingScreen(),
@@ -113,7 +119,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.intro,
         name: RouteManager.introName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const IntroScreen(),
@@ -124,7 +130,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.authEmail,
         name: RouteManager.authEmailName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const EmailScreen(),
@@ -133,7 +139,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.authPin,
         name: RouteManager.authPinName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const PinScreen(), // Using proper PIN screen with visual lines
@@ -142,7 +148,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.authPhone,
         name: RouteManager.authPhoneName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const PhoneScreen(),
@@ -151,7 +157,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.authName,
         name: RouteManager.authNameName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const NameScreen(),
@@ -160,7 +166,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.authPassword,
         name: RouteManager.authPasswordName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const PasswordScreen(),
@@ -171,7 +177,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.login,
         name: RouteManager.loginName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const LoginScreen(),
@@ -182,18 +188,60 @@ class AppRouter {
       GoRoute(
         path: RouteManager.welcomeBack,
         name: RouteManager.welcomeBackName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const WelcomeBackScreen(),
         ),
       ),
       
+      // Forgot password route
+      GoRoute(
+        path: RouteManager.forgotPassword,
+        name: RouteManager.forgotPasswordName,
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
+          context,
+          state,
+          const ForgotPasswordScreen(),
+        ),
+      ),
+      
+      // Forgot password OTP route
+      GoRoute(
+        path: RouteManager.forgotPasswordOtp,
+        name: RouteManager.forgotPasswordOtpName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final String email = state.extra! as String;
+          return _buildPageWithTransition(
+            context,
+            state,
+            ForgotPasswordOtpScreen(email: email),
+          );
+        },
+      ),
+      
+      // Reset password route
+      GoRoute(
+        path: RouteManager.resetPassword,
+        name: RouteManager.resetPasswordName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final Map<String, String> data = state.extra! as Map<String, String>;
+          return _buildPageWithTransition(
+            context,
+            state,
+            ResetPasswordScreen(
+              email: data['email']!,
+              otp: data['otp']!,
+            ),
+          );
+        },
+      ),
+      
       // Home route (legacy - redirects to dashboard)
       GoRoute(
         path: RouteManager.home,
         name: RouteManager.homeName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const MainDashboardScreen(),
@@ -204,7 +252,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.dashboard,
         name: RouteManager.dashboardName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const MainDashboardScreen(),
@@ -215,7 +263,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.eventsList,
         name: RouteManager.eventsListName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const EventsListScreen(),
@@ -226,8 +274,8 @@ class AppRouter {
       GoRoute(
         path: '${RouteManager.eventDetails}/:id',
         name: RouteManager.eventDetailsName,
-        pageBuilder: (context, state) {
-          final eventId = state.pathParameters['id'] ?? '';
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final String eventId = state.pathParameters['id'] ?? '';
           return _buildPageWithTransition(
             context,
             state,
@@ -240,7 +288,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.searchEvents,
         name: RouteManager.searchEventsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const events_search.SearchScreen(),
@@ -251,7 +299,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.myEvents,
         name: RouteManager.myEventsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const MyEventsScreen(),
@@ -262,7 +310,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.legacyEventDetails,
         name: RouteManager.legacyEventDetailsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const EventDetailsScreen(),
@@ -271,7 +319,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.ticketInformation,
         name: RouteManager.ticketInformationName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const TicketInformationScreen(),
@@ -280,7 +328,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.eventDirection,
         name: RouteManager.eventDirectionName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const EventDirectionScreen(),
@@ -289,7 +337,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.buyTicket,
         name: RouteManager.buyTicketName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const BuyTicketScreen(),
@@ -298,7 +346,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.makePayment,
         name: RouteManager.makePaymentName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const MakePaymentScreen(),
@@ -307,7 +355,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.paymentSuccessful,
         name: RouteManager.paymentSuccessfulName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const PaymentSuccessfulScreen(),
@@ -318,7 +366,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.search,
         name: RouteManager.searchName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const SearchScreen(),
@@ -329,18 +377,46 @@ class AppRouter {
       GoRoute(
         path: RouteManager.myTickets,
         name: RouteManager.myTicketsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
-          const MyTicketsScreen(),
+          const MyTicketsScreenV2(),
         ),
+      ),
+      
+      // Checkout route
+      GoRoute(
+        path: RouteManager.checkout,
+        name: RouteManager.checkoutName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final event = state.extra as EventEntity;
+          return _buildPageWithTransition(
+            context,
+            state,
+            CheckoutScreen(event: event),
+          );
+        },
+      ),
+      
+      // Ticket Details route
+      GoRoute(
+        path: '/ticket-details/:ticketId',
+        name: 'ticketDetails',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final ticketId = state.pathParameters['ticketId'] ?? '';
+          return _buildPageWithTransition(
+            context,
+            state,
+            TicketDetailsScreen(ticketId: ticketId),
+          );
+        },
       ),
       
       // Organize Event route (legacy)
       GoRoute(
         path: RouteManager.organizeEvent,
         name: RouteManager.organizeEventName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const OrganizeEventScreen(),
@@ -351,18 +427,40 @@ class AppRouter {
       GoRoute(
         path: RouteManager.eventCreationFlow,
         name: RouteManager.eventCreationFlowName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const EventCreationFlowScreen(),
         ),
       ),
       
+      // Event Creation Success route
+      GoRoute(
+        path: RouteManager.eventCreationSuccess,
+        name: RouteManager.eventCreationSuccessName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final EventModel? createdEvent = state.extra as EventModel?;
+          if (createdEvent == null) {
+            // Fallback to dashboard if no event data
+            return _buildPageWithTransition(
+              context,
+              state,
+              const MainDashboardScreen(),
+            );
+          }
+          return _buildPageWithTransition(
+            context,
+            state,
+            EventCreationSuccessScreen(createdEvent: createdEvent),
+          );
+        },
+      ),
+      
       // Resource Categories route (Co-host marketplace)
       GoRoute(
         path: RouteManager.resourceCategories,
         name: RouteManager.resourceCategoriesName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const ResourceCategoriesScreen(),
@@ -373,8 +471,8 @@ class AppRouter {
       GoRoute(
         path: RouteManager.cohostList,
         name: RouteManager.cohostListName,
-        pageBuilder: (context, state) {
-          final category = state.extra as ResourceCategory;
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final ResourceCategory category = state.extra! as ResourceCategory;
           return _buildPageWithTransition(
             context,
             state,
@@ -398,7 +496,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.chatList,
         name: RouteManager.chatListName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const ChatListScreen(),
@@ -407,7 +505,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.chatDetail,
         name: RouteManager.chatDetailName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const ChatDetailScreen(),
@@ -416,7 +514,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.organizerChat,
         name: RouteManager.organizerChatName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const OrganizerChatScreen(),
@@ -427,7 +525,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.profile,
         name: RouteManager.profileName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const ProfileScreen(),
@@ -438,7 +536,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.accountSettings,
         name: RouteManager.accountSettingsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const AccountSettingsScreen(),
@@ -449,7 +547,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.support,
         name: RouteManager.supportName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const SupportScreen(),
@@ -460,7 +558,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.terms,
         name: RouteManager.termsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const TermsScreen(),
@@ -471,7 +569,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.notificationSettings,
         name: RouteManager.notificationSettingsName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const NotificationSettingsScreen(),
@@ -482,7 +580,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.walletBalance,
         name: RouteManager.walletBalanceName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const BalanceDetailScreen(),
@@ -491,7 +589,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.walletEnterAmount,
         name: RouteManager.walletEnterAmountName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const EnterWithdrawalAmountScreen(),
@@ -500,8 +598,8 @@ class AppRouter {
       GoRoute(
         path: RouteManager.walletReview,
         name: RouteManager.walletReviewName,
-        pageBuilder: (context, state) {
-          final amount = state.extra as String? ?? '0.00';
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final String amount = state.extra as String? ?? '0.00';
           return _buildPageWithTransition(
             context,
             state,
@@ -512,8 +610,8 @@ class AppRouter {
       GoRoute(
         path: RouteManager.walletConfirmation,
         name: RouteManager.walletConfirmationName,
-        pageBuilder: (context, state) {
-          final amount = state.extra as String? ?? '0.00';
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final String amount = state.extra as String? ?? '0.00';
           return _buildPageWithTransition(
             context,
             state,
@@ -524,7 +622,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.walletHistory,
         name: RouteManager.walletHistoryName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const TransactionHistoryScreen(),
@@ -535,7 +633,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.vendorRegistration,
         name: RouteManager.vendorRegistrationName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const VendorRegistrationScreen(),
@@ -544,7 +642,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.vendorResourcesList,
         name: RouteManager.vendorResourcesListName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const VendorResourcesListScreen(),
@@ -553,7 +651,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.vendorAddResource,
         name: RouteManager.vendorAddResourceName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const VendorAddResourceScreenV2(),
@@ -562,7 +660,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.vendorBookingsList,
         name: RouteManager.vendorBookingsListName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const VendorBookingsListScreen(),
@@ -571,7 +669,7 @@ class AppRouter {
       GoRoute(
         path: RouteManager.vendorDashboardScreen,
         name: RouteManager.vendorDashboardScreenName,
-        pageBuilder: (context, state) => _buildPageWithTransition(
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
           context,
           state,
           const VendorDashboardScreen(),

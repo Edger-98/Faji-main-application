@@ -21,7 +21,7 @@ class CloudinaryConfig {
   static const int maxFileSizeBytes = 10 * 1024 * 1024;
   
   /// Allowed image formats
-  static const List<String> allowedFormats = ['jpg', 'jpeg', 'png', 'webp'];
+  static const List<String> allowedFormats = <String>['jpg', 'jpeg', 'png', 'webp'];
   
   /// Image transformation presets
   static const String thumbnailTransform = 'c_fill,w_300,h_300,q_auto';
@@ -29,7 +29,5 @@ class CloudinaryConfig {
   static const String fullTransform = 'c_limit,w_1200,q_auto';
   
   /// Check if Cloudinary is configured
-  static bool get isConfigured {
-    return cloudName.isNotEmpty && uploadPreset.isNotEmpty;
-  }
+  static bool get isConfigured => cloudName.isNotEmpty && uploadPreset.isNotEmpty;
 }

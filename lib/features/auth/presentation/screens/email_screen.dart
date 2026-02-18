@@ -37,8 +37,8 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
   }
 
   void _validateEmail() {
-    final email = _emailController.text;
-    final isValid = email.isNotEmpty && email.contains('@') && email.contains('.');
+    final String email = _emailController.text;
+    final bool isValid = email.isNotEmpty && email.contains('@') && email.contains('.');
     if (isValid != _isEmailValid) {
       setState(() {
         _isEmailValid = isValid;
@@ -55,7 +55,7 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
     await ref.read(registrationViewModelProvider.notifier).registerEmail(_emailController.text);
     
     // Check the result
-    final state = ref.read(registrationViewModelProvider);
+    final RegistrationState state = ref.read(registrationViewModelProvider);
     state.stepState.when(
       initial: () {},
       loading: () {},
@@ -63,7 +63,7 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
         // Navigate to OTP screen
         context.goNamed(RouteManager.authPinName);
       },
-      error: (failure) {
+      error: (Failure failure) {
         // Show error
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(failure.message)),
@@ -74,8 +74,8 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final registrationState = ref.watch(registrationViewModelProvider);
-    final isLoading = registrationState.stepState.maybeWhen(
+    final RegistrationState registrationState = ref.watch(registrationViewModelProvider);
+    final bool isLoading = registrationState.stepState.maybeWhen(
       loading: () => true,
       orElse: () => false,
     );
@@ -96,7 +96,7 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
             child: IntrinsicHeight(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
               SizedBox(height: 40.h), // Responsive from Figma
               
               // Back button - positioned at x: 24, y: 64
@@ -147,8 +147,8 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
                         letterSpacing: 0,
                         color: context.colors.onSurfaceVariant,
                       ),
-                      children: [
-                        const TextSpan(text: 'By tapping continue, you\'re agreeing to our '),
+                      children: <InlineSpan>[
+                        const TextSpan(text: "By tapping continue, you're agreeing to our "),
                         TextSpan(
                           text: 'Terms & Condition',
                           style: TextStyle(

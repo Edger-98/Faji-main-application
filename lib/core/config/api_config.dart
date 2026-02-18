@@ -1,62 +1,85 @@
+import 'package:fajimobileapp/core/config/config.dart';
+
 /// API Configuration for different environments
 class ApiConfig {
-  // For Android Emulator, use 10.0.2.2 instead of localhost
-  // For iOS Simulator or physical device on same network, use your computer's IP
-  static const String _devBaseUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
-  static const String _stagingBaseUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
-  static const String _productionBaseUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
+  // ========================================
+  // 🚀 SIMPLE TOGGLE: Change this to switch between localhost and Heroku
+  // ========================================
+  static const bool _useLocalhost = false; // Set to false for Heroku
+  
+  // ========================================
+  // Local Development URLs (automatically detected)
+  // ========================================
+  static const String _localhostAndroidUrl = 'http://10.0.2.2:5001/api/v1';
+  static const String _localhostIosUrl = 'http://localhost:5001/api/v1';
+  static const String _localhostWsAndroidUrl = 'ws://10.0.2.2:5001';
+  static const String _localhostWsIosUrl = 'ws://localhost:5001';
+  
+  // ========================================
+  // Heroku Production URLs
+  // ========================================
+  static const String _herokuUrl = 'https://faji-backend-52878caa6589.herokuapp.com/api/v1';
+  static const String _herokuWsUrl = 'wss://faji-backend-52878caa6589.herokuapp.com';
 
-  static const String _devWsUrl = 'ws://localhost:5001';
-  static const String _stagingWsUrl = 'wss://faji-backend-52878caa6589.herokuapp.com';
-  static const String _productionWsUrl = 'wss://faji-backend-52878caa6589.herokuapp.com';
-
-
-  // https://faji-backend-52878caa6589.herokuapp.com/
-  /// Get base URL based on environment
+  /// Get base URL - automatically switches between localhost and Heroku
+  /// This OVERRIDES the .env file configuration
   static String get baseUrl {
-    const environment = String.fromEnvironment('ENV', defaultValue: 'dev');
-    
-    switch (environment) {
-      case 'production':
-        return _productionBaseUrl;
-      case 'staging':
-        return _stagingBaseUrl;
-      case 'dev':
-        return _devBaseUrl;
-      default:
-        return _devBaseUrl; // Default to dev (localhost)
+    if (_useLocalhost) {
+      // Auto-detect platform for localhost
+      return _getLocalhostUrl();
+    } else {
+      // Use Heroku for all environments
+      return _herokuUrl;
     }
   }
 
-  /// Get WebSocket URL based on environment
+  /// Get WebSocket URL - automatically switches between localhost and Heroku
   static String get wsUrl {
-    const environment = String.fromEnvironment('ENV', defaultValue: 'dev');
-    
-    switch (environment) {
-      case 'production':
-        return _productionWsUrl;
-      case 'staging':
-        return _stagingWsUrl;
-      case 'dev':
-        return _devWsUrl;
-      default:
-        return _productionWsUrl; // Default to production
+    if (_useLocalhost) {
+      // Auto-detect platform for localhost WebSocket
+      return _getLocalhostWsUrl();
+    } else {
+      // Use Heroku WebSocket for all environments
+      return _herokuWsUrl;
     }
   }
 
-  /// Android emulator uses 10.0.2.2 instead of localhost
-  static String get androidEmulatorBaseUrl {
-    return 'http://10.0.2.2:5001/api/v1';
+  /// Get base URL from environment files (original behavior)
+  /// Use this if you want to respect .env file settings
+  static String get baseUrlFromEnv {
+    try {
+      return Config.baseUrl;
+    } catch (e) {
+      // Fallback to current toggle system if env fails
+      return baseUrl;
+    }
   }
+
+  /// Auto-detect localhost URL based on platform
+  static String _getLocalhostUrl() {
+    // For now, default to Android emulator URL
+    // You can enhance this with platform detection if needed
+    return _localhostAndroidUrl;
+  }
+
+  /// Auto-detect localhost WebSocket URL based on platform
+  static String _getLocalhostWsUrl() {
+    // For now, default to Android emulator WebSocket URL
+    // You can enhance this with platform detection if needed
+    return _localhostWsAndroidUrl;
+  }
+
+  /// Quick access methods for manual switching (if needed)
+  static String get androidEmulatorBaseUrl => _localhostAndroidUrl;
+  static String get iosSimulatorBaseUrl => _localhostIosUrl;
+  static String get herokuBaseUrl => _herokuUrl;
 
   /// For physical devices, use your computer's IP address
   /// Find your IP:
   /// - Mac/Linux: ifconfig | grep "inet " | grep -v 127.0.0.1
   /// - Windows: ipconfig | findstr IPv4
   /// Example: 'http://192.168.1.100:5001/api/v1'
-  static String getPhysicalDeviceBaseUrl(String computerIp) {
-    return 'http://$computerIp:5001/api/v1';
-  }
+  static String getPhysicalDeviceBaseUrl(String computerIp) => 'http://$computerIp:5001/api/v1';
 
   /// Request timeout in milliseconds
   static const int connectTimeout = 30000; // 30 seconds
@@ -77,7 +100,7 @@ class ApiConfig {
 
   /// File upload limits
   static const int maxFileSize = 10 * 1024 * 1024; // 10MB
-  static const List<String> allowedImageFormats = ['jpg', 'jpeg', 'png', 'webp'];
+  static const List<String> allowedImageFormats = <String>['jpg', 'jpeg', 'png', 'webp'];
 
   /// Retry configuration
   static const int maxRetries = 3;
@@ -88,4 +111,33 @@ class ApiConfig {
   static const bool enableOfflineMode = false;
   static const bool enableAnalytics = true;
   static const bool enableCrashReporting = true;
+
+  /// Debug info - shows current configuration
+  static void printCurrentConfig() {
+    print('🚀 API Configuration:');
+    print('   Using Localhost Toggle: $_useLocalhost');
+    print('   Toggle Base URL: $baseUrl');
+    print('   Env Base URL: ${_safeGetEnvUrl()}');
+    print('   WebSocket URL: $wsUrl');
+    print('   Environment: ${_safeGetEnvironment()}');
+    print('   ⚠️  Note: Toggle OVERRIDES .env files');
+  }
+
+  /// Safe getter for environment URL (won't crash if env not loaded)
+  static String _safeGetEnvUrl() {
+    try {
+      return Config.baseUrl;
+    } catch (e) {
+      return 'Not loaded or invalid';
+    }
+  }
+
+  /// Safe getter for environment (won't crash if env not loaded)
+  static String _safeGetEnvironment() {
+    try {
+      return Config.environment;
+    } catch (e) {
+      return 'Not loaded';
+    }
+  }
 }

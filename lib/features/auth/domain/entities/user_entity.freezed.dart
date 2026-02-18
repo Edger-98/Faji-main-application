@@ -23,8 +23,8 @@ mixin _$UserEntity {
   String get firstName => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
-  String? get image => throw _privateConstructorUsedError;
   bool get pushNotificationsEnabled => throw _privateConstructorUsedError;
+  String? get image => throw _privateConstructorUsedError;
   String? get expoPushToken => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -36,8 +36,8 @@ mixin _$UserEntity {
       String firstName,
       String lastName,
       String role,
-      String? image,
       bool pushNotificationsEnabled,
+      String? image,
       String? expoPushToken,
       DateTime? createdAt,
     )
@@ -52,8 +52,8 @@ mixin _$UserEntity {
       String firstName,
       String lastName,
       String role,
-      String? image,
       bool pushNotificationsEnabled,
+      String? image,
       String? expoPushToken,
       DateTime? createdAt,
     )?
@@ -68,8 +68,8 @@ mixin _$UserEntity {
       String firstName,
       String lastName,
       String role,
-      String? image,
       bool pushNotificationsEnabled,
+      String? image,
       String? expoPushToken,
       DateTime? createdAt,
     )?
@@ -111,8 +111,8 @@ abstract class $UserEntityCopyWith<$Res> {
     String firstName,
     String lastName,
     String role,
-    String? image,
     bool pushNotificationsEnabled,
+    String? image,
     String? expoPushToken,
     DateTime? createdAt,
   });
@@ -139,8 +139,8 @@ class _$UserEntityCopyWithImpl<$Res, $Val extends UserEntity>
     Object? firstName = null,
     Object? lastName = null,
     Object? role = null,
-    Object? image = freezed,
     Object? pushNotificationsEnabled = null,
+    Object? image = freezed,
     Object? expoPushToken = freezed,
     Object? createdAt = freezed,
   }) {
@@ -170,14 +170,14 @@ class _$UserEntityCopyWithImpl<$Res, $Val extends UserEntity>
                 ? _value.role
                 : role // ignore: cast_nullable_to_non_nullable
                       as String,
-            image: freezed == image
-                ? _value.image
-                : image // ignore: cast_nullable_to_non_nullable
-                      as String?,
             pushNotificationsEnabled: null == pushNotificationsEnabled
                 ? _value.pushNotificationsEnabled
                 : pushNotificationsEnabled // ignore: cast_nullable_to_non_nullable
                       as bool,
+            image: freezed == image
+                ? _value.image
+                : image // ignore: cast_nullable_to_non_nullable
+                      as String?,
             expoPushToken: freezed == expoPushToken
                 ? _value.expoPushToken
                 : expoPushToken // ignore: cast_nullable_to_non_nullable
@@ -208,8 +208,8 @@ abstract class _$$UserEntityImplCopyWith<$Res>
     String firstName,
     String lastName,
     String role,
-    String? image,
     bool pushNotificationsEnabled,
+    String? image,
     String? expoPushToken,
     DateTime? createdAt,
   });
@@ -235,8 +235,8 @@ class __$$UserEntityImplCopyWithImpl<$Res>
     Object? firstName = null,
     Object? lastName = null,
     Object? role = null,
-    Object? image = freezed,
     Object? pushNotificationsEnabled = null,
+    Object? image = freezed,
     Object? expoPushToken = freezed,
     Object? createdAt = freezed,
   }) {
@@ -266,14 +266,14 @@ class __$$UserEntityImplCopyWithImpl<$Res>
             ? _value.role
             : role // ignore: cast_nullable_to_non_nullable
                   as String,
-        image: freezed == image
-            ? _value.image
-            : image // ignore: cast_nullable_to_non_nullable
-                  as String?,
         pushNotificationsEnabled: null == pushNotificationsEnabled
             ? _value.pushNotificationsEnabled
             : pushNotificationsEnabled // ignore: cast_nullable_to_non_nullable
                   as bool,
+        image: freezed == image
+            ? _value.image
+            : image // ignore: cast_nullable_to_non_nullable
+                  as String?,
         expoPushToken: freezed == expoPushToken
             ? _value.expoPushToken
             : expoPushToken // ignore: cast_nullable_to_non_nullable
@@ -297,8 +297,8 @@ class _$UserEntityImpl extends _UserEntity {
     required this.firstName,
     required this.lastName,
     required this.role,
-    this.image,
     required this.pushNotificationsEnabled,
+    this.image,
     this.expoPushToken,
     this.createdAt,
   }) : super._();
@@ -316,9 +316,9 @@ class _$UserEntityImpl extends _UserEntity {
   @override
   final String role;
   @override
-  final String? image;
-  @override
   final bool pushNotificationsEnabled;
+  @override
+  final String? image;
   @override
   final String? expoPushToken;
   @override
@@ -326,7 +326,7 @@ class _$UserEntityImpl extends _UserEntity {
 
   @override
   String toString() {
-    return 'UserEntity(id: $id, email: $email, phoneNo: $phoneNo, firstName: $firstName, lastName: $lastName, role: $role, image: $image, pushNotificationsEnabled: $pushNotificationsEnabled, expoPushToken: $expoPushToken, createdAt: $createdAt)';
+    return 'UserEntity(id: $id, email: $email, phoneNo: $phoneNo, firstName: $firstName, lastName: $lastName, role: $role, pushNotificationsEnabled: $pushNotificationsEnabled, image: $image, expoPushToken: $expoPushToken, createdAt: $createdAt)';
   }
 
   @override
@@ -342,12 +342,12 @@ class _$UserEntityImpl extends _UserEntity {
             (identical(other.lastName, lastName) ||
                 other.lastName == lastName) &&
             (identical(other.role, role) || other.role == role) &&
-            (identical(other.image, image) || other.image == image) &&
             (identical(
                   other.pushNotificationsEnabled,
                   pushNotificationsEnabled,
                 ) ||
                 other.pushNotificationsEnabled == pushNotificationsEnabled) &&
+            (identical(other.image, image) || other.image == image) &&
             (identical(other.expoPushToken, expoPushToken) ||
                 other.expoPushToken == expoPushToken) &&
             (identical(other.createdAt, createdAt) ||
@@ -363,8 +363,8 @@ class _$UserEntityImpl extends _UserEntity {
     firstName,
     lastName,
     role,
-    image,
     pushNotificationsEnabled,
+    image,
     expoPushToken,
     createdAt,
   );
@@ -387,8 +387,8 @@ class _$UserEntityImpl extends _UserEntity {
       String firstName,
       String lastName,
       String role,
-      String? image,
       bool pushNotificationsEnabled,
+      String? image,
       String? expoPushToken,
       DateTime? createdAt,
     )
@@ -401,8 +401,8 @@ class _$UserEntityImpl extends _UserEntity {
       firstName,
       lastName,
       role,
-      image,
       pushNotificationsEnabled,
+      image,
       expoPushToken,
       createdAt,
     );
@@ -418,8 +418,8 @@ class _$UserEntityImpl extends _UserEntity {
       String firstName,
       String lastName,
       String role,
-      String? image,
       bool pushNotificationsEnabled,
+      String? image,
       String? expoPushToken,
       DateTime? createdAt,
     )?
@@ -432,8 +432,8 @@ class _$UserEntityImpl extends _UserEntity {
       firstName,
       lastName,
       role,
-      image,
       pushNotificationsEnabled,
+      image,
       expoPushToken,
       createdAt,
     );
@@ -449,8 +449,8 @@ class _$UserEntityImpl extends _UserEntity {
       String firstName,
       String lastName,
       String role,
-      String? image,
       bool pushNotificationsEnabled,
+      String? image,
       String? expoPushToken,
       DateTime? createdAt,
     )?
@@ -465,8 +465,8 @@ class _$UserEntityImpl extends _UserEntity {
         firstName,
         lastName,
         role,
-        image,
         pushNotificationsEnabled,
+        image,
         expoPushToken,
         createdAt,
       );
@@ -511,8 +511,8 @@ abstract class _UserEntity extends UserEntity {
     required final String firstName,
     required final String lastName,
     required final String role,
-    final String? image,
     required final bool pushNotificationsEnabled,
+    final String? image,
     final String? expoPushToken,
     final DateTime? createdAt,
   }) = _$UserEntityImpl;
@@ -531,9 +531,9 @@ abstract class _UserEntity extends UserEntity {
   @override
   String get role;
   @override
-  String? get image;
-  @override
   bool get pushNotificationsEnabled;
+  @override
+  String? get image;
   @override
   String? get expoPushToken;
   @override

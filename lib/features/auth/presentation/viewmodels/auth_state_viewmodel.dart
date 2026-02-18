@@ -1,39 +1,41 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../domain/usecases/get_current_user_usecase.dart';
-import '../../domain/usecases/logout_usecase.dart';
-import '../providers/auth_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 /// Auth State ViewModel - manages global auth state
 class AuthStateViewModel extends StateNotifier<BaseState<UserEntity?>> {
-  final GetCurrentUserUseCase _getCurrentUserUseCase;
-  final LogoutUseCase _logoutUseCase;
 
   AuthStateViewModel(
     this._getCurrentUserUseCase,
     this._logoutUseCase,
   ) : super(const BaseState.initial());
+  final GetCurrentUserUseCase _getCurrentUserUseCase;
+  final LogoutUseCase _logoutUseCase;
 
   Future<void> checkAuthStatus() async {
     state = const BaseState.loading();
 
-    final result = await _getCurrentUserUseCase();
+    final Either<Failure, UserEntity> result = await _getCurrentUserUseCase();
 
     result.fold(
-      (failure) => state = const BaseState.success(null),
-      (user) => state = BaseState.success(user),
+      (Failure failure) => state = const BaseState.success(null),
+      (UserEntity user) => state = BaseState.success(user),
     );
   }
 
   Future<void> logout() async {
     state = const BaseState.loading();
 
-    final result = await _logoutUseCase();
+    final Either<Failure, bool> result = await _logoutUseCase();
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
+      (Failure failure) => state = BaseState.error(failure),
       (_) => state = const BaseState.success(null),
     );
   }
@@ -48,29 +50,29 @@ class AuthStateViewModel extends StateNotifier<BaseState<UserEntity?>> {
 }
 
 /// Auth State ViewModel Provider
-final authStateViewModelProvider =
+final StateNotifierProvider<AuthStateViewModel, BaseState<UserEntity?>> authStateViewModelProvider =
     StateNotifierProvider<AuthStateViewModel, BaseState<UserEntity?>>(
-  (ref) {
-    final getCurrentUserUseCase = ref.watch(getCurrentUserUseCaseProvider);
-    final logoutUseCase = ref.watch(logoutUseCaseProvider);
+  (StateNotifierProviderRef<AuthStateViewModel, BaseState<UserEntity?>> ref) {
+    final GetCurrentUserUseCase getCurrentUserUseCase = ref.watch(getCurrentUserUseCaseProvider);
+    final LogoutUseCase logoutUseCase = ref.watch(logoutUseCaseProvider);
     return AuthStateViewModel(getCurrentUserUseCase, logoutUseCase);
   },
 );
 
 /// Helper provider to check if user is authenticated
-final isAuthenticatedProvider = Provider<bool>((ref) {
-  final authState = ref.watch(authStateViewModelProvider);
+final Provider<bool> isAuthenticatedProvider = Provider<bool>((ProviderRef<bool> ref) {
+  final BaseState<UserEntity?> authState = ref.watch(authStateViewModelProvider);
   return authState.maybeWhen(
-    success: (user) => user != null,
+    success: (UserEntity? user) => user != null,
     orElse: () => false,
   );
 });
 
 /// Helper provider to get current user
-final currentUserProvider = Provider<UserEntity?>((ref) {
-  final authState = ref.watch(authStateViewModelProvider);
+final Provider<UserEntity?> currentUserProvider = Provider<UserEntity?>((ProviderRef<UserEntity?> ref) {
+  final BaseState<UserEntity?> authState = ref.watch(authStateViewModelProvider);
   return authState.maybeWhen(
-    success: (user) => user,
+    success: (UserEntity? user) => user,
     orElse: () => null,
   );
 });

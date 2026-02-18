@@ -1,10 +1,13 @@
+import 'package:fajimobileapp/features/vendor/data/datasources/vendor_remote_datasource.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_edit_resource_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/config/app_config.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
-import '../../data/providers/vendor_providers.dart';
+import 'package:retrofit/dio.dart';
+import 'package:fajimobileapp/features/vendor/data/providers/vendor_providers.dart';
 
 class VendorResourcesListScreen extends ConsumerStatefulWidget {
   const VendorResourcesListScreen({super.key});
@@ -17,7 +20,7 @@ class VendorResourcesListScreen extends ConsumerStatefulWidget {
 class _VendorResourcesListScreenState
     extends ConsumerState<VendorResourcesListScreen> {
   bool _isLoading = true;
-  List<dynamic> _resources = [];
+  List<dynamic> _resources = <dynamic>[];
   String? _error;
 
   @override
@@ -33,15 +36,15 @@ class _VendorResourcesListScreenState
     });
 
     try {
-      final datasource = ref.read(vendorRemoteDataSourceProvider);
-      final response = await datasource.getMyResources();
+      final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
+      final HttpResponse response = await datasource.getMyResources();
 
       if (!mounted) return;
 
       if (response.response.statusCode == 200) {
         final data = response.data;
         setState(() {
-          _resources = data['data']?['resources'] ?? data['data'] ?? [];
+          _resources = data['data']?['resources'] ?? data['data'] ?? <dynamic>[];
           _isLoading = false;
         });
       } else {
@@ -59,8 +62,7 @@ class _VendorResourcesListScreenState
     }
   }
 
-  List<Map<String, dynamic>> _getMockResources() {
-    return [
+  List<Map<String, dynamic>> _getMockResources() => [
       {
         'id': '1',
         '_id': '1',
@@ -89,13 +91,12 @@ class _VendorResourcesListScreenState
         'bookingCount': 15,
       },
     ];
-  }
 
   Future<void> _deleteResource(
       BuildContext context, Map<String, dynamic> resource) async {
-    final confirmed = await showDialog<bool>(
+    final bool? confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         backgroundColor: AppColors.searchBarBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
@@ -111,7 +112,7 @@ class _VendorResourcesListScreenState
             color: AppColors.textSecondary,
           ),
         ),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
@@ -141,9 +142,9 @@ class _VendorResourcesListScreenState
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
-        final datasource = ref.read(vendorRemoteDataSourceProvider);
+        final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
         final resourceId = resource['_id'] ?? resource['id'];
         await datasource.deleteResource(resourceId.toString());
 
@@ -161,7 +162,7 @@ class _VendorResourcesListScreenState
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete: ${e.toString()}'),
+            content: Text('Failed to delete: ${e}'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -170,14 +171,14 @@ class _VendorResourcesListScreenState
   }
 
   Future<void> _toggleAvailability(Map<String, dynamic> resource) async {
-    final newAvailability = !(resource['isAvailable'] as bool? ?? true);
+    final bool newAvailability = !(resource['isAvailable'] as bool? ?? true);
 
     try {
-      final datasource = ref.read(vendorRemoteDataSourceProvider);
+      final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
       final resourceId = resource['_id'] ?? resource['id'];
       await datasource.updateResource(
         resourceId.toString(),
-        {'isAvailable': newAvailability},
+        <String, dynamic>{'isAvailable': newAvailability},
       );
 
       if (!mounted) return;
@@ -198,23 +199,28 @@ class _VendorResourcesListScreenState
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to update: ${e.toString()}'),
+          content: Text('Failed to update: ${e}'),
           backgroundColor: AppColors.error,
         ),
       );
     }
   }
 
-  void _editResource(BuildContext context, Map<String, dynamic> resource) {
-    // TODO: Navigate to edit screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Edit feature coming soon')),
+  void _editResource(BuildContext context, Map<String, dynamic> resource) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VendorEditResourceScreen(resource: resource),
+      ),
     );
+    
+    if (result == true) {
+      _fetchResources(); // Refresh list after edit
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -297,10 +303,8 @@ class _VendorResourcesListScreenState
         ),
       ),
     );
-  }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
+  Widget _buildEmptyState(BuildContext context) => Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -354,17 +358,9 @@ class _VendorResourcesListScreenState
         ),
       ),
     );
-  }
 }
 
 class _ResourceCard extends StatelessWidget {
-  final String title;
-  final String category;
-  final int price;
-  final bool isAvailable;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-  final VoidCallback onToggleAvailability;
 
   const _ResourceCard({
     required this.title,
@@ -375,10 +371,16 @@ class _ResourceCard extends StatelessWidget {
     required this.onDelete,
     required this.onToggleAvailability,
   });
+  final String title;
+  final String category;
+  final int price;
+  final bool isAvailable;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onToggleAvailability;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -412,7 +414,7 @@ class _ResourceCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '₦${_formatPrice(price)}',
+                AppConfig.formatPriceFull(price.toDouble()),
                 style: AppTypography.titleMedium.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w700,
@@ -492,12 +494,9 @@ class _ResourceCard extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  String _formatPrice(int price) {
-    return price.toString().replaceAllMapped(
+  String _formatPrice(int price) => price.toString().replaceAllMapped(
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (Match m) => '${m[1]},',
         );
-  }
 }

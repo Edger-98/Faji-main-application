@@ -7,12 +7,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 class VendorDetailScreen extends ConsumerStatefulWidget {
-  final Map<String, dynamic> vendor;
 
   const VendorDetailScreen({
     super.key,
     required this.vendor,
   });
+  final Map<String, dynamic> vendor;
 
   @override
   ConsumerState<VendorDetailScreen> createState() => _VendorDetailScreenState();
@@ -23,12 +23,12 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final vendor = widget.vendor;
+    final Map<String, dynamic> vendor = widget.vendor;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: CustomScrollView(
-        slivers: [
+        slivers: <Widget>[
           // App Bar with Image
           SliverAppBar(
             expandedHeight: 300.h,
@@ -46,7 +46,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                 onPressed: () => Navigator.pop(context),
               ),
             ),
-            actions: [
+            actions: <Widget>[
               Container(
                 margin: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
@@ -68,13 +68,13 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
-                children: [
+                children: <Widget>[
                   CachedNetworkImage(
                     imageUrl: vendor['image'] as String,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
+                    placeholder: (BuildContext context, String url) => ColoredBox(
                       color: AppColors.surfaceContainerHighest,
-                      child: Center(
+                      child: const Center(
                         child: CircularProgressIndicator(color: AppColors.primary),
                       ),
                     ),
@@ -84,7 +84,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [
+                        colors: <Color>[
                           Colors.transparent,
                           AppColors.background.withValues(alpha: 0.8),
                         ],
@@ -102,16 +102,16 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
               padding: EdgeInsets.all(24.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   // Header
                   Row(
-                    children: [
+                    children: <Widget>[
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Row(
-                              children: [
+                              children: <Widget>[
                                 Flexible(
                                   child: Text(
                                     vendor['name'] as String,
@@ -121,7 +121,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                                     ),
                                   ),
                                 ),
-                                if (vendor['verified'] as bool) ...[
+                                if (vendor['verified'] as bool) ...<Widget>[
                                   SizedBox(width: 8.w),
                                   Icon(
                                     Icons.verified,
@@ -148,7 +148,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
 
                   // Rating & Reviews
                   Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.star_rounded,
                         color: AppColors.eventCardYellow,
@@ -156,7 +156,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                       ),
                       SizedBox(width: 8.w),
                       Text(
-                        '${vendor['rating']}',
+                        '${vendor['rating'].toStringAsFixed(1)}',
                         style: AppTypography.titleLarge.copyWith(
                           color: AppColors.onSurface,
                           fontWeight: FontWeight.w700,
@@ -182,12 +182,11 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: AppColors.primary.withValues(alpha: 0.3),
-                        width: 1,
                       ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Text(
                           'Starting Price',
                           style: AppTypography.bodyLarge.copyWith(
@@ -208,13 +207,13 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                   SizedBox(height: 32.h),
 
                   // Tabs
-                  Container(
+                  DecoratedBox(
                     decoration: BoxDecoration(
                       color: AppColors.searchBarBackground,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Row(
-                      children: [
+                      children: <Widget>[
                         Expanded(
                           child: _buildTab('About', 0),
                         ),
@@ -246,7 +245,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          boxShadow: [
+          boxShadow: <BoxShadow>[
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
@@ -286,7 +285,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
   }
 
   Widget _buildTab(String title, int index) {
-    final isSelected = _selectedTab == index;
+    final bool isSelected = _selectedTab == index;
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
@@ -310,8 +309,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
     );
   }
 
-  Widget _buildAboutTab() {
-    return Column(
+  Widget _buildAboutTab() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -347,10 +345,8 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
         _buildSpecialtyChip('Private Events'),
       ],
     );
-  }
 
-  Widget _buildSpecialtyChip(String text) {
-    return Container(
+  Widget _buildSpecialtyChip(String text) => Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerHighest,
@@ -373,18 +369,17 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
         ],
       ),
     );
-  }
 
   Widget _buildServicesTab() {
-    final services = [
-      {'name': 'Basic Package', 'price': '\$500', 'duration': '4 hours'},
-      {'name': 'Standard Package', 'price': '\$800', 'duration': '6 hours'},
-      {'name': 'Premium Package', 'price': '\$1,200', 'duration': '8 hours'},
+    final List<Map<String, String>> services = <Map<String, String>>[
+      <String, String>{'name': 'Basic Package', 'price': r'$500', 'duration': '4 hours'},
+      <String, String>{'name': 'Standard Package', 'price': r'$800', 'duration': '6 hours'},
+      <String, String>{'name': 'Premium Package', 'price': r'$1,200', 'duration': '8 hours'},
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(
           'Available Packages',
           style: AppTypography.titleLarge.copyWith(
@@ -393,7 +388,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
           ),
         ),
         SizedBox(height: 16.h),
-        ...services.map((service) => Container(
+        ...services.map((Map<String, String> service) => Container(
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -401,11 +396,11 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(
-            children: [
+            children: <Widget>[
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Text(
                       service['name']!,
                       style: AppTypography.titleMedium.copyWith(
@@ -438,20 +433,20 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
   }
 
   Widget _buildReviewsTab() {
-    final reviews = [
-      {
+    final List<Map<String, Object>> reviews = <Map<String, Object>>[
+      <String, Object>{
         'name': 'Sarah Johnson',
         'rating': 5,
         'date': '2 weeks ago',
         'comment': 'Absolutely amazing service! Highly professional and exceeded our expectations.',
       },
-      {
+      <String, Object>{
         'name': 'Michael Chen',
         'rating': 5,
         'date': '1 month ago',
         'comment': 'Great experience from start to finish. Would definitely recommend!',
       },
-      {
+      <String, Object>{
         'name': 'Emily Davis',
         'rating': 4,
         'date': '2 months ago',
@@ -461,7 +456,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(
           'Customer Reviews',
           style: AppTypography.titleLarge.copyWith(
@@ -470,7 +465,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
           ),
         ),
         SizedBox(height: 16.h),
-        ...reviews.map((review) => Container(
+        ...reviews.map((Map<String, Object> review) => Container(
           margin: EdgeInsets.only(bottom: 16.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -479,14 +474,14 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               Row(
-                children: [
+                children: <Widget>[
                   CircleAvatar(
                     radius: 20.r,
                     backgroundColor: AppColors.primary.withValues(alpha: 0.2),
                     child: Text(
-                      (review['name'] as String).substring(0, 1),
+                      (review['name']! as String).substring(0, 1),
                       style: AppTypography.titleMedium.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,
@@ -497,16 +492,16 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(
-                          review['name'] as String,
+                          review['name']! as String,
                           style: AppTypography.bodyLarge.copyWith(
                             color: AppColors.onSurface,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
-                          review['date'] as String,
+                          review['date']! as String,
                           style: AppTypography.bodySmall.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -517,8 +512,8 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
                   Row(
                     children: List.generate(
                       5,
-                      (index) => Icon(
-                        index < (review['rating'] as int)
+                      (int index) => Icon(
+                        index < (review['rating']! as int)
                             ? Icons.star_rounded
                             : Icons.star_border_rounded,
                         color: AppColors.eventCardYellow,
@@ -530,7 +525,7 @@ class _VendorDetailScreenState extends ConsumerState<VendorDetailScreen> {
               ),
               SizedBox(height: 12.h),
               Text(
-                review['comment'] as String,
+                review['comment']! as String,
                 style: AppTypography.bodyMedium.copyWith(
                   color: AppColors.textSecondary,
                   height: 1.5,

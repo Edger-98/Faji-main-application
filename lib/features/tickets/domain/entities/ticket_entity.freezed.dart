@@ -22,9 +22,9 @@ mixin _$TicketEntity {
   String get eventId => throw _privateConstructorUsedError;
   int get ticketId => throw _privateConstructorUsedError;
   DateTime get purchasedDate => throw _privateConstructorUsedError;
-  String? get promoCode => throw _privateConstructorUsedError;
   int get quantity => throw _privateConstructorUsedError;
   String get transactionId => throw _privateConstructorUsedError;
+  String? get promoCode => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
@@ -34,9 +34,9 @@ mixin _$TicketEntity {
       String eventId,
       int ticketId,
       DateTime purchasedDate,
-      String? promoCode,
       int quantity,
       String transactionId,
+      String? promoCode,
       DateTime? createdAt,
     )
     $default,
@@ -49,9 +49,9 @@ mixin _$TicketEntity {
       String eventId,
       int ticketId,
       DateTime purchasedDate,
-      String? promoCode,
       int quantity,
       String transactionId,
+      String? promoCode,
       DateTime? createdAt,
     )?
     $default,
@@ -64,9 +64,9 @@ mixin _$TicketEntity {
       String eventId,
       int ticketId,
       DateTime purchasedDate,
-      String? promoCode,
       int quantity,
       String transactionId,
+      String? promoCode,
       DateTime? createdAt,
     )?
     $default, {
@@ -106,9 +106,9 @@ abstract class $TicketEntityCopyWith<$Res> {
     String eventId,
     int ticketId,
     DateTime purchasedDate,
-    String? promoCode,
     int quantity,
     String transactionId,
+    String? promoCode,
     DateTime? createdAt,
   });
 }
@@ -133,9 +133,9 @@ class _$TicketEntityCopyWithImpl<$Res, $Val extends TicketEntity>
     Object? eventId = null,
     Object? ticketId = null,
     Object? purchasedDate = null,
-    Object? promoCode = freezed,
     Object? quantity = null,
     Object? transactionId = null,
+    Object? promoCode = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(
@@ -160,10 +160,6 @@ class _$TicketEntityCopyWithImpl<$Res, $Val extends TicketEntity>
                 ? _value.purchasedDate
                 : purchasedDate // ignore: cast_nullable_to_non_nullable
                       as DateTime,
-            promoCode: freezed == promoCode
-                ? _value.promoCode
-                : promoCode // ignore: cast_nullable_to_non_nullable
-                      as String?,
             quantity: null == quantity
                 ? _value.quantity
                 : quantity // ignore: cast_nullable_to_non_nullable
@@ -172,6 +168,10 @@ class _$TicketEntityCopyWithImpl<$Res, $Val extends TicketEntity>
                 ? _value.transactionId
                 : transactionId // ignore: cast_nullable_to_non_nullable
                       as String,
+            promoCode: freezed == promoCode
+                ? _value.promoCode
+                : promoCode // ignore: cast_nullable_to_non_nullable
+                      as String?,
             createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -197,9 +197,9 @@ abstract class _$$TicketEntityImplCopyWith<$Res>
     String eventId,
     int ticketId,
     DateTime purchasedDate,
-    String? promoCode,
     int quantity,
     String transactionId,
+    String? promoCode,
     DateTime? createdAt,
   });
 }
@@ -223,9 +223,9 @@ class __$$TicketEntityImplCopyWithImpl<$Res>
     Object? eventId = null,
     Object? ticketId = null,
     Object? purchasedDate = null,
-    Object? promoCode = freezed,
     Object? quantity = null,
     Object? transactionId = null,
+    Object? promoCode = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(
@@ -250,10 +250,6 @@ class __$$TicketEntityImplCopyWithImpl<$Res>
             ? _value.purchasedDate
             : purchasedDate // ignore: cast_nullable_to_non_nullable
                   as DateTime,
-        promoCode: freezed == promoCode
-            ? _value.promoCode
-            : promoCode // ignore: cast_nullable_to_non_nullable
-                  as String?,
         quantity: null == quantity
             ? _value.quantity
             : quantity // ignore: cast_nullable_to_non_nullable
@@ -262,6 +258,10 @@ class __$$TicketEntityImplCopyWithImpl<$Res>
             ? _value.transactionId
             : transactionId // ignore: cast_nullable_to_non_nullable
                   as String,
+        promoCode: freezed == promoCode
+            ? _value.promoCode
+            : promoCode // ignore: cast_nullable_to_non_nullable
+                  as String?,
         createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -280,9 +280,9 @@ class _$TicketEntityImpl extends _TicketEntity {
     required this.eventId,
     required this.ticketId,
     required this.purchasedDate,
-    this.promoCode,
     required this.quantity,
     required this.transactionId,
+    this.promoCode,
     this.createdAt,
   }) : super._();
 
@@ -297,17 +297,17 @@ class _$TicketEntityImpl extends _TicketEntity {
   @override
   final DateTime purchasedDate;
   @override
-  final String? promoCode;
-  @override
   final int quantity;
   @override
   final String transactionId;
+  @override
+  final String? promoCode;
   @override
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'TicketEntity(id: $id, userId: $userId, eventId: $eventId, ticketId: $ticketId, purchasedDate: $purchasedDate, promoCode: $promoCode, quantity: $quantity, transactionId: $transactionId, createdAt: $createdAt)';
+    return 'TicketEntity(id: $id, userId: $userId, eventId: $eventId, ticketId: $ticketId, purchasedDate: $purchasedDate, quantity: $quantity, transactionId: $transactionId, promoCode: $promoCode, createdAt: $createdAt)';
   }
 
   @override
@@ -322,12 +322,12 @@ class _$TicketEntityImpl extends _TicketEntity {
                 other.ticketId == ticketId) &&
             (identical(other.purchasedDate, purchasedDate) ||
                 other.purchasedDate == purchasedDate) &&
-            (identical(other.promoCode, promoCode) ||
-                other.promoCode == promoCode) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
             (identical(other.transactionId, transactionId) ||
                 other.transactionId == transactionId) &&
+            (identical(other.promoCode, promoCode) ||
+                other.promoCode == promoCode) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -340,9 +340,9 @@ class _$TicketEntityImpl extends _TicketEntity {
     eventId,
     ticketId,
     purchasedDate,
-    promoCode,
     quantity,
     transactionId,
+    promoCode,
     createdAt,
   );
 
@@ -363,9 +363,9 @@ class _$TicketEntityImpl extends _TicketEntity {
       String eventId,
       int ticketId,
       DateTime purchasedDate,
-      String? promoCode,
       int quantity,
       String transactionId,
+      String? promoCode,
       DateTime? createdAt,
     )
     $default,
@@ -376,9 +376,9 @@ class _$TicketEntityImpl extends _TicketEntity {
       eventId,
       ticketId,
       purchasedDate,
-      promoCode,
       quantity,
       transactionId,
+      promoCode,
       createdAt,
     );
   }
@@ -392,9 +392,9 @@ class _$TicketEntityImpl extends _TicketEntity {
       String eventId,
       int ticketId,
       DateTime purchasedDate,
-      String? promoCode,
       int quantity,
       String transactionId,
+      String? promoCode,
       DateTime? createdAt,
     )?
     $default,
@@ -405,9 +405,9 @@ class _$TicketEntityImpl extends _TicketEntity {
       eventId,
       ticketId,
       purchasedDate,
-      promoCode,
       quantity,
       transactionId,
+      promoCode,
       createdAt,
     );
   }
@@ -421,9 +421,9 @@ class _$TicketEntityImpl extends _TicketEntity {
       String eventId,
       int ticketId,
       DateTime purchasedDate,
-      String? promoCode,
       int quantity,
       String transactionId,
+      String? promoCode,
       DateTime? createdAt,
     )?
     $default, {
@@ -436,9 +436,9 @@ class _$TicketEntityImpl extends _TicketEntity {
         eventId,
         ticketId,
         purchasedDate,
-        promoCode,
         quantity,
         transactionId,
+        promoCode,
         createdAt,
       );
     }
@@ -481,9 +481,9 @@ abstract class _TicketEntity extends TicketEntity {
     required final String eventId,
     required final int ticketId,
     required final DateTime purchasedDate,
-    final String? promoCode,
     required final int quantity,
     required final String transactionId,
+    final String? promoCode,
     final DateTime? createdAt,
   }) = _$TicketEntityImpl;
   const _TicketEntity._() : super._();
@@ -499,11 +499,11 @@ abstract class _TicketEntity extends TicketEntity {
   @override
   DateTime get purchasedDate;
   @override
-  String? get promoCode;
-  @override
   int get quantity;
   @override
   String get transactionId;
+  @override
+  String? get promoCode;
   @override
   DateTime? get createdAt;
 

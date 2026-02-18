@@ -6,7 +6,7 @@ class ResponsiveSpacing {
 
   /// Get responsive spacing based on screen width
   static double getSpacing(BuildContext context, double baseSpacing) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.of(context).size.width;
     
     if (screenWidth < 600) {
       return baseSpacing; // Mobile

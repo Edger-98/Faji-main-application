@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/network/api_response.dart';
-import '../models/user_model.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/auth/data/models/user_model.dart';
 
 part 'auth_remote_datasource.g.dart';
 
@@ -75,6 +75,18 @@ abstract class AuthRemoteDataSource {
   /// Forget password
   @POST('/auth/forget-password')
   Future<HttpResponse<dynamic>> forgetPassword(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Verify password reset OTP
+  @POST('/auth/verify-reset-otp')
+  Future<HttpResponse<dynamic>> verifyPasswordResetOtp(
+    @Body() Map<String, dynamic> body,
+  );
+
+  /// Reset password with OTP
+  @POST('/auth/reset-password')
+  Future<HttpResponse<dynamic>> resetPassword(
     @Body() Map<String, dynamic> body,
   );
 

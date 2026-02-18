@@ -18,13 +18,13 @@ _$VendorBookingEntityImpl _$$VendorBookingEntityImplFromJson(
     eventName: $checkedConvert('eventName', (v) => v as String),
     eventDate: $checkedConvert('eventDate', (v) => DateTime.parse(v as String)),
     offeredPrice: $checkedConvert('offeredPrice', (v) => (v as num).toDouble()),
-    counterOfferPrice: $checkedConvert(
-      'counterOfferPrice',
-      (v) => (v as num?)?.toDouble(),
-    ),
     status: $checkedConvert(
       'status',
       (v) => $enumDecode(_$BookingStatusEnumMap, v),
+    ),
+    counterOfferPrice: $checkedConvert(
+      'counterOfferPrice',
+      (v) => (v as num?)?.toDouble(),
     ),
     message: $checkedConvert('message', (v) => v as String?),
     createdAt: $checkedConvert(
@@ -50,8 +50,8 @@ Map<String, dynamic> _$$VendorBookingEntityImplToJson(
   'eventName': instance.eventName,
   'eventDate': instance.eventDate.toIso8601String(),
   'offeredPrice': instance.offeredPrice,
-  if (instance.counterOfferPrice case final value?) 'counterOfferPrice': value,
   'status': _$BookingStatusEnumMap[instance.status]!,
+  if (instance.counterOfferPrice case final value?) 'counterOfferPrice': value,
   if (instance.message case final value?) 'message': value,
   if (instance.createdAt?.toIso8601String() case final value?)
     'createdAt': value,

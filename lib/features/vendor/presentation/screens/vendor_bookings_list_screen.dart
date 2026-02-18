@@ -1,9 +1,11 @@
+import 'package:fajimobileapp/features/vendor/data/datasources/vendor_remote_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import '../../data/providers/vendor_providers.dart';
-import '../widgets/counter_offer_bottom_sheet.dart';
+import 'package:retrofit/dio.dart';
+import 'package:fajimobileapp/features/vendor/data/providers/vendor_providers.dart';
+import 'package:fajimobileapp/features/vendor/presentation/widgets/counter_offer_bottom_sheet.dart';
 
 class VendorBookingsListScreen extends ConsumerStatefulWidget {
   const VendorBookingsListScreen({super.key});
@@ -18,9 +20,9 @@ class _VendorBookingsListScreenState
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = false;
-  List<dynamic> _pendingBookings = [];
-  List<dynamic> _acceptedBookings = [];
-  List<dynamic> _completedBookings = [];
+  List<dynamic> _pendingBookings = <dynamic>[];
+  List<dynamic> _acceptedBookings = <dynamic>[];
+  List<dynamic> _completedBookings = <dynamic>[];
 
   @override
   void initState() {
@@ -31,7 +33,7 @@ class _VendorBookingsListScreenState
 
   Future<void> _fetchAllBookings() async {
     setState(() => _isLoading = true);
-    await Future.wait([
+    await Future.wait(<Future<void>>[
       _fetchBookings('pending'),
       _fetchBookings('accepted'),
       _fetchBookings('completed'),
@@ -41,13 +43,13 @@ class _VendorBookingsListScreenState
 
   Future<void> _fetchBookings(String status) async {
     try {
-      final datasource = ref.read(vendorRemoteDataSourceProvider);
-      final response = await datasource.getBookingRequests(status);
+      final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
+      final HttpResponse response = await datasource.getBookingRequests(status);
       
       if (!mounted) return;
       
       if (response.response.statusCode == 200) {
-        final bookings = response.data['data'] ?? [];
+        final bookings = response.data['data'] ?? <dynamic>[];
         setState(() {
           if (status == 'pending') _pendingBookings = bookings;
           if (status == 'accepted') _acceptedBookings = bookings;
@@ -67,8 +69,7 @@ class _VendorBookingsListScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -93,7 +94,7 @@ class _VendorBookingsListScreenState
                   ),
                   const SizedBox(width: 16),
                   Text(
-                    'Booking Requests',
+                    ' Booking Requests',
                     style: AppTypography.headlineMedium.copyWith(
                       color: AppColors.onSurface,
                       fontWeight: FontWeight.w600,
@@ -146,11 +147,10 @@ class _VendorBookingsListScreenState
         ),
       ),
     );
-  }
 
   Widget _buildPendingList() {
-    final mockBookings = [
-      {
+    final List<Map<String, Object>> mockBookings = <Map<String, Object>>[
+      <String, Object>{
         'id': '1',
         'customerName': 'John Doe',
         'eventName': 'Birthday Party',
@@ -159,7 +159,7 @@ class _VendorBookingsListScreenState
         'service': 'Grand Ballroom',
         'message': 'We need the venue for our annual event',
       },
-      {
+      <String, Object>{
         'id': '2',
         'customerName': 'Sarah Smith',
         'eventName': 'Wedding Reception',
@@ -173,15 +173,15 @@ class _VendorBookingsListScreenState
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       itemCount: mockBookings.length,
-      itemBuilder: (context, index) {
-        final booking = mockBookings[index];
+      itemBuilder: (BuildContext context, int index) {
+        final Map<String, Object> booking = mockBookings[index];
         return _BookingCard(
-          customerName: booking['customerName'] as String,
-          eventName: booking['eventName'] as String,
-          date: booking['date'] as String,
-          price: booking['offeredPrice'] as int,
-          service: booking['service'] as String,
-          message: booking['message'] as String,
+          customerName: booking['customerName']! as String,
+          eventName: booking['eventName']! as String,
+          date: booking['date']! as String,
+          price: booking['offeredPrice']! as int,
+          service: booking['service']! as String,
+          message: booking['message']! as String,
           status: 'pending',
           onRespond: () => _showResponseBottomSheet(context, booking),
         );
@@ -190,8 +190,8 @@ class _VendorBookingsListScreenState
   }
 
   Widget _buildAcceptedList() {
-    final mockBookings = [
-      {
+    final List<Map<String, Object>> mockBookings = <Map<String, Object>>[
+      <String, Object>{
         'id': '3',
         'customerName': 'Mike Johnson',
         'eventName': 'Corporate Event',
@@ -201,7 +201,7 @@ class _VendorBookingsListScreenState
       },
     ];
 
-    final bookings = _acceptedBookings.isNotEmpty ? _acceptedBookings : mockBookings;
+    final List bookings = _acceptedBookings.isNotEmpty ? _acceptedBookings : mockBookings;
 
     return _isLoading
         ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
@@ -211,7 +211,7 @@ class _VendorBookingsListScreenState
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               itemCount: bookings.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 final booking = bookings[index];
                 return _BookingCard(
                   customerName: booking['customerName'] as String,
@@ -227,8 +227,8 @@ class _VendorBookingsListScreenState
   }
 
   Widget _buildCompletedList() {
-    final mockBookings = [
-      {
+    final List<Map<String, Object>> mockBookings = <Map<String, Object>>[
+      <String, Object>{
         'id': '4',
         'customerName': 'Emily Davis',
         'eventName': 'Anniversary Party',
@@ -239,7 +239,7 @@ class _VendorBookingsListScreenState
       },
     ];
 
-    final bookings = _completedBookings.isNotEmpty ? _completedBookings : mockBookings;
+    final List bookings = _completedBookings.isNotEmpty ? _completedBookings : mockBookings;
 
     return _isLoading
         ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
@@ -249,7 +249,7 @@ class _VendorBookingsListScreenState
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               itemCount: bookings.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (BuildContext context, int index) {
                 final booking = bookings[index];
                 return _BookingCard(
                   customerName: booking['customerName'] as String,
@@ -265,8 +265,8 @@ class _VendorBookingsListScreenState
           );
   }
 
-  void _showResponseBottomSheet(BuildContext context, Map<String, dynamic> booking) async {
-    final result = await showCounterOfferBottomSheet(
+  Future<void> _showResponseBottomSheet(BuildContext context, Map<String, dynamic> booking) async {
+    final Map<String, dynamic>? result = await showCounterOfferBottomSheet(
       context: context,
       bookingId: booking['id'] as String,
       currentAmount: '\$${booking['offeredPrice']}',
@@ -274,28 +274,25 @@ class _VendorBookingsListScreenState
         // TODO: Call API POST /marketplace/bookings/:id/accept
         print('Accepted booking ${booking['id']}');
       },
-      onCounterOffer: (amount, message) {
+      onCounterOffer: (String amount, String message) {
         // TODO: Call API POST /marketplace/bookings/:id/counter-offer
         print('Counter offer: \$$amount, message: $message');
       },
-      onDecline: (reason) {
+      onDecline: (String reason) {
         // TODO: Call API POST /marketplace/bookings/:id/decline
         print('Declined booking ${booking['id']}, reason: $reason');
       },
     );
 
     if (result != null && mounted) {
-      String message = '';
+      var message = '';
       switch (result['action']) {
         case 'accept':
           message = 'Booking accepted!';
-          break;
         case 'counter':
           message = 'Counter offer sent: \$${result['amount']}';
-          break;
         case 'decline':
           message = 'Booking declined';
-          break;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -311,25 +308,14 @@ class _VendorBookingsListScreenState
     }
   }
 
-  String _formatPrice(int price) {
-    return price.toString().replaceAllMapped(
+  String _formatPrice(int price) => price.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
     );
-  }
 }
 
 
 class _BookingCard extends StatelessWidget {
-  final String customerName;
-  final String eventName;
-  final String date;
-  final int price;
-  final String service;
-  final String status;
-  final String? message;
-  final int? earnings;
-  final VoidCallback? onRespond;
 
   const _BookingCard({
     required this.customerName,
@@ -342,17 +328,23 @@ class _BookingCard extends StatelessWidget {
     this.earnings,
     this.onRespond,
   });
+  final String customerName;
+  final String eventName;
+  final String date;
+  final int price;
+  final String service;
+  final String status;
+  final String? message;
+  final int? earnings;
+  final VoidCallback? onRespond;
 
-  static String _formatPrice(int price) {
-    return price.toString().replaceAllMapped(
+  static String _formatPrice(int price) => price.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
     );
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -399,7 +391,7 @@ class _BookingCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '\${_formatPrice(price)}',
+                '\$${_formatPrice(price)}',
                 style: AppTypography.titleMedium.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w700,
@@ -515,7 +507,7 @@ class _BookingCard extends StatelessWidget {
                   Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'Earned: \${_formatPrice(earnings!)}',
+                    'Earned: \$${_formatPrice(earnings!)}',
                     style: AppTypography.bodyMedium.copyWith(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,
@@ -528,5 +520,4 @@ class _BookingCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

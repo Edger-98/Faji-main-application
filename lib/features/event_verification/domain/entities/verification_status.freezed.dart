@@ -29,8 +29,8 @@ mixin _$VerificationStatus {
   int get threshold => throw _privateConstructorUsedError;
   bool get meetsThreshold => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
-  String? get verifiedAt => throw _privateConstructorUsedError;
   bool get canVerify => throw _privateConstructorUsedError;
+  String? get verifiedAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
@@ -42,8 +42,8 @@ mixin _$VerificationStatus {
       int threshold,
       bool meetsThreshold,
       bool isVerified,
-      String? verifiedAt,
       bool canVerify,
+      String? verifiedAt,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -58,8 +58,8 @@ mixin _$VerificationStatus {
       int threshold,
       bool meetsThreshold,
       bool isVerified,
-      String? verifiedAt,
       bool canVerify,
+      String? verifiedAt,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -74,8 +74,8 @@ mixin _$VerificationStatus {
       int threshold,
       bool meetsThreshold,
       bool isVerified,
-      String? verifiedAt,
       bool canVerify,
+      String? verifiedAt,
     )?
     $default, {
     required TResult orElse(),
@@ -120,8 +120,8 @@ abstract class $VerificationStatusCopyWith<$Res> {
     int threshold,
     bool meetsThreshold,
     bool isVerified,
-    String? verifiedAt,
     bool canVerify,
+    String? verifiedAt,
   });
 }
 
@@ -148,8 +148,8 @@ class _$VerificationStatusCopyWithImpl<$Res, $Val extends VerificationStatus>
     Object? threshold = null,
     Object? meetsThreshold = null,
     Object? isVerified = null,
-    Object? verifiedAt = freezed,
     Object? canVerify = null,
+    Object? verifiedAt = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -185,14 +185,14 @@ class _$VerificationStatusCopyWithImpl<$Res, $Val extends VerificationStatus>
                 ? _value.isVerified
                 : isVerified // ignore: cast_nullable_to_non_nullable
                       as bool,
-            verifiedAt: freezed == verifiedAt
-                ? _value.verifiedAt
-                : verifiedAt // ignore: cast_nullable_to_non_nullable
-                      as String?,
             canVerify: null == canVerify
                 ? _value.canVerify
                 : canVerify // ignore: cast_nullable_to_non_nullable
                       as bool,
+            verifiedAt: freezed == verifiedAt
+                ? _value.verifiedAt
+                : verifiedAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -217,8 +217,8 @@ abstract class _$$VerificationStatusImplCopyWith<$Res>
     int threshold,
     bool meetsThreshold,
     bool isVerified,
-    String? verifiedAt,
     bool canVerify,
+    String? verifiedAt,
   });
 }
 
@@ -244,8 +244,8 @@ class __$$VerificationStatusImplCopyWithImpl<$Res>
     Object? threshold = null,
     Object? meetsThreshold = null,
     Object? isVerified = null,
-    Object? verifiedAt = freezed,
     Object? canVerify = null,
+    Object? verifiedAt = freezed,
   }) {
     return _then(
       _$VerificationStatusImpl(
@@ -281,14 +281,14 @@ class __$$VerificationStatusImplCopyWithImpl<$Res>
             ? _value.isVerified
             : isVerified // ignore: cast_nullable_to_non_nullable
                   as bool,
-        verifiedAt: freezed == verifiedAt
-            ? _value.verifiedAt
-            : verifiedAt // ignore: cast_nullable_to_non_nullable
-                  as String?,
         canVerify: null == canVerify
             ? _value.canVerify
             : canVerify // ignore: cast_nullable_to_non_nullable
                   as bool,
+        verifiedAt: freezed == verifiedAt
+            ? _value.verifiedAt
+            : verifiedAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -306,8 +306,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
     required this.threshold,
     required this.meetsThreshold,
     required this.isVerified,
-    this.verifiedAt,
     required this.canVerify,
+    this.verifiedAt,
   });
 
   factory _$VerificationStatusImpl.fromJson(Map<String, dynamic> json) =>
@@ -330,13 +330,13 @@ class _$VerificationStatusImpl implements _VerificationStatus {
   @override
   final bool isVerified;
   @override
-  final String? verifiedAt;
-  @override
   final bool canVerify;
+  @override
+  final String? verifiedAt;
 
   @override
   String toString() {
-    return 'VerificationStatus(eventId: $eventId, eventName: $eventName, soldTickets: $soldTickets, checkedInGuests: $checkedInGuests, checkInPercentage: $checkInPercentage, threshold: $threshold, meetsThreshold: $meetsThreshold, isVerified: $isVerified, verifiedAt: $verifiedAt, canVerify: $canVerify)';
+    return 'VerificationStatus(eventId: $eventId, eventName: $eventName, soldTickets: $soldTickets, checkedInGuests: $checkedInGuests, checkInPercentage: $checkInPercentage, threshold: $threshold, meetsThreshold: $meetsThreshold, isVerified: $isVerified, canVerify: $canVerify, verifiedAt: $verifiedAt)';
   }
 
   @override
@@ -359,10 +359,10 @@ class _$VerificationStatusImpl implements _VerificationStatus {
                 other.meetsThreshold == meetsThreshold) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
-            (identical(other.verifiedAt, verifiedAt) ||
-                other.verifiedAt == verifiedAt) &&
             (identical(other.canVerify, canVerify) ||
-                other.canVerify == canVerify));
+                other.canVerify == canVerify) &&
+            (identical(other.verifiedAt, verifiedAt) ||
+                other.verifiedAt == verifiedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -377,8 +377,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
     threshold,
     meetsThreshold,
     isVerified,
-    verifiedAt,
     canVerify,
+    verifiedAt,
   );
 
   /// Create a copy of VerificationStatus
@@ -404,8 +404,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
       int threshold,
       bool meetsThreshold,
       bool isVerified,
-      String? verifiedAt,
       bool canVerify,
+      String? verifiedAt,
     )
     $default,
   ) {
@@ -418,8 +418,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
       threshold,
       meetsThreshold,
       isVerified,
-      verifiedAt,
       canVerify,
+      verifiedAt,
     );
   }
 
@@ -435,8 +435,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
       int threshold,
       bool meetsThreshold,
       bool isVerified,
-      String? verifiedAt,
       bool canVerify,
+      String? verifiedAt,
     )?
     $default,
   ) {
@@ -449,8 +449,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
       threshold,
       meetsThreshold,
       isVerified,
-      verifiedAt,
       canVerify,
+      verifiedAt,
     );
   }
 
@@ -466,8 +466,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
       int threshold,
       bool meetsThreshold,
       bool isVerified,
-      String? verifiedAt,
       bool canVerify,
+      String? verifiedAt,
     )?
     $default, {
     required TResult orElse(),
@@ -482,8 +482,8 @@ class _$VerificationStatusImpl implements _VerificationStatus {
         threshold,
         meetsThreshold,
         isVerified,
-        verifiedAt,
         canVerify,
+        verifiedAt,
       );
     }
     return orElse();
@@ -533,8 +533,8 @@ abstract class _VerificationStatus implements VerificationStatus {
     required final int threshold,
     required final bool meetsThreshold,
     required final bool isVerified,
-    final String? verifiedAt,
     required final bool canVerify,
+    final String? verifiedAt,
   }) = _$VerificationStatusImpl;
 
   factory _VerificationStatus.fromJson(Map<String, dynamic> json) =
@@ -557,9 +557,9 @@ abstract class _VerificationStatus implements VerificationStatus {
   @override
   bool get isVerified;
   @override
-  String? get verifiedAt;
-  @override
   bool get canVerify;
+  @override
+  String? get verifiedAt;
 
   /// Create a copy of VerificationStatus
   /// with the given fields replaced by the non-null parameter values.

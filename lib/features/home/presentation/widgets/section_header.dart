@@ -5,10 +5,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Reusable section header with title and "View all" link
 class SectionHeader extends StatelessWidget {
-  final String title;
-  final VoidCallback? onViewAll;
-  final String? subtitle;
-  final String? viewAllText;
 
   const SectionHeader({
     super.key,
@@ -17,10 +13,13 @@ class SectionHeader extends StatelessWidget {
     this.subtitle,
     this.viewAllText,
   });
+  final String title;
+  final VoidCallback? onViewAll;
+  final String? subtitle;
+  final String? viewAllText;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,5 +90,4 @@ class SectionHeader extends StatelessWidget {
         ],
       ),
     );
-  }
 }

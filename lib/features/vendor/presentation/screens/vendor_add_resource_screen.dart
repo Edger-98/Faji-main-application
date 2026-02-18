@@ -13,19 +13,19 @@ class VendorAddResourceScreen extends ConsumerStatefulWidget {
 
 class _VendorAddResourceScreenState
     extends ConsumerState<VendorAddResourceScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _priceController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   String? _selectedCategory;
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
-    {'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
-    {'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
-    {'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
-    {'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
-    {'id': 'security', 'name': 'Security', 'icon': Icons.security},
+  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
+    <String, dynamic>{'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
+    <String, dynamic>{'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
+    <String, dynamic>{'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
+    <String, dynamic>{'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
+    <String, dynamic>{'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
+    <String, dynamic>{'id': 'security', 'name': 'Security', 'icon': Icons.security},
   ];
 
   @override
@@ -48,8 +48,7 @@ class _VendorAddResourceScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -337,5 +336,4 @@ class _VendorAddResourceScreenState
         ),
       ),
     );
-  }
 }

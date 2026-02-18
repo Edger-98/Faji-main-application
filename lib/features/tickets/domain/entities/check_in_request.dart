@@ -17,7 +17,7 @@ class CheckInRequest with _$CheckInRequest {
 }
 
 extension CheckInRequestX on CheckInRequest {
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'ticketId': ticketId,
         'eventId': eventId,
         if (location != null) 'location': location!.toJson(),
@@ -37,7 +37,7 @@ class LocationData with _$LocationData {
 }
 
 extension LocationDataX on LocationData {
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'latitude': latitude,
         'longitude': longitude,
         if (accuracy != null) 'accuracy': accuracy,

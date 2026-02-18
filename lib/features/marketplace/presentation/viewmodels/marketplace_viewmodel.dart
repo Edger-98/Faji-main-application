@@ -1,19 +1,17 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/marketplace_resource.dart';
-import '../../domain/entities/vendor_profile.dart';
-import '../../domain/entities/booking.dart';
-import '../../domain/usecases/get_marketplace_resources_usecase.dart';
-import '../../domain/usecases/get_vendor_profile_usecase.dart';
-import '../../domain/usecases/create_booking_usecase.dart';
-import '../../domain/usecases/get_my_bookings_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/marketplace_resource.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_profile.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/booking.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/get_marketplace_resources_usecase.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/get_vendor_profile_usecase.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/create_booking_usecase.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/get_my_bookings_usecase.dart';
 
 // State for marketplace
 class MarketplaceState {
-  final BaseState<MarketplaceResourcesResponse> resourcesState;
-  final BaseState<VendorProfile> vendorProfileState;
-  final BaseState<Booking> createBookingState;
-  final BaseState<BookingsResponse> myBookingsState;
 
   MarketplaceState({
     required this.resourcesState,
@@ -21,27 +19,25 @@ class MarketplaceState {
     required this.createBookingState,
     required this.myBookingsState,
   });
+  final BaseState<MarketplaceResourcesResponse> resourcesState;
+  final BaseState<VendorProfile> vendorProfileState;
+  final BaseState<Booking> createBookingState;
+  final BaseState<BookingsResponse> myBookingsState;
 
   MarketplaceState copyWith({
     BaseState<MarketplaceResourcesResponse>? resourcesState,
     BaseState<VendorProfile>? vendorProfileState,
     BaseState<Booking>? createBookingState,
     BaseState<BookingsResponse>? myBookingsState,
-  }) {
-    return MarketplaceState(
+  }) => MarketplaceState(
       resourcesState: resourcesState ?? this.resourcesState,
       vendorProfileState: vendorProfileState ?? this.vendorProfileState,
       createBookingState: createBookingState ?? this.createBookingState,
       myBookingsState: myBookingsState ?? this.myBookingsState,
     );
-  }
 }
 
 class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
-  final GetMarketplaceResourcesUseCase _getMarketplaceResourcesUseCase;
-  final GetVendorProfileUseCase _getVendorProfileUseCase;
-  final CreateBookingUseCase _createBookingUseCase;
-  final GetMyBookingsUseCase _getMyBookingsUseCase;
 
   MarketplaceViewModel(
     this._getMarketplaceResourcesUseCase,
@@ -54,6 +50,10 @@ class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
           createBookingState: const BaseState.initial(),
           myBookingsState: const BaseState.initial(),
         ));
+  final GetMarketplaceResourcesUseCase _getMarketplaceResourcesUseCase;
+  final GetVendorProfileUseCase _getVendorProfileUseCase;
+  final CreateBookingUseCase _createBookingUseCase;
+  final GetMyBookingsUseCase _getMyBookingsUseCase;
 
   /// Get marketplace resources by category
   Future<void> getMarketplaceResources({
@@ -67,7 +67,7 @@ class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
       resourcesState: const BaseState.loading(),
     );
 
-    final result = await _getMarketplaceResourcesUseCase(
+    final Either<Failure, MarketplaceResourcesResponse> result = await _getMarketplaceResourcesUseCase(
       category: category,
       page: page,
       limit: limit,
@@ -76,14 +76,14 @@ class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
     if (!mounted) return;
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         if (mounted) {
           state = state.copyWith(
             resourcesState: BaseState.error(failure),
           );
         }
       },
-      (resources) {
+      (MarketplaceResourcesResponse resources) {
         if (mounted) {
           state = state.copyWith(
             resourcesState: BaseState.success(resources),
@@ -103,21 +103,21 @@ class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
       vendorProfileState: const BaseState.loading(),
     );
 
-    final result = await _getVendorProfileUseCase(
+    final Either<Failure, VendorProfile> result = await _getVendorProfileUseCase(
       vendorId: vendorId,
     );
 
     if (!mounted) return;
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         if (mounted) {
           state = state.copyWith(
             vendorProfileState: BaseState.error(failure),
           );
         }
       },
-      (profile) {
+      (VendorProfile profile) {
         if (mounted) {
           state = state.copyWith(
             vendorProfileState: BaseState.success(profile),
@@ -137,21 +137,21 @@ class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
       createBookingState: const BaseState.loading(),
     );
 
-    final result = await _createBookingUseCase(
+    final Either<Failure, Booking> result = await _createBookingUseCase(
       request: request,
     );
 
     if (!mounted) return;
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         if (mounted) {
           state = state.copyWith(
             createBookingState: BaseState.error(failure),
           );
         }
       },
-      (booking) {
+      (Booking booking) {
         if (mounted) {
           state = state.copyWith(
             createBookingState: BaseState.success(booking),
@@ -171,21 +171,21 @@ class MarketplaceViewModel extends StateNotifier<MarketplaceState> {
       myBookingsState: const BaseState.loading(),
     );
 
-    final result = await _getMyBookingsUseCase(
+    final Either<Failure, BookingsResponse> result = await _getMyBookingsUseCase(
       status: status,
     );
 
     if (!mounted) return;
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         if (mounted) {
           state = state.copyWith(
             myBookingsState: BaseState.error(failure),
           );
         }
       },
-      (bookings) {
+      (BookingsResponse bookings) {
         if (mounted) {
           state = state.copyWith(
             myBookingsState: BaseState.success(bookings),

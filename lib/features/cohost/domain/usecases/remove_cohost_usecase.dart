@@ -1,20 +1,18 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/remove_cohost_response.dart';
-import '../repositories/cohost_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/remove_cohost_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/repositories/cohost_repository.dart';
 
 class RemoveCohostUseCase {
-  final CohostRepository repository;
 
   RemoveCohostUseCase(this.repository);
+  final CohostRepository repository;
 
   Future<Either<Failure, RemoveCohostResponse>> call({
     required String eventId,
     required String cohostId,
-  }) async {
-    return await repository.removeCohost(
+  }) async => await repository.removeCohost(
       eventId: eventId,
       cohostId: cohostId,
     );
-  }
 }

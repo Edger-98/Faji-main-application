@@ -1,133 +1,161 @@
+import 'package:dartz/dartz.dart';
+import 'package:dio/src/dio.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:fajimobileapp/core/network/api_client.dart';
 import 'package:fajimobileapp/core/network/network_info.dart';
-import '../../data/datasources/event_remote_datasource.dart';
-import '../../data/repositories/event_repository_impl.dart';
-import '../../domain/entities/event_entity.dart';
-import '../../domain/repositories/event_repository.dart';
-import '../../domain/usecases/add_to_favorites_usecase.dart';
-import '../../domain/usecases/get_event_by_id_usecase.dart';
-import '../../domain/usecases/get_events_usecase.dart';
-import '../../domain/usecases/get_favorite_events_usecase.dart';
-import '../../domain/usecases/get_flash_deal_events_usecase.dart';
-import '../../domain/usecases/get_trending_events_usecase.dart';
-import '../../domain/usecases/get_upcoming_events_usecase.dart';
-import '../../domain/usecases/get_user_events_usecase.dart';
-import '../../domain/usecases/remove_from_favorites_usecase.dart';
-import '../../domain/usecases/search_events_usecase.dart';
+import 'package:fajimobileapp/core/usecases/usecase.dart';
+import 'package:fajimobileapp/features/events/data/datasources/event_remote_datasource.dart';
+import 'package:fajimobileapp/features/events/data/repositories/event_repository_impl.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/domain/repositories/event_repository.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/add_to_favorites_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_event_by_id_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_favorite_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_flash_deal_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_trending_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_upcoming_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_user_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/remove_from_favorites_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/search_events_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/usecases/get_categories_usecase.dart';
+import 'package:fajimobileapp/features/events/domain/entities/category_entity.dart';
 
 /// Event Remote Data Source Provider
-final eventRemoteDataSourceProvider = Provider<EventRemoteDataSource>((ref) {
-  final dio = ref.watch(dioProvider);
+final Provider<EventRemoteDataSource> eventRemoteDataSourceProvider = Provider<EventRemoteDataSource>((ProviderRef<EventRemoteDataSource> ref) {
+  final Dio dio = ref.watch(dioProvider);
   return EventRemoteDataSource(dio);
 });
 
 /// Event Repository Provider
-final eventRepositoryProvider = Provider<EventRepository>((ref) {
-  final remoteDataSource = ref.watch(eventRemoteDataSourceProvider);
-  final networkInfo = ref.watch(networkInfoProvider);
+final Provider<EventRepository> eventRepositoryProvider = Provider<EventRepository>((ProviderRef<EventRepository> ref) {
+  final EventRemoteDataSource remoteDataSource = ref.watch(eventRemoteDataSourceProvider);
+  final NetworkInfo networkInfo = ref.watch(networkInfoProvider);
+  final Dio dio = ref.watch(dioProvider);
   return EventRepositoryImpl(
     remoteDataSource: remoteDataSource,
     networkInfo: networkInfo,
+    dio: dio,
   );
 });
 
 /// Use Case Providers
-final getEventsUseCaseProvider = Provider<GetEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetEventsUseCase> getEventsUseCaseProvider = Provider<GetEventsUseCase>((ProviderRef<GetEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetEventsUseCase(repository);
 });
 
-final getTrendingEventsUseCaseProvider = Provider<GetTrendingEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetTrendingEventsUseCase> getTrendingEventsUseCaseProvider = Provider<GetTrendingEventsUseCase>((ProviderRef<GetTrendingEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetTrendingEventsUseCase(repository);
 });
 
-final getUpcomingEventsUseCaseProvider = Provider<GetUpcomingEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetUpcomingEventsUseCase> getUpcomingEventsUseCaseProvider = Provider<GetUpcomingEventsUseCase>((ProviderRef<GetUpcomingEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetUpcomingEventsUseCase(repository);
 });
 
-final getFlashDealEventsUseCaseProvider = Provider<GetFlashDealEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetFlashDealEventsUseCase> getFlashDealEventsUseCaseProvider = Provider<GetFlashDealEventsUseCase>((ProviderRef<GetFlashDealEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetFlashDealEventsUseCase(repository);
 });
 
-final getEventByIdUseCaseProvider = Provider<GetEventByIdUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetEventByIdUseCase> getEventByIdUseCaseProvider = Provider<GetEventByIdUseCase>((ProviderRef<GetEventByIdUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetEventByIdUseCase(repository);
 });
 
-final searchEventsUseCaseProvider = Provider<SearchEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<SearchEventsUseCase> searchEventsUseCaseProvider = Provider<SearchEventsUseCase>((ProviderRef<SearchEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return SearchEventsUseCase(repository);
 });
 
-final getUserEventsUseCaseProvider = Provider<GetUserEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetUserEventsUseCase> getUserEventsUseCaseProvider = Provider<GetUserEventsUseCase>((ProviderRef<GetUserEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetUserEventsUseCase(repository);
 });
 
-final getFavoriteEventsUseCaseProvider = Provider<GetFavoriteEventsUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<GetFavoriteEventsUseCase> getFavoriteEventsUseCaseProvider = Provider<GetFavoriteEventsUseCase>((ProviderRef<GetFavoriteEventsUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return GetFavoriteEventsUseCase(repository);
 });
 
-final addToFavoritesUseCaseProvider = Provider<AddToFavoritesUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<AddToFavoritesUseCase> addToFavoritesUseCaseProvider = Provider<AddToFavoritesUseCase>((ProviderRef<AddToFavoritesUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return AddToFavoritesUseCase(repository);
 });
 
-final removeFromFavoritesUseCaseProvider = Provider<RemoveFromFavoritesUseCase>((ref) {
-  final repository = ref.watch(eventRepositoryProvider);
+final Provider<RemoveFromFavoritesUseCase> removeFromFavoritesUseCaseProvider = Provider<RemoveFromFavoritesUseCase>((ProviderRef<RemoveFromFavoritesUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
   return RemoveFromFavoritesUseCase(repository);
 });
 
+final Provider<GetCategoriesUseCase> getCategoriesUseCaseProvider = Provider<GetCategoriesUseCase>((ProviderRef<GetCategoriesUseCase> ref) {
+  final EventRepository repository = ref.watch(eventRepositoryProvider);
+  return GetCategoriesUseCase(repository);
+});
+
 /// State Providers for different event lists
-final trendingEventsProvider = FutureProvider.autoDispose<List<EventEntity>>((ref) async {
-  final useCase = ref.watch(getTrendingEventsUseCaseProvider);
-  final result = await useCase(limit: 10);
+final AutoDisposeFutureProvider<List<EventEntity>> trendingEventsProvider = FutureProvider.autoDispose<List<EventEntity>>((AutoDisposeFutureProviderRef<List<EventEntity>> ref) async {
+  final GetTrendingEventsUseCase useCase = ref.watch(getTrendingEventsUseCaseProvider);
+  final String? selectedCategory = ref.watch(selectedCategoryProvider);
+  final Either<Failure, List<EventEntity>> result = await useCase(limit: 10, category: selectedCategory);
   return result.fold(
-    (failure) => throw Exception(failure.message),
-    (events) => events,
+    (Failure failure) => throw Exception(failure.message),
+    (List<EventEntity> events) => events,
   );
 });
 
-final upcomingEventsProvider = FutureProvider.autoDispose<List<EventEntity>>((ref) async {
-  final useCase = ref.watch(getUpcomingEventsUseCaseProvider);
-  final result = await useCase(limit: 10);
+final AutoDisposeFutureProvider<List<EventEntity>> upcomingEventsProvider = FutureProvider.autoDispose<List<EventEntity>>((AutoDisposeFutureProviderRef<List<EventEntity>> ref) async {
+  final GetUpcomingEventsUseCase useCase = ref.watch(getUpcomingEventsUseCaseProvider);
+  final String? selectedCategory = ref.watch(selectedCategoryProvider);
+  final Either<Failure, List<EventEntity>> result = await useCase(limit: 10, category: selectedCategory);
   return result.fold(
-    (failure) => throw Exception(failure.message),
-    (events) => events,
+    (Failure failure) => throw Exception(failure.message),
+    (List<EventEntity> events) => events,
   );
 });
 
-final flashDealEventsProvider = FutureProvider.autoDispose<List<EventEntity>>((ref) async {
-  final useCase = ref.watch(getFlashDealEventsUseCaseProvider);
-  final result = await useCase(limit: 10);
+final AutoDisposeFutureProvider<List<EventEntity>> flashDealEventsProvider = FutureProvider.autoDispose<List<EventEntity>>((AutoDisposeFutureProviderRef<List<EventEntity>> ref) async {
+  final GetFlashDealEventsUseCase useCase = ref.watch(getFlashDealEventsUseCaseProvider);
+  final Either<Failure, List<EventEntity>> result = await useCase(limit: 10);
   return result.fold(
-    (failure) => throw Exception(failure.message),
-    (events) => events,
+    (Failure failure) => throw Exception(failure.message),
+    (List<EventEntity> events) => events,
   );
 });
 
-final userEventsProvider = StateNotifierProvider.autoDispose<UserEventsNotifier, AsyncValue<List<EventEntity>>>((ref) {
-  final useCase = ref.watch(getUserEventsUseCaseProvider);
+final AutoDisposeStateNotifierProvider<UserEventsNotifier, AsyncValue<List<EventEntity>>> userEventsProvider = StateNotifierProvider.autoDispose<UserEventsNotifier, AsyncValue<List<EventEntity>>>((AutoDisposeStateNotifierProviderRef<UserEventsNotifier, AsyncValue<List<EventEntity>>> ref) {
+  final GetUserEventsUseCase useCase = ref.watch(getUserEventsUseCaseProvider);
   return UserEventsNotifier(useCase);
 });
 
 class UserEventsNotifier extends StateNotifier<AsyncValue<List<EventEntity>>> {
-  final GetUserEventsUseCase _getUserEventsUseCase;
 
   UserEventsNotifier(this._getUserEventsUseCase) : super(const AsyncValue.loading());
+  final GetUserEventsUseCase _getUserEventsUseCase;
 
   Future<void> getUserEvents() async {
     state = const AsyncValue.loading();
-    final result = await _getUserEventsUseCase();
+    final Either<Failure, List<EventEntity>> result = await _getUserEventsUseCase();
     state = result.fold(
-      (failure) => AsyncValue.error(failure.message, StackTrace.current),
-      (events) => AsyncValue.data(events),
+      (Failure failure) => AsyncValue.error(failure.message, StackTrace.current),
+      AsyncValue.data,
     );
   }
 }
+
+/// Categories Provider
+final AutoDisposeFutureProvider<List<CategoryEntity>> categoriesProvider = FutureProvider.autoDispose<List<CategoryEntity>>((AutoDisposeFutureProviderRef<List<CategoryEntity>> ref) async {
+  final GetCategoriesUseCase useCase = ref.watch(getCategoriesUseCaseProvider);
+  final Either<Failure, List<CategoryEntity>> result = await useCase(NoParams());
+  return result.fold(
+    (Failure failure) => throw Exception(failure.message),
+    (List<CategoryEntity> categories) => categories,
+  );
+});
+
+/// Selected Category Provider for filtering
+final StateProvider<String?> selectedCategoryProvider = StateProvider<String?>((StateProviderRef<String?> ref) => null);

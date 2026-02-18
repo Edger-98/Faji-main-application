@@ -7,13 +7,13 @@ class BalanceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             _buildAppBar(context),
             Expanded(
               child: RefreshIndicator(
@@ -29,7 +29,7 @@ class BalanceDetailScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     const SizedBox(height: 32),
                     _buildBalanceCard(context),
                     const SizedBox(height: 27),
@@ -52,18 +52,18 @@ class BalanceDetailScreen extends StatelessWidget {
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Row(
-        children: [
+        children: <Widget>[
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
@@ -86,11 +86,11 @@ class BalanceDetailScreen extends StatelessWidget {
           ),
           const Spacer(),
           Stack(
-            children: [
+            children: <Widget>[
               Container(
                 width: 50,
                 height: 50,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.surfaceContainerHighest,
                   shape: BoxShape.circle,
                 ),
@@ -120,7 +120,7 @@ class BalanceDetailScreen extends StatelessWidget {
   }
 
   Widget _buildBalanceCard(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Container(
       width: double.infinity,
@@ -131,7 +131,7 @@ class BalanceDetailScreen extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Text(
             'Current Balance',
             style: theme.textTheme.titleLarge?.copyWith(
@@ -144,7 +144,7 @@ class BalanceDetailScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
+            children: <Widget>[
               Text(
                 '230.00',
                 style: theme.textTheme.displayLarge?.copyWith(
@@ -159,7 +159,7 @@ class BalanceDetailScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(
-                  'USD\$',
+                  r'USD$',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontFamily: AppTypography.modicaPro,
                     fontSize: 18,
@@ -176,7 +176,7 @@ class BalanceDetailScreen extends StatelessWidget {
   }
 
   Widget _buildWithdrawSection(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Text(
       'Withdraw to Bank.',
@@ -191,11 +191,11 @@ class BalanceDetailScreen extends StatelessWidget {
   }
 
   Widget _buildBankSelection(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(
           'Select your Bank',
           style: theme.textTheme.bodyLarge?.copyWith(
@@ -229,7 +229,7 @@ class BalanceDetailScreen extends StatelessWidget {
     String accountInfo, {
     required bool isSelected,
   }) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 14),
@@ -238,7 +238,7 @@ class BalanceDetailScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(54),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Container(
             width: 54,
             height: 55,
@@ -246,7 +246,7 @@ class BalanceDetailScreen extends StatelessWidget {
               color: const Color(0xFF1B1B1B),
               borderRadius: BorderRadius.circular(46),
             ),
-            child: Center(
+            child: const Center(
               child: Icon(
                 Icons.account_balance,
                 color: AppColors.onSurface,
@@ -258,7 +258,7 @@ class BalanceDetailScreen extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   bankName,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -289,7 +289,6 @@ class BalanceDetailScreen extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 color: isSelected ? AppColors.primary : const Color(0xFF707070),
-                width: 1,
               ),
               color: isSelected
                   ? AppColors.primary.withValues(alpha: 0.1)
@@ -314,7 +313,7 @@ class BalanceDetailScreen extends StatelessWidget {
   }
 
   Widget _buildAddNewBankButton(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return GestureDetector(
       onTap: () {
@@ -342,7 +341,7 @@ class BalanceDetailScreen extends StatelessWidget {
   }
 
   Widget _buildReviewButton(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.fromLTRB(27, 0, 27, 51),

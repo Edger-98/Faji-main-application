@@ -1,24 +1,25 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
 
-import '../../../../core/error/failures.dart';
-import '../../../../core/network/network_info.dart';
-import '../../domain/entities/refund_response.dart';
-import '../../domain/entities/revenue_distribution.dart';
-import '../../domain/entities/verification_status.dart';
-import '../../domain/entities/verify_event_response.dart';
-import '../../domain/repositories/event_verification_repository.dart';
-import '../datasources/event_verification_remote_datasource.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/core/network/network_info.dart';
+import 'package:fajimobileapp/features/event_verification/domain/entities/refund_response.dart';
+import 'package:fajimobileapp/features/event_verification/domain/entities/revenue_distribution.dart';
+import 'package:fajimobileapp/features/event_verification/domain/entities/verification_status.dart';
+import 'package:fajimobileapp/features/event_verification/domain/entities/verify_event_response.dart';
+import 'package:fajimobileapp/features/event_verification/domain/repositories/event_verification_repository.dart';
+import 'package:fajimobileapp/features/event_verification/data/datasources/event_verification_remote_datasource.dart';
 
 /// Event Verification Repository Implementation
 class EventVerificationRepositoryImpl implements EventVerificationRepository {
-  final EventVerificationRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
   EventVerificationRepositoryImpl({
     required this.remoteDataSource,
     required this.networkInfo,
   });
+  final EventVerificationRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo;
 
   @override
   Future<Either<Failure, VerificationStatus>> getVerificationStatus(
@@ -29,10 +30,10 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
     }
 
     try {
-      final response = await remoteDataSource.getVerificationStatus(eventId);
+      final ApiResponse response = await remoteDataSource.getVerificationStatus(eventId);
 
       if (response.success && response.data != null) {
-        return Right(response.data!);
+        return Right(response.data);
       } else {
         return Left(ServerFailure(message: response.message));
       }
@@ -53,9 +54,9 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
     }
 
     try {
-      final response = await remoteDataSource.verifyEvent(
+      final ApiResponse<VerifyEventResponse> response = await remoteDataSource.verifyEvent(
         eventId,
-        manualOverride ? {'manualOverride': true} : null,
+        manualOverride ? <String, dynamic>{'manualOverride': true} : null,
       );
 
       if (response.success && response.data != null) {
@@ -79,7 +80,7 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
     }
 
     try {
-      final response = await remoteDataSource.getRevenueDistribution(eventId);
+      final ApiResponse<RevenueDistribution> response = await remoteDataSource.getRevenueDistribution(eventId);
 
       if (response.success && response.data != null) {
         return Right(response.data!);
@@ -103,9 +104,9 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
     }
 
     try {
-      final response = await remoteDataSource.processRefunds(
+      final ApiResponse<RefundResponse> response = await remoteDataSource.processRefunds(
         eventId,
-        reason != null ? {'reason': reason} : null,
+        reason != null ? <String, dynamic>{'reason': reason} : null,
       );
 
       if (response.success && response.data != null) {
@@ -129,7 +130,7 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
     }
 
     try {
-      final response = await remoteDataSource.releaseEscrow(eventId);
+      final ApiResponse<VerifyEventResponse> response = await remoteDataSource.releaseEscrow(eventId);
 
       if (response.success && response.data != null) {
         return Right(response.data!);
@@ -150,14 +151,14 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
       case DioExceptionType.receiveTimeout:
         return NetworkFailure.timeout();
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
-        final message = error.response?.data?['message'] as String? ??
+        final int? statusCode = error.response?.statusCode;
+        final String message = error.response?.data?['message'] as String? ??
             error.response?.data?['error'] as String? ??
             'An error occurred';
 
         if (statusCode == 401) {
           // Provide a user-friendly message for authorization issues
-          final customMessage = message.toLowerCase().contains('event') || 
+          final String customMessage = message.toLowerCase().contains('event') || 
                                message.toLowerCase().contains('access') ||
                                message.toLowerCase().contains('permission')
               ? "You're not authorized to perform this action on this event"
@@ -166,7 +167,7 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
         } else if (statusCode == 422 || statusCode == 400) {
           return ValidationFailure(message: message);
         } else if (statusCode == 404) {
-          return ServerFailure(message: 'Event not found');
+          return const ServerFailure(message: 'Event not found');
         }
         return ServerFailure(message: message);
       case DioExceptionType.cancel:

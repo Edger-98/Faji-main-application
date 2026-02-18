@@ -1,3 +1,9 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/update_settings_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,10 +23,10 @@ class AccountSettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   
   bool _isEditing = false;
   bool _isLoading = false;
@@ -36,12 +42,12 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
   }
 
   Future<void> _loadUserData() async {
-    final authRepo = ref.read(authRepositoryProvider);
-    final userId = await authRepo.getUserId();
+    final AuthRepository authRepo = ref.read(authRepositoryProvider);
+    final String? userId = await authRepo.getUserId();
     
     // Load from saved data first (faster)
-    final localDataSource = ref.read(authLocalDataSourceProvider);
-    final userData = await localDataSource.getUserData();
+    final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
+    final Map<String, String?> userData = await localDataSource.getUserData();
     
     if (mounted) {
       setState(() {
@@ -55,7 +61,7 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
     
     // Then try to refresh from API in background
     ref.read(authStateViewModelProvider.notifier).checkAuthStatus().then((_) {
-      final currentUser = ref.read(currentUserProvider);
+      final UserEntity? currentUser = ref.read(currentUserProvider);
       
       if (currentUser != null && mounted) {
         setState(() {
@@ -80,8 +86,8 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
 
     setState(() => _isLoading = true);
 
-    final updateSettingsUseCase = ref.read(updateSettingsUseCaseProvider);
-    final result = await updateSettingsUseCase(
+    final UpdateSettingsUseCase updateSettingsUseCase = ref.read(updateSettingsUseCaseProvider);
+    final Either<Failure, UserEntity> result = await updateSettingsUseCase(
       id: _userId,
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
@@ -91,10 +97,10 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
     setState(() => _isLoading = false);
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         _showError(failure.message);
       },
-      (user) {
+      (UserEntity user) {
         // Update auth state
         ref.read(authStateViewModelProvider.notifier).setUser(user);
         
@@ -135,8 +141,7 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
@@ -369,5 +374,4 @@ class _AccountSettingsScreenState extends ConsumerState<AccountSettingsScreen> {
         ),
       ),
     );
-  }
 }

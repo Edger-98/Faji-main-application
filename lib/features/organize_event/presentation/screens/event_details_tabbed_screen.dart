@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/core/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,19 +9,18 @@ import 'package:fajimobileapp/features/organize_event/presentation/screens/tabs/
 import 'package:fajimobileapp/features/organize_event/presentation/screens/tabs/chat_tab.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/screens/tabs/settings_tab.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/screens/tabs/edit_tab.dart';
-import 'package:fajimobileapp/features/organize_event/presentation/screens/tabs/promote_tab.dart';
 import 'package:fajimobileapp/features/organize_event/presentation/providers/event_providers.dart';
 
-/// Event Details Screen with Tabs (PLAN, GUEST, CHAT, SETTINGS, EDIT, PROMOTE)
+/// Event Details Screen with Tabs (PLAN, GUEST, CHAT, SETTINGS, EDIT)
 class EventDetailsTabbedScreen extends ConsumerStatefulWidget {
-  final String eventId;
-  final String? eventName;
 
   const EventDetailsTabbedScreen({
     super.key,
     required this.eventId,
     this.eventName,
   });
+  final String eventId;
+  final String? eventName;
 
   @override
   ConsumerState<EventDetailsTabbedScreen> createState() =>
@@ -32,13 +32,12 @@ class _EventDetailsTabbedScreenState
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<String> _tabs = [
+  final List<String> _tabs = <String>[
     'PLAN',
     'GUEST',
     'CHAT',
     'SETTINGS',
     'EDIT',
-    'PROMOTE',
   ];
 
   @override
@@ -55,14 +54,14 @@ class _EventDetailsTabbedScreenState
 
   @override
   Widget build(BuildContext context) {
-    final eventAsync = ref.watch(eventDetailsProvider(widget.eventId));
+    final AsyncValue<EventModel> eventAsync = ref.watch(eventDetailsProvider(widget.eventId));
 
     return eventAsync.when(
-      data: (event) => Scaffold(
+      data: (EventModel event) => Scaffold(
         backgroundColor: AppColors.background,
         body: SafeArea(
           child: Column(
-            children: [
+            children: <Widget>[
               // Header with event name
               _buildHeader(event.name),
 
@@ -73,13 +72,12 @@ class _EventDetailsTabbedScreenState
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
-                  children: [
+                  children: <Widget>[
                     PlanTab(eventId: widget.eventId),
                     GuestTab(eventId: widget.eventId),
                     ChatTab(eventId: widget.eventId),
                     SettingsTab(eventId: widget.eventId),
                     EditTab(eventId: widget.eventId),
-                    PromoteTab(eventId: widget.eventId),
                   ],
                 ),
               ),
@@ -91,7 +89,7 @@ class _EventDetailsTabbedScreenState
         backgroundColor: AppColors.background,
         body: SafeArea(
           child: Column(
-            children: [
+            children: <Widget>[
               _buildHeader(widget.eventName ?? 'Loading...'),
               _buildTabBar(),
               const Expanded(
@@ -103,11 +101,11 @@ class _EventDetailsTabbedScreenState
           ),
         ),
       ),
-      error: (error, stack) => Scaffold(
+      error: (Object error, StackTrace stack) => Scaffold(
         backgroundColor: AppColors.background,
         body: SafeArea(
           child: Column(
-            children: [
+            children: <Widget>[
               _buildHeader(widget.eventName ?? 'Error'),
               Expanded(
                 child: Center(
@@ -115,7 +113,7 @@ class _EventDetailsTabbedScreenState
                     padding: EdgeInsets.all(24.w),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: <Widget>[
                         Icon(
                           Icons.error_outline,
                           size: 64.sp,
@@ -170,8 +168,7 @@ class _EventDetailsTabbedScreenState
     );
   }
 
-  Widget _buildHeader(String eventName) {
-    return Container(
+  Widget _buildHeader(String eventName) => Container(
       padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 8.h),
       decoration: BoxDecoration(
         color: AppColors.background,
@@ -243,21 +240,20 @@ class _EventDetailsTabbedScreenState
         ],
       ),
     );
-  }
 
   void _shareEvent() {
-    final eventAsync = ref.read(eventDetailsProvider(widget.eventId));
-    eventAsync.whenData((event) {
-      final websiteLink = event.settings.websiteLink;
-      final shareText = websiteLink.isNotEmpty 
+    final AsyncValue<EventModel> eventAsync = ref.read(eventDetailsProvider(widget.eventId));
+    eventAsync.whenData((EventModel event) {
+      final String websiteLink = event.settings.websiteLink;
+      final String shareText = websiteLink.isNotEmpty 
           ? 'https://faji.app/events/$websiteLink'
           : 'Check out ${event.name}!';
       
       Clipboard.setData(ClipboardData(text: shareText));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Event link copied to clipboard!'),
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
           backgroundColor: AppColors.primary,
         ),
       );
@@ -265,15 +261,14 @@ class _EventDetailsTabbedScreenState
   }
 
   String _formatDate(DateTime date) {
-    final months = [
+    final List<String> months = <String>[
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
-  Widget _buildTabBar() {
-    return Stack(
+  Widget _buildTabBar() => Stack(
       children: [
         Container(
           height: 44.h,
@@ -354,5 +349,4 @@ class _EventDetailsTabbedScreenState
         ),
       ],
     );
-  }
 }

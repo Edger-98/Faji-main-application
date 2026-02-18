@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/config/app_config.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/cohost_resource_entity.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/presentation/screens/booking_negotiation_screen.dart';
 import 'package:share_plus/share_plus.dart';
@@ -37,27 +38,18 @@ class _VendorProfileScreenState extends State<VendorProfileScreen>
     super.dispose();
   }
 
-  String _formatPrice(double price) {
-    if (price >= 1000000) {
-      return '₦${(price / 1000000).toStringAsFixed(1)}M';
-    } else if (price >= 1000) {
-      return '₦${(price / 1000).toStringAsFixed(0)}K';
-    }
-    return '₦${price.toStringAsFixed(0)}';
-  }
-
   Future<void> _shareVendorProfile() async {
     try {
       // Create shareable content
-      final String shareText = '''
+      final shareText = '''
 🎉 Check out ${widget.resource.cohostName} on Faji!
 
-${widget.resource.category.displayName} • ${widget.resource.rating}⭐ Rating
+${widget.resource.category.displayName} • ${widget.resource.rating.toStringAsFixed(1)}⭐ Rating
 ${widget.resource.eventsCompleted ?? 0}+ Events Completed
 
 ${widget.resource.description}
 
-Starting from ${_formatPrice(widget.resource.basePrice)} per event
+Starting from ${AppConfig.formatPrice(widget.resource.basePrice)} per event
 
 Book now on Faji App!
 ''';
@@ -85,10 +77,10 @@ Book now on Faji App!
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           // Minimal App Bar
           SliverAppBar(
@@ -248,10 +240,11 @@ Book now on Faji App!
                   // Stats row - horizontal scroll for better mobile UX
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
                     child: Row(
                       children: [
                         _buildCompactStat(
-                          '${widget.resource.rating}',
+                          widget.resource.rating.toStringAsFixed(1),
                           '⭐ Rating',
                         ),
                         SizedBox(width: 12.w),
@@ -296,7 +289,7 @@ Book now on Faji App!
                             Row(
                               children: [
                                 Text(
-                                  _formatPrice(widget.resource.basePrice),
+                                  AppConfig.formatPrice(widget.resource.basePrice),
                                   style: TextStyle(
                                     fontFamily: AppTypography.modicaPro,
                                     fontSize: 24.sp,
@@ -436,6 +429,7 @@ Book now on Faji App!
                     height: 400.h,
                     child: TabBarView(
                       controller: _tabController,
+                      physics: const NeverScrollableScrollPhysics(),
                       children: [
                         _buildReviewsTab(),
                         _buildPortfolioTab(),
@@ -522,10 +516,8 @@ Book now on Faji App!
         ),
       ),
     );
-  }
 
-  Widget _buildCompactStat(String value, String label) {
-    return Container(
+  Widget _buildCompactStat(String value, String label) => Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
@@ -560,10 +552,9 @@ Book now on Faji App!
         ],
       ),
     );
-  }
 
   Widget _buildTab(String label, int index) {
-    final isSelected = _tabController.index == index;
+    final bool isSelected = _tabController.index == index;
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -600,22 +591,22 @@ Book now on Faji App!
 
   Widget _buildReviewsTab() {
     // Mock reviews data
-    final reviews = [
-      {
+    final List<Map<String, Object>> reviews = <Map<String, Object>>[
+      <String, Object>{
         'name': 'Sarah Johnson',
         'rating': 5.0,
         'date': '2 weeks ago',
         'comment':
             'Absolutely amazing service! Made our wedding unforgettable. Highly professional and creative.',
       },
-      {
+      <String, Object>{
         'name': 'Michael Chen',
         'rating': 4.5,
         'date': '1 month ago',
         'comment':
             'Great experience overall. Very responsive and delivered exactly what we needed.',
       },
-      {
+      <String, Object>{
         'name': 'Emma Williams',
         'rating': 5.0,
         'date': '2 months ago',
@@ -626,10 +617,11 @@ Book now on Faji App!
 
     return ListView.separated(
       padding: EdgeInsets.zero,
+      physics: const BouncingScrollPhysics(),
       itemCount: reviews.length,
-      separatorBuilder: (context, index) => SizedBox(height: 16.h),
-      itemBuilder: (context, index) {
-        final review = reviews[index];
+      separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.h),
+      itemBuilder: (BuildContext context, int index) {
+        final Map<String, Object> review = reviews[index];
         return Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -642,9 +634,9 @@ Book now on Faji App!
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               Row(
-                children: [
+                children: <Widget>[
                   Container(
                     width: 40.w,
                     height: 40.h,
@@ -668,9 +660,9 @@ Book now on Faji App!
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(
-                          review['name'] as String,
+                          review['name']! as String,
                           style: TextStyle(
                             fontFamily: AppTypography.modicaPro,
                             fontSize: 15.sp,
@@ -679,7 +671,7 @@ Book now on Faji App!
                           ),
                         ),
                         Text(
-                          review['date'] as String,
+                          review['date']! as String,
                           style: TextStyle(
                             fontFamily: AppTypography.modicaPro,
                             fontSize: 12.sp,
@@ -691,7 +683,7 @@ Book now on Faji App!
                     ),
                   ),
                   Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.star_rounded,
                         color: const Color(0xFFFFB800),
@@ -699,7 +691,7 @@ Book now on Faji App!
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        review['rating'].toString(),
+                        (review['rating']! as double).toStringAsFixed(1),
                         style: TextStyle(
                           fontFamily: AppTypography.modicaPro,
                           fontSize: 14.sp,
@@ -713,7 +705,7 @@ Book now on Faji App!
               ),
               SizedBox(height: 12.h),
               Text(
-                review['comment'] as String,
+                review['comment']! as String,
                 style: TextStyle(
                   fontFamily: AppTypography.modicaPro,
                   fontSize: 14.sp,
@@ -729,9 +721,9 @@ Book now on Faji App!
     );
   }
 
-  Widget _buildPortfolioTab() {
-    return GridView.builder(
+  Widget _buildPortfolioTab() => GridView.builder(
       padding: EdgeInsets.zero,
+      physics: const BouncingScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 12.w,
@@ -759,10 +751,9 @@ Book now on Faji App!
         );
       },
     );
-  }
 
-  Widget _buildAboutTab() {
-    return SingleChildScrollView(
+  Widget _buildAboutTab() => SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -814,10 +805,8 @@ Book now on Faji App!
         ],
       ),
     );
-  }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Container(
+  Widget _buildInfoRow(String label, String value) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
@@ -851,5 +840,4 @@ Book now on Faji App!
         ],
       ),
     );
-  }
 }

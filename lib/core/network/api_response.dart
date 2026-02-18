@@ -22,7 +22,6 @@ class ApiResponse<T> with _$ApiResponse<T> {
   
   /// Create ApiResponse from direct data (when API returns data without wrapper)
   factory ApiResponse.fromDirectData(T data) => ApiResponse(
-        success: true,
         message: 'Success',
         data: data,
       );

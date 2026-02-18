@@ -5,11 +5,6 @@ import 'package:fajimobileapp/core/models/event_model.dart';
 
 /// State for event creation flow
 class EventCreationState {
-  final EventCreationEntity eventData;
-  final int currentStep;
-  final bool isLoading;
-  final String? error;
-  final EventModel? createdEvent;
 
   const EventCreationState({
     required this.eventData,
@@ -18,6 +13,11 @@ class EventCreationState {
     this.error,
     this.createdEvent,
   });
+  final EventCreationEntity eventData;
+  final int currentStep;
+  final bool isLoading;
+  final String? error;
+  final EventModel? createdEvent;
 
   EventCreationState copyWith({
     EventCreationEntity? eventData,
@@ -25,26 +25,24 @@ class EventCreationState {
     bool? isLoading,
     String? error,
     EventModel? createdEvent,
-  }) {
-    return EventCreationState(
+  }) => EventCreationState(
       eventData: eventData ?? this.eventData,
       currentStep: currentStep ?? this.currentStep,
       isLoading: isLoading ?? this.isLoading,
       error: error,
       createdEvent: createdEvent ?? this.createdEvent,
     );
-  }
 }
 
 /// ViewModel for managing event creation flow
 class EventCreationViewModel extends StateNotifier<EventCreationState> {
-  final EventCreationRepository _repository;
   
   EventCreationViewModel(this._repository)
       : super(EventCreationState(
           eventData: const EventCreationEntity(),
           currentStep: 0,
         ));
+  final EventCreationRepository _repository;
 
   // Step 0: Update event type
   void updateEventType(String eventType) {
@@ -111,7 +109,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
 
   void updateRsvpButtonText(String text) {
     // Store in description temporarily (we'll refactor entity later)
-    final currentDesc = state.eventData.description ?? '';
+    final String currentDesc = state.eventData.description ?? '';
     state = state.copyWith(
       eventData: state.eventData.copyWith(
         description: currentDesc.isEmpty ? text : currentDesc,
@@ -122,6 +120,20 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
   void updateLocation(String location) {
     state = state.copyWith(
       eventData: state.eventData.copyWith(location: location),
+    );
+  }
+
+  void updateLocationData({
+    required String address,
+    required double latitude,
+    required double longitude,
+  }) {
+    state = state.copyWith(
+      eventData: state.eventData.copyWith(
+        location: address,
+        latitude: latitude,
+        longitude: longitude,
+      ),
     );
   }
 
@@ -170,9 +182,9 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
 
   // Image upload removed poster/theme selection
 
-  // Navigation (now only 3 steps: 0=Type, 1=Details, 2=Config)
+  // Navigation (now 4 steps: 0=Type, 1=Details, 2=Config, 3=Location)
   void nextStep() {
-    if (state.currentStep < 2) {
+    if (state.currentStep < 3) {
       state = state.copyWith(currentStep: state.currentStep + 1);
     }
   }
@@ -184,14 +196,14 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
   }
 
   void goToStep(int step) {
-    if (step >= 0 && step <= 2) {
+    if (step >= 0 && step <= 3) {
       state = state.copyWith(currentStep: step);
     }
   }
 
   // Validation
   bool canProceedFromStep1() {
-    final data = state.eventData;
+    final EventCreationEntity data = state.eventData;
     return data.title != null &&
         data.title!.isNotEmpty &&
         data.description != null &&
@@ -203,7 +215,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
   }
 
   bool canProceedFromStep2() {
-    final data = state.eventData;
+    final EventCreationEntity data = state.eventData;
     return data.expectedGuests != null && data.expectedGuests! > 0;
   }
 
@@ -215,35 +227,35 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
     String? rsvpButtonText,
   }) async {
     print('🔄 ViewModel.createEvent called');
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
     
     try {
-      final data = state.eventData;
+      final EventCreationEntity data = state.eventData;
       
       // Validate required fields with detailed error messages
       if (data.title == null || data.title!.isEmpty) {
-        final errorMsg = 'Event title is required';
+        const String errorMsg = 'Event title is required';
         print('❌ Validation error: $errorMsg');
         state = state.copyWith(isLoading: false, error: errorMsg);
         return null;
       }
       
       if (data.eventDate == null) {
-        final errorMsg = 'Event date is required';
+        const String errorMsg = 'Event date is required';
         print('❌ Validation error: $errorMsg');
         state = state.copyWith(isLoading: false, error: errorMsg);
         return null;
       }
       
       if (data.expectedGuests == null || data.expectedGuests! <= 0) {
-        final errorMsg = 'Expected guests must be greater than 0';
+        const String errorMsg = 'Expected guests must be greater than 0';
         print('❌ Validation error: $errorMsg');
         state = state.copyWith(isLoading: false, error: errorMsg);
         return null;
       }
       
-      final DateTime finalStartDate = startDate ?? data.eventDate!;
-      final DateTime finalEndDate = endDate ?? finalStartDate.add(const Duration(hours: 3));
+      final finalStartDate = startDate ?? data.eventDate!;
+      final finalEndDate = endDate ?? finalStartDate.add(const Duration(hours: 3));
       
       print('📤 Calling repository.createEvent...');
       print('   name: ${data.title}');
@@ -253,7 +265,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
       print('   expectedGuests: ${data.expectedGuests}');
       print('   imageUrl: ${data.imageUrl ?? "none"}');
       
-      final createdEvent = await _repository.createEvent(
+      final EventModel createdEvent = await _repository.createEvent(
         name: data.title!,
         description: data.description,
         category: data.eventType ?? 'Other',
@@ -266,13 +278,13 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
         expectedGuests: data.expectedGuests,
         budget: data.budget,
         location: data.location != null && data.location!.isNotEmpty
-            ? {
-                'address': data.location!,
-                'latitude': 0.0,
-                'longitude': 0.0,
+            ? <String, dynamic>{
+                'address': data.location,
+                'latitude': data.latitude ?? 0.0,
+                'longitude': data.longitude ?? 0.0,
               }
             : null,
-        settings: {
+        settings: <String, dynamic>{
           'isPublic': false,
           'keepMemoriesPrivate': false,
           'disableGuestMemories': false,
@@ -280,10 +292,10 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
           'disablePublicRSVP': false,
         },
         ticketing: (data.ticketPrice != null && data.ticketPrice! > 0) || (data.totalSeats != null && data.totalSeats! > 0)
-            ? {
+            ? <String, dynamic>{
                 'enabled': true,
-                'types': [
-                  {
+                'types': <Map<String, Object>>[
+                  <String, Object>{
                     'name': 'General Admission',
                     'price': data.ticketPrice ?? 0.0,
                     'quantity': data.totalSeats ?? data.expectedGuests ?? 100,
@@ -307,7 +319,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
       print('Stack trace: $stackTrace');
       
       // Extract meaningful error message
-      String errorMessage = 'Failed to create event';
+      var errorMessage = 'Failed to create event';
       if (e.toString().contains('SocketException') || e.toString().contains('Connection')) {
         errorMessage = 'Network error. Please check your connection.';
       } else if (e.toString().contains('401') || e.toString().contains('Unauthorized')) {
@@ -320,7 +332,7 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
         errorMessage = 'Request timeout. Please try again.';
       } else {
         // Try to extract error message from exception
-        final match = RegExp(r'Exception: (.+)').firstMatch(e.toString());
+        final RegExpMatch? match = RegExp('Exception: (.+)').firstMatch(e.toString());
         if (match != null) {
           errorMessage = match.group(1) ?? errorMessage;
         }
@@ -336,9 +348,9 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
   
   DateTime _parseDateTime(DateTime date, String time) {
     // Parse time string (e.g., "14:30" or "2:30 PM")
-    final timeParts = time.replaceAll(RegExp(r'[APM\s]'), '').split(':');
-    int hour = int.parse(timeParts[0]);
-    final minute = int.parse(timeParts[1]);
+    final List<String> timeParts = time.replaceAll(RegExp(r'[APM\s]'), '').split(':');
+    var hour = int.parse(timeParts[0]);
+    final int minute = int.parse(timeParts[1]);
     
     // Handle PM times
     if (time.toUpperCase().contains('PM') && hour != 12) {
@@ -385,15 +397,14 @@ class EventCreationViewModel extends StateNotifier<EventCreationState> {
     // Generate URL-friendly link from title
     return title
         .toLowerCase()
-        .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+        .replaceAll(RegExp('[^a-z0-9]+'), '-')
         .replaceAll(RegExp(r'^-|-$'), '');
   }
 
   // Reset
   void reset() {
-    state = EventCreationState(
-      eventData: const EventCreationEntity(),
-      currentStep: 0,
+    state = const EventCreationState(
+      eventData: EventCreationEntity(),
     );
   }
 }

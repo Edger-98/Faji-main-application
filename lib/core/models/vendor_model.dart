@@ -1,10 +1,4 @@
 class VendorModel {
-  final String id;
-  final String name;
-  final String category;
-  final VendorContactModel contact;
-  final bool isOnline;
-  final String? avatar;
 
   VendorModel({
     required this.id,
@@ -25,11 +19,15 @@ class VendorModel {
       avatar: json['avatar'] as String?,
     );
   }
+  final String id;
+  final String name;
+  final String category;
+  final VendorContactModel contact;
+  final bool isOnline;
+  final String? avatar;
 }
 
 class VendorContactModel {
-  final String phone;
-  final String email;
 
   VendorContactModel({
     required this.phone,
@@ -42,4 +40,6 @@ class VendorContactModel {
       email: json['email'] as String,
     );
   }
+  final String phone;
+  final String email;
 }

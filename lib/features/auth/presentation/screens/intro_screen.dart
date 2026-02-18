@@ -49,8 +49,8 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
     ));
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeInOut,
@@ -74,8 +74,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -223,5 +222,4 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
         ),
       ),
     );
-  }
 }

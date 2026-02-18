@@ -8,16 +8,15 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Co-Host Dashboard - Limited view for co-hosts
 /// Co-hosts can view event status and earnings but CANNOT modify core event details
 class CoHostDashboardScreen extends StatelessWidget {
-  final String eventId;
 
   const CoHostDashboardScreen({
     super.key,
     required this.eventId,
   });
+  final String eventId;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
@@ -228,15 +227,13 @@ class CoHostDashboardScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Widget _buildPermissionItem({
     required BuildContext context,
     required IconData icon,
     required String title,
     required bool hasPermission,
-  }) {
-    return Container(
+  }) => Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
@@ -281,5 +278,4 @@ class CoHostDashboardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 }

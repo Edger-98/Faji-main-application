@@ -94,7 +94,7 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
     
     if (isLoading) {
       return _buildLoadingButton(theme);
@@ -112,8 +112,7 @@ class AppButton extends StatelessWidget {
     }
   }
 
-  Widget _buildPrimaryButton(ThemeData theme) {
-    return SizedBox(
+  Widget _buildPrimaryButton(ThemeData theme) => SizedBox(
       width: width,
       height: height ?? _getButtonHeight(),
       child: ElevatedButton.icon(
@@ -126,10 +125,8 @@ class AppButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildSecondaryButton(ThemeData theme) {
-    return SizedBox(
+  Widget _buildSecondaryButton(ThemeData theme) => SizedBox(
       width: width,
       height: height ?? _getButtonHeight(),
       child: OutlinedButton.icon(
@@ -142,10 +139,8 @@ class AppButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildTextButton(ThemeData theme) {
-    return SizedBox(
+  Widget _buildTextButton(ThemeData theme) => SizedBox(
       width: width,
       height: height ?? _getButtonHeight(),
       child: TextButton.icon(
@@ -158,10 +153,8 @@ class AppButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildIconButton(ThemeData theme) {
-    return SizedBox(
+  Widget _buildIconButton(ThemeData theme) => SizedBox(
       width: width ?? _getButtonHeight(),
       height: height ?? _getButtonHeight(),
       child: IconButton(
@@ -172,10 +165,8 @@ class AppButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildLoadingButton(ThemeData theme) {
-    return SizedBox(
+  Widget _buildLoadingButton(ThemeData theme) => SizedBox(
       width: width,
       height: height ?? _getButtonHeight(),
       child: ElevatedButton(
@@ -195,7 +186,6 @@ class AppButton extends StatelessWidget {
         ),
       ),
     );
-  }
 
   double _getButtonHeight() {
     switch (size) {

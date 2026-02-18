@@ -11,9 +11,7 @@ class TicketEntity with _$TicketEntity {
     required String eventId,
     required int ticketId,
     required DateTime purchasedDate,
-    String? promoCode,
-    required int quantity,
-    required String transactionId,
+    required int quantity, required String transactionId, String? promoCode,
     DateTime? createdAt,
   }) = _TicketEntity;
 

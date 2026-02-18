@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fajimobileapp/features/organize_event/presentation/viewmodels/event_creation_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,13 +22,13 @@ class CreateEventDetailsScreen extends ConsumerStatefulWidget {
 class _CreateEventDetailsScreenState
     extends ConsumerState<CreateEventDetailsScreen>
     with SingleTickerProviderStateMixin {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _websiteLinkController = TextEditingController();
-  final _rsvpButtonController =
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _websiteLinkController = TextEditingController();
+  final TextEditingController _rsvpButtonController =
       TextEditingController(text: 'Celebrate With Us');
-  final _ticketPriceController = TextEditingController();
-  final _totalSeatsController = TextEditingController();
+  final TextEditingController _ticketPriceController = TextEditingController();
+  final TextEditingController _totalSeatsController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
   bool _setDateLater = false;
@@ -50,10 +51,10 @@ class _CreateEventDetailsScreenState
       vsync: this,
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+        curve: const Interval(0, 0.6, curve: Curves.easeOut),
       ),
     );
 
@@ -63,14 +64,14 @@ class _CreateEventDetailsScreenState
     ).animate(
       CurvedAnimation(
         parent: _animationController,
-        curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic),
+        curve: const Interval(0.2, 1, curve: Curves.easeOutCubic),
       ),
     );
 
     _animationController.forward();
 
     // Load saved data if any
-    final state = ref.read(eventCreationViewModelProvider);
+    final EventCreationState state = ref.read(eventCreationViewModelProvider);
     if (state.eventData.title != null) {
       _titleController.text = state.eventData.title!;
     }
@@ -89,13 +90,12 @@ class _CreateEventDetailsScreenState
   }
 
   Future<void> _selectStartDate() async {
-    final DateTime? pickedDate = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
-      builder: (context, child) {
-        return Theme(
+      builder: (BuildContext context, Widget? child) => Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
               primary: AppColors.primary,
@@ -105,19 +105,17 @@ class _CreateEventDetailsScreenState
             ),
           ),
           child: child!,
-        );
-      },
+        ),
     );
 
     if (pickedDate != null) {
       // Now pick the time
-      final TimeOfDay? pickedTime = await showTimePicker(
+      final pickedTime = await showTimePicker(
         context: context,
         initialTime: _startDate != null 
             ? TimeOfDay.fromDateTime(_startDate!)
             : TimeOfDay.now(),
-        builder: (context, child) {
-          return Theme(
+        builder: (BuildContext context, Widget? child) => Theme(
             data: Theme.of(context).copyWith(
               colorScheme: ColorScheme.dark(
                 primary: AppColors.primary,
@@ -127,14 +125,13 @@ class _CreateEventDetailsScreenState
               ),
             ),
             child: child!,
-          );
-        },
+          ),
       );
 
       // Use picked time or default to current time if cancelled
-      final timeToUse = pickedTime ?? TimeOfDay.now();
+      final TimeOfDay timeToUse = pickedTime ?? TimeOfDay.now();
       
-      final DateTime fullDateTime = DateTime(
+      final fullDateTime = DateTime(
         pickedDate.year,
         pickedDate.month,
         pickedDate.day,
@@ -150,13 +147,12 @@ class _CreateEventDetailsScreenState
   }
 
   Future<void> _selectEndDate() async {
-    final DateTime? pickedDate = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: _endDate ?? _startDate ?? DateTime.now(),
       firstDate: _startDate ?? DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365 * 2)),
-      builder: (context, child) {
-        return Theme(
+      builder: (BuildContext context, Widget? child) => Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
               primary: AppColors.primary,
@@ -166,21 +162,19 @@ class _CreateEventDetailsScreenState
             ),
           ),
           child: child!,
-        );
-      },
+        ),
     );
 
     if (pickedDate != null) {
       // Now pick the time
-      final TimeOfDay? pickedTime = await showTimePicker(
+      final pickedTime = await showTimePicker(
         context: context,
         initialTime: _endDate != null 
             ? TimeOfDay.fromDateTime(_endDate!)
             : (_startDate != null 
                 ? TimeOfDay.fromDateTime(_startDate!.add(const Duration(hours: 2)))
                 : TimeOfDay.now()),
-        builder: (context, child) {
-          return Theme(
+        builder: (BuildContext context, Widget? child) => Theme(
             data: Theme.of(context).copyWith(
               colorScheme: ColorScheme.dark(
                 primary: AppColors.primary,
@@ -190,8 +184,7 @@ class _CreateEventDetailsScreenState
               ),
             ),
             child: child!,
-          );
-        },
+          ),
       );
 
       // Use picked time or default to 2 hours after start (or current time) if cancelled
@@ -199,13 +192,13 @@ class _CreateEventDetailsScreenState
       if (pickedTime != null) {
         timeToUse = pickedTime;
       } else if (_startDate != null) {
-        final defaultEnd = _startDate!.add(const Duration(hours: 2));
+        final DateTime defaultEnd = _startDate!.add(const Duration(hours: 2));
         timeToUse = TimeOfDay.fromDateTime(defaultEnd);
       } else {
         timeToUse = TimeOfDay.now();
       }
       
-      final DateTime fullDateTime = DateTime(
+      final fullDateTime = DateTime(
         pickedDate.year,
         pickedDate.month,
         pickedDate.day,
@@ -220,7 +213,7 @@ class _CreateEventDetailsScreenState
   }
 
   void _handleNext() {
-    final viewModel = ref.read(eventCreationViewModelProvider.notifier);
+    final EventCreationViewModel viewModel = ref.read(eventCreationViewModelProvider.notifier);
 
     // Update all fields
     viewModel.updateTitle(_titleController.text);
@@ -232,7 +225,7 @@ class _CreateEventDetailsScreenState
     if (!_isFreeEvent && _ticketPriceController.text.isNotEmpty) {
       viewModel.updateTicketPrice(double.parse(_ticketPriceController.text));
     } else {
-      viewModel.updateTicketPrice(0.0);
+      viewModel.updateTicketPrice(0);
     }
     
     if (_totalSeatsController.text.isNotEmpty) {
@@ -284,8 +277,8 @@ class _CreateEventDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(eventCreationViewModelProvider);
-    final eventType = state.eventData.eventType ?? 'Event';
+    final EventCreationState state = ref.watch(eventCreationViewModelProvider);
+    final String eventType = state.eventData.eventType ?? 'Event';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -293,12 +286,12 @@ class _CreateEventDetailsScreenState
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Column(
-            children: [
+            children: <Widget>[
               // Header with back button and progress
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Container(
                       width: 40.w,
                       height: 40.h,
@@ -318,7 +311,7 @@ class _CreateEventDetailsScreenState
                     const Expanded(
                       child: StepProgressIndicator(
                         currentStep: 1,
-                        totalSteps: 3,
+                        totalSteps: 4,
                       ),
                     ),
                   ],
@@ -331,7 +324,7 @@ class _CreateEventDetailsScreenState
                   position: _slideAnimation,
                   child: ListView(
                     padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    children: [
+                    children: <Widget>[
                       SizedBox(height: 20.h),
 
                       // Title
@@ -366,7 +359,7 @@ class _CreateEventDetailsScreenState
                         delay: 100,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Text(
                               'Give this $eventType a name',
                               style: TextStyle(
@@ -400,10 +393,10 @@ class _CreateEventDetailsScreenState
                         delay: 200,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   'Date + Time',
                                   style: TextStyle(
@@ -444,7 +437,7 @@ class _CreateEventDetailsScreenState
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      children: [
+                                      children: <Widget>[
                                         if (_setDateLater)
                                           Padding(
                                             padding: EdgeInsets.only(right: 6.w),
@@ -483,7 +476,7 @@ class _CreateEventDetailsScreenState
                                 ),
                               ),
                               child: Column(
-                                children: [
+                                children: <Widget>[
                                   _buildDateRow(
                                     label: 'Start',
                                     date: _startDate,
@@ -515,7 +508,7 @@ class _CreateEventDetailsScreenState
                         delay: 300,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Text(
                               'Event Website Link (shared with guests)',
                               style: TextStyle(
@@ -537,7 +530,7 @@ class _CreateEventDetailsScreenState
                         delay: 400,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Text(
                               'RSVP Button Title (for your event link)',
                               style: TextStyle(
@@ -559,7 +552,7 @@ class _CreateEventDetailsScreenState
                         delay: 500,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Text(
                               'Event Image (Optional)',
                               style: TextStyle(
@@ -581,7 +574,7 @@ class _CreateEventDetailsScreenState
                         delay: 600,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Text(
                               'Describe your event',
                               style: TextStyle(
@@ -603,10 +596,10 @@ class _CreateEventDetailsScreenState
                         delay: 700,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   'Ticket Information',
                                   style: TextStyle(
@@ -645,7 +638,7 @@ class _CreateEventDetailsScreenState
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      children: [
+                                      children: <Widget>[
                                         if (_isFreeEvent)
                                           Padding(
                                             padding: EdgeInsets.only(right: 6.w),
@@ -684,11 +677,11 @@ class _CreateEventDetailsScreenState
                                 ),
                               ),
                               child: Column(
-                                children: [
+                                children: <Widget>[
                                   // Ticket Price
-                                  if (!_isFreeEvent) ...[
+                                  if (!_isFreeEvent) ...<Widget>[
                                     Row(
-                                      children: [
+                                      children: <Widget>[
                                         Container(
                                           padding: EdgeInsets.all(8.w),
                                           decoration: BoxDecoration(
@@ -705,7 +698,7 @@ class _CreateEventDetailsScreenState
                                         Expanded(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
+                                            children: <Widget>[
                                               Text(
                                                 'Ticket Price',
                                                 style: TextStyle(
@@ -717,9 +710,9 @@ class _CreateEventDetailsScreenState
                                               ),
                                               SizedBox(height: 4.h),
                                               Row(
-                                                children: [
+                                                children: <Widget>[
                                                   Text(
-                                                    'NGN',
+                                                    'USD',
                                                     style: TextStyle(
                                                       fontFamily: AppTypography.modicaPro,
                                                       fontSize: 16.sp,
@@ -732,7 +725,7 @@ class _CreateEventDetailsScreenState
                                                     child: TextField(
                                                       controller: _ticketPriceController,
                                                       keyboardType: TextInputType.number,
-                                                      inputFormatters: [
+                                                      inputFormatters: <TextInputFormatter>[
                                                         FilteringTextInputFormatter.digitsOnly,
                                                       ],
                                                       style: TextStyle(
@@ -753,7 +746,7 @@ class _CreateEventDetailsScreenState
                                                         contentPadding: EdgeInsets.zero,
                                                         isDense: true,
                                                       ),
-                                                      onChanged: (value) => setState(() {}),
+                                                      onChanged: (String value) => setState(() {}),
                                                     ),
                                                   ),
                                                 ],
@@ -767,7 +760,7 @@ class _CreateEventDetailsScreenState
                                   ],
                                   // Total Seats
                                   Row(
-                                    children: [
+                                    children: <Widget>[
                                       Container(
                                         padding: EdgeInsets.all(8.w),
                                         decoration: BoxDecoration(
@@ -784,7 +777,7 @@ class _CreateEventDetailsScreenState
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
+                                          children: <Widget>[
                                             Text(
                                               'Total Tickets Available',
                                               style: TextStyle(
@@ -798,7 +791,7 @@ class _CreateEventDetailsScreenState
                                             TextField(
                                               controller: _totalSeatsController,
                                               keyboardType: TextInputType.number,
-                                              inputFormatters: [
+                                              inputFormatters: <TextInputFormatter>[
                                                 FilteringTextInputFormatter.digitsOnly,
                                               ],
                                               style: TextStyle(
@@ -819,7 +812,7 @@ class _CreateEventDetailsScreenState
                                                 contentPadding: EdgeInsets.zero,
                                                 isDense: true,
                                               ),
-                                              onChanged: (value) => setState(() {}),
+                                              onChanged: (String value) => setState(() {}),
                                             ),
                                           ],
                                         ),
@@ -846,7 +839,7 @@ class _CreateEventDetailsScreenState
                                 ],
                               ),
                             ),
-                            if (!_isFreeEvent && _ticketPriceController.text.isNotEmpty && _totalSeatsController.text.isNotEmpty) ...[
+                            if (!_isFreeEvent && _ticketPriceController.text.isNotEmpty && _totalSeatsController.text.isNotEmpty) ...<Widget>[
                               SizedBox(height: 12.h),
                               Container(
                                 padding: EdgeInsets.all(12.w),
@@ -855,7 +848,7 @@ class _CreateEventDetailsScreenState
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Row(
-                                  children: [
+                                  children: <Widget>[
                                     Icon(
                                       Icons.info_outline,
                                       color: AppColors.primary,
@@ -864,7 +857,7 @@ class _CreateEventDetailsScreenState
                                     SizedBox(width: 8.w),
                                     Expanded(
                                       child: Text(
-                                        'Potential revenue: NGN ${(int.parse(_ticketPriceController.text) * int.parse(_totalSeatsController.text)).toString()} (if all tickets sold)',
+                                        'Potential revenue: USD ${(int.parse(_ticketPriceController.text) * int.parse(_totalSeatsController.text))} (if all tickets sold)',
                                         style: TextStyle(
                                           fontFamily: AppTypography.modicaPro,
                                           fontSize: 12.sp,
@@ -890,7 +883,7 @@ class _CreateEventDetailsScreenState
                 padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 24.h),
                 decoration: BoxDecoration(
                   color: AppColors.background,
-                  boxShadow: [
+                  boxShadow: <BoxShadow>[
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 20,
@@ -899,7 +892,7 @@ class _CreateEventDetailsScreenState
                   ],
                 ),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: GestureDetector(
                         onTap: _handlePrevious,
@@ -934,7 +927,7 @@ class _CreateEventDetailsScreenState
                           decoration: BoxDecoration(
                             color: AppColors.primary,
                             borderRadius: BorderRadius.circular(28.r),
-                            boxShadow: [
+                            boxShadow: <BoxShadow>[
                               BoxShadow(
                                 color: Colors.white.withOpacity(0.3),
                                 blurRadius: 12,
@@ -966,8 +959,7 @@ class _CreateEventDetailsScreenState
     );
   }
 
-  Widget _buildAnimatedField({required int delay, required Widget child}) {
-    return TweenAnimationBuilder<double>(
+  Widget _buildAnimatedField({required int delay, required Widget child}) => TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 600 + delay),
       tween: Tween(begin: 0.0, end: 1.0),
       curve: Curves.easeOutCubic,
@@ -982,15 +974,13 @@ class _CreateEventDetailsScreenState
       },
       child: child,
     );
-  }
 
   Widget _buildStyledTextField({
     required TextEditingController controller,
     required String hintText,
     TextStyle? hintStyle,
     Widget? suffixIcon,
-  }) {
-    return Container(
+  }) => Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A), // Darker, more visible background
@@ -1033,7 +1023,6 @@ class _CreateEventDetailsScreenState
         ],
       ),
     );
-  }
 
   Widget _buildDateRow({
     required String label,
@@ -1041,8 +1030,7 @@ class _CreateEventDetailsScreenState
     required String dateLabel,
     required VoidCallback? onTap,
     required bool isStart,
-  }) {
-    return Row(
+  }) => Row(
       children: [
         Column(
           children: [
@@ -1110,17 +1098,16 @@ class _CreateEventDetailsScreenState
         ),
       ],
     );
-  }
 
   String _formatTime(DateTime dateTime) {
-    final hour = dateTime.hour > 12 ? dateTime.hour - 12 : (dateTime.hour == 0 ? 12 : dateTime.hour);
-    final minute = dateTime.minute.toString().padLeft(2, '0');
-    final period = dateTime.hour >= 12 ? 'PM' : 'AM';
+    final int hour = dateTime.hour > 12 ? dateTime.hour - 12 : (dateTime.hour == 0 ? 12 : dateTime.hour);
+    final String minute = dateTime.minute.toString().padLeft(2, '0');
+    final String period = dateTime.hour >= 12 ? 'PM' : 'AM';
     return '$hour:$minute $period';
   }
 
   Widget _buildWebsiteLinkField() {
-    final isLinkValid = _websiteLinkController.text.isNotEmpty;
+    final bool isLinkValid = _websiteLinkController.text.isNotEmpty;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -1133,9 +1120,9 @@ class _CreateEventDetailsScreenState
         ),
       ),
       child: Column(
-        children: [
+        children: <Widget>[
           Row(
-            children: [
+            children: <Widget>[
               Icon(
                 Icons.link_rounded,
                 color: const Color(0xFFFF8C42),
@@ -1174,7 +1161,7 @@ class _CreateEventDetailsScreenState
                     contentPadding: EdgeInsets.zero,
                     isDense: true,
                   ),
-                  onChanged: (value) => setState(() {}),
+                  onChanged: (String value) => setState(() {}),
                 ),
               ),
               if (isLinkValid)
@@ -1185,10 +1172,10 @@ class _CreateEventDetailsScreenState
                 ),
             ],
           ),
-          if (isLinkValid) ...[
+          if (isLinkValid) ...<Widget>[
             SizedBox(height: 12.h),
             Row(
-              children: [
+              children: <Widget>[
                 Icon(
                   Icons.check_circle,
                   color: const Color(0xFF4CAF50),
@@ -1213,7 +1200,7 @@ class _CreateEventDetailsScreenState
   }
 
   Widget _buildRSVPButtonField() {
-    final rsvpOptions = [
+    final List<String> rsvpOptions = <String>[
       'Celebrate With Us',
       'Join Us',
       'RSVP Now',
@@ -1230,11 +1217,11 @@ class _CreateEventDetailsScreenState
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
           ),
-          builder: (context) => Container(
+          builder: (BuildContext context) => Container(
             padding: EdgeInsets.symmetric(vertical: 24.h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: <Widget>[
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Text(
@@ -1248,7 +1235,7 @@ class _CreateEventDetailsScreenState
                   ),
                 ),
                 SizedBox(height: 20.h),
-                ...rsvpOptions.map((option) => ListTile(
+                ...rsvpOptions.map((String option) => ListTile(
                       title: Text(
                         option,
                         style: TextStyle(
@@ -1259,7 +1246,7 @@ class _CreateEventDetailsScreenState
                         ),
                       ),
                       trailing: _rsvpButtonController.text == option
-                          ? Icon(Icons.check, color: AppColors.primary)
+                          ? const Icon(Icons.check, color: AppColors.primary)
                           : null,
                       onTap: () {
                         setState(() {
@@ -1285,7 +1272,7 @@ class _CreateEventDetailsScreenState
           ),
         ),
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               child: Text(
                 _rsvpButtonController.text,
@@ -1308,8 +1295,7 @@ class _CreateEventDetailsScreenState
     );
   }
 
-  Widget _buildDescriptionField() {
-    return Container(
+  Widget _buildDescriptionField() => Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: const Color(0xFF2A2A2A),
@@ -1399,11 +1385,9 @@ class _CreateEventDetailsScreenState
         ],
       ),
     );
-  }
 
   // NEW: Image upload widget
-  Widget _buildImageUploadField() {
-    return GestureDetector(
+  Widget _buildImageUploadField() => GestureDetector(
       onTap: _isUploadingImage ? null : _pickAndUploadImage,
       child: Container(
         height: 200.h,
@@ -1537,22 +1521,21 @@ class _CreateEventDetailsScreenState
               ),
       ),
     );
-  }
 
   // NEW: Pick and upload image method
   Future<void> _pickAndUploadImage() async {
     // Show options: Gallery or Camera
-    final source = await showModalBottomSheet<ImageSource>(
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
       context: context,
       backgroundColor: const Color(0xFF1A1A1A),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      builder: (context) => Container(
+      builder: (BuildContext context) => Container(
         padding: EdgeInsets.all(20.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             Text(
               'Choose Image Source',
               style: TextStyle(
@@ -1570,7 +1553,7 @@ class _CreateEventDetailsScreenState
                   color: AppColors.primary.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Icon(Icons.photo_library, color: AppColors.primary),
+                child: const Icon(Icons.photo_library, color: AppColors.primary),
               ),
               title: Text(
                 'Choose from Gallery',
@@ -1591,7 +1574,7 @@ class _CreateEventDetailsScreenState
                   color: AppColors.primary.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Icon(Icons.camera_alt, color: AppColors.primary),
+                child: const Icon(Icons.camera_alt, color: AppColors.primary),
               ),
               title: Text(
                 'Take Photo',
@@ -1618,10 +1601,10 @@ class _CreateEventDetailsScreenState
     });
 
     try {
-      final imageUploadService = ref.read(imageUploadServiceProvider);
+      final ImageUploadService imageUploadService = ref.read(imageUploadServiceProvider);
       
       // Pick image
-      final file = source == ImageSource.gallery
+      final File? file = source == ImageSource.gallery
           ? await imageUploadService.pickImageFromGallery()
           : await imageUploadService.pickImageFromCamera();
 
@@ -1631,7 +1614,7 @@ class _CreateEventDetailsScreenState
       }
 
       // Upload to backend (which uploads to Cloudinary)
-      final imageUrl = await imageUploadService.uploadEventImage(file);
+      final String imageUrl = await imageUploadService.uploadEventImage(file);
 
       // Save to viewmodel
       ref.read(eventCreationViewModelProvider.notifier).updateImageUrl(imageUrl);
@@ -1646,8 +1629,8 @@ class _CreateEventDetailsScreenState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white),
+              children: <Widget>[
+                const Icon(Icons.check_circle, color: Colors.white),
                 SizedBox(width: 12.w),
                 const Text('Image uploaded successfully!'),
               ],
@@ -1669,13 +1652,12 @@ class _CreateEventDetailsScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to upload image: ${e.toString()}'),
+            content: Text('Failed to upload image: ${e}'),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.r),
             ),
-            duration: const Duration(seconds: 4),
           ),
         );
       }

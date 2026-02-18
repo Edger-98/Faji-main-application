@@ -1,16 +1,18 @@
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/routing/route_manager.dart';
-import '../../../../core/services/location_service.dart';
-import '../../domain/entities/event_entity.dart';
-import '../viewmodels/search_viewmodel.dart';
-import '../widgets/event_search_bar.dart';
-import '../widgets/event_list.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/services/location_service.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/search_viewmodel.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_search_bar.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_list.dart';
 
 /// Search Events Screen
 class SearchScreen extends ConsumerStatefulWidget {
@@ -21,9 +23,9 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
-  final _searchController = TextEditingController();
-  final List<String> _recentSearches = [];
-  final List<String> _popularSearches = [
+  final TextEditingController _searchController = TextEditingController();
+  final List<String> _recentSearches = <String>[];
+  final List<String> _popularSearches = <String>[
     'Music concerts',
     'Tech conferences',
     'Food festivals',
@@ -50,7 +52,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Future<void> _getUserLocation() async {
     setState(() => _isLoadingLocation = true);
     
-    final position = await LocationService.getCurrentLocation();
+    final Position? position = await LocationService.getCurrentLocation();
     
     if (mounted) {
       setState(() {
@@ -66,16 +68,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   List<EventEntity> _sortEventsByDistance(List<EventEntity> events) {
     if (_userLocation == null || !_sortByDistance) return events;
     
-    final sortedEvents = List<EventEntity>.from(events);
-    sortedEvents.sort((a, b) {
-      final distA = LocationService.calculateDistance(
+    final List<EventEntity> sortedEvents = List<EventEntity>.from(events);
+    sortedEvents.sort((EventEntity a, EventEntity b) {
+      final double distA = LocationService.calculateDistance(
         _userLocation!.latitude,
         _userLocation!.longitude,
         a.latitude,
         a.longitude,
       );
       
-      final distB = LocationService.calculateDistance(
+      final double distB = LocationService.calculateDistance(
         _userLocation!.latitude,
         _userLocation!.longitude,
         b.latitude,
@@ -104,7 +106,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       // Debounce search
       Future.delayed(const Duration(milliseconds: 500), () {
         if (_searchController.text == query) {
-          ref.read(searchViewModelProvider.notifier).search(query);
+          ref.read(searchViewModelProvider.notifier).search(
+            query: query,
+            limit: 20,
+          );
         }
       });
     } else {
@@ -114,7 +119,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _onSearchSubmitted(String query) {
     if (query.trim().isNotEmpty) {
-      ref.read(searchViewModelProvider.notifier).search(query);
+      ref.read(searchViewModelProvider.notifier).search(
+        query: query,
+        limit: 20,
+      );
       
       // Add to recent searches
       if (!_recentSearches.contains(query)) {
@@ -144,7 +152,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final searchState = ref.watch(searchViewModelProvider);
+    final BaseState<List<EventEntity>> searchState = ref.watch(searchViewModelProvider);
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -159,7 +167,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           autofocus: true,
           hintText: 'Search events, hosts, locations...',
         ),
-        actions: [
+        actions: <Widget>[
           if (_userLocation != null)
             IconButton(
               icon: Icon(
@@ -194,27 +202,27 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         ],
       ),
       body: searchState.when(
-        initial: () => _buildSuggestions(),
-        loading: () => EventList(
-          events: const [],
+        initial: _buildSuggestions,
+        loading: () => const EventList(
+          events: <EventEntity>[],
           isLoading: true,
           isGridView: false,
         ),
-        success: (events) {
+        success: (List<EventEntity> events) {
           if (events.isEmpty && _searchController.text.isNotEmpty) {
             return _buildNoResults();
           }
           
-          final sortedEvents = _sortEventsByDistance(events);
+          final List<EventEntity> sortedEvents = _sortEventsByDistance(events);
           
           return Column(
-            children: [
+            children: <Widget>[
               if (_userLocation != null && _sortByDistance)
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   color: context.colors.primary.withValues(alpha: 0.1),
                   child: Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.location_on,
                         size: 16.sp,
@@ -240,10 +248,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ],
           );
         },
-        error: (failure) => Center(
+        error: (Failure failure) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Icon(
                 Icons.error_outline,
                 size: 48.sp,
@@ -260,7 +268,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 onPressed: () {
                   if (_searchController.text.isNotEmpty) {
                     ref.read(searchViewModelProvider.notifier)
-                        .search(_searchController.text);
+                        .search(
+                          query: _searchController.text,
+                          limit: 20,
+                        );
                   }
                 },
                 child: const Text('Retry'),
@@ -272,8 +283,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  Widget _buildSuggestions() {
-    return SingleChildScrollView(
+  Widget _buildSuggestions() => SingleChildScrollView(
       padding: EdgeInsets.all(16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,10 +333,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         ],
       ),
     );
-  }
 
-  Widget _buildSuggestionTile(String text, IconData icon, VoidCallback onTap) {
-    return ListTile(
+  Widget _buildSuggestionTile(String text, IconData icon, VoidCallback onTap) => ListTile(
       leading: Icon(
         icon,
         color: context.colors.onSurfaceVariant,
@@ -339,10 +347,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       onTap: onTap,
       contentPadding: EdgeInsets.zero,
     );
-  }
 
-  Widget _buildNoResults() {
-    return Center(
+  Widget _buildNoResults() => Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
         child: Column(
@@ -369,5 +375,4 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         ),
       ),
     );
-  }
 }

@@ -1,8 +1,5 @@
 /// Result wrapper for API calls
 class ApiResult<T> {
-  final T? data;
-  final String? error;
-  final bool isSuccess;
 
   const ApiResult._({
     this.data,
@@ -25,6 +22,9 @@ class ApiResult<T> {
       isSuccess: false,
     );
   }
+  final T? data;
+  final String? error;
+  final bool isSuccess;
 
   /// Execute different callbacks based on result
   R when<R>({

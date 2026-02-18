@@ -8,35 +8,31 @@ abstract class NetworkInfo {
 }
 
 class NetworkInfoImpl implements NetworkInfo {
-  final Connectivity connectivity;
 
   NetworkInfoImpl(this.connectivity);
+  final Connectivity connectivity;
 
   @override
   Future<bool> get isConnected async {
-    final result = await connectivity.checkConnectivity();
+    final List<ConnectivityResult> result = await connectivity.checkConnectivity();
     return result.contains(ConnectivityResult.mobile) ||
         result.contains(ConnectivityResult.wifi) ||
         result.contains(ConnectivityResult.ethernet);
   }
 
   @override
-  Stream<bool> get onConnectivityChanged {
-    return connectivity.onConnectivityChanged.map((results) {
+  Stream<bool> get onConnectivityChanged => connectivity.onConnectivityChanged.map((results) {
       return results.contains(ConnectivityResult.mobile) ||
           results.contains(ConnectivityResult.wifi) ||
           results.contains(ConnectivityResult.ethernet);
     });
-  }
 }
 
 /// Provider for network info
-final networkInfoProvider = Provider<NetworkInfo>((ref) {
-  return NetworkInfoImpl(Connectivity());
-});
+final Provider<NetworkInfo> networkInfoProvider = Provider<NetworkInfo>((ProviderRef<NetworkInfo> ref) => NetworkInfoImpl(Connectivity()));
 
 /// Provider to check current connectivity status
-final connectivityStatusProvider = StreamProvider<bool>((ref) {
-  final networkInfo = ref.watch(networkInfoProvider);
+final StreamProvider<bool> connectivityStatusProvider = StreamProvider<bool>((StreamProviderRef<bool> ref) {
+  final NetworkInfo networkInfo = ref.watch(networkInfoProvider);
   return networkInfo.onConnectivityChanged;
 });

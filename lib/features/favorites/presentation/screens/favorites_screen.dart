@@ -5,7 +5,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/presentation/widgets/common/app_bottom_nav.dart';
 import 'package:fajimobileapp/presentation/widgets/common/empty_state.dart';
 import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
-import 'package:fajimobileapp/presentation/widgets/common/event_card_shimmer.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -17,7 +16,7 @@ class FavoritesScreen extends StatefulWidget {
 class _FavoritesScreenState extends State<FavoritesScreen> {
   bool _showEvents = true;
   bool _isLoading = false;
-  List<String> _favoriteEvents = ['event1', 'event2']; // Mock data
+  final List<String> _favoriteEvents = <String>['event1', 'event2']; // Mock data
 
   Future<void> _refreshFavorites() async {
     HapticFeedback.lightImpact();
@@ -28,8 +27,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -122,7 +120,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       itemCount: 3,
                       itemBuilder: (context, index) => Padding(
                         padding: EdgeInsets.only(bottom: index < 2 ? 14 : 0),
-                        child: const EventCardShimmer(),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
                     )
                   : _favoriteEvents.isEmpty
@@ -155,10 +157,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       // Bottom Navigation
       bottomNavigationBar: const AppBottomNav(currentIndex: 1),
     );
-  }
 
-  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
-    return GestureDetector(
+  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) => GestureDetector(
       onTap: onTap,
       child: Container(
         height: 33,
@@ -178,10 +178,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildEventCard(BuildContext context, {required bool isLive}) {
-    return Container(
+  Widget _buildEventCard(BuildContext context, {required bool isLive}) => Container(
       height: 295,
       decoration: BoxDecoration(
         color: AppColors.eventCardBlue,
@@ -330,5 +328,4 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ],
       ),
     );
-  }
 }

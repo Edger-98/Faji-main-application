@@ -5,16 +5,15 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Hero banner for featured content
 class HeroBanner extends StatelessWidget {
-  final VoidCallback? onTap;
 
   const HeroBanner({
     super.key,
     this.onTap,
   });
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 24.w),
@@ -163,18 +162,17 @@ class HeroBanner extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
 class _DotPatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final Paint paint = Paint()
       ..color = Colors.white.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
-    const spacing = 20.0;
-    const dotRadius = 2.0;
+    const double spacing = 20.0;
+    const double dotRadius = 2.0;
 
     for (double x = 0; x < size.width; x += spacing) {
       for (double y = 0; y < size.height; y += spacing) {

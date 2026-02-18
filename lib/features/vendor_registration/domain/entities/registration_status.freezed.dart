@@ -26,8 +26,8 @@ mixin _$RegistrationStatus {
   bool get documentsUploaded => throw _privateConstructorUsedError;
   bool get portfolioUploaded => throw _privateConstructorUsedError;
   bool get bankDetailsAdded => throw _privateConstructorUsedError;
-  String? get rejectionReason => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
+  String? get rejectionReason => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
@@ -36,8 +36,8 @@ mixin _$RegistrationStatus {
       bool documentsUploaded,
       bool portfolioUploaded,
       bool bankDetailsAdded,
-      String? rejectionReason,
       String updatedAt,
+      String? rejectionReason,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -49,8 +49,8 @@ mixin _$RegistrationStatus {
       bool documentsUploaded,
       bool portfolioUploaded,
       bool bankDetailsAdded,
-      String? rejectionReason,
       String updatedAt,
+      String? rejectionReason,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -62,8 +62,8 @@ mixin _$RegistrationStatus {
       bool documentsUploaded,
       bool portfolioUploaded,
       bool bankDetailsAdded,
-      String? rejectionReason,
       String updatedAt,
+      String? rejectionReason,
     )?
     $default, {
     required TResult orElse(),
@@ -105,8 +105,8 @@ abstract class $RegistrationStatusCopyWith<$Res> {
     bool documentsUploaded,
     bool portfolioUploaded,
     bool bankDetailsAdded,
-    String? rejectionReason,
     String updatedAt,
+    String? rejectionReason,
   });
 }
 
@@ -130,8 +130,8 @@ class _$RegistrationStatusCopyWithImpl<$Res, $Val extends RegistrationStatus>
     Object? documentsUploaded = null,
     Object? portfolioUploaded = null,
     Object? bankDetailsAdded = null,
-    Object? rejectionReason = freezed,
     Object? updatedAt = null,
+    Object? rejectionReason = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -155,14 +155,14 @@ class _$RegistrationStatusCopyWithImpl<$Res, $Val extends RegistrationStatus>
                 ? _value.bankDetailsAdded
                 : bankDetailsAdded // ignore: cast_nullable_to_non_nullable
                       as bool,
-            rejectionReason: freezed == rejectionReason
-                ? _value.rejectionReason
-                : rejectionReason // ignore: cast_nullable_to_non_nullable
-                      as String?,
             updatedAt: null == updatedAt
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
                       as String,
+            rejectionReason: freezed == rejectionReason
+                ? _value.rejectionReason
+                : rejectionReason // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -184,8 +184,8 @@ abstract class _$$RegistrationStatusImplCopyWith<$Res>
     bool documentsUploaded,
     bool portfolioUploaded,
     bool bankDetailsAdded,
-    String? rejectionReason,
     String updatedAt,
+    String? rejectionReason,
   });
 }
 
@@ -208,8 +208,8 @@ class __$$RegistrationStatusImplCopyWithImpl<$Res>
     Object? documentsUploaded = null,
     Object? portfolioUploaded = null,
     Object? bankDetailsAdded = null,
-    Object? rejectionReason = freezed,
     Object? updatedAt = null,
+    Object? rejectionReason = freezed,
   }) {
     return _then(
       _$RegistrationStatusImpl(
@@ -233,14 +233,14 @@ class __$$RegistrationStatusImplCopyWithImpl<$Res>
             ? _value.bankDetailsAdded
             : bankDetailsAdded // ignore: cast_nullable_to_non_nullable
                   as bool,
-        rejectionReason: freezed == rejectionReason
-            ? _value.rejectionReason
-            : rejectionReason // ignore: cast_nullable_to_non_nullable
-                  as String?,
         updatedAt: null == updatedAt
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        rejectionReason: freezed == rejectionReason
+            ? _value.rejectionReason
+            : rejectionReason // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -255,8 +255,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
     required this.documentsUploaded,
     required this.portfolioUploaded,
     required this.bankDetailsAdded,
-    this.rejectionReason,
     required this.updatedAt,
+    this.rejectionReason,
   });
 
   factory _$RegistrationStatusImpl.fromJson(Map<String, dynamic> json) =>
@@ -273,13 +273,13 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
   @override
   final bool bankDetailsAdded;
   @override
-  final String? rejectionReason;
-  @override
   final String updatedAt;
+  @override
+  final String? rejectionReason;
 
   @override
   String toString() {
-    return 'RegistrationStatus(status: $status, isApproved: $isApproved, documentsUploaded: $documentsUploaded, portfolioUploaded: $portfolioUploaded, bankDetailsAdded: $bankDetailsAdded, rejectionReason: $rejectionReason, updatedAt: $updatedAt)';
+    return 'RegistrationStatus(status: $status, isApproved: $isApproved, documentsUploaded: $documentsUploaded, portfolioUploaded: $portfolioUploaded, bankDetailsAdded: $bankDetailsAdded, updatedAt: $updatedAt, rejectionReason: $rejectionReason)';
   }
 
   @override
@@ -296,10 +296,10 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
                 other.portfolioUploaded == portfolioUploaded) &&
             (identical(other.bankDetailsAdded, bankDetailsAdded) ||
                 other.bankDetailsAdded == bankDetailsAdded) &&
-            (identical(other.rejectionReason, rejectionReason) ||
-                other.rejectionReason == rejectionReason) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.rejectionReason, rejectionReason) ||
+                other.rejectionReason == rejectionReason));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -311,8 +311,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
     documentsUploaded,
     portfolioUploaded,
     bankDetailsAdded,
-    rejectionReason,
     updatedAt,
+    rejectionReason,
   );
 
   /// Create a copy of RegistrationStatus
@@ -335,8 +335,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
       bool documentsUploaded,
       bool portfolioUploaded,
       bool bankDetailsAdded,
-      String? rejectionReason,
       String updatedAt,
+      String? rejectionReason,
     )
     $default,
   ) {
@@ -346,8 +346,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
       documentsUploaded,
       portfolioUploaded,
       bankDetailsAdded,
-      rejectionReason,
       updatedAt,
+      rejectionReason,
     );
   }
 
@@ -360,8 +360,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
       bool documentsUploaded,
       bool portfolioUploaded,
       bool bankDetailsAdded,
-      String? rejectionReason,
       String updatedAt,
+      String? rejectionReason,
     )?
     $default,
   ) {
@@ -371,8 +371,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
       documentsUploaded,
       portfolioUploaded,
       bankDetailsAdded,
-      rejectionReason,
       updatedAt,
+      rejectionReason,
     );
   }
 
@@ -385,8 +385,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
       bool documentsUploaded,
       bool portfolioUploaded,
       bool bankDetailsAdded,
-      String? rejectionReason,
       String updatedAt,
+      String? rejectionReason,
     )?
     $default, {
     required TResult orElse(),
@@ -398,8 +398,8 @@ class _$RegistrationStatusImpl implements _RegistrationStatus {
         documentsUploaded,
         portfolioUploaded,
         bankDetailsAdded,
-        rejectionReason,
         updatedAt,
+        rejectionReason,
       );
     }
     return orElse();
@@ -446,8 +446,8 @@ abstract class _RegistrationStatus implements RegistrationStatus {
     required final bool documentsUploaded,
     required final bool portfolioUploaded,
     required final bool bankDetailsAdded,
-    final String? rejectionReason,
     required final String updatedAt,
+    final String? rejectionReason,
   }) = _$RegistrationStatusImpl;
 
   factory _RegistrationStatus.fromJson(Map<String, dynamic> json) =
@@ -464,9 +464,9 @@ abstract class _RegistrationStatus implements RegistrationStatus {
   @override
   bool get bankDetailsAdded;
   @override
-  String? get rejectionReason;
-  @override
   String get updatedAt;
+  @override
+  String? get rejectionReason;
 
   /// Create a copy of RegistrationStatus
   /// with the given fields replaced by the non-null parameter values.
@@ -490,13 +490,13 @@ mixin _$VendorRegistrationProfile {
   String get bio => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
   String get phoneNumber => throw _privateConstructorUsedError;
-  String? get website => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   List<String> get documents => throw _privateConstructorUsedError;
   List<String> get portfolio => throw _privateConstructorUsedError;
-  BankDetailsResponse? get bankDetails => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
+  String? get website => throw _privateConstructorUsedError;
+  BankDetailsResponse? get bankDetails => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
@@ -506,13 +506,13 @@ mixin _$VendorRegistrationProfile {
       String bio,
       String location,
       String phoneNumber,
-      String? website,
       String status,
       List<String> documents,
       List<String> portfolio,
-      BankDetailsResponse? bankDetails,
       String createdAt,
       String updatedAt,
+      String? website,
+      BankDetailsResponse? bankDetails,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -525,13 +525,13 @@ mixin _$VendorRegistrationProfile {
       String bio,
       String location,
       String phoneNumber,
-      String? website,
       String status,
       List<String> documents,
       List<String> portfolio,
-      BankDetailsResponse? bankDetails,
       String createdAt,
       String updatedAt,
+      String? website,
+      BankDetailsResponse? bankDetails,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -544,13 +544,13 @@ mixin _$VendorRegistrationProfile {
       String bio,
       String location,
       String phoneNumber,
-      String? website,
       String status,
       List<String> documents,
       List<String> portfolio,
-      BankDetailsResponse? bankDetails,
       String createdAt,
       String updatedAt,
+      String? website,
+      BankDetailsResponse? bankDetails,
     )?
     $default, {
     required TResult orElse(),
@@ -593,13 +593,13 @@ abstract class $VendorRegistrationProfileCopyWith<$Res> {
     String bio,
     String location,
     String phoneNumber,
-    String? website,
     String status,
     List<String> documents,
     List<String> portfolio,
-    BankDetailsResponse? bankDetails,
     String createdAt,
     String updatedAt,
+    String? website,
+    BankDetailsResponse? bankDetails,
   });
 
   $BankDetailsResponseCopyWith<$Res>? get bankDetails;
@@ -629,13 +629,13 @@ class _$VendorRegistrationProfileCopyWithImpl<
     Object? bio = null,
     Object? location = null,
     Object? phoneNumber = null,
-    Object? website = freezed,
     Object? status = null,
     Object? documents = null,
     Object? portfolio = null,
-    Object? bankDetails = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? website = freezed,
+    Object? bankDetails = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -663,10 +663,6 @@ class _$VendorRegistrationProfileCopyWithImpl<
                 ? _value.phoneNumber
                 : phoneNumber // ignore: cast_nullable_to_non_nullable
                       as String,
-            website: freezed == website
-                ? _value.website
-                : website // ignore: cast_nullable_to_non_nullable
-                      as String?,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
@@ -679,10 +675,6 @@ class _$VendorRegistrationProfileCopyWithImpl<
                 ? _value.portfolio
                 : portfolio // ignore: cast_nullable_to_non_nullable
                       as List<String>,
-            bankDetails: freezed == bankDetails
-                ? _value.bankDetails
-                : bankDetails // ignore: cast_nullable_to_non_nullable
-                      as BankDetailsResponse?,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -691,6 +683,14 @@ class _$VendorRegistrationProfileCopyWithImpl<
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
                       as String,
+            website: freezed == website
+                ? _value.website
+                : website // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            bankDetails: freezed == bankDetails
+                ? _value.bankDetails
+                : bankDetails // ignore: cast_nullable_to_non_nullable
+                      as BankDetailsResponse?,
           )
           as $Val,
     );
@@ -727,13 +727,13 @@ abstract class _$$VendorRegistrationProfileImplCopyWith<$Res>
     String bio,
     String location,
     String phoneNumber,
-    String? website,
     String status,
     List<String> documents,
     List<String> portfolio,
-    BankDetailsResponse? bankDetails,
     String createdAt,
     String updatedAt,
+    String? website,
+    BankDetailsResponse? bankDetails,
   });
 
   @override
@@ -764,13 +764,13 @@ class __$$VendorRegistrationProfileImplCopyWithImpl<$Res>
     Object? bio = null,
     Object? location = null,
     Object? phoneNumber = null,
-    Object? website = freezed,
     Object? status = null,
     Object? documents = null,
     Object? portfolio = null,
-    Object? bankDetails = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? website = freezed,
+    Object? bankDetails = freezed,
   }) {
     return _then(
       _$VendorRegistrationProfileImpl(
@@ -798,10 +798,6 @@ class __$$VendorRegistrationProfileImplCopyWithImpl<$Res>
             ? _value.phoneNumber
             : phoneNumber // ignore: cast_nullable_to_non_nullable
                   as String,
-        website: freezed == website
-            ? _value.website
-            : website // ignore: cast_nullable_to_non_nullable
-                  as String?,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
@@ -814,10 +810,6 @@ class __$$VendorRegistrationProfileImplCopyWithImpl<$Res>
             ? _value._portfolio
             : portfolio // ignore: cast_nullable_to_non_nullable
                   as List<String>,
-        bankDetails: freezed == bankDetails
-            ? _value.bankDetails
-            : bankDetails // ignore: cast_nullable_to_non_nullable
-                  as BankDetailsResponse?,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -826,6 +818,14 @@ class __$$VendorRegistrationProfileImplCopyWithImpl<$Res>
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        website: freezed == website
+            ? _value.website
+            : website // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        bankDetails: freezed == bankDetails
+            ? _value.bankDetails
+            : bankDetails // ignore: cast_nullable_to_non_nullable
+                  as BankDetailsResponse?,
       ),
     );
   }
@@ -841,13 +841,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
     required this.bio,
     required this.location,
     required this.phoneNumber,
-    this.website,
     required this.status,
     required final List<String> documents,
     required final List<String> portfolio,
-    this.bankDetails,
     required this.createdAt,
     required this.updatedAt,
+    this.website,
+    this.bankDetails,
   }) : _documents = documents,
        _portfolio = portfolio;
 
@@ -867,8 +867,6 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
   @override
   final String phoneNumber;
   @override
-  final String? website;
-  @override
   final String status;
   final List<String> _documents;
   @override
@@ -887,15 +885,17 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
   }
 
   @override
-  final BankDetailsResponse? bankDetails;
-  @override
   final String createdAt;
   @override
   final String updatedAt;
+  @override
+  final String? website;
+  @override
+  final BankDetailsResponse? bankDetails;
 
   @override
   String toString() {
-    return 'VendorRegistrationProfile(id: $id, businessName: $businessName, category: $category, bio: $bio, location: $location, phoneNumber: $phoneNumber, website: $website, status: $status, documents: $documents, portfolio: $portfolio, bankDetails: $bankDetails, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'VendorRegistrationProfile(id: $id, businessName: $businessName, category: $category, bio: $bio, location: $location, phoneNumber: $phoneNumber, status: $status, documents: $documents, portfolio: $portfolio, createdAt: $createdAt, updatedAt: $updatedAt, website: $website, bankDetails: $bankDetails)';
   }
 
   @override
@@ -913,7 +913,6 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
                 other.location == location) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
-            (identical(other.website, website) || other.website == website) &&
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality().equals(
               other._documents,
@@ -923,12 +922,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
               other._portfolio,
               _portfolio,
             ) &&
-            (identical(other.bankDetails, bankDetails) ||
-                other.bankDetails == bankDetails) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.website, website) || other.website == website) &&
+            (identical(other.bankDetails, bankDetails) ||
+                other.bankDetails == bankDetails));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -941,13 +941,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
     bio,
     location,
     phoneNumber,
-    website,
     status,
     const DeepCollectionEquality().hash(_documents),
     const DeepCollectionEquality().hash(_portfolio),
-    bankDetails,
     createdAt,
     updatedAt,
+    website,
+    bankDetails,
   );
 
   /// Create a copy of VendorRegistrationProfile
@@ -971,13 +971,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
       String bio,
       String location,
       String phoneNumber,
-      String? website,
       String status,
       List<String> documents,
       List<String> portfolio,
-      BankDetailsResponse? bankDetails,
       String createdAt,
       String updatedAt,
+      String? website,
+      BankDetailsResponse? bankDetails,
     )
     $default,
   ) {
@@ -988,13 +988,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
       bio,
       location,
       phoneNumber,
-      website,
       status,
       documents,
       portfolio,
-      bankDetails,
       createdAt,
       updatedAt,
+      website,
+      bankDetails,
     );
   }
 
@@ -1008,13 +1008,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
       String bio,
       String location,
       String phoneNumber,
-      String? website,
       String status,
       List<String> documents,
       List<String> portfolio,
-      BankDetailsResponse? bankDetails,
       String createdAt,
       String updatedAt,
+      String? website,
+      BankDetailsResponse? bankDetails,
     )?
     $default,
   ) {
@@ -1025,13 +1025,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
       bio,
       location,
       phoneNumber,
-      website,
       status,
       documents,
       portfolio,
-      bankDetails,
       createdAt,
       updatedAt,
+      website,
+      bankDetails,
     );
   }
 
@@ -1045,13 +1045,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
       String bio,
       String location,
       String phoneNumber,
-      String? website,
       String status,
       List<String> documents,
       List<String> portfolio,
-      BankDetailsResponse? bankDetails,
       String createdAt,
       String updatedAt,
+      String? website,
+      BankDetailsResponse? bankDetails,
     )?
     $default, {
     required TResult orElse(),
@@ -1064,13 +1064,13 @@ class _$VendorRegistrationProfileImpl implements _VendorRegistrationProfile {
         bio,
         location,
         phoneNumber,
-        website,
         status,
         documents,
         portfolio,
-        bankDetails,
         createdAt,
         updatedAt,
+        website,
+        bankDetails,
       );
     }
     return orElse();
@@ -1118,13 +1118,13 @@ abstract class _VendorRegistrationProfile implements VendorRegistrationProfile {
     required final String bio,
     required final String location,
     required final String phoneNumber,
-    final String? website,
     required final String status,
     required final List<String> documents,
     required final List<String> portfolio,
-    final BankDetailsResponse? bankDetails,
     required final String createdAt,
     required final String updatedAt,
+    final String? website,
+    final BankDetailsResponse? bankDetails,
   }) = _$VendorRegistrationProfileImpl;
 
   factory _VendorRegistrationProfile.fromJson(Map<String, dynamic> json) =
@@ -1143,19 +1143,19 @@ abstract class _VendorRegistrationProfile implements VendorRegistrationProfile {
   @override
   String get phoneNumber;
   @override
-  String? get website;
-  @override
   String get status;
   @override
   List<String> get documents;
   @override
   List<String> get portfolio;
   @override
-  BankDetailsResponse? get bankDetails;
-  @override
   String get createdAt;
   @override
   String get updatedAt;
+  @override
+  String? get website;
+  @override
+  BankDetailsResponse? get bankDetails;
 
   /// Create a copy of VendorRegistrationProfile
   /// with the given fields replaced by the non-null parameter values.

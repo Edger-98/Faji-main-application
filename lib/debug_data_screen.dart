@@ -1,3 +1,6 @@
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
@@ -12,7 +15,7 @@ class DebugDataScreen extends ConsumerStatefulWidget {
 }
 
 class _DebugDataScreenState extends ConsumerState<DebugDataScreen> {
-  Map<String, dynamic> _debugInfo = {};
+  Map<String, dynamic> _debugInfo = <String, dynamic>{};
 
   @override
   void initState() {
@@ -21,17 +24,17 @@ class _DebugDataScreenState extends ConsumerState<DebugDataScreen> {
   }
 
   Future<void> _loadDebugInfo() async {
-    final authRepo = ref.read(authRepositoryProvider);
-    final localDataSource = ref.read(authLocalDataSourceProvider);
+    final AuthRepository authRepo = ref.read(authRepositoryProvider);
+    final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
     
-    final isLoggedIn = await authRepo.isLoggedIn();
-    final userId = await authRepo.getUserId();
-    final token = await authRepo.getToken();
-    final userData = await localDataSource.getUserData();
-    final currentUser = ref.read(currentUserProvider);
+    final bool isLoggedIn = await authRepo.isLoggedIn();
+    final String? userId = await authRepo.getUserId();
+    final String? token = await authRepo.getToken();
+    final Map<String, String?> userData = await localDataSource.getUserData();
+    final UserEntity? currentUser = ref.read(currentUserProvider);
     
     setState(() {
-      _debugInfo = {
+      _debugInfo = <String, dynamic>{
         'Is Logged In': isLoggedIn,
         'User ID': userId ?? 'null',
         'Token': token != null ? '${token.substring(0, 20)}...' : 'null',
@@ -47,15 +50,14 @@ class _DebugDataScreenState extends ConsumerState<DebugDataScreen> {
     });
     
     print('=== DEBUG INFO ===');
-    _debugInfo.forEach((key, value) {
+    _debugInfo.forEach((String key, value) {
       print('$key: $value');
     });
     print('==================');
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: const Text('Debug Data'),
         actions: [
@@ -110,5 +112,4 @@ class _DebugDataScreenState extends ConsumerState<DebugDataScreen> {
         ],
       ),
     );
-  }
 }

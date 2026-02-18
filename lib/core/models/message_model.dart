@@ -1,12 +1,4 @@
 class MessageModel {
-  final String id;
-  final String type;
-  final String content;
-  final String? senderId;
-  final String senderName;
-  final String? senderAvatar;
-  final DateTime timestamp;
-  final bool isRead;
 
   MessageModel({
     required this.id,
@@ -31,9 +23,16 @@ class MessageModel {
       isRead: json['isRead'] as bool? ?? false,
     );
   }
+  final String id;
+  final String type;
+  final String content;
+  final String? senderId;
+  final String senderName;
+  final String? senderAvatar;
+  final DateTime timestamp;
+  final bool isRead;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'type': type,
       'content': content,
@@ -43,5 +42,4 @@ class MessageModel {
       'timestamp': timestamp.toIso8601String(),
       'isRead': isRead,
     };
-  }
 }

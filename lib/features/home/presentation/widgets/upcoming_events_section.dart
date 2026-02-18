@@ -16,13 +16,14 @@ class UpcomingEventsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final upcomingEvents = ref.watch(upcomingEventsProvider);
+    final AsyncValue<List<EventEntity>> upcomingEvents = ref.watch(upcomingEventsProvider);
+    final String? selectedCategory = ref.watch(selectedCategoryProvider);
 
     return Column(
-      children: [
+      children: <Widget>[
         SectionHeader(
           title: 'Upcoming Events',
-          subtitle: 'Don\'t miss out on these',
+          subtitle: "Don't miss out on these",
           onViewAll: () {
             context.push(RouteManager.eventsList);
           },
@@ -31,14 +32,21 @@ class UpcomingEventsSection extends ConsumerWidget {
         SizedBox(
           height: 280.h,
           child: upcomingEvents.when(
-            data: (events) {
+            data: (List<EventEntity> events) {
+              // If no events and a category is selected, show category-specific empty state
+              if (events.isEmpty && selectedCategory != null) {
+                return _buildCategoryEmptyState(context, selectedCategory);
+              }
+              
+              // If no events and "All" is selected, show general empty state
               if (events.isEmpty) {
                 return _buildEmptyState(context);
               }
+              
               return _buildEventsList(context, events);
             },
             loading: () => _buildLoadingState(context),
-            error: (error, stack) => _buildErrorState(context, ref),
+            error: (Object error, StackTrace stack) => _buildErrorState(context, ref),
           ),
         ),
       ],
@@ -46,15 +54,15 @@ class UpcomingEventsSection extends ConsumerWidget {
   }
 
   Widget _buildEventsList(BuildContext context, List<EventEntity> events) {
-    final months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    final List<String> months = <String>['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     return ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
       itemCount: events.length,
-      separatorBuilder: (context, index) => SizedBox(width: 12.w),
-      itemBuilder: (context, index) {
-        final event = events[index];
+      separatorBuilder: (BuildContext context, int index) => SizedBox(width: 12.w),
+      itemBuilder: (BuildContext context, int index) {
+        final EventEntity event = events[index];
         return UpcomingEventCard(
           imageUrl: event.displayImageUrl,
           month: months[event.startDate.month - 1],
@@ -71,17 +79,14 @@ class UpcomingEventsSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoadingState(BuildContext context) {
-    return Center(
+  Widget _buildLoadingState(BuildContext context) => Center(
       child: CircularProgressIndicator(
         color: context.colors.primary,
         strokeWidth: 3,
       ),
     );
-  }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
+  Widget _buildEmptyState(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: Column(
@@ -119,10 +124,54 @@ class UpcomingEventsSection extends ConsumerWidget {
         ),
       ),
     );
+
+  Widget _buildCategoryEmptyState(BuildContext context, String categoryId) {
+    // Get category name from ID (capitalize first letter)
+    final String categoryName = categoryId.split('-').map((word) => 
+      word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1)
+    ).join(' ');
+    
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(20.w),
+              decoration: BoxDecoration(
+                color: context.colors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.search_off_rounded,
+                color: context.colors.primary,
+                size: 40.sp,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'No Results',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'No upcoming $categoryName events found',
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _buildErrorState(BuildContext context, WidgetRef ref) {
-    return Center(
+  Widget _buildErrorState(BuildContext context, WidgetRef ref) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: Column(
@@ -163,5 +212,4 @@ class UpcomingEventsSection extends ConsumerWidget {
         ),
       ),
     );
-  }
 }

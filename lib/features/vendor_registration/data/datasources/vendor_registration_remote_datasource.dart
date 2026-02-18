@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/network/api_response.dart';
-import '../../domain/entities/vendor_registration.dart';
-import '../../domain/entities/vendor_document.dart';
-import '../../domain/entities/vendor_portfolio.dart';
-import '../../domain/entities/bank_details.dart';
-import '../../domain/entities/registration_status.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_registration.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_document.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_portfolio.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/bank_details.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/registration_status.dart';
 
 part 'vendor_registration_remote_datasource.g.dart';
 

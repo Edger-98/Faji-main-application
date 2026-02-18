@@ -22,7 +22,6 @@ mixin _$EventEntity {
   String get description => throw _privateConstructorUsedError;
   String get hostId => throw _privateConstructorUsedError;
   String get hostName => throw _privateConstructorUsedError;
-  String? get hostImage => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   DateTime get startDate => throw _privateConstructorUsedError;
   DateTime get endDate => throw _privateConstructorUsedError;
@@ -30,12 +29,13 @@ mixin _$EventEntity {
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
-  List<String>? get images => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
-  String? get currency => throw _privateConstructorUsedError;
-  String? get currencySymbol => throw _privateConstructorUsedError;
   int get totalTickets => throw _privateConstructorUsedError;
   int get availableTickets => throw _privateConstructorUsedError;
+  String? get hostImage => throw _privateConstructorUsedError;
+  List<String>? get images => throw _privateConstructorUsedError;
+  String? get currency => throw _privateConstructorUsedError;
+  String? get currencySymbol => throw _privateConstructorUsedError;
   int? get soldTickets => throw _privateConstructorUsedError;
   bool get isFree => throw _privateConstructorUsedError;
   bool get ticketingEnabled => throw _privateConstructorUsedError;
@@ -57,7 +57,6 @@ mixin _$EventEntity {
       String description,
       String hostId,
       String hostName,
-      String? hostImage,
       String category,
       DateTime startDate,
       DateTime endDate,
@@ -65,12 +64,13 @@ mixin _$EventEntity {
       double latitude,
       double longitude,
       String imageUrl,
-      List<String>? images,
       double price,
-      String? currency,
-      String? currencySymbol,
       int totalTickets,
       int availableTickets,
+      String? hostImage,
+      List<String>? images,
+      String? currency,
+      String? currencySymbol,
       int? soldTickets,
       bool isFree,
       bool ticketingEnabled,
@@ -95,7 +95,6 @@ mixin _$EventEntity {
       String description,
       String hostId,
       String hostName,
-      String? hostImage,
       String category,
       DateTime startDate,
       DateTime endDate,
@@ -103,12 +102,13 @@ mixin _$EventEntity {
       double latitude,
       double longitude,
       String imageUrl,
-      List<String>? images,
       double price,
-      String? currency,
-      String? currencySymbol,
       int totalTickets,
       int availableTickets,
+      String? hostImage,
+      List<String>? images,
+      String? currency,
+      String? currencySymbol,
       int? soldTickets,
       bool isFree,
       bool ticketingEnabled,
@@ -133,7 +133,6 @@ mixin _$EventEntity {
       String description,
       String hostId,
       String hostName,
-      String? hostImage,
       String category,
       DateTime startDate,
       DateTime endDate,
@@ -141,12 +140,13 @@ mixin _$EventEntity {
       double latitude,
       double longitude,
       String imageUrl,
-      List<String>? images,
       double price,
-      String? currency,
-      String? currencySymbol,
       int totalTickets,
       int availableTickets,
+      String? hostImage,
+      List<String>? images,
+      String? currency,
+      String? currencySymbol,
       int? soldTickets,
       bool isFree,
       bool ticketingEnabled,
@@ -198,7 +198,6 @@ abstract class $EventEntityCopyWith<$Res> {
     String description,
     String hostId,
     String hostName,
-    String? hostImage,
     String category,
     DateTime startDate,
     DateTime endDate,
@@ -206,12 +205,13 @@ abstract class $EventEntityCopyWith<$Res> {
     double latitude,
     double longitude,
     String imageUrl,
-    List<String>? images,
     double price,
-    String? currency,
-    String? currencySymbol,
     int totalTickets,
     int availableTickets,
+    String? hostImage,
+    List<String>? images,
+    String? currency,
+    String? currencySymbol,
     int? soldTickets,
     bool isFree,
     bool ticketingEnabled,
@@ -248,7 +248,6 @@ class _$EventEntityCopyWithImpl<$Res, $Val extends EventEntity>
     Object? description = null,
     Object? hostId = null,
     Object? hostName = null,
-    Object? hostImage = freezed,
     Object? category = null,
     Object? startDate = null,
     Object? endDate = null,
@@ -256,12 +255,13 @@ class _$EventEntityCopyWithImpl<$Res, $Val extends EventEntity>
     Object? latitude = null,
     Object? longitude = null,
     Object? imageUrl = null,
-    Object? images = freezed,
     Object? price = null,
-    Object? currency = freezed,
-    Object? currencySymbol = freezed,
     Object? totalTickets = null,
     Object? availableTickets = null,
+    Object? hostImage = freezed,
+    Object? images = freezed,
+    Object? currency = freezed,
+    Object? currencySymbol = freezed,
     Object? soldTickets = freezed,
     Object? isFree = null,
     Object? ticketingEnabled = null,
@@ -298,10 +298,6 @@ class _$EventEntityCopyWithImpl<$Res, $Val extends EventEntity>
                 ? _value.hostName
                 : hostName // ignore: cast_nullable_to_non_nullable
                       as String,
-            hostImage: freezed == hostImage
-                ? _value.hostImage
-                : hostImage // ignore: cast_nullable_to_non_nullable
-                      as String?,
             category: null == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
@@ -330,22 +326,10 @@ class _$EventEntityCopyWithImpl<$Res, $Val extends EventEntity>
                 ? _value.imageUrl
                 : imageUrl // ignore: cast_nullable_to_non_nullable
                       as String,
-            images: freezed == images
-                ? _value.images
-                : images // ignore: cast_nullable_to_non_nullable
-                      as List<String>?,
             price: null == price
                 ? _value.price
                 : price // ignore: cast_nullable_to_non_nullable
                       as double,
-            currency: freezed == currency
-                ? _value.currency
-                : currency // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            currencySymbol: freezed == currencySymbol
-                ? _value.currencySymbol
-                : currencySymbol // ignore: cast_nullable_to_non_nullable
-                      as String?,
             totalTickets: null == totalTickets
                 ? _value.totalTickets
                 : totalTickets // ignore: cast_nullable_to_non_nullable
@@ -354,6 +338,22 @@ class _$EventEntityCopyWithImpl<$Res, $Val extends EventEntity>
                 ? _value.availableTickets
                 : availableTickets // ignore: cast_nullable_to_non_nullable
                       as int,
+            hostImage: freezed == hostImage
+                ? _value.hostImage
+                : hostImage // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            images: freezed == images
+                ? _value.images
+                : images // ignore: cast_nullable_to_non_nullable
+                      as List<String>?,
+            currency: freezed == currency
+                ? _value.currency
+                : currency // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            currencySymbol: freezed == currencySymbol
+                ? _value.currencySymbol
+                : currencySymbol // ignore: cast_nullable_to_non_nullable
+                      as String?,
             soldTickets: freezed == soldTickets
                 ? _value.soldTickets
                 : soldTickets // ignore: cast_nullable_to_non_nullable
@@ -427,7 +427,6 @@ abstract class _$$EventEntityImplCopyWith<$Res>
     String description,
     String hostId,
     String hostName,
-    String? hostImage,
     String category,
     DateTime startDate,
     DateTime endDate,
@@ -435,12 +434,13 @@ abstract class _$$EventEntityImplCopyWith<$Res>
     double latitude,
     double longitude,
     String imageUrl,
-    List<String>? images,
     double price,
-    String? currency,
-    String? currencySymbol,
     int totalTickets,
     int availableTickets,
+    String? hostImage,
+    List<String>? images,
+    String? currency,
+    String? currencySymbol,
     int? soldTickets,
     bool isFree,
     bool ticketingEnabled,
@@ -476,7 +476,6 @@ class __$$EventEntityImplCopyWithImpl<$Res>
     Object? description = null,
     Object? hostId = null,
     Object? hostName = null,
-    Object? hostImage = freezed,
     Object? category = null,
     Object? startDate = null,
     Object? endDate = null,
@@ -484,12 +483,13 @@ class __$$EventEntityImplCopyWithImpl<$Res>
     Object? latitude = null,
     Object? longitude = null,
     Object? imageUrl = null,
-    Object? images = freezed,
     Object? price = null,
-    Object? currency = freezed,
-    Object? currencySymbol = freezed,
     Object? totalTickets = null,
     Object? availableTickets = null,
+    Object? hostImage = freezed,
+    Object? images = freezed,
+    Object? currency = freezed,
+    Object? currencySymbol = freezed,
     Object? soldTickets = freezed,
     Object? isFree = null,
     Object? ticketingEnabled = null,
@@ -526,10 +526,6 @@ class __$$EventEntityImplCopyWithImpl<$Res>
             ? _value.hostName
             : hostName // ignore: cast_nullable_to_non_nullable
                   as String,
-        hostImage: freezed == hostImage
-            ? _value.hostImage
-            : hostImage // ignore: cast_nullable_to_non_nullable
-                  as String?,
         category: null == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
@@ -558,22 +554,10 @@ class __$$EventEntityImplCopyWithImpl<$Res>
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String,
-        images: freezed == images
-            ? _value._images
-            : images // ignore: cast_nullable_to_non_nullable
-                  as List<String>?,
         price: null == price
             ? _value.price
             : price // ignore: cast_nullable_to_non_nullable
                   as double,
-        currency: freezed == currency
-            ? _value.currency
-            : currency // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        currencySymbol: freezed == currencySymbol
-            ? _value.currencySymbol
-            : currencySymbol // ignore: cast_nullable_to_non_nullable
-                  as String?,
         totalTickets: null == totalTickets
             ? _value.totalTickets
             : totalTickets // ignore: cast_nullable_to_non_nullable
@@ -582,6 +566,22 @@ class __$$EventEntityImplCopyWithImpl<$Res>
             ? _value.availableTickets
             : availableTickets // ignore: cast_nullable_to_non_nullable
                   as int,
+        hostImage: freezed == hostImage
+            ? _value.hostImage
+            : hostImage // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        images: freezed == images
+            ? _value._images
+            : images // ignore: cast_nullable_to_non_nullable
+                  as List<String>?,
+        currency: freezed == currency
+            ? _value.currency
+            : currency // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        currencySymbol: freezed == currencySymbol
+            ? _value.currencySymbol
+            : currencySymbol // ignore: cast_nullable_to_non_nullable
+                  as String?,
         soldTickets: freezed == soldTickets
             ? _value.soldTickets
             : soldTickets // ignore: cast_nullable_to_non_nullable
@@ -648,7 +648,6 @@ class _$EventEntityImpl extends _EventEntity {
     required this.description,
     required this.hostId,
     required this.hostName,
-    this.hostImage,
     required this.category,
     required this.startDate,
     required this.endDate,
@@ -656,12 +655,13 @@ class _$EventEntityImpl extends _EventEntity {
     required this.latitude,
     required this.longitude,
     required this.imageUrl,
-    final List<String>? images,
     required this.price,
-    this.currency,
-    this.currencySymbol,
     required this.totalTickets,
     required this.availableTickets,
+    this.hostImage,
+    final List<String>? images,
+    this.currency,
+    this.currencySymbol,
     this.soldTickets,
     this.isFree = false,
     this.ticketingEnabled = false,
@@ -690,8 +690,6 @@ class _$EventEntityImpl extends _EventEntity {
   @override
   final String hostName;
   @override
-  final String? hostImage;
-  @override
   final String category;
   @override
   final DateTime startDate;
@@ -705,6 +703,14 @@ class _$EventEntityImpl extends _EventEntity {
   final double longitude;
   @override
   final String imageUrl;
+  @override
+  final double price;
+  @override
+  final int totalTickets;
+  @override
+  final int availableTickets;
+  @override
+  final String? hostImage;
   final List<String>? _images;
   @override
   List<String>? get images {
@@ -716,15 +722,9 @@ class _$EventEntityImpl extends _EventEntity {
   }
 
   @override
-  final double price;
-  @override
   final String? currency;
   @override
   final String? currencySymbol;
-  @override
-  final int totalTickets;
-  @override
-  final int availableTickets;
   @override
   final int? soldTickets;
   @override
@@ -765,7 +765,7 @@ class _$EventEntityImpl extends _EventEntity {
 
   @override
   String toString() {
-    return 'EventEntity(id: $id, title: $title, description: $description, hostId: $hostId, hostName: $hostName, hostImage: $hostImage, category: $category, startDate: $startDate, endDate: $endDate, location: $location, latitude: $latitude, longitude: $longitude, imageUrl: $imageUrl, images: $images, price: $price, currency: $currency, currencySymbol: $currencySymbol, totalTickets: $totalTickets, availableTickets: $availableTickets, soldTickets: $soldTickets, isFree: $isFree, ticketingEnabled: $ticketingEnabled, isFeatured: $isFeatured, isTrending: $isTrending, isFlashDeal: $isFlashDeal, isCancelled: $isCancelled, discountPercentage: $discountPercentage, rating: $rating, reviewCount: $reviewCount, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'EventEntity(id: $id, title: $title, description: $description, hostId: $hostId, hostName: $hostName, category: $category, startDate: $startDate, endDate: $endDate, location: $location, latitude: $latitude, longitude: $longitude, imageUrl: $imageUrl, price: $price, totalTickets: $totalTickets, availableTickets: $availableTickets, hostImage: $hostImage, images: $images, currency: $currency, currencySymbol: $currencySymbol, soldTickets: $soldTickets, isFree: $isFree, ticketingEnabled: $ticketingEnabled, isFeatured: $isFeatured, isTrending: $isTrending, isFlashDeal: $isFlashDeal, isCancelled: $isCancelled, discountPercentage: $discountPercentage, rating: $rating, reviewCount: $reviewCount, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -780,8 +780,6 @@ class _$EventEntityImpl extends _EventEntity {
             (identical(other.hostId, hostId) || other.hostId == hostId) &&
             (identical(other.hostName, hostName) ||
                 other.hostName == hostName) &&
-            (identical(other.hostImage, hostImage) ||
-                other.hostImage == hostImage) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.startDate, startDate) ||
@@ -795,16 +793,18 @@ class _$EventEntityImpl extends _EventEntity {
                 other.longitude == longitude) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
-            const DeepCollectionEquality().equals(other._images, _images) &&
             (identical(other.price, price) || other.price == price) &&
-            (identical(other.currency, currency) ||
-                other.currency == currency) &&
-            (identical(other.currencySymbol, currencySymbol) ||
-                other.currencySymbol == currencySymbol) &&
             (identical(other.totalTickets, totalTickets) ||
                 other.totalTickets == totalTickets) &&
             (identical(other.availableTickets, availableTickets) ||
                 other.availableTickets == availableTickets) &&
+            (identical(other.hostImage, hostImage) ||
+                other.hostImage == hostImage) &&
+            const DeepCollectionEquality().equals(other._images, _images) &&
+            (identical(other.currency, currency) ||
+                other.currency == currency) &&
+            (identical(other.currencySymbol, currencySymbol) ||
+                other.currencySymbol == currencySymbol) &&
             (identical(other.soldTickets, soldTickets) ||
                 other.soldTickets == soldTickets) &&
             (identical(other.isFree, isFree) || other.isFree == isFree) &&
@@ -838,7 +838,6 @@ class _$EventEntityImpl extends _EventEntity {
     description,
     hostId,
     hostName,
-    hostImage,
     category,
     startDate,
     endDate,
@@ -846,12 +845,13 @@ class _$EventEntityImpl extends _EventEntity {
     latitude,
     longitude,
     imageUrl,
-    const DeepCollectionEquality().hash(_images),
     price,
-    currency,
-    currencySymbol,
     totalTickets,
     availableTickets,
+    hostImage,
+    const DeepCollectionEquality().hash(_images),
+    currency,
+    currencySymbol,
     soldTickets,
     isFree,
     ticketingEnabled,
@@ -884,7 +884,6 @@ class _$EventEntityImpl extends _EventEntity {
       String description,
       String hostId,
       String hostName,
-      String? hostImage,
       String category,
       DateTime startDate,
       DateTime endDate,
@@ -892,12 +891,13 @@ class _$EventEntityImpl extends _EventEntity {
       double latitude,
       double longitude,
       String imageUrl,
-      List<String>? images,
       double price,
-      String? currency,
-      String? currencySymbol,
       int totalTickets,
       int availableTickets,
+      String? hostImage,
+      List<String>? images,
+      String? currency,
+      String? currencySymbol,
       int? soldTickets,
       bool isFree,
       bool ticketingEnabled,
@@ -920,7 +920,6 @@ class _$EventEntityImpl extends _EventEntity {
       description,
       hostId,
       hostName,
-      hostImage,
       category,
       startDate,
       endDate,
@@ -928,12 +927,13 @@ class _$EventEntityImpl extends _EventEntity {
       latitude,
       longitude,
       imageUrl,
-      images,
       price,
-      currency,
-      currencySymbol,
       totalTickets,
       availableTickets,
+      hostImage,
+      images,
+      currency,
+      currencySymbol,
       soldTickets,
       isFree,
       ticketingEnabled,
@@ -959,7 +959,6 @@ class _$EventEntityImpl extends _EventEntity {
       String description,
       String hostId,
       String hostName,
-      String? hostImage,
       String category,
       DateTime startDate,
       DateTime endDate,
@@ -967,12 +966,13 @@ class _$EventEntityImpl extends _EventEntity {
       double latitude,
       double longitude,
       String imageUrl,
-      List<String>? images,
       double price,
-      String? currency,
-      String? currencySymbol,
       int totalTickets,
       int availableTickets,
+      String? hostImage,
+      List<String>? images,
+      String? currency,
+      String? currencySymbol,
       int? soldTickets,
       bool isFree,
       bool ticketingEnabled,
@@ -995,7 +995,6 @@ class _$EventEntityImpl extends _EventEntity {
       description,
       hostId,
       hostName,
-      hostImage,
       category,
       startDate,
       endDate,
@@ -1003,12 +1002,13 @@ class _$EventEntityImpl extends _EventEntity {
       latitude,
       longitude,
       imageUrl,
-      images,
       price,
-      currency,
-      currencySymbol,
       totalTickets,
       availableTickets,
+      hostImage,
+      images,
+      currency,
+      currencySymbol,
       soldTickets,
       isFree,
       ticketingEnabled,
@@ -1034,7 +1034,6 @@ class _$EventEntityImpl extends _EventEntity {
       String description,
       String hostId,
       String hostName,
-      String? hostImage,
       String category,
       DateTime startDate,
       DateTime endDate,
@@ -1042,12 +1041,13 @@ class _$EventEntityImpl extends _EventEntity {
       double latitude,
       double longitude,
       String imageUrl,
-      List<String>? images,
       double price,
-      String? currency,
-      String? currencySymbol,
       int totalTickets,
       int availableTickets,
+      String? hostImage,
+      List<String>? images,
+      String? currency,
+      String? currencySymbol,
       int? soldTickets,
       bool isFree,
       bool ticketingEnabled,
@@ -1072,7 +1072,6 @@ class _$EventEntityImpl extends _EventEntity {
         description,
         hostId,
         hostName,
-        hostImage,
         category,
         startDate,
         endDate,
@@ -1080,12 +1079,13 @@ class _$EventEntityImpl extends _EventEntity {
         latitude,
         longitude,
         imageUrl,
-        images,
         price,
-        currency,
-        currencySymbol,
         totalTickets,
         availableTickets,
+        hostImage,
+        images,
+        currency,
+        currencySymbol,
         soldTickets,
         isFree,
         ticketingEnabled,
@@ -1140,7 +1140,6 @@ abstract class _EventEntity extends EventEntity {
     required final String description,
     required final String hostId,
     required final String hostName,
-    final String? hostImage,
     required final String category,
     required final DateTime startDate,
     required final DateTime endDate,
@@ -1148,12 +1147,13 @@ abstract class _EventEntity extends EventEntity {
     required final double latitude,
     required final double longitude,
     required final String imageUrl,
-    final List<String>? images,
     required final double price,
-    final String? currency,
-    final String? currencySymbol,
     required final int totalTickets,
     required final int availableTickets,
+    final String? hostImage,
+    final List<String>? images,
+    final String? currency,
+    final String? currencySymbol,
     final int? soldTickets,
     final bool isFree,
     final bool ticketingEnabled,
@@ -1181,8 +1181,6 @@ abstract class _EventEntity extends EventEntity {
   @override
   String get hostName;
   @override
-  String? get hostImage;
-  @override
   String get category;
   @override
   DateTime get startDate;
@@ -1197,17 +1195,19 @@ abstract class _EventEntity extends EventEntity {
   @override
   String get imageUrl;
   @override
-  List<String>? get images;
-  @override
   double get price;
-  @override
-  String? get currency;
-  @override
-  String? get currencySymbol;
   @override
   int get totalTickets;
   @override
   int get availableTickets;
+  @override
+  String? get hostImage;
+  @override
+  List<String>? get images;
+  @override
+  String? get currency;
+  @override
+  String? get currencySymbol;
   @override
   int? get soldTickets;
   @override

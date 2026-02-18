@@ -5,17 +5,14 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Progress indicator showing current step in event creation flow
 class StepProgressIndicator extends StatelessWidget {
   const StepProgressIndicator({
-    super.key,
-    required this.currentStep,
-    required this.totalSteps,
+    required this.currentStep, required this.totalSteps, super.key,
   });
 
   final int currentStep;
   final int totalSteps;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget build(BuildContext context) => Row(
       children: [
         // Elegant progress bar
         Expanded(
@@ -69,5 +66,4 @@ class StepProgressIndicator extends StatelessWidget {
         ),
       ],
     );
-  }
 }

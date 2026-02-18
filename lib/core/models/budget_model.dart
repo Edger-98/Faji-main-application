@@ -1,11 +1,4 @@
 class BudgetDetailModel {
-  final double total;
-  final double spent;
-  final double remaining;
-  final String currency;
-  final String currencySymbol;
-  final List<BudgetItemModel> items;
-  final double progress;
 
   BudgetDetailModel({
     required this.total,
@@ -31,14 +24,16 @@ class BudgetDetailModel {
       progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
     );
   }
+  final double total;
+  final double spent;
+  final double remaining;
+  final String currency;
+  final String currencySymbol;
+  final List<BudgetItemModel> items;
+  final double progress;
 }
 
 class BudgetItemModel {
-  final String id;
-  final String category;
-  final double amount;
-  final String status;
-  final DateTime? paidAt;
 
   BudgetItemModel({
     required this.id,
@@ -59,4 +54,9 @@ class BudgetItemModel {
           : null,
     );
   }
+  final String id;
+  final String category;
+  final double amount;
+  final String status;
+  final DateTime? paidAt;
 }

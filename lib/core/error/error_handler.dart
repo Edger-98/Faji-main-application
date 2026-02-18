@@ -27,7 +27,7 @@ class ErrorHandler {
         return NetworkFailure.connectionError();
 
       case DioExceptionType.badResponse:
-        final int? statusCode = error.response?.statusCode;
+        final statusCode = error.response?.statusCode;
         if (statusCode != null) {
           return ServerFailure.fromStatusCode(
             statusCode,
@@ -61,7 +61,7 @@ class ErrorHandler {
 
   /// Handle general exceptions and convert to appropriate Failure
   static Failure handleException(Exception exception) {
-    Logger.error('Exception occurred: ${exception.toString()}');
+    Logger.error('Exception occurred: ${exception}');
 
     if (exception is SocketException) {
       return NetworkFailure.noConnection();
@@ -76,7 +76,7 @@ class ErrorHandler {
 
     if (exception is ArgumentError) {
       return ValidationFailure(
-        message: 'Invalid argument: ${exception.toString()}',
+        message: 'Invalid argument: ${exception}',
         code: 'INVALID_ARGUMENT',
       );
     }
@@ -86,7 +86,7 @@ class ErrorHandler {
 
   /// Handle general errors and convert to appropriate Failure
   static Failure handleError(Error error) {
-    Logger.error('Error occurred: ${error.toString()}');
+    Logger.error('Error occurred: ${error}');
 
     if (error is AssertionError) {
       return UnknownFailure(
@@ -130,9 +130,9 @@ class ErrorHandler {
       return handleError(error);
     }
 
-    Logger.error('Unknown error type occurred: ${error.toString()}');
+    Logger.error('Unknown error type occurred: ${error}');
     return UnknownFailure(
-      message: 'An unexpected error occurred: ${error.toString()}',
+      message: 'An unexpected error occurred: ${error}',
       code: 'UNKNOWN_ERROR',
     );
   }
@@ -149,12 +149,12 @@ class ErrorHandler {
       case const (NetworkFailure):
         return 'Network error. Please check your connection and try again.';
       case const (ServerFailure):
-        final ServerFailure serverFailure = failure as ServerFailure;
+        final serverFailure = failure as ServerFailure;
         switch (serverFailure.code) {
           case 'UNAUTHORIZED':
             return 'Please log in to continue.';
           case 'FORBIDDEN':
-            return 'You don\'t have permission to perform this action.';
+            return "You don't have permission to perform this action.";
           case 'NOT_FOUND':
             return 'The requested resource was not found.';
           case 'VALIDATION_ERROR':
@@ -182,13 +182,10 @@ class ErrorHandler {
     switch (failure.runtimeType) {
       case const (NetworkFailure):
         Logger.warning('Network failure: ${failure.message}');
-        break;
       case const (ValidationFailure):
         Logger.info('Validation failure: ${failure.message}');
-        break;
       case const (CacheFailure):
         Logger.debug('Cache failure: ${failure.message}');
-        break;
       default:
         Logger.error('Failure occurred: ${failure.message}');
     }
@@ -198,10 +195,10 @@ class ErrorHandler {
   static bool isRecoverable(Failure failure) {
     switch (failure.runtimeType) {
       case const (NetworkFailure):
-        final NetworkFailure networkFailure = failure as NetworkFailure;
+        final networkFailure = failure as NetworkFailure;
         return networkFailure.code != 'NO_CONNECTION';
       case const (ServerFailure):
-        final ServerFailure serverFailure = failure as ServerFailure;
+        final serverFailure = failure as ServerFailure;
         return !<String>['UNAUTHORIZED', 'FORBIDDEN'].contains(serverFailure.code);
       case const (ValidationFailure):
       case const (AuthFailure):
@@ -209,7 +206,7 @@ class ErrorHandler {
       case const (CacheFailure):
         return true; // Can retry with network
       case const (StorageFailure):
-        final StorageFailure storageFailure = failure as StorageFailure;
+        final storageFailure = failure as StorageFailure;
         return storageFailure.code != 'INSUFFICIENT_SPACE';
       default:
         return true; // Assume recoverable unless proven otherwise
@@ -219,25 +216,25 @@ class ErrorHandler {
   /// Get retry delay for recoverable errors
   static Duration getRetryDelay(Failure failure, int attemptNumber) {
     // Exponential backoff with jitter
-    final int baseDelay = switch (failure.runtimeType) {
+    final baseDelay = switch (failure.runtimeType) {
       const (NetworkFailure) => 1000, // 1 second
       const (ServerFailure) => 2000,  // 2 seconds
       _ => 1500, // 1.5 seconds
     };
 
-    final int delay = baseDelay * (1 << (attemptNumber - 1)); // 2^(n-1)
-    final int jitter = (delay * 0.1).round(); // 10% jitter
+    final delay = baseDelay * (1 << (attemptNumber - 1)); // 2^(n-1)
+    final jitter = (delay * 0.1).round(); // 10% jitter
     
     return Duration(milliseconds: delay + jitter);
   }
 
   /// Extract error message from response data
-  static String? _extractErrorMessage(dynamic responseData) {
+  static String? _extractErrorMessage(responseData) {
     if (responseData == null) return null;
 
     if (responseData is Map<String, dynamic>) {
       // Try common error message fields
-      for (final String key in <String>['message', 'error', 'detail', 'msg']) {
+      for (final key in <String>['message', 'error', 'detail', 'msg']) {
         if (responseData.containsKey(key) && responseData[key] is String) {
           return responseData[key] as String;
         }
@@ -245,7 +242,7 @@ class ErrorHandler {
 
       // Try nested error objects
       if (responseData.containsKey('error') && responseData['error'] is Map) {
-        final Map<String, dynamic> errorObj = responseData['error'] as Map<String, dynamic>;
+        final errorObj = responseData['error'] as Map<String, dynamic>;
         if (errorObj.containsKey('message') && errorObj['message'] is String) {
           return errorObj['message'] as String;
         }

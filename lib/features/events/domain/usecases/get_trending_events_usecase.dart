@@ -1,16 +1,15 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/event_entity.dart';
-import '../repositories/event_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/domain/repositories/event_repository.dart';
 
 /// Get trending events use case
 class GetTrendingEventsUseCase {
-  final EventRepository repository;
 
   GetTrendingEventsUseCase(this.repository);
+  final EventRepository repository;
 
-  Future<Either<Failure, List<EventEntity>>> call({int? limit}) async {
-    return await repository.getTrendingEvents(limit: limit);
-  }
+  Future<Either<Failure, List<EventEntity>>> call({int? limit, String? category}) async => 
+      repository.getTrendingEvents(limit: limit, category: category);
 }

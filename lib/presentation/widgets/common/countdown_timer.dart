@@ -4,14 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 class CountdownTimer extends StatefulWidget {
-  final DateTime eventDate;
-  final TextStyle? textStyle;
 
   const CountdownTimer({
     super.key,
     required this.eventDate,
     this.textStyle,
   });
+  final DateTime eventDate;
+  final TextStyle? textStyle;
 
   @override
   State<CountdownTimer> createState() => _CountdownTimerState();
@@ -31,8 +31,8 @@ class _CountdownTimerState extends State<CountdownTimer> {
   }
 
   void _updateTimeLeft() {
-    final now = DateTime.now();
-    final difference = widget.eventDate.difference(now);
+    final DateTime now = DateTime.now();
+    final Duration difference = widget.eventDate.difference(now);
     if (mounted) {
       setState(() {
         _timeLeft = difference.isNegative ? Duration.zero : difference;
@@ -75,7 +75,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
+      children: <Widget>[
         Icon(
           Icons.access_time,
           size: 12.sp,

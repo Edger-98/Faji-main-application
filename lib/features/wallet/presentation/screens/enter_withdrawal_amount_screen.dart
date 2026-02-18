@@ -32,17 +32,17 @@ class _EnterWithdrawalAmountScreenState
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             _buildAppBar(context),
             Expanded(
               child: Column(
-                children: [
+                children: <Widget>[
                   const SizedBox(height: 32),
                   _buildTitle(context),
                   const SizedBox(height: 97),
@@ -61,18 +61,18 @@ class _EnterWithdrawalAmountScreenState
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Row(
-        children: [
+        children: <Widget>[
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
@@ -101,7 +101,7 @@ class _EnterWithdrawalAmountScreenState
   }
 
   Widget _buildTitle(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -121,13 +121,13 @@ class _EnterWithdrawalAmountScreenState
   }
 
   Widget _buildAmountDisplay(BuildContext context) {
-    final theme = Theme.of(context);
-    final displayAmount = _amount.isEmpty ? '0.00' : _amount;
+    final ThemeData theme = Theme.of(context);
+    final String displayAmount = _amount.isEmpty ? '0.00' : _amount;
     
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
+      children: <Widget>[
         Text(
           displayAmount,
           style: theme.textTheme.displayLarge?.copyWith(
@@ -142,7 +142,7 @@ class _EnterWithdrawalAmountScreenState
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
-            'USD\$',
+            r'USD$',
             style: theme.textTheme.titleMedium?.copyWith(
               fontFamily: AppTypography.modicaPro,
               fontSize: 18,
@@ -156,26 +156,25 @@ class _EnterWithdrawalAmountScreenState
   }
 
   Widget _buildNumericKeypad(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
-        children: [
-          _buildKeypadRow(['1', '2', '3'], theme),
+        children: <Widget>[
+          _buildKeypadRow(<String>['1', '2', '3'], theme),
           const SizedBox(height: 4),
-          _buildKeypadRow(['4', '5', '6'], theme),
+          _buildKeypadRow(<String>['4', '5', '6'], theme),
           const SizedBox(height: 4),
-          _buildKeypadRow(['7', '8', '9'], theme),
+          _buildKeypadRow(<String>['7', '8', '9'], theme),
           const SizedBox(height: 4),
-          _buildKeypadRow(['', '0', 'backspace'], theme),
+          _buildKeypadRow(<String>['', '0', 'backspace'], theme),
         ],
       ),
     );
   }
 
-  Widget _buildKeypadRow(List<String> numbers, ThemeData theme) {
-    return Row(
+  Widget _buildKeypadRow(List<String> numbers, ThemeData theme) => Row(
       children: numbers.map((number) {
         if (number.isEmpty) {
           return const Expanded(child: SizedBox());
@@ -188,10 +187,9 @@ class _EnterWithdrawalAmountScreenState
         );
       }).toList(),
     );
-  }
 
   Widget _buildKeypadButton(String value, ThemeData theme) {
-    final isBackspace = value == 'backspace';
+    final bool isBackspace = value == 'backspace';
     
     return GestureDetector(
       onTap: () {
@@ -230,7 +228,7 @@ class _EnterWithdrawalAmountScreenState
   }
 
   Widget _buildReviewButton(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),

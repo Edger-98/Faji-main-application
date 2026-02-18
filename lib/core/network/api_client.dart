@@ -1,16 +1,15 @@
 import 'package:dio/dio.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../config/api_config.dart';
+import 'package:fajimobileapp/core/config/api_config.dart';
 
-import 'interceptors/auth_interceptor.dart';
-import 'interceptors/error_interceptor.dart';
-import 'interceptors/logging_interceptor.dart';
-import 'interceptors/response_normalizer_interceptor.dart';
+import 'package:fajimobileapp/core/network/interceptors/auth_interceptor.dart';
+import 'package:fajimobileapp/core/network/interceptors/error_interceptor.dart';
+import 'package:fajimobileapp/core/network/interceptors/logging_interceptor.dart';
+import 'package:fajimobileapp/core/network/interceptors/response_normalizer_interceptor.dart';
 
 /// API Client configuration
 class ApiClient {
-  late final Dio _dio;
 
   ApiClient() {
     // Use ApiConfig for consistent URL across the app
@@ -40,16 +39,13 @@ class ApiClient {
       LoggingInterceptor(),
     ]);
   }
+  late final Dio _dio;
 
   Dio get dio => _dio;
 }
 
 /// Provider for API client
-final apiClientProvider = Provider<ApiClient>((ref) {
-  return ApiClient();
-});
+final Provider<ApiClient> apiClientProvider = Provider<ApiClient>((ProviderRef<ApiClient> ref) => ApiClient());
 
 /// Provider for Dio instance
-final dioProvider = Provider<Dio>((ref) {
-  return ref.watch(apiClientProvider).dio;
-});
+final Provider<Dio> dioProvider = Provider<Dio>((ProviderRef<Dio> ref) => ref.watch(apiClientProvider).dio);

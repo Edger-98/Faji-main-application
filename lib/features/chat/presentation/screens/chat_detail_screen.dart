@@ -5,8 +5,7 @@ class ChatDetailScreen extends StatelessWidget {
   const ChatDetailScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -241,10 +240,8 @@ class ChatDetailScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildMessageBubble(String message, String time, {bool isOrganizer = false, bool isUser = false}) {
-    return Column(
+  Widget _buildMessageBubble(String message, String time, {bool isOrganizer = false, bool isUser = false}) => Column(
       crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         if (!isUser)
@@ -312,10 +309,8 @@ class ChatDetailScreen extends StatelessWidget {
         ],
       ],
     );
-  }
 
-  Widget _buildSystemMessage(String message) {
-    return Container(
+  Widget _buildSystemMessage(String message) => Container(
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 34),
       decoration: BoxDecoration(
@@ -332,5 +327,4 @@ class ChatDetailScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 }

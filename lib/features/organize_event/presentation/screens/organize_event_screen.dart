@@ -10,13 +10,13 @@ class OrganizeEventScreen extends StatefulWidget {
 }
 
 class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _dateController = TextEditingController();
-  final _timeController = TextEditingController();
-  final _seatsController = TextEditingController();
-  final _locationController = TextEditingController();
-  final _priceController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _seatsController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   int _wordCount = 0;
 
   @override
@@ -26,7 +26,7 @@ class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
   }
 
   void _updateWordCount() {
-    final text = _descriptionController.text;
+    final String text = _descriptionController.text;
     setState(() {
       _wordCount = text.isEmpty ? 0 : text.split(RegExp(r'\s+')).length;
     });
@@ -45,8 +45,7 @@ class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -190,19 +189,15 @@ class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildSectionLabel(String label) {
-    return Padding(
+  Widget _buildSectionLabel(String label) => Padding(
       padding: EdgeInsets.only(left: 14.w),
       child: AppText.bodyMedium(
         label,
       ),
     );
-  }
 
-  Widget _buildDescriptionField() {
-    return Container(
+  Widget _buildDescriptionField() => Container(
       height: 183.h,
       padding: EdgeInsets.all(22.w),
       decoration: BoxDecoration(
@@ -245,5 +240,4 @@ class _OrganizeEventScreenState extends State<OrganizeEventScreen> {
         ],
       ),
     );
-  }
 }

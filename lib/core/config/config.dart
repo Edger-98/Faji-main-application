@@ -12,7 +12,7 @@ class Config {
 
   /// Get the appropriate .env file based on build mode
   static String _getEnvironmentFileName() {
-    const String environment = String.fromEnvironment('ENVIRONMENT', defaultValue: 'dev');
+    const environment = String.fromEnvironment('ENVIRONMENT', defaultValue: 'dev');
     
     switch (environment.toLowerCase()) {
       case 'production':
@@ -30,7 +30,7 @@ class Config {
 
   /// Get environment variable with optional default value
   static String _getEnvVar(String key, {String? defaultValue}) {
-    final value = dotenv.env[key];
+    final String? value = dotenv.env[key];
     if (value == null || value.isEmpty) {
       if (defaultValue != null) {
         return defaultValue;
@@ -82,8 +82,7 @@ class Config {
   }
 
   /// Get configuration summary for debugging (without sensitive data)
-  static Map<String, dynamic> getConfigSummary() {
-    return {
+  static Map<String, dynamic> getConfigSummary() => {
       'environment': environment,
       'baseUrl': baseUrl,
       'apiVersion': apiVersion,
@@ -94,5 +93,4 @@ class Config {
       'isDevelopment': isDevelopment,
       'isStaging': isStaging,
     };
-  }
 }

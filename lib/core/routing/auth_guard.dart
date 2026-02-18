@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'route_manager.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 
 /// Auth guard to protect routes that require authentication
 class AuthGuard {
   static Future<String?> redirect(BuildContext context, GoRouterState state) async {
-    final prefs = await SharedPreferences.getInstance();
-    final userEmail = prefs.getString('user_email');
-    final hasUserData = userEmail != null && userEmail.isNotEmpty;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? userEmail = prefs.getString('user_email');
+    final bool hasUserData = userEmail != null && userEmail.isNotEmpty;
     
     // List of protected routes
-    final protectedRoutes = [
+    final List<String> protectedRoutes = <String>[
       RouteManager.home,
       RouteManager.dashboard,
       RouteManager.profile,
@@ -42,7 +42,7 @@ class AuthGuard {
       RouteManager.vendorBookingsList,
     ];
     
-    final isProtectedRoute = protectedRoutes.contains(state.matchedLocation);
+    final bool isProtectedRoute = protectedRoutes.contains(state.matchedLocation);
     
     // If trying to access protected route without auth, redirect to welcome back or intro
     if (isProtectedRoute && !hasUserData) {

@@ -1,20 +1,18 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/accept_invitation_response.dart';
-import '../repositories/cohost_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/accept_invitation_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/repositories/cohost_repository.dart';
 
 class DeclineCohostInvitationUseCase {
-  final CohostRepository repository;
 
   DeclineCohostInvitationUseCase(this.repository);
+  final CohostRepository repository;
 
   Future<Either<Failure, DeclineInvitationResponse>> call({
     required String invitationId,
     String? reason,
-  }) async {
-    return await repository.declineInvitation(
+  }) async => await repository.declineInvitation(
       invitationId: invitationId,
       reason: reason,
     );
-  }
 }

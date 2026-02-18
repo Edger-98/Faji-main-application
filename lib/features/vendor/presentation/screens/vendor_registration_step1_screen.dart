@@ -15,28 +15,28 @@ class VendorRegistrationStep1Screen extends ConsumerStatefulWidget {
 
 class _VendorRegistrationStep1ScreenState
     extends ConsumerState<VendorRegistrationStep1Screen> {
-  final _formKey = GlobalKey<FormState>();
-  final _businessNameController = TextEditingController();
-  final _bioController = TextEditingController();
-  final _locationController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _alternatePhoneController = TextEditingController();
-  final _websiteController = TextEditingController();
-  final _yearsController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _businessNameController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _alternatePhoneController = TextEditingController();
+  final TextEditingController _websiteController = TextEditingController();
+  final TextEditingController _yearsController = TextEditingController();
   
   String _businessType = 'individual';
-  final List<String> _selectedCategories = [];
+  final List<String> _selectedCategories = <String>[];
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
-    {'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
-    {'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
-    {'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
-    {'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
-    {'id': 'security', 'name': 'Security', 'icon': Icons.security},
-    {'id': 'promotion', 'name': 'Promotion', 'icon': Icons.campaign},
-    {'id': 'equipment', 'name': 'Equipment', 'icon': Icons.speaker},
+  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
+    <String, dynamic>{'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
+    <String, dynamic>{'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
+    <String, dynamic>{'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
+    <String, dynamic>{'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
+    <String, dynamic>{'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
+    <String, dynamic>{'id': 'security', 'name': 'Security', 'icon': Icons.security},
+    <String, dynamic>{'id': 'promotion', 'name': 'Promotion', 'icon': Icons.campaign},
+    <String, dynamic>{'id': 'equipment', 'name': 'Equipment', 'icon': Icons.speaker},
   ];
 
   @override
@@ -67,8 +67,7 @@ class _VendorRegistrationStep1ScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -224,10 +223,8 @@ class _VendorRegistrationStep1ScreenState
         ),
       ),
     );
-  }
 
-  Widget _buildTextField(String label, TextEditingController controller, String hint, {int maxLines = 1, TextInputType? keyboardType, bool required = false}) {
-    return Column(
+  Widget _buildTextField(String label, TextEditingController controller, String hint, {int maxLines = 1, TextInputType? keyboardType, bool required = false}) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTypography.labelMedium.copyWith(color: AppColors.onSurface, fontWeight: FontWeight.w500)),
@@ -248,10 +245,9 @@ class _VendorRegistrationStep1ScreenState
         ),
       ],
     );
-  }
 
   Widget _buildBusinessTypeOption(String label, String value) {
-    final isSelected = _businessType == value;
+    final bool isSelected = _businessType == value;
     return InkWell(
       onTap: () {
         setState(() => _businessType = value);
@@ -266,7 +262,7 @@ class _VendorRegistrationStep1ScreenState
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked, color: isSelected ? AppColors.onPrimary : AppColors.textSecondary, size: 20),
             const SizedBox(width: 8),
             Text(label, style: AppTypography.bodyMedium.copyWith(color: isSelected ? AppColors.onPrimary : AppColors.onSurface)),

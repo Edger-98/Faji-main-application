@@ -7,8 +7,7 @@ import 'package:fajimobileapp/features/organize_event/presentation/screens/event
 class CreateEventBottomSheet extends StatelessWidget {
   const CreateEventBottomSheet({super.key});
 
-  static Future<void> show(BuildContext context) {
-    return showModalBottomSheet(
+  static Future<void> show(BuildContext context) => showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -16,11 +15,9 @@ class CreateEventBottomSheet extends StatelessWidget {
       enableDrag: true,
       builder: (context) => const CreateEventBottomSheet(),
     );
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       height: MediaQuery.of(context).size.height * 0.95,
       decoration: BoxDecoration(
         color: context.colors.surface,
@@ -77,5 +74,4 @@ class CreateEventBottomSheet extends StatelessWidget {
         ],
       ),
     );
-  }
 }

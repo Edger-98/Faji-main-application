@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/network/api_response.dart';
-import '../../domain/entities/marketplace_resource.dart';
-import '../../domain/entities/vendor_profile.dart';
-import '../../domain/entities/booking.dart';
-import '../../domain/entities/counter_offer.dart';
-import '../../domain/entities/vendor_stats.dart';
-import '../../domain/entities/vendor_dashboard.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/marketplace_resource.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_profile.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/booking.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/counter_offer.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_stats.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_dashboard.dart';
 
 part 'marketplace_remote_datasource.g.dart';
 

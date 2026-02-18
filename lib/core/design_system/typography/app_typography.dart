@@ -163,7 +163,7 @@ class AppTypography {
 
   /// Responsive text scaling based on screen size
   static double getResponsiveFontSize(double baseFontSize, BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.of(context).size.width;
     
     // Mobile: base size
     if (screenWidth < 600) return baseFontSize;
@@ -177,7 +177,7 @@ class AppTypography {
 
   /// Get responsive text theme based on screen size
   static TextTheme getResponsiveTextTheme(BuildContext context) {
-    final double scale = _getTextScaleFactor(context);
+    final scale = _getTextScaleFactor(context);
     
     return TextTheme(
       displayLarge: displayLarge.copyWith(fontSize: displayLarge.fontSize! * scale),
@@ -199,7 +199,7 @@ class AppTypography {
   }
 
   static double _getTextScaleFactor(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     
     if (screenWidth < 600) {
       return 1;      // Mobile

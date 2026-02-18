@@ -25,11 +25,11 @@ class _BecomeVendorCardState extends State<BecomeVendorCard>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
@@ -59,12 +59,12 @@ class _BecomeVendorCardState extends State<BecomeVendorCard>
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFFFEB822), Color(0xFFFF9500)],
+                colors: <Color>[Color(0xFFFEB822), Color(0xFFFF9500)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20),
-              boxShadow: [
+              boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: const Color(0xFFFEB822).withOpacity(0.3),
                   blurRadius: 12,
@@ -73,7 +73,7 @@ class _BecomeVendorCardState extends State<BecomeVendorCard>
               ],
             ),
             child: Row(
-              children: [
+              children: <Widget>[
                 Container(
                   width: 56,
                   height: 56,
@@ -91,7 +91,7 @@ class _BecomeVendorCardState extends State<BecomeVendorCard>
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Text(
                         'Become a Vendor',
                         style: AppTypography.labelLarge.copyWith(

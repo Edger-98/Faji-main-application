@@ -7,11 +7,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Bottom sheet for vendor to counter offer or decline booking
 /// Keyboard-friendly design that doesn't disturb input
 class CounterOfferBottomSheet extends StatefulWidget {
-  final String bookingId;
-  final String currentAmount;
-  final VoidCallback? onAccept;
-  final Function(String amount, String message)? onCounterOffer;
-  final Function(String reason)? onDecline;
 
   const CounterOfferBottomSheet({
     super.key,
@@ -21,6 +16,11 @@ class CounterOfferBottomSheet extends StatefulWidget {
     this.onCounterOffer,
     this.onDecline,
   });
+  final String bookingId;
+  final String currentAmount;
+  final VoidCallback? onAccept;
+  final Function(String amount, String message)? onCounterOffer;
+  final Function(String reason)? onDecline;
 
   @override
   State<CounterOfferBottomSheet> createState() => _CounterOfferBottomSheetState();
@@ -42,8 +42,7 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
@@ -152,7 +151,6 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
         ],
       ),
     );
-  }
 
   Widget _buildActionTab({
     required String label,
@@ -160,7 +158,7 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
     required String value,
     required Color color,
   }) {
-    final isSelected = _selectedAction == value;
+    final bool isSelected = _selectedAction == value;
 
     return GestureDetector(
       onTap: () {
@@ -181,7 +179,7 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
           ),
         ),
         child: Column(
-          children: [
+          children: <Widget>[
             Icon(
               icon,
               color: isSelected ? color : context.colors.onSurfaceVariant,
@@ -215,8 +213,7 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
     }
   }
 
-  Widget _buildAcceptContent() {
-    return Column(
+  Widget _buildAcceptContent() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
@@ -256,10 +253,8 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
         ),
       ],
     );
-  }
 
-  Widget _buildCounterContent() {
-    return Column(
+  Widget _buildCounterContent() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -349,10 +344,8 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
         ),
       ],
     );
-  }
 
-  Widget _buildDeclineContent() {
-    return Column(
+  Widget _buildDeclineContent() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -412,7 +405,6 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
         ),
       ],
     );
-  }
 
   Color _getActionColor() {
     switch (_selectedAction) {
@@ -446,8 +438,7 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
     switch (_selectedAction) {
       case 'accept':
         widget.onAccept?.call();
-        Navigator.pop(context, {'action': 'accept'});
-        break;
+        Navigator.pop(context, <String, String>{'action': 'accept'});
       case 'counter':
         if (_amountController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -462,12 +453,11 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
           _amountController.text,
           _messageController.text,
         );
-        Navigator.pop(context, {
+        Navigator.pop(context, <String, String>{
           'action': 'counter',
           'amount': _amountController.text,
           'message': _messageController.text,
         });
-        break;
       case 'decline':
         if (_declineReasonController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -479,11 +469,10 @@ class _CounterOfferBottomSheetState extends State<CounterOfferBottomSheet> {
           return;
         }
         widget.onDecline?.call(_declineReasonController.text);
-        Navigator.pop(context, {
+        Navigator.pop(context, <String, String>{
           'action': 'decline',
           'reason': _declineReasonController.text,
         });
-        break;
     }
   }
 }
@@ -496,8 +485,7 @@ Future<Map<String, dynamic>?> showCounterOfferBottomSheet({
   VoidCallback? onAccept,
   Function(String amount, String message)? onCounterOffer,
   Function(String reason)? onDecline,
-}) {
-  return showModalBottomSheet<Map<String, dynamic>>(
+}) => showModalBottomSheet<Map<String, dynamic>>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
@@ -514,4 +502,3 @@ Future<Map<String, dynamic>?> showCounterOfferBottomSheet({
       ),
     ),
   );
-}

@@ -30,13 +30,13 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
     super.initState();
     _controllers = List.generate(
       ResourceCategory.values.length,
-      (index) => AnimationController(
+      (int index) => AnimationController(
         duration: const Duration(milliseconds: 150),
         vsync: this,
       ),
     );
     _scaleAnimations = _controllers
-        .map((controller) => Tween<double>(begin: 1.0, end: 0.95).animate(
+        .map((AnimationController controller) => Tween<double>(begin: 1, end: 0.95).animate(
               CurvedAnimation(parent: controller, curve: Curves.easeInOut),
             ))
         .toList();
@@ -44,14 +44,14 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
 
   @override
   void dispose() {
-    for (var controller in _controllers) {
+    for (AnimationController controller in _controllers) {
       controller.dispose();
     }
     super.dispose();
   }
 
   void _toggleCategory(ResourceCategory category) {
-    final index = ResourceCategory.values.indexOf(category);
+    final int index = ResourceCategory.values.indexOf(category);
     _controllers[index].forward().then((_) => _controllers[index].reverse());
     
     setState(() {
@@ -85,11 +85,11 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      builder: (context) => Container(
+      builder: (BuildContext context) => Container(
         padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             Text(
               'What would you like to do?',
               style: TextStyle(
@@ -105,12 +105,12 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
-                final ResourceCategory firstCategory = _selectedCategories.first;
+                final firstCategory = _selectedCategories.first;
                 // Navigate to cohost list with eventId
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CohostListScreen(
+                    builder: (BuildContext context) => CohostListScreen(
                       category: firstCategory,
                       eventId: widget.eventId,
                     ),
@@ -179,8 +179,7 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -404,5 +403,4 @@ class _ResourceCategoriesScreenState extends State<ResourceCategoriesScreen>
         ),
       ),
     );
-  }
 }

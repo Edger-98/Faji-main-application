@@ -5,16 +5,15 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 
 class AppBottomNav extends StatelessWidget {
-  final int currentIndex;
 
   const AppBottomNav({
     super.key,
     required this.currentIndex,
   });
+  final int currentIndex;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       height: 88,
       margin: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -58,7 +57,6 @@ class AppBottomNav extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Widget _buildNavItem(
     BuildContext context, {
@@ -66,7 +64,7 @@ class AppBottomNav extends StatelessWidget {
     required int index,
     required String route,
   }) {
-    final isSelected = currentIndex == index;
+    final bool isSelected = currentIndex == index;
 
     return GestureDetector(
       onTap: () {

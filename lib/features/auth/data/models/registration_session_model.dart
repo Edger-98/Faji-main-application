@@ -1,13 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../domain/entities/registration_session_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_session_entity.dart';
 
 part 'registration_session_model.g.dart';
 
 @JsonSerializable()
 class RegistrationSessionModel {
-  final String message;
-  final String sessionId;
 
   RegistrationSessionModel({
     required this.message,
@@ -16,13 +14,13 @@ class RegistrationSessionModel {
 
   factory RegistrationSessionModel.fromJson(Map<String, dynamic> json) =>
       _$RegistrationSessionModelFromJson(json);
+  final String message;
+  final String sessionId;
 
   Map<String, dynamic> toJson() => _$RegistrationSessionModelToJson(this);
 
-  RegistrationSessionEntity toEntity() {
-    return RegistrationSessionEntity(
+  RegistrationSessionEntity toEntity() => RegistrationSessionEntity(
       message: message,
       sessionId: sessionId,
     );
-  }
 }

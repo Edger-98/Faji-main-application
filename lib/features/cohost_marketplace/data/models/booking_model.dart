@@ -2,21 +2,6 @@ import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/bookin
 
 /// Data model for booking (API communication)
 class BookingModel {
-  final String id;
-  final String eventId;
-  final String hostId;
-  final String cohostId;
-  final String resourceId;
-  final String status;
-  final String paymentOption;
-  final double offeredPrice;
-  final double? agreedPrice;
-  final double? percentageSplit;
-  final String? message;
-  final DateTime? eventDate;
-  final String? escrowStatus;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 
   BookingModel({
     required this.id,
@@ -61,9 +46,23 @@ class BookingModel {
           : null,
     );
   }
+  final String id;
+  final String eventId;
+  final String hostId;
+  final String cohostId;
+  final String resourceId;
+  final String status;
+  final String paymentOption;
+  final double offeredPrice;
+  final double? agreedPrice;
+  final double? percentageSplit;
+  final String? message;
+  final DateTime? eventDate;
+  final String? escrowStatus;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'eventId': eventId,
       'cohostId': cohostId,
       'resourceId': resourceId,
@@ -76,10 +75,8 @@ class BookingModel {
       if (eventDate != null) 'eventDate': eventDate!.toIso8601String(),
       if (escrowStatus != null) 'escrowStatus': escrowStatus,
     };
-  }
 
-  BookingEntity toEntity() {
-    return BookingEntity(
+  BookingEntity toEntity() => BookingEntity(
       id: id,
       eventId: eventId,
       hostId: hostId,
@@ -96,7 +93,6 @@ class BookingModel {
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
-  }
 
   static BookingStatus _parseBookingStatus(String status) {
     switch (status.toLowerCase()) {

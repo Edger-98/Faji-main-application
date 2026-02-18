@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ThemeModel {
-  final String id;
-  final String name;
-  final List<String> colors;
-  final String? category;
 
   ThemeModel({
     required this.id,
@@ -12,17 +8,6 @@ class ThemeModel {
     required this.colors,
     this.category,
   });
-
-  /// Convert hex color strings to Flutter Color objects
-  List<Color> get gradientColors {
-    return colors.map((hex) => _hexToColor(hex)).toList();
-  }
-
-  /// Convert hex string to Color
-  Color _hexToColor(String hex) {
-    final hexCode = hex.replaceAll('#', '');
-    return Color(int.parse('FF$hexCode', radix: 16));
-  }
 
   factory ThemeModel.fromJson(Map<String, dynamic> json) {
     return ThemeModel(
@@ -34,13 +19,24 @@ class ThemeModel {
       category: json['category'] as String?,
     );
   }
+  final String id;
+  final String name;
+  final List<String> colors;
+  final String? category;
 
-  Map<String, dynamic> toJson() {
-    return {
+  /// Convert hex color strings to Flutter Color objects
+  List<Color> get gradientColors => colors.map((hex) => _hexToColor(hex)).toList();
+
+  /// Convert hex string to Color
+  Color _hexToColor(String hex) {
+    final String hexCode = hex.replaceAll('#', '');
+    return Color(int.parse('FF$hexCode', radix: 16));
+  }
+
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
       'colors': colors,
       'category': category,
     };
-  }
 }

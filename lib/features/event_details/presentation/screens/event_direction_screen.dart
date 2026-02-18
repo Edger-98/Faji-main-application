@@ -8,8 +8,7 @@ class EventDirectionScreen extends StatelessWidget {
   const EventDirectionScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: Stack(
         children: [
@@ -208,10 +207,8 @@ class EventDirectionScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildInfoCard(BuildContext context, String label, String value, IconData icon) {
-    return Container(
+  Widget _buildInfoCard(BuildContext context, String label, String value, IconData icon) => Container(
       width: 166.w,
       height: 96.h,
       padding: EdgeInsets.symmetric(horizontal: 43.w, vertical: 18.h),
@@ -247,18 +244,17 @@ class EventDirectionScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 }
 
 class RoutePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final Paint paint = Paint()
       ..color = AppColors.primary
       ..strokeWidth = 2.w
       ..style = PaintingStyle.stroke;
 
-    final path = Path();
+    final Path path = Path();
     path.moveTo(0, 0);
     path.quadraticBezierTo(
       size.width * 0.3,

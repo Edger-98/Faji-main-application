@@ -1,18 +1,16 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/topup_request.dart';
-import '../repositories/wallet_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/repositories/wallet_repository.dart';
 
 class TopupWalletUseCase {
-  final WalletRepository repository;
 
   TopupWalletUseCase(this.repository);
+  final WalletRepository repository;
 
   Future<Either<Failure, TopupResponse>> call({
     required TopupRequest request,
-  }) async {
-    return await repository.topupWallet(
+  }) async => await repository.topupWallet(
       request: request,
     );
-  }
 }

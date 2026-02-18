@@ -1,26 +1,29 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/tickets/data/models/ticket_model.dart';
+import 'package:retrofit/dio.dart';
 
-import '../../../../core/error/failures.dart';
-import '../../../../core/network/network_info.dart';
-import '../../domain/entities/check_in_request.dart';
-import '../../domain/entities/my_ticket.dart';
-import '../../domain/entities/promo_code_validation.dart';
-import '../../domain/entities/purchase_ticket_request.dart';
-import '../../domain/entities/purchase_ticket_response.dart';
-import '../../domain/entities/ticket_entity.dart';
-import '../../domain/repositories/ticket_repository.dart';
-import '../datasources/ticket_remote_datasource.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/core/network/network_info.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/check_in_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/my_ticket.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/promo_code_validation.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_response.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/ticket_entity.dart';
+import 'package:fajimobileapp/features/tickets/domain/repositories/ticket_repository.dart';
+import 'package:fajimobileapp/features/tickets/data/datasources/ticket_remote_datasource.dart';
 
 /// Ticket repository implementation
 class TicketRepositoryImpl implements TicketRepository {
-  final TicketRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
 
   TicketRepositoryImpl({
     required this.remoteDataSource,
     required this.networkInfo,
   });
+  final TicketRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo;
 
   // ========== NEW API METHODS ==========
 
@@ -36,7 +39,7 @@ class TicketRepositoryImpl implements TicketRepository {
       print('🎫 Calling purchaseTickets API...');
       print('   Request: ${request.toJson()}');
       
-      final response = await remoteDataSource.purchaseTickets(request);
+      final ApiResponse<PurchaseTicketResponse> response = await remoteDataSource.purchaseTickets(request);
 
       print('✅ Purchase response received');
       print('   Success: ${response.success}');
@@ -71,7 +74,7 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.validatePromoCode({
+      final ApiResponse<PromoCodeValidation> response = await remoteDataSource.validatePromoCode(<String, dynamic>{
         'eventId': eventId,
         'promoCode': promoCode,
         if (amount != null) 'amount': amount,
@@ -100,12 +103,18 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getMyTickets(status, page, limit);
+      final HttpResponse response = await remoteDataSource.getMyTickets(status, page, limit);
 
-      if (response.success && response.data != null) {
-        return Right(response.data!);
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+        
+        // Handle both wrapped and direct responses
+        final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>? ?? responseData;
+        
+        final MyTicketsResponse myTicketsResponse = MyTicketsResponse.fromJson(data);
+        return Right(myTicketsResponse);
       } else {
-        return Left(ServerFailure(message: response.message));
+        return const Left(ServerFailure(message: 'Failed to get tickets'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -123,7 +132,7 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.checkInGuest(request);
+      final ApiResponse<CheckInResponse> response = await remoteDataSource.checkInGuest(request);
 
       if (response.success && response.data != null) {
         return Right(response.data!);
@@ -147,10 +156,10 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getAllTickets();
+      final ApiResponse<List<TicketModel>> response = await remoteDataSource.getAllTickets();
 
       if (response.success && response.data != null) {
-        final tickets = response.data!.map((model) => model.toEntity()).toList();
+        final List<TicketEntity> tickets = response.data!.map((TicketModel model) => model.toEntity()).toList();
         return Right(tickets);
       } else {
         return Left(ServerFailure(message: response.message));
@@ -169,7 +178,7 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getTicketById(id);
+      final ApiResponse<TicketModel> response = await remoteDataSource.getTicketById(id);
 
       if (response.success && response.data != null) {
         return Right(response.data!.toEntity());
@@ -191,10 +200,10 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getPurchasedTickets(userId);
+      final ApiResponse<List<TicketModel>> response = await remoteDataSource.getPurchasedTickets(userId);
 
       if (response.success && response.data != null) {
-        final tickets = response.data!.map((model) => model.toEntity()).toList();
+        final List<TicketEntity> tickets = response.data!.map((TicketModel model) => model.toEntity()).toList();
         return Right(tickets);
       } else {
         return Left(ServerFailure(message: response.message));
@@ -214,10 +223,10 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getEventParticipants(eventId);
+      final ApiResponse<List<TicketModel>> response = await remoteDataSource.getEventParticipants(eventId);
 
       if (response.success && response.data != null) {
-        final tickets = response.data!.map((model) => model.toEntity()).toList();
+        final List<TicketEntity> tickets = response.data!.map((TicketModel model) => model.toEntity()).toList();
         return Right(tickets);
       } else {
         return Left(ServerFailure(message: response.message));
@@ -236,14 +245,14 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getTotalTicketsSold(eventId);
+      final HttpResponse response = await remoteDataSource.getTotalTicketsSold(eventId);
 
       if (response.response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>?;
-        final total = data?['total'] as int? ?? 0;
+        final Map<String, dynamic>? data = response.data as Map<String, dynamic>?;
+        final int total = data?['total'] as int? ?? 0;
         return Right(total);
       } else {
-        return Left(ServerFailure(message: 'Failed to get total tickets'));
+        return const Left(ServerFailure(message: 'Failed to get total tickets'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -259,7 +268,7 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.getUsersByEventId(eventId);
+      final ApiResponse<List<String>> response = await remoteDataSource.getUsersByEventId(eventId);
 
       if (response.success && response.data != null) {
         return Right(response.data!);
@@ -283,10 +292,10 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.filterTickets(filter, value);
+      final ApiResponse<List<TicketModel>> response = await remoteDataSource.filterTickets(filter, value);
 
       if (response.success && response.data != null) {
-        final tickets = response.data!.map((model) => model.toEntity()).toList();
+        final List<TicketEntity> tickets = response.data!.map((TicketModel model) => model.toEntity()).toList();
         return Right(tickets);
       } else {
         return Left(ServerFailure(message: response.message));
@@ -304,16 +313,14 @@ class TicketRepositoryImpl implements TicketRepository {
     required String eventId,
     required int ticketId,
     required DateTime purchasedDate,
-    String? promoCode,
-    required int quantity,
-    required String transactionId,
+    required int quantity, required String transactionId, String? promoCode,
   }) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure.noConnection());
     }
 
     try {
-      final response = await remoteDataSource.createTicket({
+      final ApiResponse<TicketModel> response = await remoteDataSource.createTicket(<String, dynamic>{
         'userId': userId,
         'eventId': eventId,
         'ticketId': ticketId,
@@ -345,7 +352,7 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.validateTicket({
+      final HttpResponse response = await remoteDataSource.validateTicket(<String, dynamic>{
         'ticketId': ticketId,
         'eventId': eventId,
       });
@@ -353,7 +360,7 @@ class TicketRepositoryImpl implements TicketRepository {
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Invalid ticket'));
+        return const Left(ServerFailure(message: 'Invalid ticket'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -372,7 +379,7 @@ class TicketRepositoryImpl implements TicketRepository {
     }
 
     try {
-      final response = await remoteDataSource.checkInAttendee({
+      final HttpResponse response = await remoteDataSource.checkInAttendee(<String, dynamic>{
         'ticketId': ticketId,
         'eventId': eventId,
       });
@@ -380,7 +387,7 @@ class TicketRepositoryImpl implements TicketRepository {
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Check-in failed'));
+        return const Left(ServerFailure(message: 'Check-in failed'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -396,10 +403,10 @@ class TicketRepositoryImpl implements TicketRepository {
       case DioExceptionType.receiveTimeout:
         return NetworkFailure.timeout();
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
+        final int? statusCode = error.response?.statusCode;
         
         // Safely extract error message from response
-        String message = 'An error occurred';
+        var message = 'An error occurred';
         final responseData = error.response?.data;
         
         if (responseData is Map<String, dynamic>) {
@@ -422,7 +429,7 @@ class TicketRepositoryImpl implements TicketRepository {
 
         if (statusCode == 401) {
           // Check if this is an authorization issue for event access
-          final customMessage = message.toLowerCase().contains('event') || 
+          final String customMessage = message.toLowerCase().contains('event') || 
                                message.toLowerCase().contains('access') ||
                                message.toLowerCase().contains('permission')
               ? "You're not authorized to perform this action on this event"
@@ -431,7 +438,7 @@ class TicketRepositoryImpl implements TicketRepository {
         } else if (statusCode == 422 || statusCode == 400) {
           return ValidationFailure(message: message);
         } else if (statusCode == 404) {
-          return ServerFailure(message: 'Ticket not found');
+          return const ServerFailure(message: 'Ticket not found');
         }
         return ServerFailure(message: message);
       case DioExceptionType.cancel:

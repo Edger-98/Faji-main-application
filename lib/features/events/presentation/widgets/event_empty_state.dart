@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Empty state widget for events
 class EventEmptyState extends StatelessWidget {
-  final String? title;
-  final String? message;
-  final IconData? icon;
-  final VoidCallback? onRetry;
-  final String? retryText;
 
   const EventEmptyState({
     super.key,
@@ -19,10 +14,14 @@ class EventEmptyState extends StatelessWidget {
     this.onRetry,
     this.retryText,
   });
+  final String? title;
+  final String? message;
+  final IconData? icon;
+  final VoidCallback? onRetry;
+  final String? retryText;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
         child: Column(
@@ -61,5 +60,4 @@ class EventEmptyState extends StatelessWidget {
         ),
       ),
     );
-  }
 }

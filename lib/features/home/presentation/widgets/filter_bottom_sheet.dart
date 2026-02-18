@@ -5,10 +5,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Filter options model
 class FilterOptions {
-  final String? sortBy;
-  final String? priceRange;
-  final double? distance;
-  final String? eventDate;
 
   const FilterOptions({
     this.sortBy,
@@ -16,20 +12,22 @@ class FilterOptions {
     this.distance,
     this.eventDate,
   });
+  final String? sortBy;
+  final String? priceRange;
+  final double? distance;
+  final String? eventDate;
 
   FilterOptions copyWith({
     String? sortBy,
     String? priceRange,
     double? distance,
     String? eventDate,
-  }) {
-    return FilterOptions(
+  }) => FilterOptions(
       sortBy: sortBy ?? this.sortBy,
       priceRange: priceRange ?? this.priceRange,
       distance: distance ?? this.distance,
       eventDate: eventDate ?? this.eventDate,
     );
-  }
 
   bool get hasFilters =>
       sortBy != null ||
@@ -42,12 +40,12 @@ class FilterOptions {
 
 /// Filter bottom sheet widget matching Figma design
 class FilterBottomSheet extends StatefulWidget {
-  final FilterOptions? initialFilters;
 
   const FilterBottomSheet({
     super.key,
     this.initialFilters,
   });
+  final FilterOptions? initialFilters;
 
   @override
   State<FilterBottomSheet> createState() => _FilterBottomSheetState();
@@ -56,7 +54,7 @@ class FilterBottomSheet extends StatefulWidget {
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
   String? _selectedSort;
   String? _selectedPrice;
-  double _distance = 10.0;
+  double _distance = 10;
   String? _selectedDate;
 
   @override
@@ -69,8 +67,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       height: 852.h,
       decoration: BoxDecoration(
         color: context.colors.background,
@@ -261,10 +258,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ],
       ),
     );
-  }
 
   Widget _buildSortOption(String option) {
-    final isSelected = _selectedSort == option;
+    final bool isSelected = _selectedSort == option;
     return GestureDetector(
       onTap: () {
         setState(() => _selectedSort = option);
@@ -278,7 +274,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           borderRadius: BorderRadius.circular(37.r),
         ),
         child: Row(
-          children: [
+          children: <Widget>[
             Text(
               option,
               style: TextStyle(
@@ -324,9 +320,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     );
   }
 
-  Widget _buildPriceChip(String price) {
-
-    return GestureDetector(
+  Widget _buildPriceChip(String price) => GestureDetector(
       onTap: () {
         setState(() => _selectedPrice = price);
       },
@@ -350,10 +344,9 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         ),
       ),
     );
-  }
 
   Widget _buildDateOption(String option) {
-    final isSelected = _selectedDate == option;
+    final bool isSelected = _selectedDate == option;
     return GestureDetector(
       onTap: () {
         setState(() => _selectedDate = option);
@@ -367,7 +360,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           borderRadius: BorderRadius.circular(37.r),
         ),
         child: Row(
-          children: [
+          children: <Widget>[
             Text(
               option,
               style: TextStyle(
@@ -423,7 +416,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   }
 
   void _applyFilters() {
-    final filters = FilterOptions(
+    final FilterOptions filters = FilterOptions(
       sortBy: _selectedSort,
       priceRange: _selectedPrice,
       distance: _distance,

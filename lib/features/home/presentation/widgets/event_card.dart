@@ -6,14 +6,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Event card widget for trending and upcoming events
 class EventCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String date;
-  final String time;
-  final String price;
-  final bool isLive;
-  final VoidCallback? onTap;
-  final VoidCallback? onFavorite;
 
   const EventCard({
     super.key,
@@ -26,10 +18,17 @@ class EventCard extends StatelessWidget {
     this.onTap,
     this.onFavorite,
   });
+  final String imageUrl;
+  final String title;
+  final String date;
+  final String time;
+  final String price;
+  final bool isLive;
+  final VoidCallback? onTap;
+  final VoidCallback? onFavorite;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         width: 220.w,
@@ -285,5 +284,4 @@ class EventCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }

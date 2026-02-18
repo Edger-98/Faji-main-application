@@ -1,4 +1,5 @@
 /// Profile feature module exports
+library;
 
 // Presentation layer
 export 'presentation/screens/profile_screen.dart';

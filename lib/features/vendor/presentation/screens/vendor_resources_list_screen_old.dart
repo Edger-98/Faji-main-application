@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
-import '../../data/providers/vendor_providers.dart';
+import 'package:fajimobileapp/features/vendor/data/providers/vendor_providers.dart';
 
 class VendorResourcesListScreen extends ConsumerWidget {
   const VendorResourcesListScreen({super.key});
@@ -12,8 +12,8 @@ class VendorResourcesListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: Fetch from API GET /marketplace/vendors/me/resources
-    final mockResources = [
-      {
+    final List<Map<String, Object>> mockResources = <Map<String, Object>>[
+      <String, Object>{
         'id': '1',
         'title': 'Grand Ballroom - Premium Venue',
         'category': 'venue',
@@ -21,7 +21,7 @@ class VendorResourcesListScreen extends ConsumerWidget {
         'isAvailable': true,
         'bookingCount': 12,
       },
-      {
+      <String, Object>{
         'id': '2',
         'title': 'Professional DJ Services',
         'category': 'entertainment',
@@ -29,7 +29,7 @@ class VendorResourcesListScreen extends ConsumerWidget {
         'isAvailable': true,
         'bookingCount': 8,
       },
-      {
+      <String, Object>{
         'id': '3',
         'title': 'Catering Package - 100 guests',
         'category': 'catering',
@@ -43,16 +43,16 @@ class VendorResourcesListScreen extends ConsumerWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             // Header
             Padding(
               padding: const EdgeInsets.all(24),
               child: Row(
-                children: [
+                children: <Widget>[
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.searchBarBackground,
                       shape: BoxShape.circle,
                     ),
@@ -74,7 +74,7 @@ class VendorResourcesListScreen extends ConsumerWidget {
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
@@ -94,27 +94,27 @@ class VendorResourcesListScreen extends ConsumerWidget {
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       itemCount: mockResources.length,
-                      itemBuilder: (context, index) {
-                        final resource = mockResources[index];
+                      itemBuilder: (BuildContext context, int index) {
+                        final Map<String, Object> resource = mockResources[index];
                         return _ResourceCard(
-                          title: resource['title'] as String,
-                          category: resource['category'] as String,
-                          price: resource['basePrice'] as int,
-                          bookings: resource['bookingCount'] as int,
-                          isAvailable: resource['isAvailable'] as bool,
+                          title: resource['title']! as String,
+                          category: resource['category']! as String,
+                          price: resource['basePrice']! as int,
+                          bookings: resource['bookingCount']! as int,
+                          isAvailable: resource['isAvailable']! as bool,
                           onEdit: () {
                             // TODO: Navigate to edit screen
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Edit feature coming soon')),
                             );
                           },
-                          onDelete: () => _showDeleteDialog(context, resource['title'] as String),
+                          onDelete: () => _showDeleteDialog(context, resource['title']! as String),
                           onToggleAvailability: () {
                             // TODO: Call API to toggle
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  resource['isAvailable'] as bool
+                                  resource['isAvailable']! as bool
                                       ? 'Service marked as unavailable'
                                       : 'Service marked as available',
                                 ),
@@ -131,8 +131,7 @@ class VendorResourcesListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
+  Widget _buildEmptyState(BuildContext context) => Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -178,12 +177,11 @@ class VendorResourcesListScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
 
   void _showDeleteDialog(BuildContext context, String title) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         backgroundColor: AppColors.searchBarBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
@@ -199,7 +197,7 @@ class VendorResourcesListScreen extends ConsumerWidget {
             color: AppColors.textSecondary,
           ),
         ),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
@@ -238,14 +236,6 @@ class VendorResourcesListScreen extends ConsumerWidget {
 }
 
 class _ResourceCard extends StatelessWidget {
-  final String title;
-  final String category;
-  final int price;
-  final int bookings;
-  final bool isAvailable;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-  final VoidCallback onToggleAvailability;
 
   const _ResourceCard({
     required this.title,
@@ -257,10 +247,17 @@ class _ResourceCard extends StatelessWidget {
     required this.onDelete,
     required this.onToggleAvailability,
   });
+  final String title;
+  final String category;
+  final int price;
+  final int bookings;
+  final bool isAvailable;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onToggleAvailability;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: AppColors.searchBarBackground,
@@ -391,5 +388,4 @@ class _ResourceCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

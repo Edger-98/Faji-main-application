@@ -9,8 +9,7 @@ class VendorResourcesScreen extends ConsumerWidget {
   const VendorResourcesScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -97,16 +96,9 @@ class VendorResourcesScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
 }
 
 class _ResourceCard extends StatelessWidget {
-  final String title;
-  final String category;
-  final String price;
-  final int bookings;
-  final bool isAvailable;
-  final String? imageUrl;
 
   const _ResourceCard({
     required this.title,
@@ -116,10 +108,15 @@ class _ResourceCard extends StatelessWidget {
     required this.isAvailable,
     this.imageUrl,
   });
+  final String title;
+  final String category;
+  final String price;
+  final int bookings;
+  final bool isAvailable;
+  final String? imageUrl;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: AppColors.searchBarBackground,
         borderRadius: BorderRadius.circular(16),
@@ -250,5 +247,4 @@ class _ResourceCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

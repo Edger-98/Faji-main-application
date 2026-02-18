@@ -24,24 +24,24 @@ mixin _$Cohost {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  String? get avatar => throw _privateConstructorUsedError;
   double get revenueShare => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
   String get joinedAt => throw _privateConstructorUsedError;
   double get earnings => throw _privateConstructorUsedError;
   CohostPermissions get permissions => throw _privateConstructorUsedError;
+  String? get avatar => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
       String id,
       String name,
       String email,
-      String? avatar,
       double revenueShare,
       String role,
       String joinedAt,
       double earnings,
       CohostPermissions permissions,
+      String? avatar,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -51,12 +51,12 @@ mixin _$Cohost {
       String id,
       String name,
       String email,
-      String? avatar,
       double revenueShare,
       String role,
       String joinedAt,
       double earnings,
       CohostPermissions permissions,
+      String? avatar,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -66,12 +66,12 @@ mixin _$Cohost {
       String id,
       String name,
       String email,
-      String? avatar,
       double revenueShare,
       String role,
       String joinedAt,
       double earnings,
       CohostPermissions permissions,
+      String? avatar,
     )?
     $default, {
     required TResult orElse(),
@@ -108,12 +108,12 @@ abstract class $CohostCopyWith<$Res> {
     String id,
     String name,
     String email,
-    String? avatar,
     double revenueShare,
     String role,
     String joinedAt,
     double earnings,
     CohostPermissions permissions,
+    String? avatar,
   });
 
   $CohostPermissionsCopyWith<$Res> get permissions;
@@ -137,12 +137,12 @@ class _$CohostCopyWithImpl<$Res, $Val extends Cohost>
     Object? id = null,
     Object? name = null,
     Object? email = null,
-    Object? avatar = freezed,
     Object? revenueShare = null,
     Object? role = null,
     Object? joinedAt = null,
     Object? earnings = null,
     Object? permissions = null,
+    Object? avatar = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -158,10 +158,6 @@ class _$CohostCopyWithImpl<$Res, $Val extends Cohost>
                 ? _value.email
                 : email // ignore: cast_nullable_to_non_nullable
                       as String,
-            avatar: freezed == avatar
-                ? _value.avatar
-                : avatar // ignore: cast_nullable_to_non_nullable
-                      as String?,
             revenueShare: null == revenueShare
                 ? _value.revenueShare
                 : revenueShare // ignore: cast_nullable_to_non_nullable
@@ -182,6 +178,10 @@ class _$CohostCopyWithImpl<$Res, $Val extends Cohost>
                 ? _value.permissions
                 : permissions // ignore: cast_nullable_to_non_nullable
                       as CohostPermissions,
+            avatar: freezed == avatar
+                ? _value.avatar
+                : avatar // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -210,12 +210,12 @@ abstract class _$$CohostImplCopyWith<$Res> implements $CohostCopyWith<$Res> {
     String id,
     String name,
     String email,
-    String? avatar,
     double revenueShare,
     String role,
     String joinedAt,
     double earnings,
     CohostPermissions permissions,
+    String? avatar,
   });
 
   @override
@@ -239,12 +239,12 @@ class __$$CohostImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? email = null,
-    Object? avatar = freezed,
     Object? revenueShare = null,
     Object? role = null,
     Object? joinedAt = null,
     Object? earnings = null,
     Object? permissions = null,
+    Object? avatar = freezed,
   }) {
     return _then(
       _$CohostImpl(
@@ -260,10 +260,6 @@ class __$$CohostImplCopyWithImpl<$Res>
             ? _value.email
             : email // ignore: cast_nullable_to_non_nullable
                   as String,
-        avatar: freezed == avatar
-            ? _value.avatar
-            : avatar // ignore: cast_nullable_to_non_nullable
-                  as String?,
         revenueShare: null == revenueShare
             ? _value.revenueShare
             : revenueShare // ignore: cast_nullable_to_non_nullable
@@ -284,6 +280,10 @@ class __$$CohostImplCopyWithImpl<$Res>
             ? _value.permissions
             : permissions // ignore: cast_nullable_to_non_nullable
                   as CohostPermissions,
+        avatar: freezed == avatar
+            ? _value.avatar
+            : avatar // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -296,12 +296,12 @@ class _$CohostImpl implements _Cohost {
     required this.id,
     required this.name,
     required this.email,
-    this.avatar,
     required this.revenueShare,
     required this.role,
     required this.joinedAt,
     required this.earnings,
     required this.permissions,
+    this.avatar,
   });
 
   factory _$CohostImpl.fromJson(Map<String, dynamic> json) =>
@@ -314,8 +314,6 @@ class _$CohostImpl implements _Cohost {
   @override
   final String email;
   @override
-  final String? avatar;
-  @override
   final double revenueShare;
   @override
   final String role;
@@ -325,10 +323,12 @@ class _$CohostImpl implements _Cohost {
   final double earnings;
   @override
   final CohostPermissions permissions;
+  @override
+  final String? avatar;
 
   @override
   String toString() {
-    return 'Cohost(id: $id, name: $name, email: $email, avatar: $avatar, revenueShare: $revenueShare, role: $role, joinedAt: $joinedAt, earnings: $earnings, permissions: $permissions)';
+    return 'Cohost(id: $id, name: $name, email: $email, revenueShare: $revenueShare, role: $role, joinedAt: $joinedAt, earnings: $earnings, permissions: $permissions, avatar: $avatar)';
   }
 
   @override
@@ -339,7 +339,6 @@ class _$CohostImpl implements _Cohost {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.revenueShare, revenueShare) ||
                 other.revenueShare == revenueShare) &&
             (identical(other.role, role) || other.role == role) &&
@@ -348,7 +347,8 @@ class _$CohostImpl implements _Cohost {
             (identical(other.earnings, earnings) ||
                 other.earnings == earnings) &&
             (identical(other.permissions, permissions) ||
-                other.permissions == permissions));
+                other.permissions == permissions) &&
+            (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -358,12 +358,12 @@ class _$CohostImpl implements _Cohost {
     id,
     name,
     email,
-    avatar,
     revenueShare,
     role,
     joinedAt,
     earnings,
     permissions,
+    avatar,
   );
 
   /// Create a copy of Cohost
@@ -381,12 +381,12 @@ class _$CohostImpl implements _Cohost {
       String id,
       String name,
       String email,
-      String? avatar,
       double revenueShare,
       String role,
       String joinedAt,
       double earnings,
       CohostPermissions permissions,
+      String? avatar,
     )
     $default,
   ) {
@@ -394,12 +394,12 @@ class _$CohostImpl implements _Cohost {
       id,
       name,
       email,
-      avatar,
       revenueShare,
       role,
       joinedAt,
       earnings,
       permissions,
+      avatar,
     );
   }
 
@@ -410,12 +410,12 @@ class _$CohostImpl implements _Cohost {
       String id,
       String name,
       String email,
-      String? avatar,
       double revenueShare,
       String role,
       String joinedAt,
       double earnings,
       CohostPermissions permissions,
+      String? avatar,
     )?
     $default,
   ) {
@@ -423,12 +423,12 @@ class _$CohostImpl implements _Cohost {
       id,
       name,
       email,
-      avatar,
       revenueShare,
       role,
       joinedAt,
       earnings,
       permissions,
+      avatar,
     );
   }
 
@@ -439,12 +439,12 @@ class _$CohostImpl implements _Cohost {
       String id,
       String name,
       String email,
-      String? avatar,
       double revenueShare,
       String role,
       String joinedAt,
       double earnings,
       CohostPermissions permissions,
+      String? avatar,
     )?
     $default, {
     required TResult orElse(),
@@ -454,12 +454,12 @@ class _$CohostImpl implements _Cohost {
         id,
         name,
         email,
-        avatar,
         revenueShare,
         role,
         joinedAt,
         earnings,
         permissions,
+        avatar,
       );
     }
     return orElse();
@@ -504,12 +504,12 @@ abstract class _Cohost implements Cohost {
     required final String id,
     required final String name,
     required final String email,
-    final String? avatar,
     required final double revenueShare,
     required final String role,
     required final String joinedAt,
     required final double earnings,
     required final CohostPermissions permissions,
+    final String? avatar,
   }) = _$CohostImpl;
 
   factory _Cohost.fromJson(Map<String, dynamic> json) = _$CohostImpl.fromJson;
@@ -521,8 +521,6 @@ abstract class _Cohost implements Cohost {
   @override
   String get email;
   @override
-  String? get avatar;
-  @override
   double get revenueShare;
   @override
   String get role;
@@ -532,6 +530,8 @@ abstract class _Cohost implements Cohost {
   double get earnings;
   @override
   CohostPermissions get permissions;
+  @override
+  String? get avatar;
 
   /// Create a copy of Cohost
   /// with the given fields replaced by the non-null parameter values.

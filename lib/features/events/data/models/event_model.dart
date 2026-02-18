@@ -1,38 +1,6 @@
 import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
 
 class EventModel {
-  final String id;
-  final String title;
-  final String description;
-  final String organizerId;
-  final String organizerName;
-  final String? organizerImage;
-  final String category;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String location;
-  final double latitude;
-  final double longitude;
-  final String imageUrl;
-  final List<String>? images;
-  final double price;
-  final String? currency;
-  final String? currencySymbol;
-  final int totalTickets;
-  final int availableTickets;
-  final int? soldTickets;
-  final bool isFree;
-  final bool ticketingEnabled;
-  final bool? isFeatured;
-  final bool? isTrending;
-  final bool? isFlashDeal;
-  final bool isCancelled;
-  final double? discountPercentage;
-  final double? rating;
-  final int? reviewCount;
-  final List<String>? tags;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 
   EventModel({
     required this.id,
@@ -68,39 +36,6 @@ class EventModel {
     this.createdAt,
     this.updatedAt,
   });
-
-  /// Helper to safely parse dates that might be objects, strings, or null
-  static DateTime? _parseDateSafely(dynamic dateValue) {
-    if (dateValue == null) return null;
-    
-    try {
-      // If it's already a DateTime
-      if (dateValue is DateTime) return dateValue;
-      
-      // If it's a string
-      if (dateValue is String) {
-        if (dateValue.isEmpty) return null;
-        return DateTime.parse(dateValue);
-      }
-      
-      // If it's a Map (Mongoose date object), try to extract the value
-      if (dateValue is Map) {
-        // Check for common date object patterns
-        if (dateValue.containsKey('\$date')) {
-          return DateTime.parse(dateValue['\$date'].toString());
-        }
-        // If it's an empty object, return null
-        if (dateValue.isEmpty) return null;
-      }
-      
-      // Try to convert to string and parse
-      final dateStr = dateValue.toString();
-      if (dateStr.isEmpty || dateStr == '{}') return null;
-      return DateTime.parse(dateStr);
-    } catch (e) {
-      return null;
-    }
-  }
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     // Handle nested data structure (API returns {success: true, data: {...}})
@@ -272,6 +207,71 @@ class EventModel {
       updatedAt: _parseDateSafely(data['updatedAt']),
     );
   }
+  final String id;
+  final String title;
+  final String description;
+  final String organizerId;
+  final String organizerName;
+  final String? organizerImage;
+  final String category;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String location;
+  final double latitude;
+  final double longitude;
+  final String imageUrl;
+  final List<String>? images;
+  final double price;
+  final String? currency;
+  final String? currencySymbol;
+  final int totalTickets;
+  final int availableTickets;
+  final int? soldTickets;
+  final bool isFree;
+  final bool ticketingEnabled;
+  final bool? isFeatured;
+  final bool? isTrending;
+  final bool? isFlashDeal;
+  final bool isCancelled;
+  final double? discountPercentage;
+  final double? rating;
+  final int? reviewCount;
+  final List<String>? tags;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  /// Helper to safely parse dates that might be objects, strings, or null
+  static DateTime? _parseDateSafely(dateValue) {
+    if (dateValue == null) return null;
+    
+    try {
+      // If it's already a DateTime
+      if (dateValue is DateTime) return dateValue;
+      
+      // If it's a string
+      if (dateValue is String) {
+        if (dateValue.isEmpty) return null;
+        return DateTime.parse(dateValue);
+      }
+      
+      // If it's a Map (Mongoose date object), try to extract the value
+      if (dateValue is Map) {
+        // Check for common date object patterns
+        if (dateValue.containsKey(r'$date')) {
+          return DateTime.parse(dateValue[r'$date'].toString());
+        }
+        // If it's an empty object, return null
+        if (dateValue.isEmpty) return null;
+      }
+      
+      // Try to convert to string and parse
+      final String dateStr = dateValue.toString();
+      if (dateStr.isEmpty || dateStr == '{}') return null;
+      return DateTime.parse(dateStr);
+    } catch (e) {
+      return null;
+    }
+  }
 
   EventEntity toEntity() => EventEntity(
         id: id,
@@ -322,7 +322,7 @@ class EventModel {
         'latitude': latitude,
         'longitude': longitude,
         'image_url': imageUrl,
-        'images': images == null ? null : List<dynamic>.from(images!.map((dynamic x) => x)),
+        'images': images == null ? null : List<dynamic>.from(images!.map((x) => x)),
         'price': price,
         'currency': currency,
         'total_tickets': totalTickets,
@@ -334,7 +334,7 @@ class EventModel {
         'discount_percentage': discountPercentage,
         'rating': rating,
         'review_count': reviewCount,
-        'tags': tags == null ? null : List<dynamic>.from(tags!.map((dynamic x) => x)),
+        'tags': tags == null ? null : List<dynamic>.from(tags!.map((x) => x)),
         'created_at': createdAt?.toIso8601String(),
         'updated_at': updatedAt?.toIso8601String(),
       };

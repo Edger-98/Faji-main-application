@@ -5,8 +5,7 @@ class TermsScreen extends StatelessWidget {
   const TermsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -191,20 +190,16 @@ class TermsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildSectionTitle(String title) {
-    return Text(
+  Widget _buildSectionTitle(String title) => Text(
       title,
       style: AppTypography.bodyMedium.copyWith(
         color: AppColors.onSurface,
         fontWeight: AppTypography.regular,
       ),
     );
-  }
 
-  Widget _buildParagraph(String text) {
-    return Text(
+  Widget _buildParagraph(String text) => Text(
       text,
       style: AppTypography.bodySmall.copyWith(
         color: AppColors.onSurface,
@@ -213,5 +208,4 @@ class TermsScreen extends StatelessWidget {
         height: 1.23,
       ),
     );
-  }
 }

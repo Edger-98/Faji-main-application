@@ -5,13 +5,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// List-style event card for main feed (inspired by Partiful)
 class EventListCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String date;
-  final String time;
-  final String location;
-  final String attendees;
-  final VoidCallback? onTap;
 
   const EventListCard({
     super.key,
@@ -23,10 +16,16 @@ class EventListCard extends StatelessWidget {
     required this.attendees,
     this.onTap,
   });
+  final String imageUrl;
+  final String title;
+  final String date;
+  final String time;
+  final String location;
+  final String attendees;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),
@@ -271,5 +270,4 @@ class EventListCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }

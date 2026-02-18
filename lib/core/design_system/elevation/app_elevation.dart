@@ -46,19 +46,16 @@ class AppElevation {
         color: Colors.black.withValues(alpha: 0.2),
         offset: Offset(0, elevation / 2),
         blurRadius: elevation,
-        spreadRadius: 0,
       ),
       BoxShadow(
         color: Colors.black.withValues(alpha: 0.14),
         offset: Offset(0, elevation),
         blurRadius: elevation * 2,
-        spreadRadius: 0,
       ),
       BoxShadow(
         color: Colors.black.withValues(alpha: 0.12),
         offset: Offset(0, elevation / 2),
         blurRadius: elevation * 3,
-        spreadRadius: 0,
       ),
     ];
   }
@@ -96,7 +93,7 @@ class AppElevation {
     }
 
     // Calculate overlay opacity based on elevation
-    final double opacity = (4.5 * math.log(elevation + 1) + 2) / 100;
+    final opacity = (4.5 * math.log(elevation + 1) + 2) / 100;
     
     return Color.alphaBlend(
       Colors.white.withValues(alpha: opacity.clamp(0.0, 1.0)),

@@ -2,6 +2,7 @@
 library core;
 
 // Configuration
+export 'config/app_config.dart';
 export 'config/app_initializer.dart';
 export 'config/config.dart';
 

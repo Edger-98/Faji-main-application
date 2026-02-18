@@ -9,8 +9,7 @@ class VendorPortfolio with _$VendorPortfolio {
   const factory VendorPortfolio({
     required String id,
     required String imageUrl,
-    String? caption,
-    required String uploadedAt,
+    required String uploadedAt, String? caption,
   }) = _VendorPortfolio;
 
   factory VendorPortfolio.fromJson(Map<String, dynamic> json) =>

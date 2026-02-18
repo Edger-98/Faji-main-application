@@ -12,7 +12,7 @@ class FajiAppTheme {
 
   /// Dark theme configuration (Primary theme from Figma)
   static ThemeData get darkTheme {
-    final ColorScheme colorScheme = AppColors.darkColorScheme;
+    final colorScheme = AppColors.darkColorScheme;
     
     return ThemeData(
       useMaterial3: true,
@@ -115,7 +115,7 @@ class FajiAppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(34.5),
-          borderSide: BorderSide(color: colorScheme.error, width: 1),
+          borderSide: BorderSide(color: colorScheme.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(34.5),
@@ -285,7 +285,7 @@ class FajiAppTheme {
 
   /// Light theme configuration
   static ThemeData get lightTheme {
-    final ColorScheme colorScheme = AppColors.lightColorScheme;
+    final colorScheme = AppColors.lightColorScheme;
     
     return ThemeData(
       useMaterial3: true,
@@ -388,7 +388,7 @@ class FajiAppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(34.5),
-          borderSide: BorderSide(color: colorScheme.error, width: 1),
+          borderSide: BorderSide(color: colorScheme.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(34.5),
@@ -557,14 +557,12 @@ class FajiAppTheme {
   }
 
   /// Get theme based on brightness
-  static ThemeData getTheme(Brightness brightness) {
-    return brightness == Brightness.dark ? darkTheme : lightTheme;
-  }
+  static ThemeData getTheme(Brightness brightness) => brightness == Brightness.dark ? darkTheme : lightTheme;
 
   /// Get responsive theme based on screen size and brightness
   static ThemeData getResponsiveTheme(BuildContext context, Brightness brightness) {
-    final ThemeData baseTheme = getTheme(brightness);
-    final TextTheme responsiveTextTheme = AppTypography.getResponsiveTextTheme(context);
+    final baseTheme = getTheme(brightness);
+    final responsiveTextTheme = AppTypography.getResponsiveTextTheme(context);
     
     return baseTheme.copyWith(
       textTheme: responsiveTextTheme,

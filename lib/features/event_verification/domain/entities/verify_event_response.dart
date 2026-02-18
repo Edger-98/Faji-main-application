@@ -68,8 +68,7 @@ class VerificationStatus with _$VerificationStatus {
     required int threshold,
     required bool meetsThreshold,
     required bool isVerified,
-    String? verifiedAt,
-    required bool canVerify,
+    required bool canVerify, String? verifiedAt,
   }) = _VerificationStatus;
 
   factory VerificationStatus.fromJson(Map<String, dynamic> json) =>

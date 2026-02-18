@@ -1,4 +1,5 @@
-import 'event_entity.dart';
+import 'package:fajimobileapp/core/config/app_config.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
 
 /// Extension methods for EventEntity to help with display formatting
 extension EventEntityDisplay on EventEntity {
@@ -14,14 +15,11 @@ extension EventEntityDisplay on EventEntity {
   /// Get formatted price string
   String get displayPrice {
     if (price > 0) {
-      final currencySymbol = currency ?? '\$';
-      return 'From $currencySymbol${price.toStringAsFixed(2)}';
+      return 'From ${AppConfig.formatPriceFull(price)}';
     }
     return 'Free';
   }
   
   /// Check if event should show as "live" or trending
-  bool get isLiveOrTrending {
-    return isTrending == true || isFeatured == true;
-  }
+  bool get isLiveOrTrending => isTrending == true || isFeatured == true;
 }

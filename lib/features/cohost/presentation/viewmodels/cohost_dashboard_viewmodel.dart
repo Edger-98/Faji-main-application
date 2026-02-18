@@ -1,17 +1,19 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/cohost_dashboard.dart';
-import '../../domain/usecases/get_cohost_dashboard_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_dashboard.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/get_cohost_dashboard_usecase.dart';
 
 // State for co-host dashboard
 typedef CohostDashboardState = BaseState<CohostDashboard>;
 
 class CohostDashboardViewModel extends StateNotifier<CohostDashboardState> {
-  final GetCohostDashboardUseCase _getCohostDashboardUseCase;
 
   CohostDashboardViewModel(
     this._getCohostDashboardUseCase,
   ) : super(const BaseState.initial());
+  final GetCohostDashboardUseCase _getCohostDashboardUseCase;
 
   /// Get co-host dashboard for an event
   Future<void> getCohostDashboard({
@@ -19,13 +21,13 @@ class CohostDashboardViewModel extends StateNotifier<CohostDashboardState> {
   }) async {
     state = const BaseState.loading();
 
-    final result = await _getCohostDashboardUseCase(
+    final Either<Failure, CohostDashboard> result = await _getCohostDashboardUseCase(
       eventId: eventId,
     );
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (dashboard) => state = BaseState.success(dashboard),
+      (Failure failure) => state = BaseState.error(failure),
+      (CohostDashboard dashboard) => state = BaseState.success(dashboard),
     );
   }
 

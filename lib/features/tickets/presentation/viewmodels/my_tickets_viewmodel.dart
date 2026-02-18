@@ -1,20 +1,22 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/my_ticket.dart';
-import '../../domain/usecases/get_my_tickets_usecase.dart';
-import '../providers/ticket_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/my_ticket.dart';
+import 'package:fajimobileapp/features/tickets/domain/usecases/get_my_tickets_usecase.dart';
+import 'package:fajimobileapp/features/tickets/presentation/providers/ticket_providers.dart';
 
 /// My Tickets ViewModel
 class MyTicketsViewModel extends StateNotifier<BaseState<MyTicketsResponse>> {
+
+  MyTicketsViewModel(this._getMyTicketsUseCase)
+      : super(const BaseState.initial());
   final GetMyTicketsUseCase _getMyTicketsUseCase;
 
   String? _currentStatus;
   int _currentPage = 1;
   bool _hasMore = true;
-
-  MyTicketsViewModel(this._getMyTicketsUseCase)
-      : super(const BaseState.initial());
 
   /// Load my tickets
   Future<void> loadMyTickets({
@@ -33,26 +35,31 @@ class MyTicketsViewModel extends StateNotifier<BaseState<MyTicketsResponse>> {
     _currentStatus = status;
     _currentPage = page;
 
-    final result = await _getMyTicketsUseCase(
+    final Either<Failure, MyTicketsResponse> result = await _getMyTicketsUseCase(
       status: status,
       page: page,
-      limit: 20,
     );
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (response) {
+      (Failure failure) {
+        if (mounted) {
+          state = BaseState.error(failure);
+        }
+      },
+      (MyTicketsResponse response) {
+        if (!mounted) return;
+        
         _hasMore = response.pagination.page < response.pagination.pages;
 
         if (loadMore && state.isSuccess) {
           // Append to existing tickets
-          final currentData = state.dataOrNull;
+          final MyTicketsResponse? currentData = state.dataOrNull;
           if (currentData != null) {
-            final updatedTickets = <MyTicket>[
+            final List<MyTicket> updatedTickets = <MyTicket>[
               ...currentData.tickets,
               ...response.tickets,
             ];
-            final updatedResponse = MyTicketsResponse(
+            final MyTicketsResponse updatedResponse = MyTicketsResponse(
               tickets: updatedTickets,
               pagination: response.pagination,
             );
@@ -103,9 +110,9 @@ class MyTicketsViewModel extends StateNotifier<BaseState<MyTicketsResponse>> {
 }
 
 /// My Tickets ViewModel Provider
-final myTicketsViewModelProvider = StateNotifierProvider.autoDispose<
+final AutoDisposeStateNotifierProvider<MyTicketsViewModel, BaseState<MyTicketsResponse>> myTicketsViewModelProvider = StateNotifierProvider.autoDispose<
     MyTicketsViewModel, BaseState<MyTicketsResponse>>(
-  (ref) => MyTicketsViewModel(
+  (AutoDisposeStateNotifierProviderRef<MyTicketsViewModel, BaseState<MyTicketsResponse>> ref) => MyTicketsViewModel(
     ref.watch(getMyTicketsUseCaseProvider),
   ),
 );

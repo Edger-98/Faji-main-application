@@ -16,8 +16,7 @@ class CoHostInvitationsScreen extends StatefulWidget {
 
 class _CoHostInvitationsScreenState extends State<CoHostInvitationsScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
@@ -47,7 +46,6 @@ class _CoHostInvitationsScreenState extends State<CoHostInvitationsScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildInvitationCard({
     required String eventId,
@@ -56,8 +54,7 @@ class _CoHostInvitationsScreenState extends State<CoHostInvitationsScreen> {
     required String eventDate,
     required String revenueShare,
     required String invitedDate,
-  }) {
-    return Container(
+  }) => Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -226,7 +223,6 @@ class _CoHostInvitationsScreenState extends State<CoHostInvitationsScreen> {
         ],
       ),
     );
-  }
 
   void _acceptInvitation(String eventId) {
     HapticFeedback.mediumImpact();

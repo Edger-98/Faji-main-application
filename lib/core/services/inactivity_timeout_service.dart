@@ -4,14 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../design_system/design_system.dart';
-import '../routing/route_manager.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 
 /// Service to handle user inactivity timeout
 class InactivityTimeoutService {
-  static final InactivityTimeoutService _instance = InactivityTimeoutService._internal();
   factory InactivityTimeoutService() => _instance;
   InactivityTimeoutService._internal();
+  static final InactivityTimeoutService _instance = InactivityTimeoutService._internal();
 
   // Configuration
   static const Duration _inactivityDuration = Duration(minutes: 10);
@@ -75,13 +75,12 @@ class InactivityTimeoutService {
     _isDialogShowing = true;
     
     // Start countdown timer for auto-logout
-    int remainingSeconds = _warningDuration.inSeconds;
+    var remainingSeconds = _warningDuration.inSeconds;
     
     showDialog(
       context: _context!,
       barrierDismissible: false,
-      builder: (dialogContext) {
-        return _InactivityDialog(
+      builder: (BuildContext dialogContext) => _InactivityDialog(
           remainingSeconds: remainingSeconds,
           onStayActive: () {
             _handleStayActive(dialogContext);
@@ -89,8 +88,7 @@ class InactivityTimeoutService {
           onLogout: () {
             _handleLogout(dialogContext);
           },
-        );
-      },
+        ),
     ).then((_) {
       _isDialogShowing = false;
     });
@@ -129,7 +127,7 @@ class InactivityTimeoutService {
       await _storage.delete(key: 'user_id');
       
       // Clear shared preferences
-      final prefs = await SharedPreferences.getInstance();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.clear();
     } catch (e) {
       // Silent error handling
@@ -167,15 +165,15 @@ class InactivityTimeoutService {
 
 /// Inactivity warning dialog widget
 class _InactivityDialog extends StatefulWidget {
-  final int remainingSeconds;
-  final VoidCallback onStayActive;
-  final VoidCallback onLogout;
 
   const _InactivityDialog({
     required this.remainingSeconds,
     required this.onStayActive,
     required this.onLogout,
   });
+  final int remainingSeconds;
+  final VoidCallback onStayActive;
+  final VoidCallback onLogout;
 
   @override
   State<_InactivityDialog> createState() => _InactivityDialogState();
@@ -193,7 +191,7 @@ class _InactivityDialogState extends State<_InactivityDialog> {
   }
 
   void _startCountdown() {
-    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (!mounted) {
         timer.cancel();
         return;
@@ -216,8 +214,7 @@ class _InactivityDialogState extends State<_InactivityDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
+  Widget build(BuildContext context) => AlertDialog(
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.r),
@@ -346,5 +343,4 @@ class _InactivityDialogState extends State<_InactivityDialog> {
         ],
       ),
     );
-  }
 }

@@ -1,24 +1,22 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/my_ticket.dart';
-import '../repositories/ticket_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/my_ticket.dart';
+import 'package:fajimobileapp/features/tickets/domain/repositories/ticket_repository.dart';
 
 /// Get My Tickets Use Case
 class GetMyTicketsUseCase {
-  final TicketRepository repository;
 
   GetMyTicketsUseCase(this.repository);
+  final TicketRepository repository;
 
   Future<Either<Failure, MyTicketsResponse>> call({
     String? status,
     int page = 1,
     int limit = 20,
-  }) async {
-    return await repository.getMyTickets(
+  }) async => await repository.getMyTickets(
       status: status,
       page: page,
       limit: limit,
     );
-  }
 }

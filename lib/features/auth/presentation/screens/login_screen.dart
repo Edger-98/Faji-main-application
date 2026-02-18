@@ -1,3 +1,6 @@
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +12,7 @@ import 'package:fajimobileapp/core/services/toast_service.dart';
 import 'package:fajimobileapp/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/login_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 /// Login screen for existing users
 class LoginScreen extends ConsumerStatefulWidget {
@@ -19,9 +23,9 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
   @override
@@ -66,25 +70,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     // Listen to login state
-    ref.listen(loginViewModelProvider, (previous, next) {
+    ref.listen(loginViewModelProvider, (BaseState<AuthTokenEntity>? previous, BaseState<AuthTokenEntity> next) {
       next.when(
         initial: () {},
         loading: () {},
-        success: (token) async {
+        success: (AuthTokenEntity token) async {
+          // Save password for biometric login
+          final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
+          await localDataSource.savePassword(_passwordController.text);
+          
           // Fetch user data
           await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
           
           // Navigate directly to home after first login
           context.go(RouteManager.home);
         },
-        error: (failure) {
+        error: (Failure failure) {
           _showError(failure.message);
         },
       );
     });
 
-    final loginState = ref.watch(loginViewModelProvider);
-    final isLoading = loginState.maybeWhen(
+    final BaseState<AuthTokenEntity> loginState = ref.watch(loginViewModelProvider);
+    final bool isLoading = loginState.maybeWhen(
       loading: () => true,
       orElse: () => false,
     );
@@ -99,7 +107,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                 SizedBox(height: 40.h),
                 
                 // Back button
@@ -108,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Container(
                     width: 50.w,
                     height: 50.h,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.surfaceContainerHighest,
                       shape: BoxShape.circle,
                     ),
@@ -185,7 +193,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Implement forgot password
+                      context.push(RouteManager.forgotPassword);
                     },
                     child: AppText.bodySmall(
                       'Forgot password?',
@@ -215,7 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       context.go(RouteManager.authEmail);
                     },
                     child: AppText.bodyMedium(
-                      'Don\'t have an account? Sign up',
+                      "Don't have an account? Sign up",
                       color: context.colors.onSurfaceVariant,
                     ),
                   ),

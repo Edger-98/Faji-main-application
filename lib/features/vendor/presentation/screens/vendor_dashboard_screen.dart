@@ -1,3 +1,5 @@
+import 'package:fajimobileapp/features/vendor/data/datasources/vendor_remote_datasource.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_profile_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
-import '../../data/providers/vendor_providers.dart';
+import 'package:retrofit/dio.dart';
+import 'package:fajimobileapp/features/vendor/data/providers/vendor_providers.dart';
 
 class VendorDashboardScreen extends ConsumerStatefulWidget {
   const VendorDashboardScreen({super.key});
@@ -29,14 +32,14 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final datasource = ref.read(vendorRemoteDataSourceProvider);
-      final response = await datasource.getVendorStats();
+      final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
+      final HttpResponse response = await datasource.getVendorStats();
 
       if (!mounted) return;
 
       if (response.response.statusCode == 200) {
         setState(() {
-          _stats = response.data['data'] ?? response.data;
+          _stats = (response.data['data'] ?? response.data) as Map<String, dynamic>?;
           _isLoading = false;
         });
       } else {
@@ -53,8 +56,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
     }
   }
 
-  Map<String, dynamic> _getMockStats() {
-    return {
+  Map<String, dynamic> _getMockStats() => {
       'totalBookings': 24,
       'totalEarnings': 4850000,
       'pendingRequests': 3,
@@ -62,35 +64,34 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
       'completedBookings': 21,
       'averageRating': 4.8,
     };
-  }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: AppColors.background,
-        body: const Center(
+        body: Center(
           child: CircularProgressIndicator(color: AppColors.primary),
         ),
       );
     }
 
-    final mockStats = _stats ?? _getMockStats();
+    final Map<String, dynamic> mockStats = _stats ?? _getMockStats();
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             // Header
             Padding(
               padding: EdgeInsets.all(24.w),
               child: Row(
-                children: [
+                children: <Widget>[
                   Container(
                     width: 50.w,
                     height: 50.h,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.searchBarBackground,
                       shape: BoxShape.circle,
                     ),
@@ -108,6 +109,22 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined),
+                    color: AppColors.primary,
+                    onPressed: () async {
+                      final result = await Navigator.push<bool>(
+                        context,
+                        MaterialPageRoute<bool>(
+                          builder: (context) => const VendorProfileEditScreen(),
+                        ),
+                      );
+                      if (result == true) {
+                        _fetchStats(); // Refresh after profile update
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -115,10 +132,10 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
-                children: [
+                children: <Widget>[
                   // Stats Cards Row 1
                   Row(
-                    children: [
+                    children: <Widget>[
                       Expanded(
                         child: _StatCard(
                           icon: Icons.monetization_on,
@@ -141,7 +158,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                   SizedBox(height: 12.h),
                   // Stats Cards Row 2
                   Row(
-                    children: [
+                    children: <Widget>[
                       Expanded(
                         child: _StatCard(
                           icon: Icons.pending_actions,
@@ -202,16 +219,16 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                   ),
                   SizedBox(height: 24.h),
                   // Recent Activity
-                  Text(
-                    'Recent Activity',
-                    style: AppTypography.titleMedium.copyWith(
-                      color: AppColors.onSurface,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  // Text(
+                  //   'Recent Activity',
+                  //   style: AppTypography.titleMedium.copyWith(
+                  //     color: AppColors.onSurface,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
+                  // ),
                   SizedBox(height: 12.h),
-                  _buildRecentActivity(),
-                  SizedBox(height: 120.h),
+                  // _buildRecentActivity(),
+                  // SizedBox(height: 120.h),
                 ],
               ),
             ),
@@ -223,22 +240,22 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
 
   Widget _buildRecentActivity() {
     // TODO: Fetch from API
-    final mockActivity = [
-      {
+    final List<Map<String, Object>> mockActivity = <Map<String, Object>>[
+      <String, Object>{
         'type': 'booking',
         'title': 'New booking request',
         'subtitle': 'Wedding Reception - Sarah Smith',
         'time': '2 hours ago',
         'icon': Icons.event_note,
       },
-      {
+      <String, Object>{
         'type': 'completed',
         'title': 'Booking completed',
         'subtitle': 'Corporate Event - Mike Johnson',
         'time': '1 day ago',
         'icon': Icons.check_circle,
       },
-      {
+      <String, Object>{
         'type': 'resource',
         'title': 'Service updated',
         'subtitle': 'Grand Ballroom - Price updated',
@@ -248,8 +265,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
     ];
 
     return Column(
-      children: mockActivity.map((activity) {
-        return Container(
+      children: mockActivity.map((Map<String, Object> activity) => Container(
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -301,24 +317,17 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
               ),
             ],
           ),
-        );
-      }).toList(),
+        )).toList(),
     );
   }
 
-  String _formatPrice(int price) {
-    return price.toString().replaceAllMapped(
+  String _formatPrice(int price) => price.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]},',
     );
-  }
 }
 
 class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
 
   const _StatCard({
     required this.icon,
@@ -326,10 +335,13 @@ class _StatCard extends StatelessWidget {
     required this.value,
     required this.color,
   });
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.searchBarBackground,
@@ -369,14 +381,9 @@ class _StatCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }
 
 class _QuickActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
 
   const _QuickActionCard({
     required this.icon,
@@ -384,10 +391,13 @@ class _QuickActionCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
   });
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(16.w),
@@ -441,5 +451,4 @@ class _QuickActionCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }

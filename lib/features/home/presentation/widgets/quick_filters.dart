@@ -4,31 +4,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 class QuickFilters extends StatefulWidget {
-  final Function(String) onFilterSelected;
 
   const QuickFilters({
     super.key,
     required this.onFilterSelected,
   });
+  final Function(String) onFilterSelected;
 
   @override
   State<QuickFilters> createState() => _QuickFiltersState();
 }
 
 class _QuickFiltersState extends State<QuickFilters> {
-  String _selectedFilter = 'All';
+  final String _selectedFilter = 'All';
 
-  final List<Map<String, dynamic>> _filters = [
-    {'label': 'All', 'icon': Icons.grid_view},
-    {'label': 'Today', 'icon': Icons.today},
-    {'label': 'This Week', 'icon': Icons.date_range},
-    {'label': 'Free', 'icon': Icons.money_off},
-    {'label': 'Popular', 'icon': Icons.trending_up},
+  final List<Map<String, dynamic>> _filters = <Map<String, dynamic>>[
+    <String, dynamic>{'label': 'All', 'icon': Icons.grid_view},
+    <String, dynamic>{'label': 'Today', 'icon': Icons.today},
+    <String, dynamic>{'label': 'This Week', 'icon': Icons.date_range},
+    <String, dynamic>{'label': 'Free', 'icon': Icons.money_off},
+    <String, dynamic>{'label': 'Popular', 'icon': Icons.trending_up},
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 40.h,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -66,5 +65,4 @@ class _QuickFiltersState extends State<QuickFilters> {
         },
       ),
     );
-  }
 }

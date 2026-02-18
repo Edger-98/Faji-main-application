@@ -18,7 +18,7 @@ class PurchaseTicketRequest with _$PurchaseTicketRequest {
 }
 
 extension PurchaseTicketRequestX on PurchaseTicketRequest {
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'eventId': eventId,
         'quantity': quantity,
         if (promoCode != null) 'promoCode': promoCode,

@@ -3,10 +3,10 @@ import 'package:fajimobileapp/features/organize_event/presentation/viewmodels/ev
 import 'package:fajimobileapp/features/organize_event/data/repositories/event_creation_repository.dart';
 
 /// Provider for event creation viewmodel
-final eventCreationViewModelProvider =
+final StateNotifierProvider<EventCreationViewModel, EventCreationState> eventCreationViewModelProvider =
     StateNotifierProvider<EventCreationViewModel, EventCreationState>(
-  (ref) {
-    final repository = ref.read(eventCreationRepositoryProvider);
+  (StateNotifierProviderRef<EventCreationViewModel, EventCreationState> ref) {
+    final EventCreationRepository repository = ref.read(eventCreationRepositoryProvider);
     return EventCreationViewModel(repository);
   },
 );

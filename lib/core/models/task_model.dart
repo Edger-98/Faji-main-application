@@ -1,12 +1,4 @@
 class TaskModel {
-  final String id;
-  final String title;
-  final String? description;
-  final String status;
-  final DateTime? dueDate;
-  final AssignedUserModel? assignedTo;
-  final DateTime createdAt;
-  final DateTime? completedAt;
 
   TaskModel({
     required this.id,
@@ -37,9 +29,16 @@ class TaskModel {
           : null,
     );
   }
+  final String id;
+  final String title;
+  final String? description;
+  final String status;
+  final DateTime? dueDate;
+  final AssignedUserModel? assignedTo;
+  final DateTime createdAt;
+  final DateTime? completedAt;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'title': title,
       'description': description,
@@ -49,12 +48,9 @@ class TaskModel {
       'createdAt': createdAt.toIso8601String(),
       'completedAt': completedAt?.toIso8601String(),
     };
-  }
 }
 
 class AssignedUserModel {
-  final String id;
-  final String name;
 
   AssignedUserModel({
     required this.id,
@@ -67,20 +63,16 @@ class AssignedUserModel {
       name: json['name'] as String,
     );
   }
+  final String id;
+  final String name;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
     };
-  }
 }
 
 class TaskStatsModel {
-  final int total;
-  final int completed;
-  final int inProgress;
-  final int notStarted;
 
   TaskStatsModel({
     required this.total,
@@ -97,4 +89,8 @@ class TaskStatsModel {
       notStarted: json['notStarted'] as int,
     );
   }
+  final int total;
+  final int completed;
+  final int inProgress;
+  final int notStarted;
 }

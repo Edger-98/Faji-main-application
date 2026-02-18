@@ -83,7 +83,7 @@ class _TicketRemoteDataSource implements TicketRemoteDataSource {
   }
 
   @override
-  Future<ApiResponse<MyTicketsResponse>> getMyTickets(
+  Future<HttpResponse<dynamic>> getMyTickets(
     String? status,
     int page,
     int limit,
@@ -97,7 +97,7 @@ class _TicketRemoteDataSource implements TicketRemoteDataSource {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ApiResponse<MyTicketsResponse>>(
+    final _options = _setStreamType<HttpResponse<dynamic>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -107,18 +107,10 @@ class _TicketRemoteDataSource implements TicketRemoteDataSource {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<MyTicketsResponse> _value;
-    try {
-      _value = ApiResponse<MyTicketsResponse>.fromJson(
-        _result.data!,
-        (json) => MyTicketsResponse.fromJson(json as Map<String, dynamic>),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
   }
 
   @override

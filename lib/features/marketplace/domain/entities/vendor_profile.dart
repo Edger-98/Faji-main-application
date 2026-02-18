@@ -10,17 +10,7 @@ class VendorProfile with _$VendorProfile {
     required String id,
     required String name,
     required String bio,
-    String? profilePhoto,
-    required List<String> categories,
-    required double rating,
-    required int reviewCount,
-    required int eventsCompleted,
-    required bool isVerified,
-    required String responseTime,
-    required String location,
-    required List<String> portfolio,
-    required List<VendorResource> resources,
-    required List<VendorReview> reviews,
+    required List<String> categories, required double rating, required int reviewCount, required int eventsCompleted, required bool isVerified, required String responseTime, required String location, required List<String> portfolio, required List<VendorResource> resources, required List<VendorReview> reviews, String? profilePhoto,
   }) = _VendorProfile;
 
   factory VendorProfile.fromJson(Map<String, dynamic> json) =>

@@ -1,14 +1,12 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/vendor_stats.dart';
-import '../repositories/marketplace_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_stats.dart';
+import 'package:fajimobileapp/features/marketplace/domain/repositories/marketplace_repository.dart';
 
 class GetVendorStatsUseCase {
-  final MarketplaceRepository repository;
 
   GetVendorStatsUseCase(this.repository);
+  final MarketplaceRepository repository;
 
-  Future<Either<Failure, VendorStats>> call() async {
-    return await repository.getVendorStats();
-  }
+  Future<Either<Failure, VendorStats>> call() async => await repository.getVendorStats();
 }

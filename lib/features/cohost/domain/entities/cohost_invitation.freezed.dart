@@ -26,9 +26,9 @@ mixin _$CohostInvitation {
   CohostUser get host => throw _privateConstructorUsedError;
   double get revenueShare => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  String? get message => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get expiresAt => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
   String? get respondedAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
@@ -38,9 +38,9 @@ mixin _$CohostInvitation {
       CohostUser host,
       double revenueShare,
       String status,
-      String? message,
       String createdAt,
       String expiresAt,
+      String? message,
       String? respondedAt,
     )
     $default,
@@ -53,9 +53,9 @@ mixin _$CohostInvitation {
       CohostUser host,
       double revenueShare,
       String status,
-      String? message,
       String createdAt,
       String expiresAt,
+      String? message,
       String? respondedAt,
     )?
     $default,
@@ -68,9 +68,9 @@ mixin _$CohostInvitation {
       CohostUser host,
       double revenueShare,
       String status,
-      String? message,
       String createdAt,
       String expiresAt,
+      String? message,
       String? respondedAt,
     )?
     $default, {
@@ -113,9 +113,9 @@ abstract class $CohostInvitationCopyWith<$Res> {
     CohostUser host,
     double revenueShare,
     String status,
-    String? message,
     String createdAt,
     String expiresAt,
+    String? message,
     String? respondedAt,
   });
 
@@ -143,9 +143,9 @@ class _$CohostInvitationCopyWithImpl<$Res, $Val extends CohostInvitation>
     Object? host = null,
     Object? revenueShare = null,
     Object? status = null,
-    Object? message = freezed,
     Object? createdAt = null,
     Object? expiresAt = null,
+    Object? message = freezed,
     Object? respondedAt = freezed,
   }) {
     return _then(
@@ -170,10 +170,6 @@ class _$CohostInvitationCopyWithImpl<$Res, $Val extends CohostInvitation>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as String,
-            message: freezed == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                      as String?,
             createdAt: null == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
@@ -182,6 +178,10 @@ class _$CohostInvitationCopyWithImpl<$Res, $Val extends CohostInvitation>
                 ? _value.expiresAt
                 : expiresAt // ignore: cast_nullable_to_non_nullable
                       as String,
+            message: freezed == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String?,
             respondedAt: freezed == respondedAt
                 ? _value.respondedAt
                 : respondedAt // ignore: cast_nullable_to_non_nullable
@@ -227,9 +227,9 @@ abstract class _$$CohostInvitationImplCopyWith<$Res>
     CohostUser host,
     double revenueShare,
     String status,
-    String? message,
     String createdAt,
     String expiresAt,
+    String? message,
     String? respondedAt,
   });
 
@@ -258,9 +258,9 @@ class __$$CohostInvitationImplCopyWithImpl<$Res>
     Object? host = null,
     Object? revenueShare = null,
     Object? status = null,
-    Object? message = freezed,
     Object? createdAt = null,
     Object? expiresAt = null,
+    Object? message = freezed,
     Object? respondedAt = freezed,
   }) {
     return _then(
@@ -285,10 +285,6 @@ class __$$CohostInvitationImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as String,
-        message: freezed == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String?,
         createdAt: null == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
@@ -297,6 +293,10 @@ class __$$CohostInvitationImplCopyWithImpl<$Res>
             ? _value.expiresAt
             : expiresAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        message: freezed == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String?,
         respondedAt: freezed == respondedAt
             ? _value.respondedAt
             : respondedAt // ignore: cast_nullable_to_non_nullable
@@ -315,9 +315,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
     required this.host,
     required this.revenueShare,
     required this.status,
-    this.message,
     required this.createdAt,
     required this.expiresAt,
+    this.message,
     this.respondedAt,
   });
 
@@ -335,17 +335,17 @@ class _$CohostInvitationImpl implements _CohostInvitation {
   @override
   final String status;
   @override
-  final String? message;
-  @override
   final String createdAt;
   @override
   final String expiresAt;
+  @override
+  final String? message;
   @override
   final String? respondedAt;
 
   @override
   String toString() {
-    return 'CohostInvitation(id: $id, event: $event, host: $host, revenueShare: $revenueShare, status: $status, message: $message, createdAt: $createdAt, expiresAt: $expiresAt, respondedAt: $respondedAt)';
+    return 'CohostInvitation(id: $id, event: $event, host: $host, revenueShare: $revenueShare, status: $status, createdAt: $createdAt, expiresAt: $expiresAt, message: $message, respondedAt: $respondedAt)';
   }
 
   @override
@@ -359,11 +359,11 @@ class _$CohostInvitationImpl implements _CohostInvitation {
             (identical(other.revenueShare, revenueShare) ||
                 other.revenueShare == revenueShare) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.message, message) || other.message == message) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.expiresAt, expiresAt) ||
                 other.expiresAt == expiresAt) &&
+            (identical(other.message, message) || other.message == message) &&
             (identical(other.respondedAt, respondedAt) ||
                 other.respondedAt == respondedAt));
   }
@@ -377,9 +377,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
     host,
     revenueShare,
     status,
-    message,
     createdAt,
     expiresAt,
+    message,
     respondedAt,
   );
 
@@ -403,9 +403,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
       CohostUser host,
       double revenueShare,
       String status,
-      String? message,
       String createdAt,
       String expiresAt,
+      String? message,
       String? respondedAt,
     )
     $default,
@@ -416,9 +416,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
       host,
       revenueShare,
       status,
-      message,
       createdAt,
       expiresAt,
+      message,
       respondedAt,
     );
   }
@@ -432,9 +432,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
       CohostUser host,
       double revenueShare,
       String status,
-      String? message,
       String createdAt,
       String expiresAt,
+      String? message,
       String? respondedAt,
     )?
     $default,
@@ -445,9 +445,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
       host,
       revenueShare,
       status,
-      message,
       createdAt,
       expiresAt,
+      message,
       respondedAt,
     );
   }
@@ -461,9 +461,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
       CohostUser host,
       double revenueShare,
       String status,
-      String? message,
       String createdAt,
       String expiresAt,
+      String? message,
       String? respondedAt,
     )?
     $default, {
@@ -476,9 +476,9 @@ class _$CohostInvitationImpl implements _CohostInvitation {
         host,
         revenueShare,
         status,
-        message,
         createdAt,
         expiresAt,
+        message,
         respondedAt,
       );
     }
@@ -526,9 +526,9 @@ abstract class _CohostInvitation implements CohostInvitation {
     required final CohostUser host,
     required final double revenueShare,
     required final String status,
-    final String? message,
     required final String createdAt,
     required final String expiresAt,
+    final String? message,
     final String? respondedAt,
   }) = _$CohostInvitationImpl;
 
@@ -546,11 +546,11 @@ abstract class _CohostInvitation implements CohostInvitation {
   @override
   String get status;
   @override
-  String? get message;
-  @override
   String get createdAt;
   @override
   String get expiresAt;
+  @override
+  String? get message;
   @override
   String? get respondedAt;
 

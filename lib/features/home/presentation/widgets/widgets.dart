@@ -1,4 +1,5 @@
 /// Home feature widgets barrel file
+library;
 export 'category_filter_section.dart';
 export 'event_card.dart';
 export 'event_list_card.dart';

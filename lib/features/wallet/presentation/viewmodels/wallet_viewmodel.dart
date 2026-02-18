@@ -1,41 +1,38 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/wallet_balance.dart';
-import '../../domain/entities/wallet_transaction.dart';
-import '../../domain/entities/earnings_breakdown.dart';
-import '../../domain/usecases/get_wallet_balance_usecase.dart';
-import '../../domain/usecases/get_wallet_transactions_usecase.dart';
-import '../../domain/usecases/get_earnings_breakdown_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
+import 'package:fajimobileapp/features/wallet/domain/usecases/get_wallet_balance_usecase.dart';
+import 'package:fajimobileapp/features/wallet/domain/usecases/get_wallet_transactions_usecase.dart';
+import 'package:fajimobileapp/features/wallet/domain/usecases/get_earnings_breakdown_usecase.dart';
 
 // State for wallet
 class WalletState {
-  final BaseState<WalletBalance> balanceState;
-  final BaseState<WalletTransactionsResponse> transactionsState;
-  final BaseState<EarningsBreakdown> earningsState;
 
   WalletState({
     required this.balanceState,
     required this.transactionsState,
     required this.earningsState,
   });
+  final BaseState<WalletBalance> balanceState;
+  final BaseState<WalletTransactionsResponse> transactionsState;
+  final BaseState<EarningsBreakdown> earningsState;
 
   WalletState copyWith({
     BaseState<WalletBalance>? balanceState,
     BaseState<WalletTransactionsResponse>? transactionsState,
     BaseState<EarningsBreakdown>? earningsState,
-  }) {
-    return WalletState(
+  }) => WalletState(
       balanceState: balanceState ?? this.balanceState,
       transactionsState: transactionsState ?? this.transactionsState,
       earningsState: earningsState ?? this.earningsState,
     );
-  }
 }
 
 class WalletViewModel extends StateNotifier<WalletState> {
-  final GetWalletBalanceUseCase _getWalletBalanceUseCase;
-  final GetWalletTransactionsUseCase _getWalletTransactionsUseCase;
-  final GetEarningsBreakdownUseCase _getEarningsBreakdownUseCase;
 
   WalletViewModel(
     this._getWalletBalanceUseCase,
@@ -46,6 +43,9 @@ class WalletViewModel extends StateNotifier<WalletState> {
           transactionsState: const BaseState.initial(),
           earningsState: const BaseState.initial(),
         ));
+  final GetWalletBalanceUseCase _getWalletBalanceUseCase;
+  final GetWalletTransactionsUseCase _getWalletTransactionsUseCase;
+  final GetEarningsBreakdownUseCase _getEarningsBreakdownUseCase;
 
   /// Get wallet balance
   Future<void> getWalletBalance() async {
@@ -53,13 +53,13 @@ class WalletViewModel extends StateNotifier<WalletState> {
       balanceState: const BaseState.loading(),
     );
 
-    final result = await _getWalletBalanceUseCase();
+    final Either<Failure, WalletBalance> result = await _getWalletBalanceUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         balanceState: BaseState.error(failure),
       ),
-      (balance) => state = state.copyWith(
+      (WalletBalance balance) => state = state.copyWith(
         balanceState: BaseState.success(balance),
       ),
     );
@@ -75,17 +75,17 @@ class WalletViewModel extends StateNotifier<WalletState> {
       transactionsState: const BaseState.loading(),
     );
 
-    final result = await _getWalletTransactionsUseCase(
+    final Either<Failure, WalletTransactionsResponse> result = await _getWalletTransactionsUseCase(
       type: type,
       page: page,
       limit: limit,
     );
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         transactionsState: BaseState.error(failure),
       ),
-      (transactions) => state = state.copyWith(
+      (WalletTransactionsResponse transactions) => state = state.copyWith(
         transactionsState: BaseState.success(transactions),
       ),
     );
@@ -97,13 +97,13 @@ class WalletViewModel extends StateNotifier<WalletState> {
       earningsState: const BaseState.loading(),
     );
 
-    final result = await _getEarningsBreakdownUseCase();
+    final Either<Failure, EarningsBreakdown> result = await _getEarningsBreakdownUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         earningsState: BaseState.error(failure),
       ),
-      (earnings) => state = state.copyWith(
+      (EarningsBreakdown earnings) => state = state.copyWith(
         earningsState: BaseState.success(earnings),
       ),
     );
@@ -116,12 +116,12 @@ class WalletViewModel extends StateNotifier<WalletState> {
 
   /// Load more transactions (pagination)
   Future<void> loadMoreTransactions() async {
-    final currentState = state.transactionsState;
+    final BaseState<WalletTransactionsResponse> currentState = state.transactionsState;
     if (currentState.isSuccess) {
-      final data = currentState.dataOrNull;
+      final WalletTransactionsResponse? data = currentState.dataOrNull;
       if (data != null) {
-        final currentPage = data.pagination.page;
-        final totalPages = data.pagination.pages;
+        final int currentPage = data.pagination.page;
+        final int totalPages = data.pagination.pages;
 
         if (currentPage < totalPages) {
           await getWalletTransactions(page: currentPage + 1);
@@ -132,7 +132,7 @@ class WalletViewModel extends StateNotifier<WalletState> {
 
   /// Refresh all wallet data
   Future<void> refreshAll() async {
-    await Future.wait([
+    await Future.wait(<Future<void>>[
       getWalletBalance(),
       getWalletTransactions(),
       getEarningsBreakdown(),

@@ -10,7 +10,7 @@ class ShareUtils {
   }) async {
     HapticFeedback.mediumImpact();
     
-    final text = '''
+    final String text = '''
 Check out this event: $eventName
 
 📅 Date: $eventDate
@@ -34,7 +34,7 @@ Get your tickets now!
   }) async {
     HapticFeedback.mediumImpact();
     
-    final text = '''
+    final String text = '''
 My ticket for $eventName
 
 Ticket ID: $ticketId
@@ -52,7 +52,7 @@ See you there! 🎉
   }) async {
     HapticFeedback.mediumImpact();
     
-    final text = '''
+    final String text = '''
 Connect with me on Faji!
 
 👤 $userName

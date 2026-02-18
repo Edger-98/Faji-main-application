@@ -104,7 +104,7 @@ class _CommonAppTextFieldState extends State<CommonAppTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +148,7 @@ class _CommonAppTextFieldState extends State<CommonAppTextField> {
   }
 
   InputDecoration _buildInputDecoration(ThemeData theme) {
-    final ColorScheme colorScheme = theme.colorScheme;
+    final colorScheme = theme.colorScheme;
     
     return InputDecoration(
       labelText: widget.labelText,
@@ -205,7 +205,7 @@ class _CommonAppTextFieldState extends State<CommonAppTextField> {
     required bool isError,
     required bool isFocused,
   }) {
-    final ColorScheme colorScheme = theme.colorScheme;
+    final colorScheme = theme.colorScheme;
     
     BorderSide borderSide;
 

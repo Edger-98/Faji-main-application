@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/user_entity.dart';
-import '../repositories/auth_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 
 /// Update account settings use case
 class UpdateSettingsUseCase {
-  final AuthRepository repository;
 
   UpdateSettingsUseCase(this.repository);
+  final AuthRepository repository;
 
   Future<Either<Failure, UserEntity>> call({
     required String id,
@@ -16,13 +16,11 @@ class UpdateSettingsUseCase {
     String? lastName,
     String? phoneNo,
     String? imagePath,
-  }) async {
-    return await repository.updateSettings(
+  }) async => await repository.updateSettings(
       id: id,
       firstName: firstName,
       lastName: lastName,
       phoneNo: phoneNo,
       imagePath: imagePath,
     );
-  }
 }

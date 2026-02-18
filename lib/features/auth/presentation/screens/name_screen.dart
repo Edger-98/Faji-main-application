@@ -45,8 +45,8 @@ class _NameScreenState extends ConsumerState<NameScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -82,7 +82,7 @@ class _NameScreenState extends ConsumerState<NameScreen>
   }
 
   void _validateForm() {
-    final isValid = _firstNameController.text.trim().isNotEmpty &&
+    final bool isValid = _firstNameController.text.trim().isNotEmpty &&
         _lastNameController.text.trim().isNotEmpty;
     if (isValid != _isFormValid) {
       setState(() {
@@ -93,8 +93,8 @@ class _NameScreenState extends ConsumerState<NameScreen>
 
   @override
   Widget build(BuildContext context) {
-    final registrationState = ref.watch(registrationViewModelProvider);
-    final isLoading = registrationState.stepState.maybeWhen(
+    final RegistrationState registrationState = ref.watch(registrationViewModelProvider);
+    final bool isLoading = registrationState.stepState.maybeWhen(
       loading: () => true,
       orElse: () => false,
     );
@@ -120,7 +120,7 @@ class _NameScreenState extends ConsumerState<NameScreen>
                     position: _slideAnimation,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         SizedBox(height: 40.h),
 
                         // Back button - positioned at x: 24, y: 64
@@ -225,7 +225,7 @@ class _NameScreenState extends ConsumerState<NameScreen>
     );
     
     // Check the result
-    final state = ref.read(registrationViewModelProvider);
+    final RegistrationState state = ref.read(registrationViewModelProvider);
     state.stepState.when(
       initial: () {},
       loading: () {},
@@ -233,7 +233,7 @@ class _NameScreenState extends ConsumerState<NameScreen>
         // Navigate to password screen
         context.goNamed(RouteManager.authPasswordName);
       },
-      error: (failure) {
+      error: (Failure failure) {
         // Show error
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(failure.message)),

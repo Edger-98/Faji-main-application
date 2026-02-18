@@ -1,17 +1,15 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../repositories/marketplace_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/marketplace/domain/repositories/marketplace_repository.dart';
 
 class DeleteResourceUseCase {
-  final MarketplaceRepository repository;
 
   DeleteResourceUseCase(this.repository);
+  final MarketplaceRepository repository;
 
   Future<Either<Failure, void>> call({
     required String resourceId,
-  }) async {
-    return await repository.deleteResource(
+  }) async => await repository.deleteResource(
       resourceId: resourceId,
     );
-  }
 }

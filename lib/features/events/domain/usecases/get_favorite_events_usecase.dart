@@ -1,15 +1,13 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/event_entity.dart';
-import '../repositories/event_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/domain/repositories/event_repository.dart';
 
 class GetFavoriteEventsUseCase {
-  final EventRepository repository;
   
   GetFavoriteEventsUseCase(this.repository);
+  final EventRepository repository;
   
-  Future<Either<Failure, List<EventEntity>>> call() async {
-    return await repository.getFavoriteEvents();
-  }
+  Future<Either<Failure, List<EventEntity>>> call() async => await repository.getFavoriteEvents();
 }

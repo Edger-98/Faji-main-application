@@ -29,22 +29,22 @@ class CohostListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final params = VendorFetchParams(
+    final VendorFetchParams params = VendorFetchParams(
       eventId: eventId,
       category: category,
     );
-    final resourcesAsync = ref.watch(vendorsProvider(params));
+    final AsyncValue<List<CohostResourceEntity>> resourcesAsync = ref.watch(vendorsProvider(params));
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             // Header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 10.h),
               child: Row(
-                children: [
+                children: <Widget>[
                   Container(
                     width: 50.w,
                     height: 50.h,
@@ -62,9 +62,9 @@ class CohostListScreen extends ConsumerWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Row(
-                          children: [
+                          children: <Widget>[
                             Container(
                               padding: EdgeInsets.all(8.w),
                               decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class CohostListScreen extends ConsumerWidget {
                           ],
                         ),
                         resourcesAsync.when(
-                          data: (resources) => AppText.bodySmall(
+                          data: (List<CohostResourceEntity> resources) => AppText.bodySmall(
                             '${resources.length} available',
                             color: AppColors.onSurfaceVariant,
                           ),
@@ -105,12 +105,12 @@ class CohostListScreen extends ConsumerWidget {
             // Content
             Expanded(
               child: resourcesAsync.when(
-                data: (resources) {
+                data: (List<CohostResourceEntity> resources) {
                   if (resources.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: <Widget>[
                           Icon(
                             Icons.inbox_outlined,
                             size: 64.sp,
@@ -134,11 +134,11 @@ class CohostListScreen extends ConsumerWidget {
                   return ListView.separated(
                     padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
                     itemCount: resources.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 16.h),
-                    itemBuilder: (context, index) {
-                      final CohostResourceEntity resource = resources[index];
+                    separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.h),
+                    itemBuilder: (BuildContext context, int index) {
+                      final resource = resources[index];
 
-                  return Container(
+                  return DecoratedBox(
                     decoration: BoxDecoration(
                       color: AppColors.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(20.r),
@@ -151,7 +151,7 @@ class CohostListScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VendorProfileScreen(
+                              builder: (BuildContext context) => VendorProfileScreen(
                                 resource: resource,
                                 eventId: eventId,
                               ),
@@ -162,10 +162,10 @@ class CohostListScreen extends ConsumerWidget {
                           padding: EdgeInsets.all(16.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: <Widget>[
                               // Header row
                               Row(
-                                children: [
+                                children: <Widget>[
                                   // Profile photo placeholder
                                   Container(
                                     width: 50.w,
@@ -190,9 +190,9 @@ class CohostListScreen extends ConsumerWidget {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
+                                      children: <Widget>[
                                         Row(
-                                          children: [
+                                          children: <Widget>[
                                             Expanded(
                                               child: AppText.titleMedium(
                                                 resource.cohostName,
@@ -209,7 +209,7 @@ class CohostListScreen extends ConsumerWidget {
                                         ),
                                         SizedBox(height: 2.h),
                                         Row(
-                                          children: [
+                                          children: <Widget>[
                                             Icon(
                                               Icons.star,
                                               color: AppColors.eventCardYellow,
@@ -247,7 +247,7 @@ class CohostListScreen extends ConsumerWidget {
 
                               // Stats row
                               Row(
-                                children: [
+                                children: <Widget>[
                                   Icon(
                                     Icons.event_available,
                                     color: AppColors.onSurfaceVariant,
@@ -292,8 +292,8 @@ class CohostListScreen extends ConsumerWidget {
             loading: () => Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: AppColors.primary),
+                    children: <Widget>[
+                      const CircularProgressIndicator(color: AppColors.primary),
                       SizedBox(height: 16.h),
                       AppText.bodyMedium(
                         'Loading vendors...',
@@ -302,12 +302,12 @@ class CohostListScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                error: (error, stackTrace) {
+                error: (Object error, StackTrace stackTrace) {
                   print('❌ UI Error: $error');
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: <Widget>[
                         Icon(
                           Icons.error_outline,
                           size: 64.sp,
@@ -330,7 +330,7 @@ class CohostListScreen extends ConsumerWidget {
                         SizedBox(height: 24.h),
                         ElevatedButton(
                           onPressed: () {
-                            final params = VendorFetchParams(
+                            final VendorFetchParams params = VendorFetchParams(
                               eventId: eventId,
                               category: category,
                             );

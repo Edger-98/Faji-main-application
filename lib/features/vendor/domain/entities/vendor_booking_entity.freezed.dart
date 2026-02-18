@@ -29,8 +29,8 @@ mixin _$VendorBookingEntity {
   String get eventName => throw _privateConstructorUsedError;
   DateTime get eventDate => throw _privateConstructorUsedError;
   double get offeredPrice => throw _privateConstructorUsedError;
-  double? get counterOfferPrice => throw _privateConstructorUsedError;
   BookingStatus get status => throw _privateConstructorUsedError;
+  double? get counterOfferPrice => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
@@ -45,8 +45,8 @@ mixin _$VendorBookingEntity {
       String eventName,
       DateTime eventDate,
       double offeredPrice,
-      double? counterOfferPrice,
       BookingStatus status,
+      double? counterOfferPrice,
       String? message,
       DateTime? createdAt,
       DateTime? updatedAt,
@@ -64,8 +64,8 @@ mixin _$VendorBookingEntity {
       String eventName,
       DateTime eventDate,
       double offeredPrice,
-      double? counterOfferPrice,
       BookingStatus status,
+      double? counterOfferPrice,
       String? message,
       DateTime? createdAt,
       DateTime? updatedAt,
@@ -83,8 +83,8 @@ mixin _$VendorBookingEntity {
       String eventName,
       DateTime eventDate,
       double offeredPrice,
-      double? counterOfferPrice,
       BookingStatus status,
+      double? counterOfferPrice,
       String? message,
       DateTime? createdAt,
       DateTime? updatedAt,
@@ -132,8 +132,8 @@ abstract class $VendorBookingEntityCopyWith<$Res> {
     String eventName,
     DateTime eventDate,
     double offeredPrice,
-    double? counterOfferPrice,
     BookingStatus status,
+    double? counterOfferPrice,
     String? message,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -163,8 +163,8 @@ class _$VendorBookingEntityCopyWithImpl<$Res, $Val extends VendorBookingEntity>
     Object? eventName = null,
     Object? eventDate = null,
     Object? offeredPrice = null,
-    Object? counterOfferPrice = freezed,
     Object? status = null,
+    Object? counterOfferPrice = freezed,
     Object? message = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -203,14 +203,14 @@ class _$VendorBookingEntityCopyWithImpl<$Res, $Val extends VendorBookingEntity>
                 ? _value.offeredPrice
                 : offeredPrice // ignore: cast_nullable_to_non_nullable
                       as double,
-            counterOfferPrice: freezed == counterOfferPrice
-                ? _value.counterOfferPrice
-                : counterOfferPrice // ignore: cast_nullable_to_non_nullable
-                      as double?,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as BookingStatus,
+            counterOfferPrice: freezed == counterOfferPrice
+                ? _value.counterOfferPrice
+                : counterOfferPrice // ignore: cast_nullable_to_non_nullable
+                      as double?,
             message: freezed == message
                 ? _value.message
                 : message // ignore: cast_nullable_to_non_nullable
@@ -247,8 +247,8 @@ abstract class _$$VendorBookingEntityImplCopyWith<$Res>
     String eventName,
     DateTime eventDate,
     double offeredPrice,
-    double? counterOfferPrice,
     BookingStatus status,
+    double? counterOfferPrice,
     String? message,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -277,8 +277,8 @@ class __$$VendorBookingEntityImplCopyWithImpl<$Res>
     Object? eventName = null,
     Object? eventDate = null,
     Object? offeredPrice = null,
-    Object? counterOfferPrice = freezed,
     Object? status = null,
+    Object? counterOfferPrice = freezed,
     Object? message = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -317,14 +317,14 @@ class __$$VendorBookingEntityImplCopyWithImpl<$Res>
             ? _value.offeredPrice
             : offeredPrice // ignore: cast_nullable_to_non_nullable
                   as double,
-        counterOfferPrice: freezed == counterOfferPrice
-            ? _value.counterOfferPrice
-            : counterOfferPrice // ignore: cast_nullable_to_non_nullable
-                  as double?,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as BookingStatus,
+        counterOfferPrice: freezed == counterOfferPrice
+            ? _value.counterOfferPrice
+            : counterOfferPrice // ignore: cast_nullable_to_non_nullable
+                  as double?,
         message: freezed == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
@@ -354,8 +354,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
     required this.eventName,
     required this.eventDate,
     required this.offeredPrice,
-    this.counterOfferPrice,
     required this.status,
+    this.counterOfferPrice,
     this.message,
     this.createdAt,
     this.updatedAt,
@@ -381,9 +381,9 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
   @override
   final double offeredPrice;
   @override
-  final double? counterOfferPrice;
-  @override
   final BookingStatus status;
+  @override
+  final double? counterOfferPrice;
   @override
   final String? message;
   @override
@@ -393,7 +393,7 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
 
   @override
   String toString() {
-    return 'VendorBookingEntity(id: $id, vendorId: $vendorId, resourceId: $resourceId, customerId: $customerId, customerName: $customerName, eventName: $eventName, eventDate: $eventDate, offeredPrice: $offeredPrice, counterOfferPrice: $counterOfferPrice, status: $status, message: $message, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'VendorBookingEntity(id: $id, vendorId: $vendorId, resourceId: $resourceId, customerId: $customerId, customerName: $customerName, eventName: $eventName, eventDate: $eventDate, offeredPrice: $offeredPrice, status: $status, counterOfferPrice: $counterOfferPrice, message: $message, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -416,9 +416,9 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
                 other.eventDate == eventDate) &&
             (identical(other.offeredPrice, offeredPrice) ||
                 other.offeredPrice == offeredPrice) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.counterOfferPrice, counterOfferPrice) ||
                 other.counterOfferPrice == counterOfferPrice) &&
-            (identical(other.status, status) || other.status == status) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -438,8 +438,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
     eventName,
     eventDate,
     offeredPrice,
-    counterOfferPrice,
     status,
+    counterOfferPrice,
     message,
     createdAt,
     updatedAt,
@@ -468,8 +468,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
       String eventName,
       DateTime eventDate,
       double offeredPrice,
-      double? counterOfferPrice,
       BookingStatus status,
+      double? counterOfferPrice,
       String? message,
       DateTime? createdAt,
       DateTime? updatedAt,
@@ -485,8 +485,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
       eventName,
       eventDate,
       offeredPrice,
-      counterOfferPrice,
       status,
+      counterOfferPrice,
       message,
       createdAt,
       updatedAt,
@@ -505,8 +505,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
       String eventName,
       DateTime eventDate,
       double offeredPrice,
-      double? counterOfferPrice,
       BookingStatus status,
+      double? counterOfferPrice,
       String? message,
       DateTime? createdAt,
       DateTime? updatedAt,
@@ -522,8 +522,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
       eventName,
       eventDate,
       offeredPrice,
-      counterOfferPrice,
       status,
+      counterOfferPrice,
       message,
       createdAt,
       updatedAt,
@@ -542,8 +542,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
       String eventName,
       DateTime eventDate,
       double offeredPrice,
-      double? counterOfferPrice,
       BookingStatus status,
+      double? counterOfferPrice,
       String? message,
       DateTime? createdAt,
       DateTime? updatedAt,
@@ -561,8 +561,8 @@ class _$VendorBookingEntityImpl implements _VendorBookingEntity {
         eventName,
         eventDate,
         offeredPrice,
-        counterOfferPrice,
         status,
+        counterOfferPrice,
         message,
         createdAt,
         updatedAt,
@@ -615,8 +615,8 @@ abstract class _VendorBookingEntity implements VendorBookingEntity {
     required final String eventName,
     required final DateTime eventDate,
     required final double offeredPrice,
-    final double? counterOfferPrice,
     required final BookingStatus status,
+    final double? counterOfferPrice,
     final String? message,
     final DateTime? createdAt,
     final DateTime? updatedAt,
@@ -642,9 +642,9 @@ abstract class _VendorBookingEntity implements VendorBookingEntity {
   @override
   double get offeredPrice;
   @override
-  double? get counterOfferPrice;
-  @override
   BookingStatus get status;
+  @override
+  double? get counterOfferPrice;
   @override
   String? get message;
   @override

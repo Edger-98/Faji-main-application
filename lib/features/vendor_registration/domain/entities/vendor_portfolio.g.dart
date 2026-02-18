@@ -11,8 +11,8 @@ _$VendorPortfolioImpl _$$VendorPortfolioImplFromJson(Map json) =>
       final val = _$VendorPortfolioImpl(
         id: $checkedConvert('id', (v) => v as String),
         imageUrl: $checkedConvert('imageUrl', (v) => v as String),
-        caption: $checkedConvert('caption', (v) => v as String?),
         uploadedAt: $checkedConvert('uploadedAt', (v) => v as String),
+        caption: $checkedConvert('caption', (v) => v as String?),
       );
       return val;
     });
@@ -22,8 +22,8 @@ Map<String, dynamic> _$$VendorPortfolioImplToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'imageUrl': instance.imageUrl,
-  if (instance.caption case final value?) 'caption': value,
   'uploadedAt': instance.uploadedAt,
+  if (instance.caption case final value?) 'caption': value,
 };
 
 _$UploadPortfolioRequestImpl _$$UploadPortfolioRequestImplFromJson(Map json) =>

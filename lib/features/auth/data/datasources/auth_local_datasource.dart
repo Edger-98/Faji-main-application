@@ -14,10 +14,17 @@ abstract class AuthLocalDataSource {
   Future<String?> getUserEmail();
   Future<void> saveUserData(String firstName, String lastName, String email, {String? phoneNo});
   Future<Map<String, String?>> getUserData();
+  Future<void> savePassword(String password);
+  Future<String?> getPassword();
   Future<void> clearAll();
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
+
+  AuthLocalDataSourceImpl({
+    required this.secureStorage,
+    required this.sharedPreferences,
+  });
   final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;
 
@@ -28,11 +35,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const String _userFirstNameKey = 'user_first_name';
   static const String _userLastNameKey = 'user_last_name';
   static const String _userPhoneKey = 'user_phone';
-
-  AuthLocalDataSourceImpl({
-    required this.secureStorage,
-    required this.sharedPreferences,
-  });
+  static const String _passwordKey = 'user_password';
 
   @override
   Future<void> saveToken(String token) async {
@@ -40,9 +43,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<String?> getToken() async {
-    return await secureStorage.read(key: _tokenKey);
-  }
+  Future<String?> getToken() async => await secureStorage.read(key: _tokenKey);
 
   @override
   Future<void> clearToken() async {
@@ -55,9 +56,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<String?> getRefreshToken() async {
-    return await secureStorage.read(key: _refreshTokenKey);
-  }
+  Future<String?> getRefreshToken() async => await secureStorage.read(key: _refreshTokenKey);
 
   @override
   Future<void> saveUserId(String userId) async {
@@ -65,9 +64,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<String?> getUserId() async {
-    return sharedPreferences.getString(_userIdKey);
-  }
+  Future<String?> getUserId() async => sharedPreferences.getString(_userIdKey);
 
   @override
   Future<void> saveUserEmail(String email) async {
@@ -75,9 +72,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<String?> getUserEmail() async {
-    return sharedPreferences.getString(_userEmailKey);
-  }
+  Future<String?> getUserEmail() async => sharedPreferences.getString(_userEmailKey);
 
   @override
   Future<void> saveUserData(String firstName, String lastName, String email, {String? phoneNo}) async {
@@ -90,14 +85,20 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<Map<String, String?>> getUserData() async {
-    return {
+  Future<Map<String, String?>> getUserData() async => {
       'firstName': sharedPreferences.getString(_userFirstNameKey),
       'lastName': sharedPreferences.getString(_userLastNameKey),
       'email': sharedPreferences.getString(_userEmailKey),
       'phoneNo': sharedPreferences.getString(_userPhoneKey),
     };
+
+  @override
+  Future<void> savePassword(String password) async {
+    await secureStorage.write(key: _passwordKey, value: password);
   }
+
+  @override
+  Future<String?> getPassword() async => await secureStorage.read(key: _passwordKey);
 
   @override
   Future<void> clearAll() async {

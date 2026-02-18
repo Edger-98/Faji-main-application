@@ -22,6 +22,8 @@ mixin _$EventCreationEntity {
       throw _privateConstructorUsedError; // Step 1: Event Details
   String? get title => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  String? get category =>
+      throw _privateConstructorUsedError; // Added category field
   String? get imageUrl =>
       throw _privateConstructorUsedError; // Cloudinary image URL (replaces poster/theme)
   String? get localImagePath =>
@@ -37,6 +39,9 @@ mixin _$EventCreationEntity {
   bool get enableWishlist => throw _privateConstructorUsedError;
   bool get enableBudgetTracking => throw _privateConstructorUsedError;
   bool get enableCohostMarketplace =>
+      throw _privateConstructorUsedError; // Step 3: Location Data
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude =>
       throw _privateConstructorUsedError; // Co-host data (if enabled)
   List<String>? get selectedCohostIds => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -45,6 +50,7 @@ mixin _$EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
+      String? category,
       String? imageUrl,
       String? localImagePath,
       DateTime? eventDate,
@@ -57,6 +63,8 @@ mixin _$EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
+      double? latitude,
+      double? longitude,
       List<String>? selectedCohostIds,
     )
     $default,
@@ -67,6 +75,7 @@ mixin _$EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
+      String? category,
       String? imageUrl,
       String? localImagePath,
       DateTime? eventDate,
@@ -79,6 +88,8 @@ mixin _$EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
+      double? latitude,
+      double? longitude,
       List<String>? selectedCohostIds,
     )?
     $default,
@@ -89,6 +100,7 @@ mixin _$EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
+      String? category,
       String? imageUrl,
       String? localImagePath,
       DateTime? eventDate,
@@ -101,6 +113,8 @@ mixin _$EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
+      double? latitude,
+      double? longitude,
       List<String>? selectedCohostIds,
     )?
     $default, {
@@ -138,6 +152,7 @@ abstract class $EventCreationEntityCopyWith<$Res> {
     String? eventType,
     String? title,
     String? description,
+    String? category,
     String? imageUrl,
     String? localImagePath,
     DateTime? eventDate,
@@ -150,6 +165,8 @@ abstract class $EventCreationEntityCopyWith<$Res> {
     bool enableWishlist,
     bool enableBudgetTracking,
     bool enableCohostMarketplace,
+    double? latitude,
+    double? longitude,
     List<String>? selectedCohostIds,
   });
 }
@@ -172,6 +189,7 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
     Object? eventType = freezed,
     Object? title = freezed,
     Object? description = freezed,
+    Object? category = freezed,
     Object? imageUrl = freezed,
     Object? localImagePath = freezed,
     Object? eventDate = freezed,
@@ -184,6 +202,8 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
     Object? enableWishlist = null,
     Object? enableBudgetTracking = null,
     Object? enableCohostMarketplace = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? selectedCohostIds = freezed,
   }) {
     return _then(
@@ -199,6 +219,10 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
             description: freezed == description
                 ? _value.description
                 : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            category: freezed == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
                       as String?,
             imageUrl: freezed == imageUrl
                 ? _value.imageUrl
@@ -248,6 +272,14 @@ class _$EventCreationEntityCopyWithImpl<$Res, $Val extends EventCreationEntity>
                 ? _value.enableCohostMarketplace
                 : enableCohostMarketplace // ignore: cast_nullable_to_non_nullable
                       as bool,
+            latitude: freezed == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            longitude: freezed == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                      as double?,
             selectedCohostIds: freezed == selectedCohostIds
                 ? _value.selectedCohostIds
                 : selectedCohostIds // ignore: cast_nullable_to_non_nullable
@@ -271,6 +303,7 @@ abstract class _$$EventCreationEntityImplCopyWith<$Res>
     String? eventType,
     String? title,
     String? description,
+    String? category,
     String? imageUrl,
     String? localImagePath,
     DateTime? eventDate,
@@ -283,6 +316,8 @@ abstract class _$$EventCreationEntityImplCopyWith<$Res>
     bool enableWishlist,
     bool enableBudgetTracking,
     bool enableCohostMarketplace,
+    double? latitude,
+    double? longitude,
     List<String>? selectedCohostIds,
   });
 }
@@ -304,6 +339,7 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
     Object? eventType = freezed,
     Object? title = freezed,
     Object? description = freezed,
+    Object? category = freezed,
     Object? imageUrl = freezed,
     Object? localImagePath = freezed,
     Object? eventDate = freezed,
@@ -316,6 +352,8 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
     Object? enableWishlist = null,
     Object? enableBudgetTracking = null,
     Object? enableCohostMarketplace = null,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
     Object? selectedCohostIds = freezed,
   }) {
     return _then(
@@ -331,6 +369,10 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
         description: freezed == description
             ? _value.description
             : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        category: freezed == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
                   as String?,
         imageUrl: freezed == imageUrl
             ? _value.imageUrl
@@ -380,6 +422,14 @@ class __$$EventCreationEntityImplCopyWithImpl<$Res>
             ? _value.enableCohostMarketplace
             : enableCohostMarketplace // ignore: cast_nullable_to_non_nullable
                   as bool,
+        latitude: freezed == latitude
+            ? _value.latitude
+            : latitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        longitude: freezed == longitude
+            ? _value.longitude
+            : longitude // ignore: cast_nullable_to_non_nullable
+                  as double?,
         selectedCohostIds: freezed == selectedCohostIds
             ? _value._selectedCohostIds
             : selectedCohostIds // ignore: cast_nullable_to_non_nullable
@@ -396,6 +446,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     this.eventType,
     this.title,
     this.description,
+    this.category,
     this.imageUrl,
     this.localImagePath,
     this.eventDate,
@@ -408,6 +459,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     this.enableWishlist = false,
     this.enableBudgetTracking = false,
     this.enableCohostMarketplace = false,
+    this.latitude,
+    this.longitude,
     final List<String>? selectedCohostIds,
   }) : _selectedCohostIds = selectedCohostIds;
 
@@ -419,6 +472,9 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
   final String? title;
   @override
   final String? description;
+  @override
+  final String? category;
+  // Added category field
   @override
   final String? imageUrl;
   // Cloudinary image URL (replaces poster/theme)
@@ -449,6 +505,11 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
   @override
   @JsonKey()
   final bool enableCohostMarketplace;
+  // Step 3: Location Data
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
   // Co-host data (if enabled)
   final List<String>? _selectedCohostIds;
   // Co-host data (if enabled)
@@ -464,7 +525,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
 
   @override
   String toString() {
-    return 'EventCreationEntity(eventType: $eventType, title: $title, description: $description, imageUrl: $imageUrl, localImagePath: $localImagePath, eventDate: $eventDate, eventTime: $eventTime, location: $location, totalSeats: $totalSeats, ticketPrice: $ticketPrice, expectedGuests: $expectedGuests, budget: $budget, enableWishlist: $enableWishlist, enableBudgetTracking: $enableBudgetTracking, enableCohostMarketplace: $enableCohostMarketplace, selectedCohostIds: $selectedCohostIds)';
+    return 'EventCreationEntity(eventType: $eventType, title: $title, description: $description, category: $category, imageUrl: $imageUrl, localImagePath: $localImagePath, eventDate: $eventDate, eventTime: $eventTime, location: $location, totalSeats: $totalSeats, ticketPrice: $ticketPrice, expectedGuests: $expectedGuests, budget: $budget, enableWishlist: $enableWishlist, enableBudgetTracking: $enableBudgetTracking, enableCohostMarketplace: $enableCohostMarketplace, latitude: $latitude, longitude: $longitude, selectedCohostIds: $selectedCohostIds)';
   }
 
   @override
@@ -477,6 +538,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
             (identical(other.localImagePath, localImagePath) ||
@@ -503,6 +566,10 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
                   enableCohostMarketplace,
                 ) ||
                 other.enableCohostMarketplace == enableCohostMarketplace) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             const DeepCollectionEquality().equals(
               other._selectedCohostIds,
               _selectedCohostIds,
@@ -510,11 +577,12 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     eventType,
     title,
     description,
+    category,
     imageUrl,
     localImagePath,
     eventDate,
@@ -527,8 +595,10 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
     enableWishlist,
     enableBudgetTracking,
     enableCohostMarketplace,
+    latitude,
+    longitude,
     const DeepCollectionEquality().hash(_selectedCohostIds),
-  );
+  ]);
 
   /// Create a copy of EventCreationEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -548,6 +618,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
+      String? category,
       String? imageUrl,
       String? localImagePath,
       DateTime? eventDate,
@@ -560,6 +631,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
+      double? latitude,
+      double? longitude,
       List<String>? selectedCohostIds,
     )
     $default,
@@ -568,6 +641,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       eventType,
       title,
       description,
+      category,
       imageUrl,
       localImagePath,
       eventDate,
@@ -580,6 +654,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       enableWishlist,
       enableBudgetTracking,
       enableCohostMarketplace,
+      latitude,
+      longitude,
       selectedCohostIds,
     );
   }
@@ -591,6 +667,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
+      String? category,
       String? imageUrl,
       String? localImagePath,
       DateTime? eventDate,
@@ -603,6 +680,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
+      double? latitude,
+      double? longitude,
       List<String>? selectedCohostIds,
     )?
     $default,
@@ -611,6 +690,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       eventType,
       title,
       description,
+      category,
       imageUrl,
       localImagePath,
       eventDate,
@@ -623,6 +703,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       enableWishlist,
       enableBudgetTracking,
       enableCohostMarketplace,
+      latitude,
+      longitude,
       selectedCohostIds,
     );
   }
@@ -634,6 +716,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       String? eventType,
       String? title,
       String? description,
+      String? category,
       String? imageUrl,
       String? localImagePath,
       DateTime? eventDate,
@@ -646,6 +729,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
       bool enableWishlist,
       bool enableBudgetTracking,
       bool enableCohostMarketplace,
+      double? latitude,
+      double? longitude,
       List<String>? selectedCohostIds,
     )?
     $default, {
@@ -656,6 +741,7 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
         eventType,
         title,
         description,
+        category,
         imageUrl,
         localImagePath,
         eventDate,
@@ -668,6 +754,8 @@ class _$EventCreationEntityImpl implements _EventCreationEntity {
         enableWishlist,
         enableBudgetTracking,
         enableCohostMarketplace,
+        latitude,
+        longitude,
         selectedCohostIds,
       );
     }
@@ -708,6 +796,7 @@ abstract class _EventCreationEntity implements EventCreationEntity {
     final String? eventType,
     final String? title,
     final String? description,
+    final String? category,
     final String? imageUrl,
     final String? localImagePath,
     final DateTime? eventDate,
@@ -720,6 +809,8 @@ abstract class _EventCreationEntity implements EventCreationEntity {
     final bool enableWishlist,
     final bool enableBudgetTracking,
     final bool enableCohostMarketplace,
+    final double? latitude,
+    final double? longitude,
     final List<String>? selectedCohostIds,
   }) = _$EventCreationEntityImpl;
 
@@ -730,6 +821,8 @@ abstract class _EventCreationEntity implements EventCreationEntity {
   String? get title;
   @override
   String? get description;
+  @override
+  String? get category; // Added category field
   @override
   String? get imageUrl; // Cloudinary image URL (replaces poster/theme)
   @override
@@ -753,7 +846,11 @@ abstract class _EventCreationEntity implements EventCreationEntity {
   @override
   bool get enableBudgetTracking;
   @override
-  bool get enableCohostMarketplace; // Co-host data (if enabled)
+  bool get enableCohostMarketplace; // Step 3: Location Data
+  @override
+  double? get latitude;
+  @override
+  double? get longitude; // Co-host data (if enabled)
   @override
   List<String>? get selectedCohostIds;
 

@@ -3,9 +3,7 @@ class Sanitizers {
   Sanitizers._();
 
   /// Sanitize email input
-  static String email(String input) {
-    return input.trim().toLowerCase();
-  }
+  static String email(String input) => input.trim().toLowerCase();
 
   /// Sanitize name input (capitalize first letter of each word)
   static String name(String input) {
@@ -22,11 +20,11 @@ class Sanitizers {
   /// Sanitize phone number (remove all non-digit characters except +)
   static String phoneNumber(String input) {
     // Keep only digits and leading +
-    String sanitized = input.replaceAll(RegExp(r'[^\d+]'), '');
+    var sanitized = input.replaceAll(RegExp(r'[^\d+]'), '');
     
     // Ensure + is only at the beginning
     if (sanitized.contains('+')) {
-      final List<String> parts = sanitized.split('+');
+      final parts = sanitized.split('+');
       sanitized = '+${parts.where((String part) => part.isNotEmpty).join()}';
     }
     
@@ -35,11 +33,11 @@ class Sanitizers {
 
   /// Sanitize text input (remove dangerous characters, trim whitespace)
   static String text(String input, {bool allowHtml = false}) {
-    String sanitized = input.trim();
+    var sanitized = input.trim();
     
     if (!allowHtml) {
       // Remove HTML tags
-      sanitized = sanitized.replaceAll(RegExp(r'<[^>]*>'), '');
+      sanitized = sanitized.replaceAll(RegExp('<[^>]*>'), '');
       
       // Remove potentially dangerous characters
    //   sanitized = sanitized.replaceAll(RegExp(r'[<>"\']'), '');
@@ -53,7 +51,7 @@ class Sanitizers {
 
   /// Sanitize URL input
   static String url(String input) {
-    String sanitized = input.trim().toLowerCase();
+    var sanitized = input.trim().toLowerCase();
     
     // Add protocol if missing
     if (!sanitized.startsWith('http://') && !sanitized.startsWith('https://')) {
@@ -92,32 +90,32 @@ class Sanitizers {
 
   /// Remove SQL injection patterns
   static String sqlSafe(String input) {
-    String sanitized = input.trim();
+    var sanitized = input.trim();
     
     // Remove common SQL injection patterns
-    final List<String> sqlPatterns = <String>[
-      r"'",
-      r'"',
-      r';',
-      r'--',
+    final sqlPatterns = <String>[
+      "'",
+      '"',
+      ';',
+      '--',
       r'/\*',
       r'\*/',
-      r'xp_',
-      r'sp_',
-      r'exec',
-      r'execute',
-      r'select',
-      r'insert',
-      r'update',
-      r'delete',
-      r'drop',
-      r'create',
-      r'alter',
-      r'union',
-      r'script',
+      'xp_',
+      'sp_',
+      'exec',
+      'execute',
+      'select',
+      'insert',
+      'update',
+      'delete',
+      'drop',
+      'create',
+      'alter',
+      'union',
+      'script',
     ];
     
-    for (final String pattern in sqlPatterns) {
+    for (final pattern in sqlPatterns) {
       sanitized = sanitized.replaceAll(RegExp(pattern, caseSensitive: false), '');
     }
     
@@ -126,19 +124,19 @@ class Sanitizers {
 
   /// Remove XSS (Cross-Site Scripting) patterns
   static String xssSafe(String input) {
-    String sanitized = input.trim();
+    var sanitized = input.trim();
     
     // Remove script tags and their content
     sanitized = sanitized.replaceAll(RegExp(r'<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>', caseSensitive: false), '');
     
     // Remove javascript: protocol
-    sanitized = sanitized.replaceAll(RegExp(r'javascript:', caseSensitive: false), '');
+    sanitized = sanitized.replaceAll(RegExp('javascript:', caseSensitive: false), '');
     
     // Remove on* event handlers
     sanitized = sanitized.replaceAll(RegExp(r'on\w+\s*=', caseSensitive: false), '');
     
     // Remove potentially dangerous HTML tags
-    final List<String> dangerousTags = <String>[
+    final dangerousTags = <String>[
       'script',
       'iframe',
       'object',
@@ -154,7 +152,7 @@ class Sanitizers {
       'style',
     ];
     
-    for (final String tag in dangerousTags) {
+    for (final tag in dangerousTags) {
       sanitized = sanitized.replaceAll(
         RegExp('</?$tag\\b[^>]*>', caseSensitive: false),
         '',
@@ -166,7 +164,7 @@ class Sanitizers {
 
   /// Sanitize filename for safe storage
   static String filename(String input) {
-    String sanitized = input.trim();
+    var sanitized = input.trim();
     
     // Remove path separators and dangerous characters
     sanitized = sanitized.replaceAll(RegExp(r'[/\\:*?"<>|]'), '');
@@ -189,7 +187,7 @@ class Sanitizers {
 
   /// Sanitize search query
   static String searchQuery(String input) {
-    String sanitized = input.trim();
+    var sanitized = input.trim();
     
     // Remove special characters that might cause issues
     sanitized = sanitized.replaceAll(RegExp(r'[^\w\s\-_.]'), '');
@@ -207,15 +205,15 @@ class Sanitizers {
 
   /// Sanitize JSON string
   static String json(String input) {
-    String sanitized = input.trim();
+    var sanitized = input.trim();
     
     // Escape special JSON characters
     sanitized = sanitized
-        .replaceAll('\\', '\\\\')
-        .replaceAll('"', '\\"')
-        .replaceAll('\n', '\\n')
-        .replaceAll('\r', '\\r')
-        .replaceAll('\t', '\\t');
+        .replaceAll(r'\', r'\\')
+        .replaceAll('"', r'\"')
+        .replaceAll('\n', r'\n')
+        .replaceAll('\r', r'\r')
+        .replaceAll('\t', r'\t');
     
     return sanitized;
   }
@@ -231,14 +229,14 @@ class Sanitizers {
     bool toLowerCase = false,
     bool toUpperCase = false,
   }) {
-    String sanitized = input;
+    var sanitized = input;
     
     if (trimWhitespace) {
       sanitized = sanitized.trim();
     }
     
     if (removeHtml) {
-      sanitized = sanitized.replaceAll(RegExp(r'<[^>]*>'), '');
+      sanitized = sanitized.replaceAll(RegExp('<[^>]*>'), '');
     }
     
     if (removeSql) {

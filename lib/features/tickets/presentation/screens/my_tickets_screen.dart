@@ -5,7 +5,6 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/presentation/widgets/common/app_bottom_nav.dart';
 import 'package:fajimobileapp/presentation/widgets/common/empty_state.dart';
 import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
-import 'package:fajimobileapp/presentation/widgets/common/event_card_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +17,7 @@ class MyTicketsScreen extends StatefulWidget {
 }
 
 class _MyTicketsScreenState extends State<MyTicketsScreen> {
-  List<String> _tickets = ['ticket1', 'ticket2']; // Mock data
+  final List<String> _tickets = <String>['ticket1', 'ticket2']; // Mock data
   bool _isLoading = false;
 
   Future<void> _refreshTickets() async {
@@ -30,9 +29,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -93,33 +90,55 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
                   context.push(RouteManager.eventCreationFlow);
                 },
                 child: Container(
-                  height: 69,
+                  height: 64,
                   decoration: BoxDecoration(
-                    color: AppColors.searchBarBackground,
-                    borderRadius: BorderRadius.circular(37),
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary.withValues(alpha: 0.15),
+                        AppColors.primary.withValues(alpha: 0.05),
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      width: 1.5,
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const SizedBox(width: 22),
-                      Text(
-                        'Organize an event',
-                        style: AppTypography.bodyLarge.copyWith(
-                          color: const Color(0xFFB9B9B9),
-                          fontWeight: AppTypography.regular,
-                          fontSize: 20,
-                        ),
-                      ),
-                      const Spacer(),
+                      const SizedBox(width: 20),
                       Container(
-                        width: 28,
-                        height: 28,
-                        margin: const EdgeInsets.only(right: 30),
-                        child: Icon(
-                          Icons.add_circle_outline,
-                          color: AppColors.onSurface,
-                          size: 28,
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.add_rounded,
+                          color: Colors.white,
+                          size: 24,
                         ),
                       ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Text(
+                          'Organize an event',
+                          style: AppTypography.bodyLarge.copyWith(
+                            color: AppColors.onSurface,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: AppColors.onSurfaceVariant,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 20),
                     ],
                   ),
                 ),
@@ -134,7 +153,11 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
                       itemCount: 3,
                       itemBuilder: (context, index) => Padding(
                         padding: EdgeInsets.only(bottom: index < 2 ? 14 : 0),
-                        child: const TicketCardShimmer(),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
                     )
                   : _tickets.isEmpty
@@ -167,137 +190,192 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
       // Bottom Navigation
       bottomNavigationBar: const AppBottomNav(currentIndex: 1), // Changed from 2 to 1
     );
-  }
 
-  Widget _buildTicketCard(BuildContext context, {required bool isLiked}) {
-    return Container(
+  Widget _buildTicketCard(BuildContext context, {required bool isLiked}) => Container(
       height: 267,
       decoration: BoxDecoration(
-        color: AppColors.eventCardBlue,
-        borderRadius: BorderRadius.circular(40),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Stack(
         children: [
-          // Background image
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: Container(
-                color: AppColors.eventCardBlue,
+          // Decorative circles
+          Positioned(
+            right: -30,
+            top: -30,
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
           ),
-          // Gradient overlay
           Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 88,
+            left: -20,
+            bottom: -20,
             child: Container(
+              width: 100,
+              height: 100,
               decoration: BoxDecoration(
-                color: AppColors.overlayBackground,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40),
-                ),
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.05),
               ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'GENfest Music Festival 2024 - Multi - \nsensorial Audio Interface',
-                        style: AppTypography.bodyMedium.copyWith(
-                          color: AppColors.onSurface,
-                          fontWeight: AppTypography.regular,
-                          fontSize: 15,
-                        ),
-                        maxLines: 2,
+            ),
+          ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with ticket icon and like button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          Text(
-                            'Wed 22/03',
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.textSecondary,
-                              fontWeight: AppTypography.regular,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            width: 3,
-                            height: 3,
-                            decoration: const BoxDecoration(
-                              color: AppColors.dotSeparator,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '08:30 PM',
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.textSecondary,
-                              fontWeight: AppTypography.regular,
-                              fontSize: 12,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            width: 3,
-                            height: 3,
-                            decoration: const BoxDecoration(
-                              color: AppColors.dotSeparator,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'From \$40.00',
-                            style: AppTypography.bodySmall.copyWith(
-                              color: AppColors.primary,
-                              fontWeight: AppTypography.regular,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                      child: const Icon(
+                        Icons.confirmation_number_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    AnimatedButton(
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        // Toggle favorite
+                      },
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: isLiked 
+                              ? Colors.white.withValues(alpha: 0.3)
+                              : Colors.white.withValues(alpha: 0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red[300] : Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                // Event title
+                Text(
+                  'GENfest Music Festival 2024',
+                  style: AppTypography.bodyMedium.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    height: 1.3,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Multi-sensorial Audio Interface',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontSize: 13,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 16),
+                // Event details
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildDetailItem(
+                          Icons.calendar_today_rounded,
+                          'Wed 22/03',
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 30,
+                        color: Colors.white.withValues(alpha: 0.2),
+                      ),
+                      Expanded(
+                        child: _buildDetailItem(
+                          Icons.access_time_rounded,
+                          '08:30 PM',
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 30,
+                        color: Colors.white.withValues(alpha: 0.2),
+                      ),
+                      Expanded(
+                        child: _buildDetailItem(
+                          Icons.local_offer_rounded,
+                          r'$40.00',
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-          ),
-          // Like button
-          Positioned(
-            right: 16,
-            top: 16,
-            child: AnimatedButton(
-              onTap: () {
-                HapticFeedback.mediumImpact();
-                // Toggle favorite
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: isLiked ? Colors.black : Colors.black.withOpacity(0.38),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: AppColors.onSurface,
-                  size: 20,
-                ),
-              ),
+              ],
             ),
           ),
         ],
       ),
     );
-  }
+
+  Widget _buildDetailItem(IconData icon, String text) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: Colors.white.withValues(alpha: 0.9),
+            size: 16,
+          ),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              text,
+              style: AppTypography.bodySmall.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      );
 }

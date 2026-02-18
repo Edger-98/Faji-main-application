@@ -6,9 +6,7 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Primary button component matching Figma design system
 class AuthButton extends StatefulWidget {
   const AuthButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
+    required this.text, required this.onPressed, super.key,
     this.isEnabled = true,
     this.width,
     this.height = 59,
@@ -37,7 +35,7 @@ class _AuthButtonState extends State<AuthButton>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
     ).animate(CurvedAnimation(
       parent: _animationController,
@@ -70,8 +68,7 @@ class _AuthButtonState extends State<AuthButton>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
+  Widget build(BuildContext context) => AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
         return Transform.scale(
@@ -121,5 +118,4 @@ class _AuthButtonState extends State<AuthButton>
         );
       },
     );
-  }
 }

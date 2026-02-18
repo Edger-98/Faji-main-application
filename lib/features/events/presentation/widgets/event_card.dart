@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../domain/entities/event_entity.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
 
 /// Reusable Event Card Widget
-class EventCard extends StatelessWidget {
-  final EventEntity event;
-  final VoidCallback? onTap;
-  final VoidCallback? onFavorite;
-  final bool isFavorite;
-  final bool showFavoriteButton; // Defaults to false now
+class EventCard extends StatelessWidget { // Defaults to false now
 
   const EventCard({
     super.key,
@@ -21,10 +16,14 @@ class EventCard extends StatelessWidget {
     this.isFavorite = false,
     this.showFavoriteButton = false, // Changed default to false
   });
+  final EventEntity event;
+  final VoidCallback? onTap;
+  final VoidCallback? onFavorite;
+  final bool isFavorite;
+  final bool showFavoriteButton;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget build(BuildContext context) => Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.r),
@@ -34,6 +33,7 @@ class EventCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Event Image
             Stack(
@@ -109,11 +109,13 @@ class EventCard extends StatelessWidget {
             ),
             
             // Event Details
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                   // Title
                   AppText.titleMedium(
                     event.title,
@@ -214,17 +216,16 @@ class EventCard extends StatelessWidget {
                         ),
                     ],
                   ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
     );
-  }
 
-  Widget _buildBadge(String text, Color color) {
-    return Container(
+  Widget _buildBadge(String text, Color color) => Container(
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
       decoration: BoxDecoration(
         color: color,
@@ -235,12 +236,11 @@ class EventCard extends StatelessWidget {
         color: Colors.white,
       ),
     );
-  }
 
   Widget _buildPriceDisplay(BuildContext context) {
     // Check if event has price info
-    final price = event.price;
-    final isFree = price == 0;
+    final double price = event.price;
+    final bool isFree = price == 0;
     
     if (isFree) {
       return AppText.titleSmall(
@@ -252,7 +252,7 @@ class EventCard extends StatelessWidget {
     // Show price with discount if applicable
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         if (event.hasDiscount)
           AppText.bodySmall(
             '\$${event.price.toStringAsFixed(2)}',
@@ -285,7 +285,7 @@ class EventCard extends StatelessWidget {
       );
     }
     
-    final available = event.availableTickets;
+    final int available = event.availableTickets;
     if (available <= 10) {
       // Show urgency for low availability
       return AppText.bodySmall(
@@ -302,7 +302,7 @@ class EventCard extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    final months = [
+    final List<String> months = <String>[
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];

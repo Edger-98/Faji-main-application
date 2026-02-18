@@ -1,17 +1,19 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/topup_request.dart';
-import '../../domain/usecases/topup_wallet_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/usecases/topup_wallet_usecase.dart';
 
 // State for top-up
 typedef TopupState = BaseState<TopupResponse>;
 
 class TopupViewModel extends StateNotifier<TopupState> {
-  final TopupWalletUseCase _topupWalletUseCase;
 
   TopupViewModel(
     this._topupWalletUseCase,
   ) : super(const BaseState.initial());
+  final TopupWalletUseCase _topupWalletUseCase;
 
   /// Top-up wallet
   Future<void> topupWallet({
@@ -20,16 +22,16 @@ class TopupViewModel extends StateNotifier<TopupState> {
   }) async {
     state = const BaseState.loading();
 
-    final request = TopupRequest(
+    final TopupRequest request = TopupRequest(
       amount: amount,
       paymentMethod: paymentMethod,
     );
 
-    final result = await _topupWalletUseCase(request: request);
+    final Either<Failure, TopupResponse> result = await _topupWalletUseCase(request: request);
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (response) => state = BaseState.success(response),
+      (Failure failure) => state = BaseState.error(failure),
+      (TopupResponse response) => state = BaseState.success(response),
     );
   }
 

@@ -1,11 +1,12 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/api_service.dart';
-import '../../../../core/models/event_model.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/core/models/event_model.dart';
 
 class EventRepository {
-  final ApiService _api;
   
   EventRepository(this._api);
+  final ApiService _api;
   
   Future<List<EventModel>> getEvents({
     String? status,
@@ -15,7 +16,7 @@ class EventRepository {
     int limit = 20,
   }) async {
     try {
-      final params = <String, dynamic>{
+      final Map<String, dynamic> params = <String, dynamic>{
         'page': page,
         'limit': limit,
       };
@@ -24,10 +25,10 @@ class EventRepository {
       if (role != null) params['role'] = role;
       if (bookmarked != null) params['bookmarked'] = bookmarked.toString();
       
-      final response = await _api.get('/events', params: params);
+      final Response response = await _api.get('/events', params: params);
       
       final data = response.data['data'];
-      final events = data['events'] as List;
+      final List events = data['events'] as List;
       
       return events.map((e) => EventModel.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
@@ -37,7 +38,7 @@ class EventRepository {
   
   Future<EventModel> getEventDetails(String eventId) async {
     try {
-      final response = await _api.get('/events/$eventId');
+      final Response response = await _api.get('/events/$eventId');
       return EventModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } catch (e) {
       throw Exception('Failed to load event details: $e');
@@ -46,7 +47,7 @@ class EventRepository {
   
   Future<void> toggleBookmark(String eventId, bool bookmarked) async {
     try {
-      await _api.post('/events/$eventId/bookmark', data: {
+      await _api.post('/events/$eventId/bookmark', data: <String, bool>{
         'bookmarked': bookmarked,
       });
     } catch (e) {
@@ -56,7 +57,7 @@ class EventRepository {
   
   Future<EventModel> updateEvent(String eventId, Map<String, dynamic> data) async {
     try {
-      final response = await _api.patch('/events/$eventId', data: data);
+      final Response response = await _api.patch('/events/$eventId', data: data);
       // API returns {id, updatedAt} not full event, so fetch the updated event
       return await getEventDetails(eventId);
     } catch (e) {
@@ -74,10 +75,10 @@ class EventRepository {
   
   Future<String> uploadMedia(String eventId, String filePath, String type) async {
     try {
-      final response = await _api.uploadFile(
+      final Response response = await _api.uploadFile(
         '/events/$eventId/media',
         filePath,
-        data: {'type': type},
+        data: <String, dynamic>{'type': type},
       );
       return response.data['data']['url'] as String;
     } catch (e) {
@@ -94,6 +95,4 @@ class EventRepository {
   }
 }
 
-final eventRepositoryProvider = Provider<EventRepository>((ref) {
-  return EventRepository(ref.read(apiServiceProvider));
-});
+final Provider<EventRepository> eventRepositoryProvider = Provider<EventRepository>((ProviderRef<EventRepository> ref) => EventRepository(ref.read(apiServiceProvider)));

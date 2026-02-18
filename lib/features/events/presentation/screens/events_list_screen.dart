@@ -1,16 +1,19 @@
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/routing/route_manager.dart';
-import '../../../../core/services/toast_service.dart';
-import '../../domain/entities/event_entity.dart';
-import '../viewmodels/events_list_viewmodel.dart';
-import '../widgets/event_list.dart';
-import '../widgets/category_filter.dart';
-import '../widgets/event_search_bar.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/services/toast_service.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/events_list_viewmodel.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/favorites_viewmodel.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_card.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/category_filter.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_search_bar.dart';
 
 /// Events List Screen with filters
 class EventsListScreen extends ConsumerStatefulWidget {
@@ -21,11 +24,11 @@ class EventsListScreen extends ConsumerStatefulWidget {
 }
 
 class _EventsListScreenState extends ConsumerState<EventsListScreen> {
-  final _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String? _selectedCategory;
   bool _isGridView = true;
   
-  final List<String> _categories = [
+  final List<String> _categories = <String>[
     'Music',
     'Sports',
     'Technology',
@@ -51,6 +54,9 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
   }
 
   void _loadEvents() {
+    print('🔍 EventsListScreen: Loading events with category: $_selectedCategory');
+    print('🔍 EventsListScreen: Search query: ${_searchController.text}');
+    
     ref.read(eventsListViewModelProvider.notifier).getEvents(
       category: _selectedCategory,
       search: _searchController.text.isNotEmpty ? _searchController.text : null,
@@ -59,6 +65,7 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
   }
 
   void _onCategorySelected(String? category) {
+    print('🔍 EventsListScreen: Category selected: $category');
     setState(() {
       _selectedCategory = category;
     });
@@ -78,11 +85,21 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
     context.push('${RouteManager.eventDetails}/${event.id}');
   }
 
-  void _onFavoriteTap(EventEntity event) {
-    ToastService.showInfo(
-      context: context,
-      message: 'Favorite feature coming soon!',
-    );
+  Future<void> _onFavoriteTap(EventEntity event) async {
+    final bool success = await ref.read(favoritesViewModelProvider.notifier).toggleFavorite(event);
+    
+    if (success && mounted) {
+      final bool isFavorite = ref.read(favoritesViewModelProvider.notifier).isFavorite(event.id);
+      ToastService.showSuccess(
+        context: context,
+        message: isFavorite ? 'Added to favorites' : 'Removed from favorites',
+      );
+    } else if (mounted) {
+      ToastService.showError(
+        context: context,
+        message: 'Failed to update favorites',
+      );
+    }
   }
 
   void _toggleViewMode() {
@@ -93,7 +110,7 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final eventsState = ref.watch(eventsListViewModelProvider);
+    final BaseState<List<EventEntity>> eventsState = ref.watch(eventsListViewModelProvider);
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -104,7 +121,7 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
           'Events',
           color: context.colors.onSurface,
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
             icon: Icon(
               _isGridView ? Icons.view_list : Icons.grid_view,
@@ -127,50 +144,128 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
         onRefresh: () async {
           _loadEvents();
         },
-        child: Column(
-          children: [
+        child: CustomScrollView(
+          slivers: <Widget>[
             // Search Bar
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              child: EventSearchBar(
-                controller: _searchController,
-                onChanged: _onSearchChanged,
-                hintText: 'Search events...',
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                child: EventSearchBar(
+                  controller: _searchController,
+                  onChanged: _onSearchChanged,
+                  hintText: 'Search events...',
+                ),
               ),
             ),
             
             // Category Filter
-            CategoryFilter(
-              categories: _categories,
-              selectedCategory: _selectedCategory,
-              onCategorySelected: _onCategorySelected,
+            SliverToBoxAdapter(
+              child: CategoryFilter(
+                categories: _categories,
+                selectedCategory: _selectedCategory,
+                onCategorySelected: _onCategorySelected,
+              ),
             ),
             
-            SizedBox(height: 8.h),
+            SliverToBoxAdapter(
+              child: SizedBox(height: 8.h),
+            ),
             
             // Events List
-            Expanded(
-              child: eventsState.when(
-                initial: () => const Center(
+            eventsState.when(
+              initial: () => SliverFillRemaining(
+                child: const Center(
                   child: Text('Pull to refresh or search for events'),
                 ),
-                loading: () => EventList(
-                  events: const [],
-                  isLoading: true,
-                  isGridView: _isGridView,
+              ),
+              loading: () => SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: context.colors.primary,
+                  ),
                 ),
-                success: (events) => EventList(
-                  events: events,
-                  isGridView: _isGridView,
-                  onEventTap: _onEventTap,
-                  onFavoriteTap: _onFavoriteTap,
-                  onRetry: _loadEvents,
-                ),
-                error: (failure) => EventList(
-                  events: const [],
-                  error: failure.message,
-                  isGridView: _isGridView,
-                  onRetry: _loadEvents,
+              ),
+              success: (List<EventEntity> events) {
+                if (events.isEmpty) {
+                  return const SliverFillRemaining(
+                    child: Center(
+                      child: Text('No events found'),
+                    ),
+                  );
+                }
+                
+                if (_isGridView) {
+                  return SliverPadding(
+                    padding: EdgeInsets.all(16.w),
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.75,
+                        crossAxisSpacing: 12.w,
+                        mainAxisSpacing: 12.h,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          final event = events[index];
+                          return EventCard(
+                            event: event,
+                            onTap: () => _onEventTap(event),
+                            onFavorite: () => _onFavoriteTap(event),
+                            isFavorite: ref.read(favoritesViewModelProvider.notifier).isFavorite(event.id),
+                            showFavoriteButton: true,
+                          );
+                        },
+                        childCount: events.length,
+                      ),
+                    ),
+                  );
+                }
+                
+                return SliverPadding(
+                  padding: EdgeInsets.all(16.w),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        final event = events[index];
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 12.h),
+                          child: EventCard(
+                            event: event,
+                            onTap: () => _onEventTap(event),
+                            onFavorite: () => _onFavoriteTap(event),
+                            isFavorite: ref.read(favoritesViewModelProvider.notifier).isFavorite(event.id),
+                            showFavoriteButton: true,
+                          ),
+                        );
+                      },
+                      childCount: events.length,
+                    ),
+                  ),
+                );
+              },
+              error: (Failure failure) => SliverFillRemaining(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.error_outline,
+                        size: 48.sp,
+                        color: context.colors.error,
+                      ),
+                      SizedBox(height: 16.h),
+                      AppText.bodyLarge(
+                        failure.message,
+                        textAlign: TextAlign.center,
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                      SizedBox(height: 16.h),
+                      ElevatedButton(
+                        onPressed: _loadEvents,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'vendor_stats.dart';
-import 'booking.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_stats.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/booking.dart';
 
 part 'vendor_dashboard.freezed.dart';
 part 'vendor_dashboard.g.dart';

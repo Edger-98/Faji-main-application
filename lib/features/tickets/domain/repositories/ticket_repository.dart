@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/check_in_request.dart';
-import '../entities/my_ticket.dart';
-import '../entities/promo_code_validation.dart';
-import '../entities/purchase_ticket_request.dart';
-import '../entities/purchase_ticket_response.dart';
-import '../entities/ticket_entity.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/check_in_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/my_ticket.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/promo_code_validation.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_response.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/ticket_entity.dart';
 
 /// Ticket repository interface - domain layer
 abstract class TicketRepository {
@@ -68,9 +68,7 @@ abstract class TicketRepository {
     required String eventId,
     required int ticketId,
     required DateTime purchasedDate,
-    String? promoCode,
-    required int quantity,
-    required String transactionId,
+    required int quantity, required String transactionId, String? promoCode,
   });
 
   /// Validate ticket

@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/network/api_response.dart';
-import '../../domain/entities/invite_cohost_request.dart';
-import '../../domain/entities/cohost_invitation.dart';
-import '../../domain/entities/accept_invitation_response.dart';
-import '../../domain/entities/cohost.dart';
-import '../../domain/entities/cohost_dashboard.dart';
-import '../../domain/entities/remove_cohost_response.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/invite_cohost_request.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_invitation.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/accept_invitation_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_dashboard.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/remove_cohost_response.dart';
 
 part 'cohost_remote_datasource.g.dart';
 

@@ -4,23 +4,13 @@
 
 import 'dart:convert';
 
-import '../../domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str) as Map<String, dynamic>);
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
-  final String id;
-  final String email;
-  final String phoneNo;
-  final String firstName;
-  final String lastName;
-  final String role;
-  final String? image;
-  final bool pushNotificationsEnabled;
-  final String? expoPushToken;
-  final DateTime? createdAt;
 
   UserModel({
     required this.id,
@@ -50,35 +40,6 @@ class UserModel {
             : DateTime.parse(json['createdAt'] as String),
       );
 
-  Map<String, dynamic> toJson() => {
-        '_id': id,
-        'email': email,
-        'phoneNo': phoneNo,
-        'firstName': firstName,
-        'lastName': lastName,
-        'role': role,
-        'image': image,
-        'pushNotificationsEnabled': pushNotificationsEnabled,
-        'expoPushToken': expoPushToken,
-        'createdAt': createdAt?.toIso8601String(),
-      };
-
-  /// Convert to entity
-  UserEntity toEntity() {
-    return UserEntity(
-      id: id,
-      email: email,
-      phoneNo: phoneNo,
-      firstName: firstName,
-      lastName: lastName,
-      role: role,
-      image: image,
-      pushNotificationsEnabled: pushNotificationsEnabled,
-      expoPushToken: expoPushToken,
-      createdAt: createdAt,
-    );
-  }
-
   /// Create from entity
   factory UserModel.fromEntity(UserEntity entity) {
     return UserModel(
@@ -94,4 +55,41 @@ class UserModel {
       createdAt: entity.createdAt,
     );
   }
+  final String id;
+  final String email;
+  final String phoneNo;
+  final String firstName;
+  final String lastName;
+  final String role;
+  final String? image;
+  final bool pushNotificationsEnabled;
+  final String? expoPushToken;
+  final DateTime? createdAt;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        '_id': id,
+        'email': email,
+        'phoneNo': phoneNo,
+        'firstName': firstName,
+        'lastName': lastName,
+        'role': role,
+        'image': image,
+        'pushNotificationsEnabled': pushNotificationsEnabled,
+        'expoPushToken': expoPushToken,
+        'createdAt': createdAt?.toIso8601String(),
+      };
+
+  /// Convert to entity
+  UserEntity toEntity() => UserEntity(
+      id: id,
+      email: email,
+      phoneNo: phoneNo,
+      firstName: firstName,
+      lastName: lastName,
+      role: role,
+      image: image,
+      pushNotificationsEnabled: pushNotificationsEnabled,
+      expoPushToken: expoPushToken,
+      createdAt: createdAt,
+    );
 }

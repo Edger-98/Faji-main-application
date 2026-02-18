@@ -2,14 +2,14 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../network/api_client.dart';
+import 'package:fajimobileapp/core/network/api_client.dart';
 
 /// Service for handling image uploads via backend API
 class ImageUploadService {
-  final Dio _dio;
-  final ImagePicker _imagePicker = ImagePicker();
   
   ImageUploadService(this._dio);
+  final Dio _dio;
+  final ImagePicker _imagePicker = ImagePicker();
   
   /// Maximum file size (10MB)
   static const int maxFileSizeBytes = 10 * 1024 * 1024;
@@ -17,7 +17,7 @@ class ImageUploadService {
   /// Pick image from gallery
   Future<File?> pickImageFromGallery() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1920,
         maxHeight: 1920,
@@ -26,10 +26,10 @@ class ImageUploadService {
       
       if (image == null) return null;
       
-      final file = File(image.path);
+      final File file = File(image.path);
       
       // Check file size
-      final fileSize = await file.length();
+      final int fileSize = await file.length();
       if (fileSize > maxFileSizeBytes) {
         throw Exception('Image size exceeds 10MB limit');
       }
@@ -43,7 +43,7 @@ class ImageUploadService {
   /// Pick image from camera
   Future<File?> pickImageFromCamera() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: ImageSource.camera,
         maxWidth: 1920,
         maxHeight: 1920,
@@ -52,10 +52,10 @@ class ImageUploadService {
       
       if (image == null) return null;
       
-      final file = File(image.path);
+      final File file = File(image.path);
       
       // Check file size
-      final fileSize = await file.length();
+      final int fileSize = await file.length();
       if (fileSize > maxFileSizeBytes) {
         throw Exception('Image size exceeds 10MB limit');
       }
@@ -78,7 +78,7 @@ class ImageUploadService {
       print('🏷️ Type: $type');
       
       // Create form data
-      final formData = FormData.fromMap({
+      final FormData formData = FormData.fromMap(<String, dynamic>{
         'image': await MultipartFile.fromFile(
           imageFile.path,
           filename: imageFile.path.split('/').last,
@@ -86,12 +86,12 @@ class ImageUploadService {
       });
       
       // Upload to backend
-      final response = await _dio.post(
+      final Response response = await _dio.post(
         '/upload/image',
         data: formData,
-        queryParameters: {'type': type},
+        queryParameters: <String, dynamic>{'type': type},
         options: Options(
-          headers: {
+          headers: <String, dynamic>{
             'Content-Type': 'multipart/form-data',
           },
         ),
@@ -101,7 +101,7 @@ class ImageUploadService {
       print('📦 Response: ${response.data}');
       
       if (response.statusCode == 200 && response.data['success'] == true) {
-        final imageUrl = response.data['data']['imageUrl'] as String;
+        final String imageUrl = response.data['data']['imageUrl'] as String;
         print('🖼️ Image URL: $imageUrl');
         return imageUrl;
       } else {
@@ -130,20 +130,20 @@ class ImageUploadService {
       print('📤 Uploading ${imageFiles.length} images to backend...');
       
       // Create form data with multiple files
-      final formData = FormData.fromMap({
-        'images': imageFiles.map((file) async => await MultipartFile.fromFile(
+      final FormData formData = FormData.fromMap(<String, dynamic>{
+        'images': imageFiles.map((File file) async => MultipartFile.fromFile(
           file.path,
           filename: file.path.split('/').last,
         )).toList(),
       });
       
       // Upload to backend
-      final response = await _dio.post(
+      final Response response = await _dio.post(
         '/upload/images',
         data: formData,
-        queryParameters: {'type': type},
+        queryParameters: <String, dynamic>{'type': type},
         options: Options(
-          headers: {
+          headers: <String, dynamic>{
             'Content-Type': 'multipart/form-data',
           },
         ),
@@ -152,8 +152,8 @@ class ImageUploadService {
       print('✅ Upload successful');
       
       if (response.statusCode == 200 && response.data['success'] == true) {
-        final images = response.data['data']['images'] as List;
-        final imageUrls = images.map((img) => img['imageUrl'] as String).toList();
+        final List images = response.data['data']['images'] as List;
+        final List<String> imageUrls = images.map((img) => img['imageUrl'] as String).toList();
         print('🖼️ Uploaded ${imageUrls.length} images');
         return imageUrls;
       } else {
@@ -173,9 +173,9 @@ class ImageUploadService {
     try {
       print('🗑️ Deleting image: $publicId');
       
-      final response = await _dio.delete(
+      final Response response = await _dio.delete(
         '/upload/image',
-        data: {'publicId': publicId},
+        data: <String, String>{'publicId': publicId},
       );
       
       if (response.statusCode == 200 && response.data['success'] == true) {
@@ -193,28 +193,20 @@ class ImageUploadService {
   }
   
   /// Upload event image
-  Future<String> uploadEventImage(File imageFile) async {
-    return await uploadImage(imageFile: imageFile, type: 'event');
-  }
+  Future<String> uploadEventImage(File imageFile) async => await uploadImage(imageFile: imageFile, type: 'event');
   
   /// Upload profile image
-  Future<String> uploadProfileImage(File imageFile) async {
-    return await uploadImage(imageFile: imageFile, type: 'profile');
-  }
+  Future<String> uploadProfileImage(File imageFile) async => await uploadImage(imageFile: imageFile, type: 'profile');
   
   /// Upload vendor image
-  Future<String> uploadVendorImage(File imageFile) async {
-    return await uploadImage(imageFile: imageFile, type: 'vendor');
-  }
+  Future<String> uploadVendorImage(File imageFile) async => await uploadImage(imageFile: imageFile, type: 'vendor');
   
   /// Upload resource image
-  Future<String> uploadResourceImage(File imageFile) async {
-    return await uploadImage(imageFile: imageFile, type: 'resource');
-  }
+  Future<String> uploadResourceImage(File imageFile) async => await uploadImage(imageFile: imageFile, type: 'resource');
 }
 
 /// Provider for ImageUploadService
-final imageUploadServiceProvider = Provider<ImageUploadService>((ref) {
-  final dio = ref.watch(dioProvider);
+final Provider<ImageUploadService> imageUploadServiceProvider = Provider<ImageUploadService>((ProviderRef<ImageUploadService> ref) {
+  final Dio dio = ref.watch(dioProvider);
   return ImageUploadService(dio);
 });

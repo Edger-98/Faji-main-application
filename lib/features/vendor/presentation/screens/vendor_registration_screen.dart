@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'package:fajimobileapp/features/vendor/data/datasources/vendor_remote_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import '../../data/providers/vendor_providers.dart';
+import 'package:retrofit/dio.dart';
+import 'package:fajimobileapp/features/vendor/data/providers/vendor_providers.dart';
 
 class VendorRegistrationScreen extends ConsumerStatefulWidget {
   const VendorRegistrationScreen({super.key});
@@ -17,25 +19,25 @@ class VendorRegistrationScreen extends ConsumerStatefulWidget {
 
 class _VendorRegistrationScreenState
     extends ConsumerState<VendorRegistrationScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _businessNameController = TextEditingController();
-  final _bioController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _locationController = TextEditingController();
-  final List<String> _selectedCategories = [];
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _businessNameController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+  final List<String> _selectedCategories = <String>[];
   String? _profilePhotoUrl;
   bool _isUploadingPhoto = false;
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
-    {'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
-    {'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
-    {'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
-    {'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
-    {'id': 'security', 'name': 'Security', 'icon': Icons.security},
-    {'id': 'transport', 'name': 'Transport', 'icon': Icons.directions_car},
-    {'id': 'equipment', 'name': 'Equipment', 'icon': Icons.speaker},
+  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
+    <String, dynamic>{'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
+    <String, dynamic>{'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
+    <String, dynamic>{'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
+    <String, dynamic>{'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
+    <String, dynamic>{'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
+    <String, dynamic>{'id': 'security', 'name': 'Security', 'icon': Icons.security},
+    <String, dynamic>{'id': 'transport', 'name': 'Transport', 'icon': Icons.directions_car},
+    <String, dynamic>{'id': 'equipment', 'name': 'Equipment', 'icon': Icons.speaker},
   ];
 
   @override
@@ -63,8 +65,8 @@ class _VendorRegistrationScreenState
     try {
       setState(() => _isUploadingPhoto = true);
       
-      final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
+      final ImagePicker picker = ImagePicker();
+      final image = await picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1024,
         maxHeight: 1024,
@@ -77,8 +79,8 @@ class _VendorRegistrationScreenState
       }
       
       // Upload via backend API
-      final datasource = ref.read(vendorRemoteDataSourceProvider);
-      final formData = FormData.fromMap({
+      final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
+      final FormData formData = FormData.fromMap(<String, dynamic>{
         'imageType': 'profile',
         'image': await MultipartFile.fromFile(
           image.path,
@@ -86,8 +88,8 @@ class _VendorRegistrationScreenState
         ),
       });
       
-      final response = await datasource.uploadImage(formData);
-      final imageUrl = response.data['data']['imageUrl'] as String;
+      final HttpResponse response = await datasource.uploadImage(formData);
+      final String imageUrl = response.data['data']['imageUrl'] as String;
       
       setState(() {
         _profilePhotoUrl = imageUrl;
@@ -125,7 +127,7 @@ class _VendorRegistrationScreenState
       
       try {
         // Prepare registration data matching backend spec
-        final data = {
+        final Map<String, Object> data = <String, Object>{
           'businessName': _businessNameController.text,
           'bio': _bioController.text,
           'categories': _selectedCategories,
@@ -141,15 +143,15 @@ class _VendorRegistrationScreenState
         }
         
         // Call API
-        final datasource = ref.read(vendorRemoteDataSourceProvider);
-        final response = await datasource.registerVendor(data);
+        final VendorRemoteDataSource datasource = ref.read(vendorRemoteDataSourceProvider);
+        final HttpResponse response = await datasource.registerVendor(data);
         
         if (!mounted) return;
         
         setState(() => _isLoading = false);
         
         if (response.response.statusCode == 201 || response.response.statusCode == 200) {
-          final message = response.data['message']?.toString() ?? 'Vendor registration submitted successfully!';
+          final String message = response.data['message']?.toString() ?? 'Vendor registration submitted successfully!';
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(message),
@@ -168,9 +170,8 @@ class _VendorRegistrationScreenState
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Registration failed: ${e.toString()}'),
+            content: Text('Registration failed: ${e}'),
             backgroundColor: AppColors.error,
-            duration: const Duration(seconds: 4),
           ),
         );
       }
@@ -186,38 +187,41 @@ class _VendorRegistrationScreenState
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Row(
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppColors.searchBarBackground,
-                      shape: BoxShape.circle,
+          child: Column(
+            children: <Widget>[
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: AppColors.searchBarBackground,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios_new, size: 16),
+                        color: AppColors.onSurface,
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new, size: 16),
-                      color: AppColors.onSurface,
-                      onPressed: () => Navigator.pop(context),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Become a Vendor',
+                      style: AppTypography.headlineMedium.copyWith(
+                        color: AppColors.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    'Become a Vendor',
-                    style: AppTypography.headlineMedium.copyWith(
-                      color: AppColors.onSurface,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            // Content
+              // Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -225,7 +229,7 @@ class _VendorRegistrationScreenState
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       // Hero Section
                       Container(
                         padding: const EdgeInsets.all(20),
@@ -237,7 +241,7 @@ class _VendorRegistrationScreenState
                           ),
                         ),
                         child: Column(
-                          children: [
+                          children: <Widget>[
                             const Icon(
                               Icons.storefront_rounded,
                               size: 48,
@@ -300,7 +304,7 @@ class _VendorRegistrationScreenState
                                     )
                                   : Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
+                                      children: <Widget>[
                                         const Icon(
                                           Icons.add_photo_alternate_rounded,
                                           size: 40,
@@ -345,7 +349,7 @@ class _VendorRegistrationScreenState
                             vertical: 16,
                           ),
                         ),
-                        validator: (value) {
+                        validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your business name';
                           }
@@ -389,7 +393,7 @@ class _VendorRegistrationScreenState
                             color: AppColors.textSecondary,
                           ),
                         ),
-                        validator: (value) {
+                        validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a bio';
                           }
@@ -431,7 +435,7 @@ class _VendorRegistrationScreenState
                             vertical: 16,
                           ),
                         ),
-                        validator: (value) {
+                        validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
@@ -470,7 +474,7 @@ class _VendorRegistrationScreenState
                             vertical: 16,
                           ),
                         ),
-                        validator: (value) {
+                        validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your phone number';
                           }
@@ -505,7 +509,7 @@ class _VendorRegistrationScreenState
                             vertical: 16,
                           ),
                         ),
-                        validator: (value) {
+                        validator: (String? value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your location';
                           }
@@ -533,8 +537,8 @@ class _VendorRegistrationScreenState
                         spacing: 12,
                         runSpacing: 12,
                         children: _categories.map((Map<String, dynamic> category) {
-                          final String categoryId = category['id'] as String;
-                          final isSelected =
+                          final categoryId = category['id'] as String;
+                          final bool isSelected =
                               _selectedCategories.contains(categoryId);
                           return InkWell(
                             onTap: () => _toggleCategory(categoryId),
@@ -559,7 +563,7 @@ class _VendorRegistrationScreenState
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: [
+                                children: <Widget>[
                                   Icon(
                                     category['icon'] as IconData,
                                     size: 18,
@@ -627,7 +631,7 @@ class _VendorRegistrationScreenState
             ),
           ],
         ),
-      ),
-    );
-  }
-}
+      ), // End of Scaffold
+    ); // End of build method
+  } // End of build method
+} // End of class

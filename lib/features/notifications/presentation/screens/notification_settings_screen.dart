@@ -21,24 +21,24 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
 
   @override
   Widget build(BuildContext context) {
-    final permissionAsync = ref.watch(notificationPermissionProvider);
-    final fcmTokenAsync = ref.watch(fcmTokenProvider);
+    final AsyncValue<bool> permissionAsync = ref.watch(notificationPermissionProvider);
+    final AsyncValue<String?> fcmTokenAsync = ref.watch(fcmTokenProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             // Header
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
               child: Row(
-                children: [
+                children: <Widget>[
                   // Back button
                   Container(
                     width: 40.w,
                     height: 40.h,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.searchBarBackground,
                       shape: BoxShape.circle,
                     ),
@@ -67,12 +67,12 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
-                children: [
+                children: <Widget>[
                   SizedBox(height: 8.h),
 
                   // Permission status
                   permissionAsync.when(
-                    data: (isGranted) => _buildPermissionCard(isGranted),
+                    data: _buildPermissionCard,
                     loading: () => const SizedBox.shrink(),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
@@ -96,7 +96,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     title: 'Event Reminders',
                     subtitle: 'Get notified about upcoming events',
                     value: _eventReminders,
-                    onChanged: (value) => setState(() => _eventReminders = value),
+                    onChanged: (bool value) => setState(() => _eventReminders = value),
                   ),
 
                   _buildNotificationToggle(
@@ -104,7 +104,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     title: 'Booking Updates',
                     subtitle: 'Updates on your bookings and requests',
                     value: _bookingUpdates,
-                    onChanged: (value) => setState(() => _bookingUpdates = value),
+                    onChanged: (bool value) => setState(() => _bookingUpdates = value),
                   ),
 
                   _buildNotificationToggle(
@@ -112,7 +112,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     title: 'Vendor Messages',
                     subtitle: 'Messages from vendors and hosts',
                     value: _vendorMessages,
-                    onChanged: (value) => setState(() => _vendorMessages = value),
+                    onChanged: (bool value) => setState(() => _vendorMessages = value),
                   ),
 
                   _buildNotificationToggle(
@@ -120,7 +120,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     title: 'Payment Notifications',
                     subtitle: 'Payment confirmations and receipts',
                     value: _paymentNotifications,
-                    onChanged: (value) => setState(() => _paymentNotifications = value),
+                    onChanged: (bool value) => setState(() => _paymentNotifications = value),
                   ),
 
                   _buildNotificationToggle(
@@ -128,13 +128,13 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
                     title: 'Marketing & Promotions',
                     subtitle: 'Special offers and new features',
                     value: _marketingEmails,
-                    onChanged: (value) => setState(() => _marketingEmails = value),
+                    onChanged: (bool value) => setState(() => _marketingEmails = value),
                   ),
 
                   SizedBox(height: 24.h),
 
                   // FCM Token (for debugging)
-                  if (fcmTokenAsync.hasValue && fcmTokenAsync.value != null) ...[
+                  if (fcmTokenAsync.hasValue && fcmTokenAsync.value != null) ...<Widget>[
                     Text(
                       'Device Token',
                       style: TextStyle(
@@ -174,8 +174,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
     );
   }
 
-  Widget _buildPermissionCard(bool isGranted) {
-    return Container(
+  Widget _buildPermissionCard(bool isGranted) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: isGranted
@@ -243,7 +242,6 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
         ],
       ),
     );
-  }
 
   Widget _buildNotificationToggle({
     required IconData icon,
@@ -251,8 +249,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-  }) {
-    return Container(
+  }) => Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -309,5 +306,4 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
         ],
       ),
     );
-  }
 }

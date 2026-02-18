@@ -46,8 +46,8 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -80,9 +80,9 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
   }
 
   void _validatePassword() {
-    final password = _passwordController.text;
+    final String password = _passwordController.text;
     // Password must be at least 6 characters
-    final isValid = password.length >= 6;
+    final bool isValid = password.length >= 6;
     if (isValid != _isPasswordValid) {
       setState(() {
         _isPasswordValid = isValid;
@@ -92,8 +92,8 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
 
   @override
   Widget build(BuildContext context) {
-    final registrationState = ref.watch(registrationViewModelProvider);
-    final isLoading = registrationState.stepState.maybeWhen(
+    final RegistrationState registrationState = ref.watch(registrationViewModelProvider);
+    final bool isLoading = registrationState.stepState.maybeWhen(
       loading: () => true,
       orElse: () => false,
     );
@@ -119,7 +119,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
                     position: _slideAnimation,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         SizedBox(height: 40.h),
 
                         // Back button - positioned at x: 24, y: 64
@@ -144,7 +144,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
 
                         // Subtitle - positioned at x: 28, y: 160
                         Text(
-                          'Create a password with at least 6 letters or\nnumbers. It should be something others\ncan\'t guess.',
+                          "Create a password with at least 6 letters or\nnumbers. It should be something others\ncan't guess.",
                           style: TextStyle(
                             fontFamily: AppTypography.modicaPro,
                             fontSize: 17.sp,
@@ -197,7 +197,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
                           child: Padding(
                             padding: EdgeInsets.only(left: 4.w),
                             child: Row(
-                              children: [
+                              children: <Widget>[
                                 Icon(
                                   _isPasswordValid
                                       ? Icons.check_circle
@@ -266,7 +266,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
     );
     
     // Check the result
-    final state = ref.read(registrationViewModelProvider);
+    final RegistrationState state = ref.read(registrationViewModelProvider);
     state.stepState.when(
       initial: () {},
       loading: () {},
@@ -289,7 +289,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen>
           }
         }
       },
-      error: (failure) {
+      error: (Failure failure) {
         // Show error
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

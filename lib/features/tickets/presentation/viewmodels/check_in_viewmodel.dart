@@ -1,16 +1,18 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/check_in_request.dart';
-import '../../domain/usecases/check_in_guest_usecase.dart';
-import '../providers/ticket_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/check_in_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/usecases/check_in_guest_usecase.dart';
+import 'package:fajimobileapp/features/tickets/presentation/providers/ticket_providers.dart';
 
 /// Check-In ViewModel
 class CheckInViewModel extends StateNotifier<BaseState<CheckInResponse>> {
-  final CheckInGuestUseCase _checkInGuestUseCase;
 
   CheckInViewModel(this._checkInGuestUseCase)
       : super(const BaseState.initial());
+  final CheckInGuestUseCase _checkInGuestUseCase;
 
   /// Check-in guest
   Future<void> checkInGuest({
@@ -22,7 +24,7 @@ class CheckInViewModel extends StateNotifier<BaseState<CheckInResponse>> {
   }) async {
     state = const BaseState.loading();
 
-    final request = CheckInRequest(
+    final CheckInRequest request = CheckInRequest(
       ticketId: ticketId,
       eventId: eventId,
       location: (latitude != null && longitude != null)
@@ -34,11 +36,11 @@ class CheckInViewModel extends StateNotifier<BaseState<CheckInResponse>> {
           : null,
     );
 
-    final result = await _checkInGuestUseCase(request);
+    final Either<Failure, CheckInResponse> result = await _checkInGuestUseCase(request);
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (response) => state = BaseState.success(response),
+      (Failure failure) => state = BaseState.error(failure),
+      (CheckInResponse response) => state = BaseState.success(response),
     );
   }
 
@@ -49,9 +51,9 @@ class CheckInViewModel extends StateNotifier<BaseState<CheckInResponse>> {
 }
 
 /// Check-In ViewModel Provider
-final checkInViewModelProvider = StateNotifierProvider.autoDispose<
+final AutoDisposeStateNotifierProvider<CheckInViewModel, BaseState<CheckInResponse>> checkInViewModelProvider = StateNotifierProvider.autoDispose<
     CheckInViewModel, BaseState<CheckInResponse>>(
-  (ref) => CheckInViewModel(
+  (AutoDisposeStateNotifierProviderRef<CheckInViewModel, BaseState<CheckInResponse>> ref) => CheckInViewModel(
     ref.watch(checkInGuestUseCaseProvider),
   ),
 );

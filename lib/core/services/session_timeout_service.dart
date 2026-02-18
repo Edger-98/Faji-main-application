@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../routing/route_manager.dart';
-import '../network/interceptors/auth_interceptor.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/network/interceptors/auth_interceptor.dart';
 
 /// Service to handle session timeout and redirect to welcome back screen
 class SessionTimeoutService {
-  static final SessionTimeoutService _instance = SessionTimeoutService._internal();
   factory SessionTimeoutService() => _instance;
   SessionTimeoutService._internal();
+  static final SessionTimeoutService _instance = SessionTimeoutService._internal();
 
   BuildContext? _context;
   bool _isHandlingTimeout = false;
@@ -65,7 +65,7 @@ class SessionTimeoutService {
       await _storage.delete(key: 'user_id');
       
       // Clear shared preferences
-      final prefs = await SharedPreferences.getInstance();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('firstName');
       await prefs.remove('lastName');
       await prefs.remove('email');

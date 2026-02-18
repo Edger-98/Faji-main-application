@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:in_app_review/in_app_review.dart';
-import '../../../../core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Bottom sheet for rating the app
 class RateAppBottomSheet extends StatefulWidget {
   const RateAppBottomSheet({super.key});
 
-  static Future<void> show(BuildContext context) {
-    return showModalBottomSheet(
+  static Future<void> show(BuildContext context) => showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const RateAppBottomSheet(),
     );
-  }
 
   @override
   State<RateAppBottomSheet> createState() => _RateAppBottomSheetState();
@@ -58,7 +56,7 @@ class _RateAppBottomSheetState extends State<RateAppBottomSheet> {
 
       // If rating is 4 or 5, prompt for app store review
       if (_rating >= 4) {
-        final InAppReview inAppReview = InAppReview.instance;
+        final inAppReview = InAppReview.instance;
         if (await inAppReview.isAvailable()) {
           await inAppReview.requestReview();
         }
@@ -67,11 +65,11 @@ class _RateAppBottomSheetState extends State<RateAppBottomSheet> {
       // Show success message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Thank you for your feedback!'),
+          const SnackBar(
+            content: Text('Thank you for your feedback!'),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
+            duration: Duration(seconds: 3),
           ),
         );
       }
@@ -90,8 +88,7 @@ class _RateAppBottomSheetState extends State<RateAppBottomSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
@@ -270,7 +267,6 @@ class _RateAppBottomSheetState extends State<RateAppBottomSheet> {
         ),
       ),
     );
-  }
 
   String _getRatingText(int rating) {
     switch (rating) {

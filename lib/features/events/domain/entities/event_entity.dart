@@ -11,20 +11,10 @@ class EventEntity with _$EventEntity {
     required String description,
     required String hostId,
     required String hostName,
-    String? hostImage,
-    required String category,
-    required DateTime startDate,
-    required DateTime endDate,
-    required String location,
-    required double latitude,
-    required double longitude,
-    required String imageUrl,
+    required String category, required DateTime startDate, required DateTime endDate, required String location, required double latitude, required double longitude, required String imageUrl, required double price, required int totalTickets, required int availableTickets, String? hostImage,
     List<String>? images,
-    required double price,
     String? currency,
     String? currencySymbol,
-    required int totalTickets,
-    required int availableTickets,
     int? soldTickets,
     @Default(false) bool isFree,
     @Default(false) bool ticketingEnabled,
@@ -42,12 +32,15 @@ class EventEntity with _$EventEntity {
 
   const EventEntity._();
 
-  bool get isSoldOut => ticketingEnabled && availableTickets <= 0;
+  bool get isSoldOut => availableTickets <= 0;
   bool get hasDiscount => discountPercentage != null && discountPercentage! > 0;
   double get discountedPrice => hasDiscount 
       ? price * (1 - (discountPercentage! / 100))
       : price;
-  String get formattedPrice => '${currencySymbol ?? '\$'}${price.toStringAsFixed(2)}';
-  bool get hasTickets => ticketingEnabled && !isFree;
+  String get formattedPrice => '\$${price.toStringAsFixed(2)}';
+  
+  // All events have tickets - some are free (price = 0), some are paid (price > 0)
+  bool get isPaidEvent => price > 0;
+  bool get isFreeEvent => price == 0 || isFree;
 }
 

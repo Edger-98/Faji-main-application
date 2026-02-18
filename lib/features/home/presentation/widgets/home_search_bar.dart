@@ -8,18 +8,17 @@ import 'package:fajimobileapp/features/home/presentation/widgets/filter_bottom_s
 
 /// Search bar for home screen
 class HomeSearchBar extends StatelessWidget {
-  final VoidCallback? onSearchTap;
-  final VoidCallback? onFilterTap;
 
   const HomeSearchBar({
     super.key,
     this.onSearchTap,
     this.onFilterTap,
   });
+  final VoidCallback? onSearchTap;
+  final VoidCallback? onFilterTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget build(BuildContext context) => Row(
       children: [
         Expanded(
           child: GestureDetector(
@@ -71,14 +70,13 @@ class HomeSearchBar extends StatelessWidget {
         ),
       ],
     );
-  }
 
   void _showSearch(BuildContext context) {
     context.push('/search');
   }
 
-  void _showFilter(BuildContext context) async {
-    final result = await BottomSheetService.show<FilterOptions>(
+  Future<void> _showFilter(BuildContext context) async {
+    final FilterOptions? result = await BottomSheetService.show<FilterOptions>(
       context: context,
       child: const FilterBottomSheet(),
     );

@@ -24,7 +24,6 @@ mixin _$VendorProfile {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get bio => throw _privateConstructorUsedError;
-  String? get profilePhoto => throw _privateConstructorUsedError;
   List<String> get categories => throw _privateConstructorUsedError;
   double get rating => throw _privateConstructorUsedError;
   int get reviewCount => throw _privateConstructorUsedError;
@@ -35,13 +34,13 @@ mixin _$VendorProfile {
   List<String> get portfolio => throw _privateConstructorUsedError;
   List<VendorResource> get resources => throw _privateConstructorUsedError;
   List<VendorReview> get reviews => throw _privateConstructorUsedError;
+  String? get profilePhoto => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
       String id,
       String name,
       String bio,
-      String? profilePhoto,
       List<String> categories,
       double rating,
       int reviewCount,
@@ -52,6 +51,7 @@ mixin _$VendorProfile {
       List<String> portfolio,
       List<VendorResource> resources,
       List<VendorReview> reviews,
+      String? profilePhoto,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -61,7 +61,6 @@ mixin _$VendorProfile {
       String id,
       String name,
       String bio,
-      String? profilePhoto,
       List<String> categories,
       double rating,
       int reviewCount,
@@ -72,6 +71,7 @@ mixin _$VendorProfile {
       List<String> portfolio,
       List<VendorResource> resources,
       List<VendorReview> reviews,
+      String? profilePhoto,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -81,7 +81,6 @@ mixin _$VendorProfile {
       String id,
       String name,
       String bio,
-      String? profilePhoto,
       List<String> categories,
       double rating,
       int reviewCount,
@@ -92,6 +91,7 @@ mixin _$VendorProfile {
       List<String> portfolio,
       List<VendorResource> resources,
       List<VendorReview> reviews,
+      String? profilePhoto,
     )?
     $default, {
     required TResult orElse(),
@@ -131,7 +131,6 @@ abstract class $VendorProfileCopyWith<$Res> {
     String id,
     String name,
     String bio,
-    String? profilePhoto,
     List<String> categories,
     double rating,
     int reviewCount,
@@ -142,6 +141,7 @@ abstract class $VendorProfileCopyWith<$Res> {
     List<String> portfolio,
     List<VendorResource> resources,
     List<VendorReview> reviews,
+    String? profilePhoto,
   });
 }
 
@@ -163,7 +163,6 @@ class _$VendorProfileCopyWithImpl<$Res, $Val extends VendorProfile>
     Object? id = null,
     Object? name = null,
     Object? bio = null,
-    Object? profilePhoto = freezed,
     Object? categories = null,
     Object? rating = null,
     Object? reviewCount = null,
@@ -174,6 +173,7 @@ class _$VendorProfileCopyWithImpl<$Res, $Val extends VendorProfile>
     Object? portfolio = null,
     Object? resources = null,
     Object? reviews = null,
+    Object? profilePhoto = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -189,10 +189,6 @@ class _$VendorProfileCopyWithImpl<$Res, $Val extends VendorProfile>
                 ? _value.bio
                 : bio // ignore: cast_nullable_to_non_nullable
                       as String,
-            profilePhoto: freezed == profilePhoto
-                ? _value.profilePhoto
-                : profilePhoto // ignore: cast_nullable_to_non_nullable
-                      as String?,
             categories: null == categories
                 ? _value.categories
                 : categories // ignore: cast_nullable_to_non_nullable
@@ -233,6 +229,10 @@ class _$VendorProfileCopyWithImpl<$Res, $Val extends VendorProfile>
                 ? _value.reviews
                 : reviews // ignore: cast_nullable_to_non_nullable
                       as List<VendorReview>,
+            profilePhoto: freezed == profilePhoto
+                ? _value.profilePhoto
+                : profilePhoto // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -252,7 +252,6 @@ abstract class _$$VendorProfileImplCopyWith<$Res>
     String id,
     String name,
     String bio,
-    String? profilePhoto,
     List<String> categories,
     double rating,
     int reviewCount,
@@ -263,6 +262,7 @@ abstract class _$$VendorProfileImplCopyWith<$Res>
     List<String> portfolio,
     List<VendorResource> resources,
     List<VendorReview> reviews,
+    String? profilePhoto,
   });
 }
 
@@ -283,7 +283,6 @@ class __$$VendorProfileImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? bio = null,
-    Object? profilePhoto = freezed,
     Object? categories = null,
     Object? rating = null,
     Object? reviewCount = null,
@@ -294,6 +293,7 @@ class __$$VendorProfileImplCopyWithImpl<$Res>
     Object? portfolio = null,
     Object? resources = null,
     Object? reviews = null,
+    Object? profilePhoto = freezed,
   }) {
     return _then(
       _$VendorProfileImpl(
@@ -309,10 +309,6 @@ class __$$VendorProfileImplCopyWithImpl<$Res>
             ? _value.bio
             : bio // ignore: cast_nullable_to_non_nullable
                   as String,
-        profilePhoto: freezed == profilePhoto
-            ? _value.profilePhoto
-            : profilePhoto // ignore: cast_nullable_to_non_nullable
-                  as String?,
         categories: null == categories
             ? _value._categories
             : categories // ignore: cast_nullable_to_non_nullable
@@ -353,6 +349,10 @@ class __$$VendorProfileImplCopyWithImpl<$Res>
             ? _value._reviews
             : reviews // ignore: cast_nullable_to_non_nullable
                   as List<VendorReview>,
+        profilePhoto: freezed == profilePhoto
+            ? _value.profilePhoto
+            : profilePhoto // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -365,7 +365,6 @@ class _$VendorProfileImpl implements _VendorProfile {
     required this.id,
     required this.name,
     required this.bio,
-    this.profilePhoto,
     required final List<String> categories,
     required this.rating,
     required this.reviewCount,
@@ -376,6 +375,7 @@ class _$VendorProfileImpl implements _VendorProfile {
     required final List<String> portfolio,
     required final List<VendorResource> resources,
     required final List<VendorReview> reviews,
+    this.profilePhoto,
   }) : _categories = categories,
        _portfolio = portfolio,
        _resources = resources,
@@ -390,8 +390,6 @@ class _$VendorProfileImpl implements _VendorProfile {
   final String name;
   @override
   final String bio;
-  @override
-  final String? profilePhoto;
   final List<String> _categories;
   @override
   List<String> get categories {
@@ -437,8 +435,11 @@ class _$VendorProfileImpl implements _VendorProfile {
   }
 
   @override
+  final String? profilePhoto;
+
+  @override
   String toString() {
-    return 'VendorProfile(id: $id, name: $name, bio: $bio, profilePhoto: $profilePhoto, categories: $categories, rating: $rating, reviewCount: $reviewCount, eventsCompleted: $eventsCompleted, isVerified: $isVerified, responseTime: $responseTime, location: $location, portfolio: $portfolio, resources: $resources, reviews: $reviews)';
+    return 'VendorProfile(id: $id, name: $name, bio: $bio, categories: $categories, rating: $rating, reviewCount: $reviewCount, eventsCompleted: $eventsCompleted, isVerified: $isVerified, responseTime: $responseTime, location: $location, portfolio: $portfolio, resources: $resources, reviews: $reviews, profilePhoto: $profilePhoto)';
   }
 
   @override
@@ -449,8 +450,6 @@ class _$VendorProfileImpl implements _VendorProfile {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.bio, bio) || other.bio == bio) &&
-            (identical(other.profilePhoto, profilePhoto) ||
-                other.profilePhoto == profilePhoto) &&
             const DeepCollectionEquality().equals(
               other._categories,
               _categories,
@@ -474,7 +473,9 @@ class _$VendorProfileImpl implements _VendorProfile {
               other._resources,
               _resources,
             ) &&
-            const DeepCollectionEquality().equals(other._reviews, _reviews));
+            const DeepCollectionEquality().equals(other._reviews, _reviews) &&
+            (identical(other.profilePhoto, profilePhoto) ||
+                other.profilePhoto == profilePhoto));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -484,7 +485,6 @@ class _$VendorProfileImpl implements _VendorProfile {
     id,
     name,
     bio,
-    profilePhoto,
     const DeepCollectionEquality().hash(_categories),
     rating,
     reviewCount,
@@ -495,6 +495,7 @@ class _$VendorProfileImpl implements _VendorProfile {
     const DeepCollectionEquality().hash(_portfolio),
     const DeepCollectionEquality().hash(_resources),
     const DeepCollectionEquality().hash(_reviews),
+    profilePhoto,
   );
 
   /// Create a copy of VendorProfile
@@ -512,7 +513,6 @@ class _$VendorProfileImpl implements _VendorProfile {
       String id,
       String name,
       String bio,
-      String? profilePhoto,
       List<String> categories,
       double rating,
       int reviewCount,
@@ -523,6 +523,7 @@ class _$VendorProfileImpl implements _VendorProfile {
       List<String> portfolio,
       List<VendorResource> resources,
       List<VendorReview> reviews,
+      String? profilePhoto,
     )
     $default,
   ) {
@@ -530,7 +531,6 @@ class _$VendorProfileImpl implements _VendorProfile {
       id,
       name,
       bio,
-      profilePhoto,
       categories,
       rating,
       reviewCount,
@@ -541,6 +541,7 @@ class _$VendorProfileImpl implements _VendorProfile {
       portfolio,
       resources,
       reviews,
+      profilePhoto,
     );
   }
 
@@ -551,7 +552,6 @@ class _$VendorProfileImpl implements _VendorProfile {
       String id,
       String name,
       String bio,
-      String? profilePhoto,
       List<String> categories,
       double rating,
       int reviewCount,
@@ -562,6 +562,7 @@ class _$VendorProfileImpl implements _VendorProfile {
       List<String> portfolio,
       List<VendorResource> resources,
       List<VendorReview> reviews,
+      String? profilePhoto,
     )?
     $default,
   ) {
@@ -569,7 +570,6 @@ class _$VendorProfileImpl implements _VendorProfile {
       id,
       name,
       bio,
-      profilePhoto,
       categories,
       rating,
       reviewCount,
@@ -580,6 +580,7 @@ class _$VendorProfileImpl implements _VendorProfile {
       portfolio,
       resources,
       reviews,
+      profilePhoto,
     );
   }
 
@@ -590,7 +591,6 @@ class _$VendorProfileImpl implements _VendorProfile {
       String id,
       String name,
       String bio,
-      String? profilePhoto,
       List<String> categories,
       double rating,
       int reviewCount,
@@ -601,6 +601,7 @@ class _$VendorProfileImpl implements _VendorProfile {
       List<String> portfolio,
       List<VendorResource> resources,
       List<VendorReview> reviews,
+      String? profilePhoto,
     )?
     $default, {
     required TResult orElse(),
@@ -610,7 +611,6 @@ class _$VendorProfileImpl implements _VendorProfile {
         id,
         name,
         bio,
-        profilePhoto,
         categories,
         rating,
         reviewCount,
@@ -621,6 +621,7 @@ class _$VendorProfileImpl implements _VendorProfile {
         portfolio,
         resources,
         reviews,
+        profilePhoto,
       );
     }
     return orElse();
@@ -665,7 +666,6 @@ abstract class _VendorProfile implements VendorProfile {
     required final String id,
     required final String name,
     required final String bio,
-    final String? profilePhoto,
     required final List<String> categories,
     required final double rating,
     required final int reviewCount,
@@ -676,6 +676,7 @@ abstract class _VendorProfile implements VendorProfile {
     required final List<String> portfolio,
     required final List<VendorResource> resources,
     required final List<VendorReview> reviews,
+    final String? profilePhoto,
   }) = _$VendorProfileImpl;
 
   factory _VendorProfile.fromJson(Map<String, dynamic> json) =
@@ -687,8 +688,6 @@ abstract class _VendorProfile implements VendorProfile {
   String get name;
   @override
   String get bio;
-  @override
-  String? get profilePhoto;
   @override
   List<String> get categories;
   @override
@@ -709,6 +708,8 @@ abstract class _VendorProfile implements VendorProfile {
   List<VendorResource> get resources;
   @override
   List<VendorReview> get reviews;
+  @override
+  String? get profilePhoto;
 
   /// Create a copy of VendorProfile
   /// with the given fields replaced by the non-null parameter values.

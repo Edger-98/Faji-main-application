@@ -12,8 +12,7 @@ class UserEntity with _$UserEntity {
     required String firstName,
     required String lastName,
     required String role,
-    String? image,
-    required bool pushNotificationsEnabled,
+    required bool pushNotificationsEnabled, String? image,
     String? expoPushToken,
     DateTime? createdAt,
   }) = _UserEntity;

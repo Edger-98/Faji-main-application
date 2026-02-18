@@ -16,8 +16,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
   int selectedPaymentMethod = 0; // 0: Mastercard, 1: Visa, 2: Apple Pay, 3: PayPal
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +142,6 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
         ],
       ),
     );
-  }
 
   Widget _buildPaymentCard(
     BuildContext context,
@@ -155,7 +153,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
     bool isApplePay = false,
     bool isPayPal = false,
   }) {
-    final isSelected = selectedPaymentMethod == index;
+    final bool isSelected = selectedPaymentMethod == index;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -172,7 +170,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
             borderRadius: BorderRadius.circular(34.5.r),
           ),
           child: Row(
-            children: [
+            children: <Widget>[
               // Icon
               if (isMastercard)
                 _buildMastercardIcon()
@@ -188,12 +186,12 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     AppText.labelLarge(
                       title,
                       color: context.colors.onSurface,
                     ),
-                    if (subtitle.isNotEmpty) ...[
+                    if (subtitle.isNotEmpty) ...<Widget>[
                       SizedBox(height: 2.h),
                       Text(
                         subtitle,
@@ -245,8 +243,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
     );
   }
 
-  Widget _buildMastercardIcon() {
-    return SizedBox(
+  Widget _buildMastercardIcon() => SizedBox(
       width: 50.w,
       height: 32.14.h,
       child: Stack(
@@ -276,10 +273,8 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
         ],
       ),
     );
-  }
 
-  Widget _buildVisaIcon() {
-    return Container(
+  Widget _buildVisaIcon() => Container(
       width: 42.w,
       height: 13.w,
       decoration: const BoxDecoration(
@@ -296,10 +291,8 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildPayPalIcon() {
-    return Container(
+  Widget _buildPayPalIcon() => Container(
       width: 32.w,
       height: 32.h,
       decoration: BoxDecoration(
@@ -317,5 +310,4 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
         ),
       ),
     );
-  }
 }

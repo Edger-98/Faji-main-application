@@ -1,54 +1,46 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/vendor_registration.dart';
-import '../../domain/entities/vendor_document.dart';
-import '../../domain/entities/vendor_portfolio.dart';
-import '../../domain/entities/bank_details.dart';
-import '../../domain/entities/registration_status.dart';
-import '../../domain/usecases/register_vendor_usecase.dart';
-import '../../domain/usecases/upload_vendor_documents_usecase.dart';
-import '../../domain/usecases/upload_portfolio_usecase.dart';
-import '../../domain/usecases/add_bank_details_usecase.dart';
-import '../../domain/usecases/check_vendor_status_usecase.dart';
-import '../../domain/usecases/get_vendor_profile_usecase.dart';
-import '../../domain/usecases/update_vendor_profile_usecase.dart';
-import '../../domain/usecases/delete_portfolio_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_registration.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_document.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_portfolio.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/bank_details.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/registration_status.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/register_vendor_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/upload_vendor_documents_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/upload_portfolio_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/add_bank_details_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/check_vendor_status_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/get_vendor_profile_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/update_vendor_profile_usecase.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/usecases/delete_portfolio_usecase.dart';
 
 // State for vendor registration
 class VendorRegistrationState {
-  final BaseState<VendorRegistrationResponse> registrationState;
-  final BaseState<RegistrationStatus> statusState;
-  final BaseState<VendorRegistrationProfile> profileState;
 
   VendorRegistrationState({
     required this.registrationState,
     required this.statusState,
     required this.profileState,
   });
+  final BaseState<VendorRegistrationResponse> registrationState;
+  final BaseState<RegistrationStatus> statusState;
+  final BaseState<VendorRegistrationProfile> profileState;
 
   VendorRegistrationState copyWith({
     BaseState<VendorRegistrationResponse>? registrationState,
     BaseState<RegistrationStatus>? statusState,
     BaseState<VendorRegistrationProfile>? profileState,
-  }) {
-    return VendorRegistrationState(
+  }) => VendorRegistrationState(
       registrationState: registrationState ?? this.registrationState,
       statusState: statusState ?? this.statusState,
       profileState: profileState ?? this.profileState,
     );
-  }
 }
 
 class VendorRegistrationViewModel
     extends StateNotifier<VendorRegistrationState> {
-  final RegisterVendorUseCase _registerVendorUseCase;
-  final UploadVendorDocumentsUseCase _uploadVendorDocumentsUseCase;
-  final UploadPortfolioUseCase _uploadPortfolioUseCase;
-  final AddBankDetailsUseCase _addBankDetailsUseCase;
-  final CheckVendorStatusUseCase _checkVendorStatusUseCase;
-  final GetVendorProfileUseCase _getVendorProfileUseCase;
-  final UpdateVendorProfileUseCase _updateVendorProfileUseCase;
-  final DeletePortfolioUseCase _deletePortfolioUseCase;
 
   VendorRegistrationViewModel(
     this._registerVendorUseCase,
@@ -64,6 +56,14 @@ class VendorRegistrationViewModel
           statusState: const BaseState.initial(),
           profileState: const BaseState.initial(),
         ));
+  final RegisterVendorUseCase _registerVendorUseCase;
+  final UploadVendorDocumentsUseCase _uploadVendorDocumentsUseCase;
+  final UploadPortfolioUseCase _uploadPortfolioUseCase;
+  final AddBankDetailsUseCase _addBankDetailsUseCase;
+  final CheckVendorStatusUseCase _checkVendorStatusUseCase;
+  final GetVendorProfileUseCase _getVendorProfileUseCase;
+  final UpdateVendorProfileUseCase _updateVendorProfileUseCase;
+  final DeletePortfolioUseCase _deletePortfolioUseCase;
 
   /// Register as vendor
   Future<void> registerVendor({
@@ -73,13 +73,13 @@ class VendorRegistrationViewModel
       registrationState: const BaseState.loading(),
     );
 
-    final result = await _registerVendorUseCase(request: request);
+    final Either<Failure, VendorRegistrationResponse> result = await _registerVendorUseCase(request: request);
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         registrationState: BaseState.error(failure),
       ),
-      (response) => state = state.copyWith(
+      (VendorRegistrationResponse response) => state = state.copyWith(
         registrationState: BaseState.success(response),
       ),
     );
@@ -89,11 +89,11 @@ class VendorRegistrationViewModel
   Future<VendorDocument?> uploadDocuments({
     required UploadDocumentRequest request,
   }) async {
-    final result = await _uploadVendorDocumentsUseCase(request: request);
+    final Either<Failure, VendorDocument> result = await _uploadVendorDocumentsUseCase(request: request);
 
     return result.fold(
-      (failure) => null,
-      (document) => document,
+      (Failure failure) => null,
+      (VendorDocument document) => document,
     );
   }
 
@@ -101,11 +101,11 @@ class VendorRegistrationViewModel
   Future<VendorPortfolio?> uploadPortfolio({
     required UploadPortfolioRequest request,
   }) async {
-    final result = await _uploadPortfolioUseCase(request: request);
+    final Either<Failure, VendorPortfolio> result = await _uploadPortfolioUseCase(request: request);
 
     return result.fold(
-      (failure) => null,
-      (portfolio) => portfolio,
+      (Failure failure) => null,
+      (VendorPortfolio portfolio) => portfolio,
     );
   }
 
@@ -113,11 +113,11 @@ class VendorRegistrationViewModel
   Future<BankDetailsResponse?> addBankDetails({
     required BankDetailsRequest request,
   }) async {
-    final result = await _addBankDetailsUseCase(request: request);
+    final Either<Failure, BankDetailsResponse> result = await _addBankDetailsUseCase(request: request);
 
     return result.fold(
-      (failure) => null,
-      (bankDetails) => bankDetails,
+      (Failure failure) => null,
+      (BankDetailsResponse bankDetails) => bankDetails,
     );
   }
 
@@ -127,13 +127,13 @@ class VendorRegistrationViewModel
       statusState: const BaseState.loading(),
     );
 
-    final result = await _checkVendorStatusUseCase();
+    final Either<Failure, RegistrationStatus> result = await _checkVendorStatusUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         statusState: BaseState.error(failure),
       ),
-      (status) => state = state.copyWith(
+      (RegistrationStatus status) => state = state.copyWith(
         statusState: BaseState.success(status),
       ),
     );
@@ -145,13 +145,13 @@ class VendorRegistrationViewModel
       profileState: const BaseState.loading(),
     );
 
-    final result = await _getVendorProfileUseCase();
+    final Either<Failure, VendorRegistrationProfile> result = await _getVendorProfileUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         profileState: BaseState.error(failure),
       ),
-      (profile) => state = state.copyWith(
+      (VendorRegistrationProfile profile) => state = state.copyWith(
         profileState: BaseState.success(profile),
       ),
     );
@@ -161,13 +161,13 @@ class VendorRegistrationViewModel
   Future<bool> updateProfile({
     required Map<String, dynamic> profileData,
   }) async {
-    final result = await _updateVendorProfileUseCase(
+    final Either<Failure, VendorRegistrationProfile> result = await _updateVendorProfileUseCase(
       profileData: profileData,
     );
 
     return result.fold(
-      (failure) => false,
-      (profile) {
+      (Failure failure) => false,
+      (VendorRegistrationProfile profile) {
         // Update state with new profile
         state = state.copyWith(
           profileState: BaseState.success(profile),
@@ -181,12 +181,12 @@ class VendorRegistrationViewModel
   Future<bool> deletePortfolio({
     required String portfolioId,
   }) async {
-    final result = await _deletePortfolioUseCase(
+    final Either<Failure, void> result = await _deletePortfolioUseCase(
       portfolioId: portfolioId,
     );
 
     return result.fold(
-      (failure) => false,
+      (Failure failure) => false,
       (_) {
         // Refresh profile after deletion
         getProfile();
@@ -197,7 +197,7 @@ class VendorRegistrationViewModel
 
   /// Refresh all
   Future<void> refreshAll() async {
-    await Future.wait([
+    await Future.wait(<Future<void>>[
       checkStatus(),
       getProfile(),
     ]);

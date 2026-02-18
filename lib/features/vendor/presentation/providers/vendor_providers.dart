@@ -3,11 +3,14 @@ import 'package:fajimobileapp/features/vendor/domain/entities/vendor_profile_ent
 import 'package:fajimobileapp/features/vendor/domain/entities/vendor_resource_entity.dart';
 import 'package:fajimobileapp/features/vendor/domain/entities/vendor_booking_entity.dart';
 import 'package:fajimobileapp/features/vendor/domain/entities/vendor_stats_entity.dart';
+import 'package:fajimobileapp/features/vendor/domain/entities/vendor_status.dart';
+import 'package:fajimobileapp/features/vendor/data/datasources/vendor_remote_datasource.dart';
+import 'package:fajimobileapp/core/network/api_client.dart';
 
 // Mock data providers - Replace with actual API calls
 
 /// Provider for vendor profile
-final vendorProfileProvider = FutureProvider<VendorProfileEntity?>((ref) async {
+final FutureProvider<VendorProfileEntity?> vendorProfileProvider = FutureProvider<VendorProfileEntity?>((FutureProviderRef<VendorProfileEntity?> ref) async {
   // TODO: Fetch from API
   await Future.delayed(const Duration(milliseconds: 500));
   
@@ -17,13 +20,13 @@ final vendorProfileProvider = FutureProvider<VendorProfileEntity?>((ref) async {
 });
 
 /// Provider for vendor stats
-final vendorStatsProvider = FutureProvider<VendorStatsEntity>((ref) async {
+final FutureProvider<VendorStatsEntity> vendorStatsProvider = FutureProvider<VendorStatsEntity>((FutureProviderRef<VendorStatsEntity> ref) async {
   // TODO: Fetch from API
   await Future.delayed(const Duration(milliseconds: 500));
   
   return const VendorStatsEntity(
     totalBookings: 24,
-    totalEarnings: 2450.0,
+    totalEarnings: 2450,
     pendingRequests: 3,
     activeResources: 8,
     completedBookings: 21,
@@ -32,20 +35,19 @@ final vendorStatsProvider = FutureProvider<VendorStatsEntity>((ref) async {
 });
 
 /// Provider for vendor resources
-final vendorResourcesProvider = FutureProvider<List<VendorResourceEntity>>((ref) async {
+final FutureProvider<List<VendorResourceEntity>> vendorResourcesProvider = FutureProvider<List<VendorResourceEntity>>((FutureProviderRef<List<VendorResourceEntity>> ref) async {
   // TODO: Fetch from API
   await Future.delayed(const Duration(milliseconds: 500));
   
-  return [
+  return <VendorResourceEntity>[
     VendorResourceEntity(
       id: '1',
       vendorId: 'vendor_123',
       category: 'entertainment',
       title: 'Professional DJ Services',
       description: 'High-quality DJ services for all types of events',
-      price: 250.0,
-      images: [],
-      isAvailable: true,
+      price: 250,
+      images: <String>[],
       bookingCount: 12,
       createdAt: DateTime.now(),
     ),
@@ -55,9 +57,8 @@ final vendorResourcesProvider = FutureProvider<List<VendorResourceEntity>>((ref)
       category: 'photography',
       title: 'Event Photography',
       description: 'Professional photography services',
-      price: 500.0,
-      images: [],
-      isAvailable: true,
+      price: 500,
+      images: <String>[],
       bookingCount: 8,
       createdAt: DateTime.now(),
     ),
@@ -65,11 +66,11 @@ final vendorResourcesProvider = FutureProvider<List<VendorResourceEntity>>((ref)
 });
 
 /// Provider for vendor bookings with status filter
-final vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, BookingStatus?>((ref, status) async {
+final FutureProviderFamily<List<VendorBookingEntity>, BookingStatus?> vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, BookingStatus?>((FutureProviderRef<List<VendorBookingEntity>> ref, BookingStatus? status) async {
   // TODO: Fetch from API with status filter
   await Future.delayed(const Duration(milliseconds: 500));
   
-  final allBookings = [
+  final List<VendorBookingEntity> allBookings = <VendorBookingEntity>[
     VendorBookingEntity(
       id: '1',
       vendorId: 'vendor_123',
@@ -78,7 +79,7 @@ final vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, 
       customerName: 'John Doe',
       eventName: 'Birthday Party',
       eventDate: DateTime(2025, 12, 25),
-      offeredPrice: 250.0,
+      offeredPrice: 250,
       status: BookingStatus.pending,
       createdAt: DateTime.now(),
     ),
@@ -90,7 +91,7 @@ final vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, 
       customerName: 'Sarah Smith',
       eventName: 'Wedding Reception',
       eventDate: DateTime(2026, 1, 15),
-      offeredPrice: 800.0,
+      offeredPrice: 800,
       status: BookingStatus.pending,
       createdAt: DateTime.now(),
     ),
@@ -102,7 +103,7 @@ final vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, 
       customerName: 'Mike Johnson',
       eventName: 'Corporate Event',
       eventDate: DateTime(2025, 12, 20),
-      offeredPrice: 500.0,
+      offeredPrice: 500,
       status: BookingStatus.accepted,
       createdAt: DateTime.now(),
     ),
@@ -114,7 +115,7 @@ final vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, 
       customerName: 'Emily Davis',
       eventName: 'Anniversary Party',
       eventDate: DateTime(2025, 12, 10),
-      offeredPrice: 350.0,
+      offeredPrice: 350,
       status: BookingStatus.completed,
       createdAt: DateTime.now(),
     ),
@@ -124,12 +125,12 @@ final vendorBookingsProvider = FutureProvider.family<List<VendorBookingEntity>, 
     return allBookings;
   }
   
-  return allBookings.where((booking) => booking.status == status).toList();
+  return allBookings.where((VendorBookingEntity booking) => booking.status == status).toList();
 });
 
 /// Provider to check if current user is a vendor
-final isVendorProvider = FutureProvider<bool>((ref) async {
-  final profile = await ref.watch(vendorProfileProvider.future);
+final FutureProvider<bool> isVendorProvider = FutureProvider<bool>((FutureProviderRef<bool> ref) async {
+  final VendorProfileEntity? profile = await ref.watch(vendorProfileProvider.future);
   return profile != null;
 });
 
@@ -155,9 +156,7 @@ class VendorRegistrationNotifier extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final vendorRegistrationProvider = StateNotifierProvider<VendorRegistrationNotifier, AsyncValue<void>>((ref) {
-  return VendorRegistrationNotifier();
-});
+final StateNotifierProvider<VendorRegistrationNotifier, AsyncValue<void>> vendorRegistrationProvider = StateNotifierProvider<VendorRegistrationNotifier, AsyncValue<void>>((StateNotifierProviderRef<VendorRegistrationNotifier, AsyncValue<void>> ref) => VendorRegistrationNotifier());
 
 /// State notifier for resource management
 class ResourceManagementNotifier extends StateNotifier<AsyncValue<void>> {
@@ -215,9 +214,7 @@ class ResourceManagementNotifier extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final resourceManagementProvider = StateNotifierProvider<ResourceManagementNotifier, AsyncValue<void>>((ref) {
-  return ResourceManagementNotifier();
-});
+final StateNotifierProvider<ResourceManagementNotifier, AsyncValue<void>> resourceManagementProvider = StateNotifierProvider<ResourceManagementNotifier, AsyncValue<void>>((StateNotifierProviderRef<ResourceManagementNotifier, AsyncValue<void>> ref) => ResourceManagementNotifier());
 
 /// State notifier for booking management
 class BookingManagementNotifier extends StateNotifier<AsyncValue<void>> {
@@ -266,6 +263,27 @@ class BookingManagementNotifier extends StateNotifier<AsyncValue<void>> {
   }
 }
 
-final bookingManagementProvider = StateNotifierProvider<BookingManagementNotifier, AsyncValue<void>>((ref) {
-  return BookingManagementNotifier();
+final StateNotifierProvider<BookingManagementNotifier, AsyncValue<void>> bookingManagementProvider = StateNotifierProvider<BookingManagementNotifier, AsyncValue<void>>((StateNotifierProviderRef<BookingManagementNotifier, AsyncValue<void>> ref) => BookingManagementNotifier());
+
+
+/// Provider for checking vendor status
+final FutureProvider<VendorStatus?> vendorStatusProvider = FutureProvider<VendorStatus?>((FutureProviderRef<VendorStatus?> ref) async {
+  try {
+    final dio = ref.read(dioProvider);
+    final vendorDataSource = VendorRemoteDataSource(dio);
+    
+    final response = await vendorDataSource.checkVendorStatus();
+    
+    if (response.response.statusCode == 200 && response.data != null) {
+      final data = response.data['data'] as Map<String, dynamic>?;
+      if (data != null) {
+        return VendorStatus.fromJson(data);
+      }
+    }
+    
+    return null;
+  } catch (e) {
+    print('Error checking vendor status: $e');
+    return null;
+  }
 });

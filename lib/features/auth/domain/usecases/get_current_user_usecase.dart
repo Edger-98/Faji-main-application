@@ -1,23 +1,23 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/user_entity.dart';
-import '../repositories/auth_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 
 /// Get current user use case
 class GetCurrentUserUseCase {
-  final AuthRepository repository;
 
   GetCurrentUserUseCase(this.repository);
+  final AuthRepository repository;
 
   Future<Either<Failure, UserEntity>> call() async {
     // Get stored user ID
-    final userId = await repository.getUserId();
+    final String? userId = await repository.getUserId();
     if (userId == null) {
-      return Left(CacheFailure(message: 'No user ID found'));
+      return const Left(CacheFailure(message: 'No user ID found'));
     }
     
     // Fetch user by ID
-    return await repository.getUserById(userId);
+    return repository.getUserById(userId);
   }
 }

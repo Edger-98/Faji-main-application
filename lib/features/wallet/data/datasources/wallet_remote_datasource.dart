@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../../../../core/network/api_response.dart';
-import '../../domain/entities/wallet_balance.dart';
-import '../../domain/entities/wallet_transaction.dart';
-import '../../domain/entities/withdraw_request.dart';
-import '../../domain/entities/topup_request.dart';
-import '../../domain/entities/earnings_breakdown.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/withdraw_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
 
 part 'wallet_remote_datasource.g.dart';
 
@@ -16,7 +16,7 @@ abstract class WalletRemoteDataSource {
 
   /// Get wallet balance
   @GET('/wallet/balance')
-  Future<ApiResponse<WalletBalance>> getWalletBalance();
+  Future<HttpResponse<dynamic>> getWalletBalance();
 
   /// Get wallet transactions
   @GET('/wallet/transactions')
@@ -28,7 +28,7 @@ abstract class WalletRemoteDataSource {
 
   /// Withdraw funds from wallet
   @POST('/wallet/withdraw')
-  Future<ApiResponse<WithdrawResponse>> withdrawFunds(
+  Future<HttpResponse<dynamic>> withdrawFunds(
     @Body() WithdrawRequest request,
   );
 

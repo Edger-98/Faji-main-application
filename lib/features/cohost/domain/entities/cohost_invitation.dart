@@ -12,9 +12,7 @@ class CohostInvitation with _$CohostInvitation {
     required CohostUser host,
     required double revenueShare,
     required String status,
-    String? message,
-    required String createdAt,
-    required String expiresAt,
+    required String createdAt, required String expiresAt, String? message,
     String? respondedAt,
   }) = _CohostInvitation;
 

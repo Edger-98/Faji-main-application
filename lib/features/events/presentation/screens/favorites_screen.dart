@@ -1,13 +1,16 @@
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/routing/route_manager.dart';
-import '../../domain/entities/event_entity.dart';
-import '../viewmodels/favorites_viewmodel.dart';
-import '../widgets/event_list.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/services/toast_service.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/favorites_viewmodel.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_list.dart';
 
 /// Favorites Screen
 class FavoritesScreen extends ConsumerStatefulWidget {
@@ -34,14 +37,25 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     context.push('${RouteManager.eventDetails}/${event.id}');
   }
 
-  void _onFavoriteTap(EventEntity event) {
-    // Refresh the list after removing favorite
-    _loadFavorites();
+  Future<void> _onFavoriteTap(EventEntity event) async {
+    final bool success = await ref.read(favoritesViewModelProvider.notifier).removeFromFavorites(event.id);
+    
+    if (success && mounted) {
+      ToastService.showSuccess(
+        context: context,
+        message: 'Removed from favorites',
+      );
+    } else if (mounted) {
+      ToastService.showError(
+        context: context,
+        message: 'Failed to remove from favorites',
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final favoritesState = ref.watch(favoritesViewModelProvider);
+    final BaseState<List<EventEntity>> favoritesState = ref.watch(favoritesViewModelProvider);
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -61,12 +75,12 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           initial: () => const Center(
             child: CircularProgressIndicator(),
           ),
-          loading: () => EventList(
-            events: const [],
+          loading: () => const EventList(
+            events: <EventEntity>[],
             isLoading: true,
             isGridView: false,
           ),
-          success: (events) {
+          success: (List<EventEntity> events) {
             if (events.isEmpty) {
               return _buildEmptyState();
             }
@@ -75,11 +89,11 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               isGridView: false,
               onEventTap: _onEventTap,
               onFavoriteTap: _onFavoriteTap,
-              favoriteEventIds: events.map((e) => e.id).toSet(),
+              favoriteEventIds: events.map((EventEntity e) => e.id).toSet(),
             );
           },
-          error: (failure) => EventList(
-            events: const [],
+          error: (Failure failure) => EventList(
+            events: const <EventEntity>[],
             error: failure.message,
             isGridView: false,
             onRetry: _loadFavorites,
@@ -89,8 +103,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
+  Widget _buildEmptyState() => Center(
       child: Padding(
         padding: EdgeInsets.all(32.w),
         child: Column(
@@ -124,5 +137,4 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         ),
       ),
     );
-  }
 }

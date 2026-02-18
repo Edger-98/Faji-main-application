@@ -1,26 +1,27 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/error/failures.dart';
-import '../../domain/entities/vendor_registration.dart';
-import '../../domain/entities/vendor_document.dart';
-import '../../domain/entities/vendor_portfolio.dart';
-import '../../domain/entities/bank_details.dart';
-import '../../domain/entities/registration_status.dart';
-import '../../domain/repositories/vendor_registration_repository.dart';
-import '../datasources/vendor_registration_remote_datasource.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_registration.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_document.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_portfolio.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/bank_details.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/registration_status.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/repositories/vendor_registration_repository.dart';
+import 'package:fajimobileapp/features/vendor_registration/data/datasources/vendor_registration_remote_datasource.dart';
 
 class VendorRegistrationRepositoryImpl
     implements VendorRegistrationRepository {
-  final VendorRegistrationRemoteDataSource remoteDataSource;
 
   VendorRegistrationRepositoryImpl(this.remoteDataSource);
+  final VendorRegistrationRemoteDataSource remoteDataSource;
 
   @override
   Future<Either<Failure, VendorRegistrationResponse>> registerVendor({
     required VendorRegistrationRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.registerVendor(request);
+      final ApiResponse<VendorRegistrationResponse> response = await remoteDataSource.registerVendor(request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -38,7 +39,7 @@ class VendorRegistrationRepositoryImpl
     required UploadDocumentRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.uploadDocuments(request);
+      final ApiResponse<VendorDocument> response = await remoteDataSource.uploadDocuments(request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -56,7 +57,7 @@ class VendorRegistrationRepositoryImpl
     required UploadPortfolioRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.uploadPortfolio(request);
+      final ApiResponse<VendorPortfolio> response = await remoteDataSource.uploadPortfolio(request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -74,7 +75,7 @@ class VendorRegistrationRepositoryImpl
     required BankDetailsRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.addBankDetails(request);
+      final ApiResponse<BankDetailsResponse> response = await remoteDataSource.addBankDetails(request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -90,7 +91,7 @@ class VendorRegistrationRepositoryImpl
   @override
   Future<Either<Failure, RegistrationStatus>> checkStatus() async {
     try {
-      final response = await remoteDataSource.checkStatus();
+      final ApiResponse<RegistrationStatus> response = await remoteDataSource.checkStatus();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -106,7 +107,7 @@ class VendorRegistrationRepositoryImpl
   @override
   Future<Either<Failure, VendorRegistrationProfile>> getProfile() async {
     try {
-      final response = await remoteDataSource.getProfile();
+      final ApiResponse<VendorRegistrationProfile> response = await remoteDataSource.getProfile();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -124,7 +125,7 @@ class VendorRegistrationRepositoryImpl
     required Map<String, dynamic> profileData,
   }) async {
     try {
-      final response = await remoteDataSource.updateProfile(profileData);
+      final ApiResponse<VendorRegistrationProfile> response = await remoteDataSource.updateProfile(profileData);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -156,22 +157,22 @@ class VendorRegistrationRepositoryImpl
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return ServerFailure(message: 'Connection timeout');
+        return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
+        final int? statusCode = error.response?.statusCode;
         final message = error.response?.data?['message'] ?? 'Server error';
         if (statusCode == 401) {
-          return AuthFailure(message: 'Unauthorized');
+          return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {
-          return AuthFailure(message: 'Forbidden');
+          return const AuthFailure(message: 'Forbidden');
         } else if (statusCode == 404) {
-          return ServerFailure(message: 'Not found');
+          return const ServerFailure(message: 'Not found');
         }
         return ServerFailure(message: message);
       case DioExceptionType.cancel:
-        return ServerFailure(message: 'Request cancelled');
+        return const ServerFailure(message: 'Request cancelled');
       case DioExceptionType.connectionError:
-        return NetworkFailure(message: 'No internet connection');
+        return const NetworkFailure(message: 'No internet connection');
       default:
         return ServerFailure(message: error.message ?? 'Unknown error');
     }

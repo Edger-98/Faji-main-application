@@ -5,11 +5,7 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Card with toggle switch for enabling/disabling features
 class FeatureToggleCard extends StatelessWidget {
   const FeatureToggleCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.value,
-    required this.onChanged,
+    required this.title, required this.description, required this.value, required this.onChanged, super.key,
     this.icon,
   });
 
@@ -20,8 +16,7 @@ class FeatureToggleCard extends StatelessWidget {
   final String? icon;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerHighest,
@@ -70,5 +65,4 @@ class FeatureToggleCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

@@ -1,26 +1,27 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/api_service.dart';
-import '../../../../core/models/theme_model.dart';
-import '../../../../core/models/poster_model.dart';
-import '../../../../core/models/event_model.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/core/models/theme_model.dart';
+import 'package:fajimobileapp/core/models/poster_model.dart';
+import 'package:fajimobileapp/core/models/event_model.dart';
 
 class EventCreationRepository {
-  final ApiService _api;
 
   EventCreationRepository(this._api);
+  final ApiService _api;
 
   Future<List<ThemeModel>> getThemes() async {
-    final response = await _api.get('/event-themes');
-    final themes = (response.data['data']['themes'] as List)
+    final Response response = await _api.get('/event-themes');
+    final List<ThemeModel> themes = (response.data['data']['themes'] as List)
         .map((e) => ThemeModel.fromJson(e as Map<String, dynamic>))
         .toList();
     return themes;
   }
 
   Future<List<PosterModel>> getPosters({String? category}) async {
-    final params = category != null ? {'category': category} : null;
-    final response = await _api.get('/event-posters', params: params);
-    final posters = (response.data['data']['posters'] as List)
+    final Map<String, String>? params = category != null ? <String, String>{'category': category} : null;
+    final Response response = await _api.get('/event-posters', params: params);
+    final List<PosterModel> posters = (response.data['data']['posters'] as List)
         .map((e) => PosterModel.fromJson(e as Map<String, dynamic>))
         .toList();
     return posters;
@@ -43,7 +44,7 @@ class EventCreationRepository {
     Map<String, dynamic>? ticketing, // NEW: Ticketing data
   }) async {
     try {
-      final Map<String, dynamic> eventData = {
+      final eventData = <String, dynamic>{
         'name': name,
         'category': category,
         'startDate': startDate.toIso8601String(),
@@ -82,15 +83,15 @@ class EventCreationRepository {
       }
 
       print('📤 Posting to /events with data: $eventData');
-      final response = await _api.post('/events', data: eventData);
+      final Response response = await _api.post('/events', data: eventData);
       
       print('📥 Response received: ${response.statusCode}');
       print('   Response data: ${response.data}');
       
-      final eventJson = response.data['data'] as Map<String, dynamic>;
+      final Map<String, dynamic> eventJson = response.data['data'] as Map<String, dynamic>;
       print('   Parsing event JSON...');
       
-      final event = EventModel.fromJson(eventJson);
+      final EventModel event = EventModel.fromJson(eventJson);
       print('✅ Event parsed successfully: ${event.id}');
       
       return event;
@@ -102,6 +103,4 @@ class EventCreationRepository {
   }
 }
 
-final eventCreationRepositoryProvider = Provider<EventCreationRepository>((ref) {
-  return EventCreationRepository(ref.read(apiServiceProvider));
-});
+final Provider<EventCreationRepository> eventCreationRepositoryProvider = Provider<EventCreationRepository>((ProviderRef<EventCreationRepository> ref) => EventCreationRepository(ref.read(apiServiceProvider)));

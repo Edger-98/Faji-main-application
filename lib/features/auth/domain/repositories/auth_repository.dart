@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/auth_token_entity.dart';
-import '../entities/registration_complete_entity.dart';
-import '../entities/registration_session_entity.dart';
-import '../entities/registration_token_entity.dart';
-import '../entities/user_entity.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_complete_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_session_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
 
 /// Auth repository interface - domain layer
 abstract class AuthRepository {
@@ -80,6 +80,18 @@ abstract class AuthRepository {
   /// Forget password
   Future<Either<Failure, bool>> forgetPassword({
     required String email,
+  });
+
+  /// Verify password reset OTP
+  Future<Either<Failure, String>> verifyPasswordResetOtp({
+    required String email,
+    required String otp,
+  });
+
+  /// Reset password with reset token
+  Future<Either<Failure, bool>> resetPassword({
+    required String resetToken,
+    required String newPassword,
   });
 
   /// Update password with token

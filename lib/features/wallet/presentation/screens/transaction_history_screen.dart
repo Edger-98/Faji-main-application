@@ -1,28 +1,30 @@
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/presentation/viewmodels/wallet_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import '../providers/wallet_providers.dart';
-import '../../domain/entities/wallet_transaction.dart';
+import 'package:fajimobileapp/features/wallet/presentation/providers/wallet_providers.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
 
 class TransactionHistoryScreen extends HookConsumerWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletViewModel = ref.watch(walletViewModelProvider.notifier);
-    final walletState = ref.watch(walletViewModelProvider);
-    final selectedFilter = useState('All');
-    final filters = ['All', 'Hosting', 'Co-hosting', 'Vendor'];
-    final scrollController = useScrollController();
+    final WalletViewModel walletViewModel = ref.watch(walletViewModelProvider.notifier);
+    final WalletState walletState = ref.watch(walletViewModelProvider);
+    final ValueNotifier<String> selectedFilter = useState('All');
+    final List<String> filters = <String>['All', 'Hosting', 'Co-hosting', 'Vendor'];
+    final ScrollController scrollController = useScrollController();
 
     // Load transactions on mount
     useEffect(() {
-      Future.microtask(() => walletViewModel.getWalletTransactions());
+      Future.microtask(walletViewModel.getWalletTransactions);
       return null;
-    }, []);
+    }, <Object?>[]);
 
     // Pagination listener
     useEffect(() {
@@ -34,7 +36,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
       
       scrollController.addListener(onScroll);
       return () => scrollController.removeListener(onScroll);
-    }, [scrollController]);
+    }, <Object?>[scrollController]);
 
     void onFilterChanged(String filter) {
       HapticFeedback.lightImpact();
@@ -57,7 +59,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
       backgroundColor: context.colors.surface,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             _buildAppBar(context),
             Expanded(
               child: SingleChildScrollView(
@@ -65,7 +67,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     SizedBox(height: 16.h),
                     _buildSubtitle(context),
                     SizedBox(height: 20.h),
@@ -74,11 +76,11 @@ class TransactionHistoryScreen extends HookConsumerWidget {
                     walletState.transactionsState.when(
                       initial: () => _buildTransactionsEmpty(context),
                       loading: () => _buildTransactionsLoading(context),
-                      success: (transactionsResponse) => _buildTransactionList(
+                      success: (WalletTransactionsResponse transactionsResponse) => _buildTransactionList(
                         context,
                         transactionsResponse.transactions,
                       ),
-                      error: (failure) => _buildTransactionsError(context, failure.message),
+                      error: (Failure failure) => _buildTransactionsError(context, failure.message),
                     ),
                     SizedBox(height: 32.h),
                   ],
@@ -91,8 +93,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return Padding(
+  Widget _buildAppBar(BuildContext context) => Padding(
       padding: EdgeInsets.all(24.w),
       child: Row(
         children: [
@@ -128,24 +129,20 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildSubtitle(BuildContext context) {
-    return Text(
+  Widget _buildSubtitle(BuildContext context) => Text(
       'View all your earnings from hosting, co-hosting, and vendor services.',
       style: AppTypography.bodyMedium.copyWith(
         color: context.colors.onSurfaceVariant,
       ),
     );
-  }
 
   Widget _buildFilterChips(
     BuildContext context,
     List<String> filters,
     String selectedFilter,
     Function(String) onFilterChanged,
-  ) {
-    return SizedBox(
+  ) => SizedBox(
       height: 48.h,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -168,7 +165,6 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         },
       ),
     );
-  }
 
   Widget _buildTransactionList(BuildContext context, List<WalletTransaction> transactions) {
     if (transactions.isEmpty) {
@@ -177,7 +173,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
 
     return Column(
       children: transactions
-          .map((transaction) => Padding(
+          .map((WalletTransaction transaction) => Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
                 child: _buildTransactionCard(context, transaction),
               ))
@@ -185,8 +181,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildTransactionsLoading(BuildContext context) {
-    return Column(
+  Widget _buildTransactionsLoading(BuildContext context) => Column(
       children: List.generate(
         5,
         (index) => Padding(
@@ -195,10 +190,8 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildTransactionSkeleton(BuildContext context) {
-    return Container(
+  Widget _buildTransactionSkeleton(BuildContext context) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
@@ -250,10 +243,8 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildTransactionsEmpty(BuildContext context) {
-    return Center(
+  Widget _buildTransactionsEmpty(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 60.h),
         child: Column(
@@ -282,10 +273,8 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildTransactionsError(BuildContext context, String message) {
-    return Center(
+  Widget _buildTransactionsError(BuildContext context, String message) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 60.h),
         child: Column(
@@ -314,7 +303,6 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
   Widget _buildTransactionCard(
     BuildContext context,
@@ -356,7 +344,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
     // Format date
     String formattedDate;
     try {
-      final date = DateTime.parse(transaction.createdAt);
+      final DateTime date = DateTime.parse(transaction.createdAt);
       formattedDate = '${_getMonthName(date.month)} ${date.day}, ${date.year}';
     } catch (e) {
       formattedDate = transaction.createdAt;
@@ -369,7 +357,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Container(
             width: 48.w,
             height: 48.h,
@@ -387,7 +375,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   transaction.description,
                   style: AppTypography.bodyMedium.copyWith(
@@ -408,7 +396,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
                 ),
                 SizedBox(height: 6.h),
                 Row(
-                  children: [
+                  children: <Widget>[
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       decoration: BoxDecoration(
@@ -451,7 +439,7 @@ class TransactionHistoryScreen extends HookConsumerWidget {
   }
 
   String _getMonthName(int month) {
-    const months = [
+    const List<String> months = <String>[
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];

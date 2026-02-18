@@ -15,7 +15,7 @@ class Validators {
     }
 
     // RFC 5322 compliant email regex
-    final RegExp emailRegex = RegExp(
+    final emailRegex = RegExp(
       r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
     );
 
@@ -41,17 +41,17 @@ class Validators {
     }
 
     // Check for at least one uppercase letter
-    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+    if (!RegExp('[A-Z]').hasMatch(value)) {
       return 'Password must contain at least one uppercase letter';
     }
 
     // Check for at least one lowercase letter
-    if (!RegExp(r'[a-z]').hasMatch(value)) {
+    if (!RegExp('[a-z]').hasMatch(value)) {
       return 'Password must contain at least one lowercase letter';
     }
 
     // Check for at least one digit
-    if (!RegExp(r'[0-9]').hasMatch(value)) {
+    if (!RegExp('[0-9]').hasMatch(value)) {
       return 'Password must contain at least one number';
     }
 
@@ -106,7 +106,7 @@ class Validators {
     }
 
     // Remove all non-digit characters for validation
-    final String digitsOnly = value.replaceAll(RegExp(r'[^\d]'), '');
+    final digitsOnly = value.replaceAll(RegExp(r'[^\d]'), '');
 
     // Check for minimum and maximum length
     if (digitsOnly.length < 10) {
@@ -118,7 +118,7 @@ class Validators {
     }
 
     // International phone number regex (with optional country code)
-    final RegExp phoneRegex = RegExp(r'^\+?[1-9]\d{1,14}$');
+    final phoneRegex = RegExp(r'^\+?[1-9]\d{1,14}$');
     
     if (!phoneRegex.hasMatch(digitsOnly)) {
       return 'Please enter a valid phone number';
@@ -193,7 +193,7 @@ class Validators {
       return null; // Let required validator handle empty values
     }
 
-    final Uri? uri = Uri.tryParse(value);
+    final uri = Uri.tryParse(value);
     if (uri == null || !uri.hasScheme || (!uri.scheme.startsWith('http'))) {
       return 'Please enter a valid $fieldName';
     }
@@ -221,7 +221,7 @@ class Validators {
       return null; // Let required validator handle empty values
     }
 
-    final int? ageValue = int.tryParse(value);
+    final ageValue = int.tryParse(value);
     if (ageValue == null) {
       return 'Please enter a valid age';
     }
@@ -244,7 +244,7 @@ class Validators {
     }
 
     // Remove spaces and hyphens
-    final String cleanValue = value.replaceAll(RegExp(r'[\s\-]'), '');
+    final cleanValue = value.replaceAll(RegExp(r'[\s\-]'), '');
 
     // Check if all characters are digits
     if (!RegExp(r'^\d+$').hasMatch(cleanValue)) {
@@ -283,8 +283,7 @@ class Validators {
   }
 
   /// Combine multiple validators
-  static String? Function(String?) combine(List<String? Function(String?)> validators) {
-    return (String? value) {
+  static String? Function(String?) combine(List<String? Function(String?)> validators) => (String? value) {
       for (final String? Function(String?) validator in validators) {
         final String? result = validator(value);
         if (result != null) {
@@ -293,15 +292,14 @@ class Validators {
       }
       return null;
     };
-  }
 
   /// Luhn algorithm implementation for credit card validation
   static bool _isValidLuhn(String cardNumber) {
-    int sum = 0;
-    bool alternate = false;
+    var sum = 0;
+    var alternate = false;
 
-    for (int i = cardNumber.length - 1; i >= 0; i--) {
-      int digit = int.parse(cardNumber[i]);
+    for (var i = cardNumber.length - 1; i >= 0; i--) {
+      var digit = int.parse(cardNumber[i]);
 
       if (alternate) {
         digit *= 2;

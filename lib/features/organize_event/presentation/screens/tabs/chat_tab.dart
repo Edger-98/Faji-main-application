@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/core/models/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,9 +7,9 @@ import 'package:fajimobileapp/features/organize_event/presentation/providers/mes
 
 /// CHAT Tab - Shows event chat with planners with REAL API DATA
 class ChatTab extends ConsumerStatefulWidget {
-  final String eventId;
 
   const ChatTab({super.key, required this.eventId});
+  final String eventId;
 
   @override
   ConsumerState<ChatTab> createState() => _ChatTabState();
@@ -25,10 +26,10 @@ class _ChatTabState extends ConsumerState<ChatTab> {
     super.dispose();
   }
 
-  void _sendMessage() async {
+  Future<void> _sendMessage() async {
     if (_messageController.text.trim().isEmpty) return;
 
-    final content = _messageController.text.trim();
+    final String content = _messageController.text.trim();
     _messageController.clear();
 
     try {
@@ -65,26 +66,26 @@ class _ChatTabState extends ConsumerState<ChatTab> {
   }
 
   String _formatTime(DateTime time) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    final hour = time.hour > 12 ? time.hour - 12 : time.hour;
-    final period = time.hour >= 12 ? 'PM' : 'AM';
+    final List<String> months = <String>['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final int hour = time.hour > 12 ? time.hour - 12 : time.hour;
+    final String period = time.hour >= 12 ? 'PM' : 'AM';
     return '${months[time.month - 1]} ${time.day}, ${hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')} $period';
   }
 
   @override
   Widget build(BuildContext context) {
-    final messagesAsync = ref.watch(messageListProvider(widget.eventId));
+    final AsyncValue<List<MessageModel>> messagesAsync = ref.watch(messageListProvider(widget.eventId));
 
     return Column(
-      children: [
+      children: <Widget>[
         Expanded(
           child: messagesAsync.when(
-            data: (messages) {
+            data: (List<MessageModel> messages) {
               if (messages.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.chat_bubble_outline,
                         size: 64.sp,
@@ -122,8 +123,8 @@ class _ChatTabState extends ConsumerState<ChatTab> {
                   controller: _scrollController,
                   padding: EdgeInsets.all(16.w),
                   itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages[index];
+                  itemBuilder: (BuildContext context, int index) {
+                    final MessageModel message = messages[index];
                     return Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
                       child: message.type == 'system'
@@ -142,13 +143,13 @@ class _ChatTabState extends ConsumerState<ChatTab> {
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(
+            error: (Object error, StackTrace stack) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
                   SizedBox(height: 16.h),
-                  Text('Failed to load messages'),
+                  const Text('Failed to load messages'),
                   SizedBox(height: 8.h),
                   ElevatedButton(
                     onPressed: () =>
@@ -165,8 +166,7 @@ class _ChatTabState extends ConsumerState<ChatTab> {
     );
   }
 
-  Widget _buildSystemMessage(String message, String time) {
-    return Align(
+  Widget _buildSystemMessage(String message, String time) => Align(
       alignment: Alignment.centerRight,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
@@ -207,10 +207,8 @@ class _ChatTabState extends ConsumerState<ChatTab> {
         ),
       ),
     );
-  }
 
-  Widget _buildUserMessage(String message, String time, String senderName) {
-    return Align(
+  Widget _buildUserMessage(String message, String time, String senderName) => Align(
       alignment: Alignment.centerRight,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
@@ -265,16 +263,15 @@ class _ChatTabState extends ConsumerState<ChatTab> {
         ),
       ),
     );
-  }
 
   Widget _buildChatInput() {
-    final isSending = ref.watch(messageSendProvider).isLoading;
+    final bool isSending = ref.watch(messageSendProvider).isLoading;
 
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
       decoration: BoxDecoration(
         color: AppColors.background,
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 20,
@@ -283,7 +280,7 @@ class _ChatTabState extends ConsumerState<ChatTab> {
         ],
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -293,7 +290,7 @@ class _ChatTabState extends ConsumerState<ChatTab> {
                 border: Border.all(color: const Color(0xFF2A2A2A)),
               ),
               child: Row(
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: TextField(
                       controller: _messageController,
@@ -316,7 +313,7 @@ class _ChatTabState extends ConsumerState<ChatTab> {
                         contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                       ),
                       onSubmitted: (_) => _sendMessage(),
-                      onChanged: (value) => setState(() {}),
+                      onChanged: (String value) => setState(() {}),
                     ),
                   ),
                   IconButton(

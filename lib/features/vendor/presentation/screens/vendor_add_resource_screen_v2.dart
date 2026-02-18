@@ -2,8 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import '../../data/providers/vendor_providers.dart';
+import 'package:fajimobileapp/features/vendor/data/providers/vendor_providers.dart';
 
 class VendorAddResourceScreenV2 extends ConsumerStatefulWidget {
   const VendorAddResourceScreenV2({super.key});
@@ -15,21 +16,23 @@ class VendorAddResourceScreenV2 extends ConsumerStatefulWidget {
 
 class _VendorAddResourceScreenV2State
     extends ConsumerState<VendorAddResourceScreenV2> {
-  final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _priceController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   String? _selectedCategory;
+  final List<String> _imageUrls = [];
+  bool _isUploadingImage = false;
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
-    {'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
-    {'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
-    {'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
-    {'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
-    {'id': 'security', 'name': 'Security', 'icon': Icons.security},
-    {'id': 'promotion', 'name': 'Promotion', 'icon': Icons.campaign},
-    {'id': 'equipment', 'name': 'Equipment', 'icon': Icons.speaker},
+  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
+    <String, dynamic>{'id': 'venue', 'name': 'Venue', 'icon': Icons.location_city},
+    <String, dynamic>{'id': 'entertainment', 'name': 'Entertainment', 'icon': Icons.music_note},
+    <String, dynamic>{'id': 'catering', 'name': 'Catering', 'icon': Icons.restaurant},
+    <String, dynamic>{'id': 'photography', 'name': 'Photography', 'icon': Icons.camera_alt},
+    <String, dynamic>{'id': 'decoration', 'name': 'Decoration', 'icon': Icons.celebration},
+    <String, dynamic>{'id': 'security', 'name': 'Security', 'icon': Icons.security},
+    <String, dynamic>{'id': 'promotion', 'name': 'Promotion', 'icon': Icons.campaign},
+    <String, dynamic>{'id': 'equipment', 'name': 'Equipment', 'icon': Icons.speaker},
   ];
 
   @override
@@ -42,6 +45,102 @@ class _VendorAddResourceScreenV2State
 
   bool _isLoading = false;
 
+  Future<void> _pickAndUploadImage() async {
+    try {
+      setState(() => _isUploadingImage = true);
+      
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      
+      if (image == null) {
+        setState(() => _isUploadingImage = false);
+        return;
+      }
+      
+      // Upload via backend API - use 'cover' as imageType since 'resource' is not supported
+      final datasource = ref.read(vendorRemoteDataSourceProvider);
+      final FormData formData = FormData.fromMap({
+        'imageType': 'cover', // Backend only accepts 'profile' or 'cover'
+        'image': await MultipartFile.fromFile(
+          image.path,
+          filename: image.name,
+        ),
+      });
+      
+      final response = await datasource.uploadImage(formData);
+      
+      // Check if response is successful
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        final imageUrl = response.data['data']['imageUrl'] as String;
+        
+        setState(() {
+          _imageUrls.add(imageUrl);
+          _isUploadingImage = false;
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Image uploaded successfully'),
+              backgroundColor: AppColors.successGreen,
+            ),
+          );
+        }
+      } else {
+        throw Exception(response.data['error']?['message'] ?? 'Upload failed');
+      }
+    } on DioException catch (e) {
+      setState(() => _isUploadingImage = false);
+      
+      // Extract error message from API response
+      String errorMessage = 'Failed to upload image';
+      
+      if (e.response?.data != null) {
+        final data = e.response!.data;
+        if (data is Map) {
+          // Try to get error message from various possible structures
+          errorMessage = (data['error']?['message'] ?? 
+                        data['message'] ?? 
+                        data['error'] ?? 
+                        'Upload failed').toString();
+        }
+      } else if (e.message != null) {
+        errorMessage = e.message!;
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() => _isUploadingImage = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to upload image: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _imageUrls.removeAt(index);
+    });
+  }
+
   Future<void> _submitResource() async {
     if (_formKey.currentState!.validate() && _selectedCategory != null) {
       HapticFeedback.mediumImpact();
@@ -50,12 +149,19 @@ class _VendorAddResourceScreenV2State
       
       try {
         // Prepare FormData
-        final formData = FormData.fromMap({
+        final Map<String, dynamic> data = {
           'title': _titleController.text,
           'description': _descriptionController.text,
           'category': _selectedCategory,
           'basePrice': _priceController.text,
-        });
+        };
+        
+        // Add images if any
+        if (_imageUrls.isNotEmpty) {
+          data['images'] = _imageUrls;
+        }
+        
+        final FormData formData = FormData.fromMap(data);
         
         // Call API
         final datasource = ref.read(vendorRemoteDataSourceProvider);
@@ -66,16 +172,44 @@ class _VendorAddResourceScreenV2State
         setState(() => _isLoading = false);
         
         if (response.response.statusCode == 201 || response.response.statusCode == 200) {
-          Navigator.pop(context, true); // Return true to indicate success
+          Navigator.pop(context, true);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(response.data['message'] ?? 'Service added successfully!'),
+              content: Text((response.data['message'] ?? 'Service added successfully!') as String),
               backgroundColor: AppColors.success,
             ),
           );
         } else {
-          throw Exception('Failed to add service');
+          throw Exception(response.data['error']?['message'] ?? 'Failed to add service');
         }
+      } on DioException catch (e) {
+        if (!mounted) return;
+        
+        setState(() => _isLoading = false);
+        
+        // Extract clean error message from API response
+        String errorMessage = 'Failed to add service';
+        
+        if (e.response?.data != null) {
+          final data = e.response!.data;
+          if (data is Map) {
+            // Extract message from error structure: {"error": {"message": "..."}}
+            errorMessage = (data['error']?['message'] ?? 
+                          data['message'] ?? 
+                          data['error'] ?? 
+                          'Failed to add service').toString();
+          }
+        } else if (e.message != null) {
+          errorMessage = e.message!;
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: AppColors.error,
+            duration: const Duration(seconds: 4),
+          ),
+        );
       } catch (e) {
         if (!mounted) return;
         
@@ -83,7 +217,7 @@ class _VendorAddResourceScreenV2State
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to add service: ${e.toString()}'),
+            content: Text('Failed to add service: $e'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -96,8 +230,7 @@ class _VendorAddResourceScreenV2State
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -141,55 +274,161 @@ class _VendorAddResourceScreenV2State
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Image Upload
-                      InkWell(
-                        onTap: () {
-                          // TODO: Image picker
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Image upload coming soon'),
+                      if (_imageUrls.isEmpty)
+                        InkWell(
+                          onTap: _isUploadingImage ? null : _pickAndUploadImage,
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            height: 180,
+                            decoration: BoxDecoration(
+                              color: AppColors.searchBarBackground,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.textSecondary.withOpacity(0.3),
+                                width: 2,
+                              ),
                             ),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          height: 180,
-                          decoration: BoxDecoration(
-                            color: AppColors.searchBarBackground,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppColors.textSecondary.withOpacity(0.3),
-                              width: 2,
-                              style: BorderStyle.solid,
-                            ),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_photo_alternate_outlined,
-                                  size: 48,
-                                  color: AppColors.textSecondary,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Add Photos',
-                                  style: AppTypography.bodyLarge.copyWith(
-                                    color: AppColors.textSecondary,
+                            child: _isUploadingImage
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primary,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          Icons.add_photo_alternate_outlined,
+                                          size: 48,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Add Photos',
+                                          style: AppTypography.bodyLarge.copyWith(
+                                            color: AppColors.textSecondary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Tap to upload service images',
+                                          style: AppTypography.bodySmall.copyWith(
+                                            color: AppColors.textSecondary.withOpacity(0.7),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Tap to upload service images',
-                                  style: AppTypography.bodySmall.copyWith(
-                                    color: AppColors.textSecondary.withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
+                        )
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 120,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: _imageUrls.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index == _imageUrls.length) {
+                                    // Add more button
+                                    return InkWell(
+                                      onTap: _isUploadingImage ? null : _pickAndUploadImage,
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Container(
+                                        width: 120,
+                                        margin: const EdgeInsets.only(right: 12),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.searchBarBackground,
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: AppColors.primary.withOpacity(0.3),
+                                            width: 2,
+                                          ),
+                                        ),
+                                        child: _isUploadingImage
+                                            ? const Center(
+                                                child: CircularProgressIndicator(
+                                                  color: AppColors.primary,
+                                                ),
+                                              )
+                                            : const Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.add_photo_alternate,
+                                                    size: 32,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    'Add More',
+                                                    style: TextStyle(
+                                                      color: AppColors.primary,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                      ),
+                                    );
+                                  }
+                                  
+                                  return Container(
+                                    width: 120,
+                                    margin: const EdgeInsets.only(right: 12),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: Image.network(
+                                            _imageUrls[index],
+                                            width: 120,
+                                            height: 120,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                color: AppColors.searchBarBackground,
+                                                child: const Icon(
+                                                  Icons.broken_image,
+                                                  color: AppColors.textSecondary,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 4,
+                                          right: 4,
+                                          child: InkWell(
+                                            onTap: () => _removeImage(index),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(4),
+                                              decoration: const BoxDecoration(
+                                                color: AppColors.error,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.close,
+                                                size: 16,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
                       const SizedBox(height: 24),
                       // Category
                       Text(
@@ -410,5 +649,4 @@ class _VendorAddResourceScreenV2State
         ),
       ),
     );
-  }
 }

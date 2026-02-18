@@ -28,8 +28,7 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -104,10 +103,8 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
         ),
       ),
     );
-  }
 
-  Widget _buildPendingList() {
-    return ListView(
+  Widget _buildPendingList() => ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       children: [
         _BookingCard(
@@ -145,10 +142,8 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
         ),
       ],
     );
-  }
 
-  Widget _buildAcceptedList() {
-    return ListView(
+  Widget _buildAcceptedList() => ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       children: [
         _BookingCard(
@@ -161,10 +156,8 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
         ),
       ],
     );
-  }
 
-  Widget _buildCompletedList() {
-    return ListView(
+  Widget _buildCompletedList() => ListView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       children: [
         _BookingCard(
@@ -188,13 +181,12 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
         ),
       ],
     );
-  }
 
   void _showCounterOfferDialog(BuildContext context) {
-    final counterOfferController = TextEditingController();
+    final TextEditingController counterOfferController = TextEditingController();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         backgroundColor: AppColors.searchBarBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -208,7 +200,7 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             Text(
               'Accept the current offer or propose a counter offer',
               style: AppTypography.bodyMedium.copyWith(
@@ -224,7 +216,7 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
               ),
               decoration: InputDecoration(
                 labelText: 'Counter Offer Amount',
-                prefixText: '\$ ',
+                prefixText: r'$ ',
                 filled: true,
                 fillColor: const Color(0xFF2E2E2E),
                 border: OutlineInputBorder(
@@ -235,7 +227,7 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
             ),
           ],
         ),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
@@ -288,7 +280,7 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
   void _showDeclineDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         backgroundColor: AppColors.searchBarBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -306,7 +298,7 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
             color: AppColors.textSecondary,
           ),
         ),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
@@ -344,15 +336,6 @@ class _VendorBookingsScreenState extends ConsumerState<VendorBookingsScreen>
 }
 
 class _BookingCard extends StatelessWidget {
-  final String customerName;
-  final String eventName;
-  final String date;
-  final String price;
-  final String service;
-  final String status;
-  final String? earnings;
-  final VoidCallback? onAccept;
-  final VoidCallback? onDecline;
 
   const _BookingCard({
     required this.customerName,
@@ -365,10 +348,18 @@ class _BookingCard extends StatelessWidget {
     this.onAccept,
     this.onDecline,
   });
+  final String customerName;
+  final String eventName;
+  final String date;
+  final String price;
+  final String service;
+  final String status;
+  final String? earnings;
+  final VoidCallback? onAccept;
+  final VoidCallback? onDecline;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.searchBarBackground,
@@ -563,5 +554,4 @@ class _BookingCard extends StatelessWidget {
         ],
       ),
     );
-  }
 }

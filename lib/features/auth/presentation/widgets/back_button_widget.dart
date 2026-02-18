@@ -15,8 +15,7 @@ class BackButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       width: 50.w, // Responsive width
       height: 50.h, // Responsive height
       decoration: BoxDecoration(
@@ -42,5 +41,4 @@ class BackButtonWidget extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -1,4 +1,5 @@
 import 'package:fajimobileapp/core/constants/app_images.dart';
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,8 +44,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeInOut,
@@ -52,7 +53,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     _scaleAnimation = Tween<double>(
       begin: 0.8,
-      end: 1.0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _scaleController,
       curve: Curves.elasticOut,
@@ -70,13 +71,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted) return;
     
     // Check if onboarding has been completed
-    final prefs = await SharedPreferences.getInstance();
-    final onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool onboardingComplete = prefs.getBool('onboarding_complete') ?? false;
     
     // Check if user has saved credentials
-    final localDataSource = ref.read(authLocalDataSourceProvider);
-    final userData = await localDataSource.getUserData();
-    final hasUserData = userData['email'] != null && userData['email']!.isNotEmpty;
+    final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
+    final Map<String, String?> userData = await localDataSource.getUserData();
+    final bool hasUserData = userData['email'] != null && userData['email']!.isNotEmpty;
     
     if (!mounted) return;
     
@@ -100,8 +101,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       body: Container(
         width: double.infinity,
@@ -142,5 +142,4 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         // ),
       ),
     );
-  }
 }

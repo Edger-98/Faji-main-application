@@ -1,26 +1,28 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/promo_code_validation.dart';
-import '../../domain/entities/purchase_ticket_request.dart';
-import '../../domain/entities/purchase_ticket_response.dart';
-import '../../domain/usecases/purchase_tickets_usecase.dart';
-import '../../domain/usecases/validate_promo_code_usecase.dart';
-import '../providers/ticket_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/promo_code_validation.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_response.dart';
+import 'package:fajimobileapp/features/tickets/domain/usecases/purchase_tickets_usecase.dart';
+import 'package:fajimobileapp/features/tickets/domain/usecases/validate_promo_code_usecase.dart';
+import 'package:fajimobileapp/features/tickets/presentation/providers/ticket_providers.dart';
 
 /// Purchase Ticket ViewModel - NEW API
 class PurchaseTicketViewModelNew
     extends StateNotifier<BaseState<PurchaseTicketResponse>> {
-  final PurchaseTicketsUseCase _purchaseTicketsUseCase;
-  final ValidatePromoCodeUseCase _validatePromoCodeUseCase;
-
-  PromoCodeValidation? _promoCodeValidation;
-  PromoCodeValidation? get promoCodeValidation => _promoCodeValidation;
 
   PurchaseTicketViewModelNew(
     this._purchaseTicketsUseCase,
     this._validatePromoCodeUseCase,
   ) : super(const BaseState.initial());
+  final PurchaseTicketsUseCase _purchaseTicketsUseCase;
+  final ValidatePromoCodeUseCase _validatePromoCodeUseCase;
+
+  PromoCodeValidation? _promoCodeValidation;
+  PromoCodeValidation? get promoCodeValidation => _promoCodeValidation;
 
   /// Purchase tickets
   Future<void> purchaseTickets({
@@ -31,18 +33,18 @@ class PurchaseTicketViewModelNew
   }) async {
     state = const BaseState.loading();
 
-    final request = PurchaseTicketRequest(
+    final PurchaseTicketRequest request = PurchaseTicketRequest(
       eventId: eventId,
       quantity: quantity,
       promoCode: promoCode,
       paymentMethod: paymentMethod,
     );
 
-    final result = await _purchaseTicketsUseCase(request);
+    final Either<Failure, PurchaseTicketResponse> result = await _purchaseTicketsUseCase(request);
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (response) => state = BaseState.success(response),
+      (Failure failure) => state = BaseState.error(failure),
+      (PurchaseTicketResponse response) => state = BaseState.success(response),
     );
   }
 
@@ -52,18 +54,18 @@ class PurchaseTicketViewModelNew
     required String promoCode,
     required double amount,
   }) async {
-    final result = await _validatePromoCodeUseCase(
+    final Either<Failure, PromoCodeValidation> result = await _validatePromoCodeUseCase(
       eventId: eventId,
       promoCode: promoCode,
       amount: amount,
     );
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         _promoCodeValidation = null;
         state = BaseState.error(failure);
       },
-      (validation) {
+      (PromoCodeValidation validation) {
         _promoCodeValidation = validation;
         // Notify listeners without changing main state
         state = state;
@@ -85,9 +87,9 @@ class PurchaseTicketViewModelNew
 }
 
 /// Purchase Ticket ViewModel Provider - NEW API
-final purchaseTicketViewModelNewProvider = StateNotifierProvider.autoDispose<
+final AutoDisposeStateNotifierProvider<PurchaseTicketViewModelNew, BaseState<PurchaseTicketResponse>> purchaseTicketViewModelNewProvider = StateNotifierProvider.autoDispose<
     PurchaseTicketViewModelNew, BaseState<PurchaseTicketResponse>>(
-  (ref) => PurchaseTicketViewModelNew(
+  (AutoDisposeStateNotifierProviderRef<PurchaseTicketViewModelNew, BaseState<PurchaseTicketResponse>> ref) => PurchaseTicketViewModelNew(
     ref.watch(purchaseTicketsUseCaseProvider),
     ref.watch(validatePromoCodeUseCaseProvider),
   ),

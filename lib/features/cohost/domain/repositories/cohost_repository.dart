@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/invite_cohost_request.dart';
-import '../entities/cohost_invitation.dart';
-import '../entities/accept_invitation_response.dart';
-import '../entities/cohost.dart';
-import '../entities/cohost_dashboard.dart';
-import '../entities/remove_cohost_response.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/invite_cohost_request.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_invitation.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/accept_invitation_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_dashboard.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/remove_cohost_response.dart';
 
 abstract class CohostRepository {
   /// Invite a co-host to an event

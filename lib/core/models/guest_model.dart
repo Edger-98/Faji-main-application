@@ -1,13 +1,4 @@
 class GuestModel {
-  final String id;
-  final String name;
-  final String? phone;
-  final String? email;
-  final String status;
-  final DateTime? rsvpDate;
-  final bool isOnline;
-  final String? avatar;
-  final DateTime invitedAt;
 
   GuestModel({
     required this.id,
@@ -36,9 +27,17 @@ class GuestModel {
       invitedAt: DateTime.parse(json['invitedAt'] as String),
     );
   }
+  final String id;
+  final String name;
+  final String? phone;
+  final String? email;
+  final String status;
+  final DateTime? rsvpDate;
+  final bool isOnline;
+  final String? avatar;
+  final DateTime invitedAt;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
       'phone': phone,
@@ -49,14 +48,9 @@ class GuestModel {
       'avatar': avatar,
       'invitedAt': invitedAt.toIso8601String(),
     };
-  }
 }
 
 class GuestStatsModel {
-  final int total;
-  final int confirmed;
-  final int invited;
-  final int declined;
 
   GuestStatsModel({
     required this.total,
@@ -73,4 +67,8 @@ class GuestStatsModel {
       declined: json['declined'] as int,
     );
   }
+  final int total;
+  final int confirmed;
+  final int invited;
+  final int declined;
 }

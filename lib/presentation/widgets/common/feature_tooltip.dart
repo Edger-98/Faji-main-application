@@ -4,10 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 class FeatureTooltip extends StatefulWidget {
-  final Widget child;
-  final String message;
-  final String? featureKey;
-  final bool showOnFirstTime;
 
   const FeatureTooltip({
     super.key,
@@ -16,6 +12,10 @@ class FeatureTooltip extends StatefulWidget {
     this.featureKey,
     this.showOnFirstTime = true,
   });
+  final Widget child;
+  final String message;
+  final String? featureKey;
+  final bool showOnFirstTime;
 
   @override
   State<FeatureTooltip> createState() => _FeatureTooltipState();
@@ -39,12 +39,12 @@ class _FeatureTooltipState extends State<FeatureTooltip> {
   void _showTooltipOverlay() {
     if (_overlayEntry != null) return;
 
-    final renderBox = context.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
-    final size = renderBox.size;
+    final RenderBox renderBox = context.findRenderObject()! as RenderBox;
+    final Offset position = renderBox.localToGlobal(Offset.zero);
+    final Size size = renderBox.size;
 
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
+      builder: (BuildContext context) => Positioned(
         left: position.dx,
         top: position.dy + size.height + 8.h,
         child: Material(
@@ -57,7 +57,7 @@ class _FeatureTooltipState extends State<FeatureTooltip> {
               decoration: BoxDecoration(
                 color: AppColors.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12.r),
-                boxShadow: [
+                boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
@@ -67,7 +67,7 @@ class _FeatureTooltipState extends State<FeatureTooltip> {
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   Flexible(
                     child: Text(
                       widget.message,
@@ -116,7 +116,5 @@ class _FeatureTooltipState extends State<FeatureTooltip> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
+  Widget build(BuildContext context) => widget.child;
 }

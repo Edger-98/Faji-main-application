@@ -1,14 +1,12 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/wallet_balance.dart';
-import '../repositories/wallet_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
+import 'package:fajimobileapp/features/wallet/domain/repositories/wallet_repository.dart';
 
 class GetWalletBalanceUseCase {
-  final WalletRepository repository;
 
   GetWalletBalanceUseCase(this.repository);
+  final WalletRepository repository;
 
-  Future<Either<Failure, WalletBalance>> call() async {
-    return await repository.getWalletBalance();
-  }
+  Future<Either<Failure, WalletBalance>> call() async => await repository.getWalletBalance();
 }

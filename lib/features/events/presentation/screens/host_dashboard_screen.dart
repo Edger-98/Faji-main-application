@@ -8,16 +8,15 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Host Dashboard - Full event management for hosts
 /// Shows: Ticket sales, revenue breakdown, co-hosts, attached vendors
 class HostDashboardScreen extends StatelessWidget {
-  final String eventId;
 
   const HostDashboardScreen({
     super.key,
     required this.eventId,
   });
+  final String eventId;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
@@ -257,13 +256,11 @@ class HostDashboardScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Widget _buildRevenueMetric({
     required String label,
     required String value,
-  }) {
-    return Column(
+  }) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -283,7 +280,6 @@ class HostDashboardScreen extends StatelessWidget {
         ),
       ],
     );
-  }
 
   Widget _buildBreakdownItem({
     required BuildContext context,
@@ -291,8 +287,7 @@ class HostDashboardScreen extends StatelessWidget {
     required String amount,
     required Color color,
     bool isBold = false,
-  }) {
-    return Padding(
+  }) => Padding(
       padding: EdgeInsets.only(bottom: 12.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -314,7 +309,6 @@ class HostDashboardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 
   Widget _buildCoHostItem({
     required BuildContext context,
@@ -322,8 +316,7 @@ class HostDashboardScreen extends StatelessWidget {
     required String email,
     required String share,
     required String earnings,
-  }) {
-    return Container(
+  }) => Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
@@ -373,7 +366,6 @@ class HostDashboardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 
   Widget _buildVendorItem({
     required BuildContext context,
@@ -381,8 +373,7 @@ class HostDashboardScreen extends StatelessWidget {
     required String service,
     required String status,
     required String amount,
-  }) {
-    return Container(
+  }) => Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
@@ -457,5 +448,4 @@ class HostDashboardScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 }

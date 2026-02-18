@@ -1,11 +1,12 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/api_service.dart';
-import '../../../../core/models/guest_model.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/core/models/guest_model.dart';
 
 class GuestRepository {
-  final ApiService _api;
   
   GuestRepository(this._api);
+  final ApiService _api;
   
   Future<GuestListResponse> getGuests(
     String eventId, {
@@ -15,7 +16,7 @@ class GuestRepository {
     int limit = 20,
   }) async {
     try {
-      final params = <String, dynamic>{
+      final Map<String, dynamic> params = <String, dynamic>{
         'page': page,
         'limit': limit,
       };
@@ -23,14 +24,14 @@ class GuestRepository {
       if (status != null && status != 'all') params['status'] = status;
       if (search != null && search.isNotEmpty) params['search'] = search;
       
-      final response = await _api.get('/events/$eventId/guests', params: params);
+      final Response response = await _api.get('/events/$eventId/guests', params: params);
       
       final data = response.data['data'];
-      final guests = (data['guests'] as List)
+      final List<GuestModel> guests = (data['guests'] as List)
           .map((e) => GuestModel.fromJson(e as Map<String, dynamic>))
           .toList();
       
-      final stats = GuestStatsModel.fromJson(data['stats'] as Map<String, dynamic>);
+      final GuestStatsModel stats = GuestStatsModel.fromJson(data['stats'] as Map<String, dynamic>);
       
       return GuestListResponse(guests: guests, stats: stats);
     } catch (e) {
@@ -45,7 +46,7 @@ class GuestRepository {
     String? email,
   }) async {
     try {
-      final response = await _api.post('/events/$eventId/guests', data: {
+      final Response response = await _api.post('/events/$eventId/guests', data: <String, String?>{
         'name': name,
         'phone': phone,
         'email': email,
@@ -59,15 +60,13 @@ class GuestRepository {
 }
 
 class GuestListResponse {
-  final List<GuestModel> guests;
-  final GuestStatsModel stats;
 
   GuestListResponse({
     required this.guests,
     required this.stats,
   });
+  final List<GuestModel> guests;
+  final GuestStatsModel stats;
 }
 
-final guestRepositoryProvider = Provider<GuestRepository>((ref) {
-  return GuestRepository(ref.read(apiServiceProvider));
-});
+final Provider<GuestRepository> guestRepositoryProvider = Provider<GuestRepository>((ProviderRef<GuestRepository> ref) => GuestRepository(ref.read(apiServiceProvider)));

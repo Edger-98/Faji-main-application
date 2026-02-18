@@ -1,79 +1,79 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/network/dio_client.dart';
-import '../../data/datasources/cohost_remote_datasource.dart';
-import '../../data/repositories/cohost_repository_impl.dart';
-import '../../domain/repositories/cohost_repository.dart';
-import '../../domain/usecases/invite_cohost_usecase.dart';
-import '../../domain/usecases/get_cohost_invitations_usecase.dart';
-import '../../domain/usecases/accept_cohost_invitation_usecase.dart';
-import '../../domain/usecases/decline_cohost_invitation_usecase.dart';
-import '../../domain/usecases/get_event_cohosts_usecase.dart';
-import '../../domain/usecases/remove_cohost_usecase.dart';
-import '../../domain/usecases/get_cohost_dashboard_usecase.dart';
-import '../viewmodels/cohost_invitation_viewmodel.dart';
-import '../viewmodels/cohost_dashboard_viewmodel.dart';
+import 'package:fajimobileapp/core/network/dio_client.dart';
+import 'package:fajimobileapp/features/cohost/data/datasources/cohost_remote_datasource.dart';
+import 'package:fajimobileapp/features/cohost/data/repositories/cohost_repository_impl.dart';
+import 'package:fajimobileapp/features/cohost/domain/repositories/cohost_repository.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/invite_cohost_usecase.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/get_cohost_invitations_usecase.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/accept_cohost_invitation_usecase.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/decline_cohost_invitation_usecase.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/get_event_cohosts_usecase.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/remove_cohost_usecase.dart';
+import 'package:fajimobileapp/features/cohost/domain/usecases/get_cohost_dashboard_usecase.dart';
+import 'package:fajimobileapp/features/cohost/presentation/viewmodels/cohost_invitation_viewmodel.dart';
+import 'package:fajimobileapp/features/cohost/presentation/viewmodels/cohost_dashboard_viewmodel.dart';
 
 // Data Source Provider
-final cohostRemoteDataSourceProvider = Provider<CohostRemoteDataSource>((ref) {
+final Provider<CohostRemoteDataSource> cohostRemoteDataSourceProvider = Provider<CohostRemoteDataSource>((ProviderRef<CohostRemoteDataSource> ref) {
   final dio = ref.watch(dioProvider);
   return CohostRemoteDataSource(dio);
 });
 
 // Repository Provider
-final cohostRepositoryProvider = Provider<CohostRepository>((ref) {
-  final remoteDataSource = ref.watch(cohostRemoteDataSourceProvider);
+final Provider<CohostRepository> cohostRepositoryProvider = Provider<CohostRepository>((ProviderRef<CohostRepository> ref) {
+  final CohostRemoteDataSource remoteDataSource = ref.watch(cohostRemoteDataSourceProvider);
   return CohostRepositoryImpl(remoteDataSource);
 });
 
 // Use Case Providers
-final inviteCohostUseCaseProvider = Provider<InviteCohostUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<InviteCohostUseCase> inviteCohostUseCaseProvider = Provider<InviteCohostUseCase>((ProviderRef<InviteCohostUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return InviteCohostUseCase(repository);
 });
 
-final getCohostInvitationsUseCaseProvider =
-    Provider<GetCohostInvitationsUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<GetCohostInvitationsUseCase> getCohostInvitationsUseCaseProvider =
+    Provider<GetCohostInvitationsUseCase>((ProviderRef<GetCohostInvitationsUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return GetCohostInvitationsUseCase(repository);
 });
 
-final acceptCohostInvitationUseCaseProvider =
-    Provider<AcceptCohostInvitationUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<AcceptCohostInvitationUseCase> acceptCohostInvitationUseCaseProvider =
+    Provider<AcceptCohostInvitationUseCase>((ProviderRef<AcceptCohostInvitationUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return AcceptCohostInvitationUseCase(repository);
 });
 
-final declineCohostInvitationUseCaseProvider =
-    Provider<DeclineCohostInvitationUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<DeclineCohostInvitationUseCase> declineCohostInvitationUseCaseProvider =
+    Provider<DeclineCohostInvitationUseCase>((ProviderRef<DeclineCohostInvitationUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return DeclineCohostInvitationUseCase(repository);
 });
 
-final getEventCohostsUseCaseProvider = Provider<GetEventCohostsUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<GetEventCohostsUseCase> getEventCohostsUseCaseProvider = Provider<GetEventCohostsUseCase>((ProviderRef<GetEventCohostsUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return GetEventCohostsUseCase(repository);
 });
 
-final removeCohostUseCaseProvider = Provider<RemoveCohostUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<RemoveCohostUseCase> removeCohostUseCaseProvider = Provider<RemoveCohostUseCase>((ProviderRef<RemoveCohostUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return RemoveCohostUseCase(repository);
 });
 
-final getCohostDashboardUseCaseProvider =
-    Provider<GetCohostDashboardUseCase>((ref) {
-  final repository = ref.watch(cohostRepositoryProvider);
+final Provider<GetCohostDashboardUseCase> getCohostDashboardUseCaseProvider =
+    Provider<GetCohostDashboardUseCase>((ProviderRef<GetCohostDashboardUseCase> ref) {
+  final CohostRepository repository = ref.watch(cohostRepositoryProvider);
   return GetCohostDashboardUseCase(repository);
 });
 
 // ViewModel Providers
-final cohostInvitationViewModelProvider = StateNotifierProvider.autoDispose<
-    CohostInvitationViewModel, CohostInvitationState>((ref) {
-  final inviteUseCase = ref.watch(inviteCohostUseCaseProvider);
-  final getInvitationsUseCase = ref.watch(getCohostInvitationsUseCaseProvider);
-  final acceptUseCase = ref.watch(acceptCohostInvitationUseCaseProvider);
-  final declineUseCase = ref.watch(declineCohostInvitationUseCaseProvider);
-  final getEventCohostsUseCase = ref.watch(getEventCohostsUseCaseProvider);
-  final removeUseCase = ref.watch(removeCohostUseCaseProvider);
+final AutoDisposeStateNotifierProvider<CohostInvitationViewModel, CohostInvitationState> cohostInvitationViewModelProvider = StateNotifierProvider.autoDispose<
+    CohostInvitationViewModel, CohostInvitationState>((AutoDisposeStateNotifierProviderRef<CohostInvitationViewModel, CohostInvitationState> ref) {
+  final InviteCohostUseCase inviteUseCase = ref.watch(inviteCohostUseCaseProvider);
+  final GetCohostInvitationsUseCase getInvitationsUseCase = ref.watch(getCohostInvitationsUseCaseProvider);
+  final AcceptCohostInvitationUseCase acceptUseCase = ref.watch(acceptCohostInvitationUseCaseProvider);
+  final DeclineCohostInvitationUseCase declineUseCase = ref.watch(declineCohostInvitationUseCaseProvider);
+  final GetEventCohostsUseCase getEventCohostsUseCase = ref.watch(getEventCohostsUseCaseProvider);
+  final RemoveCohostUseCase removeUseCase = ref.watch(removeCohostUseCaseProvider);
 
   return CohostInvitationViewModel(
     inviteUseCase,
@@ -85,8 +85,8 @@ final cohostInvitationViewModelProvider = StateNotifierProvider.autoDispose<
   );
 });
 
-final cohostDashboardViewModelProvider = StateNotifierProvider.autoDispose<
-    CohostDashboardViewModel, CohostDashboardState>((ref) {
-  final getDashboardUseCase = ref.watch(getCohostDashboardUseCaseProvider);
+final AutoDisposeStateNotifierProvider<CohostDashboardViewModel, CohostDashboardState> cohostDashboardViewModelProvider = StateNotifierProvider.autoDispose<
+    CohostDashboardViewModel, CohostDashboardState>((AutoDisposeStateNotifierProviderRef<CohostDashboardViewModel, CohostDashboardState> ref) {
+  final GetCohostDashboardUseCase getDashboardUseCase = ref.watch(getCohostDashboardUseCaseProvider);
   return CohostDashboardViewModel(getDashboardUseCase);
 });

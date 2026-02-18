@@ -1,15 +1,17 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/auth_token_entity.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../providers/auth_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/login_usecase.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 /// Login ViewModel
 class LoginViewModel extends StateNotifier<BaseState<AuthTokenEntity>> {
-  final LoginUseCase _loginUseCase;
 
   LoginViewModel(this._loginUseCase) : super(const BaseState.initial());
+  final LoginUseCase _loginUseCase;
 
   Future<void> login({
     required String email,
@@ -17,14 +19,14 @@ class LoginViewModel extends StateNotifier<BaseState<AuthTokenEntity>> {
   }) async {
     state = const BaseState.loading();
 
-    final result = await _loginUseCase(
+    final Either<Failure, AuthTokenEntity> result = await _loginUseCase(
       email: email,
       password: password,
     );
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (token) => state = BaseState.success(token),
+      (Failure failure) => state = BaseState.error(failure),
+      (AuthTokenEntity token) => state = BaseState.success(token),
     );
   }
 
@@ -34,10 +36,10 @@ class LoginViewModel extends StateNotifier<BaseState<AuthTokenEntity>> {
 }
 
 /// Login ViewModel Provider
-final loginViewModelProvider =
+final AutoDisposeStateNotifierProvider<LoginViewModel, BaseState<AuthTokenEntity>> loginViewModelProvider =
     StateNotifierProvider.autoDispose<LoginViewModel, BaseState<AuthTokenEntity>>(
-  (ref) {
-    final loginUseCase = ref.watch(loginUseCaseProvider);
+  (AutoDisposeStateNotifierProviderRef<LoginViewModel, BaseState<AuthTokenEntity>> ref) {
+    final LoginUseCase loginUseCase = ref.watch(loginUseCaseProvider);
     return LoginViewModel(loginUseCase);
   },
 );

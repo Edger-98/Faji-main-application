@@ -7,8 +7,7 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Standardized text field component following Faji design system
 class AppTextField extends StatelessWidget {
   const AppTextField({
-    super.key,
-    required this.hintText,
+    required this.hintText, super.key,
     this.controller,
     this.focusNode,
     this.keyboardType = TextInputType.text,
@@ -36,8 +35,7 @@ class AppTextField extends StatelessWidget {
   final TextCapitalization textCapitalization;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       decoration: BoxDecoration(
@@ -99,5 +97,4 @@ class AppTextField extends StatelessWidget {
         ],
       ),
     );
-  }
 }

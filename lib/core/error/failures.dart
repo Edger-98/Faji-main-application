@@ -38,7 +38,7 @@ class ServerFailure extends Failure {
         );
       case 403:
         return const ServerFailure(
-          message: 'Access denied. You don\'t have permission.',
+          message: "Access denied. You don't have permission.",
           code: 'FORBIDDEN',
         );
       case 404:
@@ -99,26 +99,20 @@ class NetworkFailure extends Failure {
     super.details,
   });
 
-  factory NetworkFailure.noConnection() {
-    return const NetworkFailure(
+  factory NetworkFailure.noConnection() => const NetworkFailure(
       message: 'No internet connection. Please check your network.',
       code: 'NO_CONNECTION',
     );
-  }
 
-  factory NetworkFailure.timeout() {
-    return const NetworkFailure(
+  factory NetworkFailure.timeout() => const NetworkFailure(
       message: 'Request timeout. Please try again.',
       code: 'TIMEOUT',
     );
-  }
 
-  factory NetworkFailure.connectionError() {
-    return const NetworkFailure(
+  factory NetworkFailure.connectionError() => const NetworkFailure(
       message: 'Connection error. Please check your network.',
       code: 'CONNECTION_ERROR',
     );
-  }
 }
 
 /// Cache-related failures
@@ -129,26 +123,20 @@ class CacheFailure extends Failure {
     super.details,
   });
 
-  factory CacheFailure.notFound() {
-    return const CacheFailure(
+  factory CacheFailure.notFound() => const CacheFailure(
       message: 'Data not found in cache.',
       code: 'CACHE_NOT_FOUND',
     );
-  }
 
-  factory CacheFailure.writeError() {
-    return const CacheFailure(
+  factory CacheFailure.writeError() => const CacheFailure(
       message: 'Failed to write to cache.',
       code: 'CACHE_WRITE_ERROR',
     );
-  }
 
-  factory CacheFailure.readError() {
-    return const CacheFailure(
+  factory CacheFailure.readError() => const CacheFailure(
       message: 'Failed to read from cache.',
       code: 'CACHE_READ_ERROR',
     );
-  }
 }
 
 /// Authentication-related failures
@@ -159,47 +147,35 @@ class AuthFailure extends Failure {
     super.details,
   });
 
-  factory AuthFailure.invalidCredentials() {
-    return const AuthFailure(
+  factory AuthFailure.invalidCredentials() => const AuthFailure(
       message: 'Invalid email or password.',
       code: 'INVALID_CREDENTIALS',
     );
-  }
 
-  factory AuthFailure.userNotFound() {
-    return const AuthFailure(
+  factory AuthFailure.userNotFound() => const AuthFailure(
       message: 'User not found.',
       code: 'USER_NOT_FOUND',
     );
-  }
 
-  factory AuthFailure.emailAlreadyExists() {
-    return const AuthFailure(
+  factory AuthFailure.emailAlreadyExists() => const AuthFailure(
       message: 'Email already exists.',
       code: 'EMAIL_EXISTS',
     );
-  }
 
-  factory AuthFailure.weakPassword() {
-    return const AuthFailure(
+  factory AuthFailure.weakPassword() => const AuthFailure(
       message: 'Password is too weak.',
       code: 'WEAK_PASSWORD',
     );
-  }
 
-  factory AuthFailure.tokenExpired() {
-    return const AuthFailure(
+  factory AuthFailure.tokenExpired() => const AuthFailure(
       message: 'Session expired. Please log in again.',
       code: 'TOKEN_EXPIRED',
     );
-  }
 
-  factory AuthFailure.accountDisabled() {
-    return const AuthFailure(
+  factory AuthFailure.accountDisabled() => const AuthFailure(
       message: 'Account has been disabled.',
       code: 'ACCOUNT_DISABLED',
     );
-  }
 }
 
 /// Validation-related failures
@@ -210,29 +186,23 @@ class ValidationFailure extends Failure {
     super.details,
   });
 
-  factory ValidationFailure.invalidInput(String field) {
-    return ValidationFailure(
+  factory ValidationFailure.invalidInput(String field) => ValidationFailure(
       message: 'Invalid $field provided.',
       code: 'INVALID_INPUT',
       details: <String, dynamic>{'field': field},
     );
-  }
 
-  factory ValidationFailure.requiredField(String field) {
-    return ValidationFailure(
+  factory ValidationFailure.requiredField(String field) => ValidationFailure(
       message: '$field is required.',
       code: 'REQUIRED_FIELD',
       details: <String, dynamic>{'field': field},
     );
-  }
 
-  factory ValidationFailure.multipleErrors(Map<String, String> errors) {
-    return ValidationFailure(
+  factory ValidationFailure.multipleErrors(Map<String, String> errors) => ValidationFailure(
       message: 'Multiple validation errors occurred.',
       code: 'MULTIPLE_ERRORS',
       details: <String, dynamic>{'errors': errors},
     );
-  }
 }
 
 /// Permission-related failures
@@ -243,21 +213,17 @@ class PermissionFailure extends Failure {
     super.details,
   });
 
-  factory PermissionFailure.denied(String permission) {
-    return PermissionFailure(
+  factory PermissionFailure.denied(String permission) => PermissionFailure(
       message: '$permission permission denied.',
       code: 'PERMISSION_DENIED',
       details: <String, dynamic>{'permission': permission},
     );
-  }
 
-  factory PermissionFailure.permanentlyDenied(String permission) {
-    return PermissionFailure(
+  factory PermissionFailure.permanentlyDenied(String permission) => PermissionFailure(
       message: '$permission permission permanently denied.',
       code: 'PERMISSION_PERMANENTLY_DENIED',
       details: <String, dynamic>{'permission': permission},
     );
-  }
 }
 
 /// Storage-related failures
@@ -268,33 +234,25 @@ class StorageFailure extends Failure {
     super.details,
   });
 
-  factory StorageFailure.notFound() {
-    return const StorageFailure(
+  factory StorageFailure.notFound() => const StorageFailure(
       message: 'File not found.',
       code: 'FILE_NOT_FOUND',
     );
-  }
 
-  factory StorageFailure.accessDenied() {
-    return const StorageFailure(
+  factory StorageFailure.accessDenied() => const StorageFailure(
       message: 'Access denied to storage.',
       code: 'STORAGE_ACCESS_DENIED',
     );
-  }
 
-  factory StorageFailure.insufficientSpace() {
-    return const StorageFailure(
+  factory StorageFailure.insufficientSpace() => const StorageFailure(
       message: 'Insufficient storage space.',
       code: 'INSUFFICIENT_SPACE',
     );
-  }
 
-  factory StorageFailure.corruptedData() {
-    return const StorageFailure(
+  factory StorageFailure.corruptedData() => const StorageFailure(
       message: 'Data is corrupted.',
       code: 'CORRUPTED_DATA',
     );
-  }
 }
 
 /// Unknown or unexpected failures
@@ -305,16 +263,13 @@ class UnknownFailure extends Failure {
     super.details,
   });
 
-  factory UnknownFailure.fromException(Exception exception) {
-    return UnknownFailure(
+  factory UnknownFailure.fromException(Exception exception) => UnknownFailure(
       message: 'An unexpected error occurred: ${exception.toString()}',
       code: 'UNKNOWN_ERROR',
       details: <String, dynamic>{'exception': exception.toString()},
     );
-  }
 
-  factory UnknownFailure.fromError(Error error) {
-    return UnknownFailure(
+  factory UnknownFailure.fromError(Error error) => UnknownFailure(
       message: 'An unexpected error occurred: ${error.toString()}',
       code: 'UNKNOWN_ERROR',
       details: <String, dynamic>{
@@ -322,5 +277,4 @@ class UnknownFailure extends Failure {
         'stackTrace': error.stackTrace.toString(),
       },
     );
-  }
 }

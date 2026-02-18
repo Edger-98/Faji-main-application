@@ -3,9 +3,6 @@ import 'package:flutter/services.dart';
 
 /// Button with scale animation on press
 class AnimatedButton extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onTap;
-  final double scaleAmount;
 
   const AnimatedButton({
     super.key,
@@ -13,6 +10,9 @@ class AnimatedButton extends StatefulWidget {
     required this.onTap,
     this.scaleAmount = 0.95,
   });
+  final Widget child;
+  final VoidCallback? onTap;
+  final double scaleAmount;
 
   @override
   State<AnimatedButton> createState() => _AnimatedButtonState();
@@ -31,7 +31,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: widget.scaleAmount,
     ).animate(CurvedAnimation(
       parent: _controller,
@@ -59,8 +59,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTapDown: widget.onTap != null ? _handleTapDown : null,
       onTapUp: widget.onTap != null ? _handleTapUp : null,
       onTapCancel: widget.onTap != null ? _handleTapCancel : null,
@@ -70,5 +69,4 @@ class _AnimatedButtonState extends State<AnimatedButton>
         child: widget.child,
       ),
     );
-  }
 }

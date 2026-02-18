@@ -4,21 +4,21 @@ import 'package:go_router/go_router.dart';
 
 /// Wrapper that adds swipe-to-go-back gesture
 class SwipeablePage extends StatelessWidget {
-  final Widget child;
-  final bool canSwipeBack;
 
   const SwipeablePage({
     super.key,
     required this.child,
     this.canSwipeBack = true,
   });
+  final Widget child;
+  final bool canSwipeBack;
 
   @override
   Widget build(BuildContext context) {
     if (!canSwipeBack) return child;
 
     return GestureDetector(
-      onHorizontalDragEnd: (details) {
+      onHorizontalDragEnd: (DragEndDetails details) {
         // Swipe from left to right
         if (details.primaryVelocity! > 300) {
           HapticFeedback.lightImpact();

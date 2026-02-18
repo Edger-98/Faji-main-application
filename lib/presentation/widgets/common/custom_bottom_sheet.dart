@@ -21,7 +21,7 @@ class CustomBottomSheet {
       enableDrag: enableDrag,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => BackdropFilter(
+      builder: (BuildContext context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           height: height,
@@ -34,9 +34,9 @@ class CustomBottomSheet {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
+            children: <Widget>[
               // Drag handle
-              if (enableDrag) ...[
+              if (enableDrag) ...<Widget>[
                 SizedBox(height: 12.h),
                 Container(
                   width: 40.w,
@@ -63,8 +63,7 @@ class CustomBottomSheet {
     required String title,
     required List<ActionSheetItem> actions,
     bool showCancel = true,
-  }) {
-    return show<T>(
+  }) => show<T>(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -98,10 +97,8 @@ class CustomBottomSheet {
         ],
       ),
     );
-  }
 
-  static Widget _buildActionItem(BuildContext context, ActionSheetItem action) {
-    return InkWell(
+  static Widget _buildActionItem(BuildContext context, ActionSheetItem action) => InkWell(
       onTap: () {
         HapticFeedback.lightImpact();
         Navigator.pop(context);
@@ -137,14 +134,9 @@ class CustomBottomSheet {
         ),
       ),
     );
-  }
 }
 
 class ActionSheetItem {
-  final String label;
-  final VoidCallback onTap;
-  final IconData? icon;
-  final bool isDestructive;
 
   ActionSheetItem({
     required this.label,
@@ -152,4 +144,8 @@ class ActionSheetItem {
     this.icon,
     this.isDestructive = false,
   });
+  final String label;
+  final VoidCallback onTap;
+  final IconData? icon;
+  final bool isDestructive;
 }

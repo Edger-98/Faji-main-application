@@ -1,3 +1,5 @@
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,16 +11,16 @@ import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_v
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 /// Provider for user display name
-final userDisplayNameProvider = FutureProvider<String>((ref) async {
+final FutureProvider<String> userDisplayNameProvider = FutureProvider<String>((FutureProviderRef<String> ref) async {
   // Try to get from current user provider first
-  final currentUser = ref.watch(currentUserProvider);
+  final UserEntity? currentUser = ref.watch(currentUserProvider);
   if (currentUser?.firstName != null && currentUser!.firstName.isNotEmpty) {
     return currentUser.firstName;
   }
 
   // Fallback to saved user data
-  final localDataSource = ref.watch(authLocalDataSourceProvider);
-  final userData = await localDataSource.getUserData();
+  final AuthLocalDataSource localDataSource = ref.watch(authLocalDataSourceProvider);
+  final Map<String, String?> userData = await localDataSource.getUserData();
   
   if (userData['firstName'] != null && userData['firstName']!.isNotEmpty) {
     return userData['firstName']!;
@@ -33,16 +35,16 @@ class HomeHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userNameAsync = ref.watch(userDisplayNameProvider);
+    final AsyncValue<String> userNameAsync = ref.watch(userDisplayNameProvider);
     
     return Padding(
       padding: EdgeInsets.fromLTRB(27.w, 20.h, 27.w, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           // Greeting text
           userNameAsync.when(
-            data: (userName) => AppText.displayLarge(
+            data: (String userName) => AppText.displayLarge(
               'Hi, $userName!',
               color: context.colors.onSurface,
             ),
@@ -57,7 +59,7 @@ class HomeHeader extends ConsumerWidget {
           ),
           
           Row(
-            children: [
+            children: <Widget>[
               // Chat/Messages icon
               GestureDetector(
                 onTap: () {
@@ -80,7 +82,7 @@ class HomeHeader extends ConsumerWidget {
               SizedBox(width: 10.w),
               // Notification bell with badge
               Stack(
-                children: [
+                children: <Widget>[
                   Container(
                     width: 50.w,
                     height: 50.h,

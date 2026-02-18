@@ -14,8 +14,7 @@ class _FavoritesContentState extends State<FavoritesContent> {
   bool _showEvents = true;
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
+  Widget build(BuildContext context) => SafeArea(
       bottom: false,
       child: Column(
         children: [
@@ -101,10 +100,8 @@ class _FavoritesContentState extends State<FavoritesContent> {
         ],
       ),
     );
-  }
 
-  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
-    return GestureDetector(
+  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) => GestureDetector(
       onTap: onTap,
       child: Container(
         height: 33.h,
@@ -126,10 +123,8 @@ class _FavoritesContentState extends State<FavoritesContent> {
         ),
       ),
     );
-  }
 
-  Widget _buildEventCard(BuildContext context, {required bool isLive}) {
-    return Container(
+  Widget _buildEventCard(BuildContext context, {required bool isLive}) => Container(
       height: 295.h,
       decoration: BoxDecoration(
         color: AppColors.eventCardBlue,
@@ -284,5 +279,4 @@ class _FavoritesContentState extends State<FavoritesContent> {
         ],
       ),
     );
-  }
 }

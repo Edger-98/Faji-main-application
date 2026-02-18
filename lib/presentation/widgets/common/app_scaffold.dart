@@ -49,9 +49,9 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
     
-    Widget scaffoldBody = body;
+    var scaffoldBody = body;
 
     // Add padding if specified
     if (padding != null) {
@@ -144,8 +144,7 @@ class ResponsiveAppScaffold extends StatelessWidget {
   final List<Widget>? actions;
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
+  Widget build(BuildContext context) => LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double screenWidth = constraints.maxWidth;
         
@@ -180,5 +179,4 @@ class ResponsiveAppScaffold extends StatelessWidget {
         );
       },
     );
-  }
 }

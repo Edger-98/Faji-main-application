@@ -3,11 +3,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Empty state widget for when there's no data
 class EmptyState extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String message;
-  final String? actionText;
-  final VoidCallback? onAction;
 
   const EmptyState({
     super.key,
@@ -17,10 +12,14 @@ class EmptyState extends StatelessWidget {
     this.actionText,
     this.onAction,
   });
+  final IconData icon;
+  final String title;
+  final String message;
+  final String? actionText;
+  final VoidCallback? onAction;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
@@ -90,5 +89,4 @@ class EmptyState extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -1,19 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/error/failures.dart';
-import '../../domain/entities/marketplace_resource.dart';
-import '../../domain/entities/vendor_profile.dart';
-import '../../domain/entities/booking.dart';
-import '../../domain/entities/counter_offer.dart';
-import '../../domain/entities/vendor_stats.dart';
-import '../../domain/entities/vendor_dashboard.dart';
-import '../../domain/repositories/marketplace_repository.dart';
-import '../datasources/marketplace_remote_datasource.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/marketplace_resource.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_profile.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/booking.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/counter_offer.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_stats.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_dashboard.dart';
+import 'package:fajimobileapp/features/marketplace/domain/repositories/marketplace_repository.dart';
+import 'package:fajimobileapp/features/marketplace/data/datasources/marketplace_remote_datasource.dart';
 
 class MarketplaceRepositoryImpl implements MarketplaceRepository {
-  final MarketplaceRemoteDataSource remoteDataSource;
 
   MarketplaceRepositoryImpl(this.remoteDataSource);
+  final MarketplaceRemoteDataSource remoteDataSource;
 
   @override
   Future<Either<Failure, MarketplaceResourcesResponse>> getMarketplaceResources({
@@ -22,14 +23,14 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     int limit = 20,
   }) async {
     try {
-      final response = await remoteDataSource.getMarketplaceResources(
+      final ApiResponse<List<MarketplaceResource>> response = await remoteDataSource.getMarketplaceResources(
         category,
         page,
         limit,
       );
       if (response.success && response.data != null) {
         // API returns list directly, wrap in response object
-        final resourcesResponse = MarketplaceResourcesResponse(
+        final MarketplaceResourcesResponse resourcesResponse = MarketplaceResourcesResponse(
           resources: response.data!,
           pagination: ResourcePagination(
             page: page,
@@ -54,7 +55,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required String vendorId,
   }) async {
     try {
-      final response = await remoteDataSource.getVendorProfile(vendorId);
+      final ApiResponse<VendorProfile> response = await remoteDataSource.getVendorProfile(vendorId);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -72,7 +73,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required CreateBookingRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.createBooking(request);
+      final ApiResponse<Booking> response = await remoteDataSource.createBooking(request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -90,7 +91,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     String? status,
   }) async {
     try {
-      final response = await remoteDataSource.getMyBookings(status);
+      final ApiResponse<List<Booking>> response = await remoteDataSource.getMyBookings(status);
       if (response.success && response.data != null) {
         return Right(BookingsResponse(bookings: response.data!));
       } else {
@@ -108,7 +109,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     String? status,
   }) async {
     try {
-      final response = await remoteDataSource.getBookingRequests(status);
+      final ApiResponse<List<Booking>> response = await remoteDataSource.getBookingRequests(status);
       if (response.success && response.data != null) {
         return Right(BookingsResponse(bookings: response.data!));
       } else {
@@ -127,8 +128,8 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     double? agreedPrice,
   }) async {
     try {
-      final request = AcceptBookingRequest(agreedPrice: agreedPrice);
-      final response = await remoteDataSource.acceptBooking(bookingId, request);
+      final AcceptBookingRequest request = AcceptBookingRequest(agreedPrice: agreedPrice);
+      final ApiResponse<Booking> response = await remoteDataSource.acceptBooking(bookingId, request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -147,8 +148,8 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     String? reason,
   }) async {
     try {
-      final request = DeclineBookingRequest(reason: reason);
-      final response = await remoteDataSource.declineBooking(bookingId, request);
+      final DeclineBookingRequest request = DeclineBookingRequest(reason: reason);
+      final ApiResponse<Booking> response = await remoteDataSource.declineBooking(bookingId, request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -167,7 +168,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required CounterOfferRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.sendCounterOffer(bookingId, request);
+      final ApiResponse<CounterOfferResponse> response = await remoteDataSource.sendCounterOffer(bookingId, request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -186,7 +187,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required UpdateBookingRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.updateBooking(bookingId, request);
+      final ApiResponse<Booking> response = await remoteDataSource.updateBooking(bookingId, request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -202,7 +203,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
   @override
   Future<Either<Failure, VendorProfile>> getMyVendorProfile() async {
     try {
-      final response = await remoteDataSource.getMyVendorProfile();
+      final ApiResponse<VendorProfile> response = await remoteDataSource.getMyVendorProfile();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -218,7 +219,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
   @override
   Future<Either<Failure, VendorStats>> getVendorStats() async {
     try {
-      final response = await remoteDataSource.getVendorStats();
+      final ApiResponse<VendorStats> response = await remoteDataSource.getVendorStats();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -236,7 +237,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required Map<String, dynamic> resourceData,
   }) async {
     try {
-      final response = await remoteDataSource.addResource(resourceData);
+      final ApiResponse<MarketplaceResource> response = await remoteDataSource.addResource(resourceData);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -252,7 +253,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
   @override
   Future<Either<Failure, List<MarketplaceResource>>> getMyResources() async {
     try {
-      final response = await remoteDataSource.getMyResources();
+      final ApiResponse<List<MarketplaceResource>> response = await remoteDataSource.getMyResources();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -271,7 +272,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required Map<String, dynamic> resourceData,
   }) async {
     try {
-      final response = await remoteDataSource.updateResource(resourceId, resourceData);
+      final ApiResponse<MarketplaceResource> response = await remoteDataSource.updateResource(resourceId, resourceData);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -301,7 +302,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
   @override
   Future<Either<Failure, VendorDashboard>> getVendorDashboard() async {
     try {
-      final response = await remoteDataSource.getVendorDashboard();
+      final ApiResponse<VendorDashboard> response = await remoteDataSource.getVendorDashboard();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -319,22 +320,22 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return ServerFailure(message: 'Connection timeout');
+        return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
+        final int? statusCode = error.response?.statusCode;
         final message = error.response?.data?['message'] ?? 'Server error';
         if (statusCode == 401) {
-          return AuthFailure(message: 'Unauthorized');
+          return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {
-          return AuthFailure(message: 'Forbidden');
+          return const AuthFailure(message: 'Forbidden');
         } else if (statusCode == 404) {
-          return ServerFailure(message: 'Not found');
+          return const ServerFailure(message: 'Not found');
         }
         return ServerFailure(message: message);
       case DioExceptionType.cancel:
-        return ServerFailure(message: 'Request cancelled');
+        return const ServerFailure(message: 'Request cancelled');
       case DioExceptionType.connectionError:
-        return NetworkFailure(message: 'No internet connection');
+        return const NetworkFailure(message: 'No internet connection');
       default:
         return ServerFailure(message: error.message ?? 'Unknown error');
     }

@@ -1,3 +1,5 @@
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/marketplace/presentation/viewmodels/marketplace_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,13 +20,13 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final marketplaceViewModel = ref.watch(marketplaceViewModelProvider.notifier);
-    final marketplaceState = ref.watch(marketplaceViewModelProvider);
-    final selectedCategory = useState('All');
-    final isGridView = useState(true);
-    final searchController = useTextEditingController();
+    final MarketplaceViewModel marketplaceViewModel = ref.watch(marketplaceViewModelProvider.notifier);
+    final MarketplaceState marketplaceState = ref.watch(marketplaceViewModelProvider);
+    final ValueNotifier<String> selectedCategory = useState('All');
+    final ValueNotifier<bool> isGridView = useState(true);
+    final TextEditingController searchController = useTextEditingController();
 
-    final categories = [
+    final List<String> categories = <String>[
       'All',
       'Photography',
       'Catering',
@@ -40,7 +42,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         category: selectedCategory.value == 'All' ? 'all' : selectedCategory.value,
       ));
       return null;
-    }, []);
+    }, <Object?>[]);
 
     Future<void> refreshVendors() async {
       HapticFeedback.lightImpact();
@@ -66,19 +68,19 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
           color: AppColors.primary,
           backgroundColor: AppColors.surfaceContainerHighest,
           child: CustomScrollView(
-            slivers: [
+            slivers: <Widget>[
               // Header
               SliverToBoxAdapter(
                 child: AppHeader(
                   title: 'Vendors',
                   subtitle: 'Discover and book services for your events',
-                  trailing: Container(
+                  trailing: DecoratedBox(
                     decoration: BoxDecoration(
                       color: context.colors.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Row(
-                      children: [
+                      children: <Widget>[
                         IconButton(
                           icon: Icon(
                             Icons.grid_view_rounded,
@@ -117,9 +119,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
                       suffixIcon: searchController.text.isNotEmpty
                           ? IconButton(
                               icon: Icon(Icons.clear, color: context.colors.onSurfaceVariant),
-                              onPressed: () {
-                                searchController.clear();
-                              },
+                              onPressed: searchController.clear,
                             )
                           : null,
                     ),
@@ -136,14 +136,14 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      final isSelected = selectedCategory.value == category;
+                    itemBuilder: (BuildContext context, int index) {
+                      final String category = categories[index];
+                      final bool isSelected = selectedCategory.value == category;
                       
                       return FilterChip(
                         label: Text(category),
                         selected: isSelected,
-                        onSelected: (selected) => onCategoryChanged(category),
+                        onSelected: (bool selected) => onCategoryChanged(category),
                         backgroundColor: context.colors.surfaceContainerHighest,
                         selectedColor: context.colors.primary,
                         labelStyle: AppTypography.labelMedium.copyWith(
@@ -161,7 +161,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
               marketplaceState.resourcesState.when(
                 initial: () => _buildEmptyState(context),
                 loading: () => _buildLoadingState(context, isGridView.value),
-                success: (resourcesResponse) {
+                success: (MarketplaceResourcesResponse resourcesResponse) {
                   if (resourcesResponse.resources.isEmpty) {
                     return _buildEmptyState(context);
                   }
@@ -169,7 +169,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
                       ? _buildVendorGrid(context, resourcesResponse.resources)
                       : _buildVendorList(context, resourcesResponse.resources);
                 },
-                error: (failure) => _buildErrorState(context, failure.message, refreshVendors),
+                error: (Failure failure) => _buildErrorState(context, failure.message, refreshVendors),
               ),
 
               // Bottom padding for nav bar
@@ -181,8 +181,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildVendorGrid(BuildContext context, List<MarketplaceResource> resources) {
-    return SliverPadding(
+  Widget _buildVendorGrid(BuildContext context, List<MarketplaceResource> resources) => SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       sliver: SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -197,10 +196,8 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildVendorList(BuildContext context, List<MarketplaceResource> resources) {
-    return SliverPadding(
+  Widget _buildVendorList(BuildContext context, List<MarketplaceResource> resources) => SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -209,7 +206,6 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
   Widget _buildLoadingState(BuildContext context, bool isGrid) {
     if (isGrid) {
@@ -223,7 +219,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
             childAspectRatio: 0.68,
           ),
           delegate: SliverChildBuilderDelegate(
-            (context, index) => _buildVendorCardSkeleton(context),
+            (BuildContext context, int index) => _buildVendorCardSkeleton(context),
             childCount: 6,
           ),
         ),
@@ -233,7 +229,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 24.w),
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate(
-            (context, index) => _buildVendorListSkeleton(context),
+            (BuildContext context, int index) => _buildVendorListSkeleton(context),
             childCount: 5,
           ),
         ),
@@ -241,8 +237,7 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
     }
   }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return SliverToBoxAdapter(
+  Widget _buildEmptyState(BuildContext context) => SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 80.h, horizontal: 40.w),
         child: Column(
@@ -271,10 +266,8 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildErrorState(BuildContext context, String message, VoidCallback onRetry) {
-    return SliverToBoxAdapter(
+  Widget _buildErrorState(BuildContext context, String message, VoidCallback onRetry) => SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 80.h, horizontal: 40.w),
         child: Column(
@@ -308,10 +301,8 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildVendorCardSkeleton(BuildContext context) {
-    return Container(
+  Widget _buildVendorCardSkeleton(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16.r),
@@ -354,10 +345,8 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildVendorListSkeleton(BuildContext context) {
-    return Container(
+  Widget _buildVendorListSkeleton(BuildContext context) => Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -402,10 +391,8 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildVendorCard(BuildContext context, MarketplaceResource resource) {
-    return GestureDetector(
+  Widget _buildVendorCard(BuildContext context, MarketplaceResource resource) => GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
         // TODO: Navigate to vendor detail with resource data
@@ -598,10 +585,8 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildVendorListTile(BuildContext context, MarketplaceResource resource) {
-    return GestureDetector(
+  Widget _buildVendorListTile(BuildContext context, MarketplaceResource resource) => GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
         Navigator.push(
@@ -766,5 +751,4 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 }

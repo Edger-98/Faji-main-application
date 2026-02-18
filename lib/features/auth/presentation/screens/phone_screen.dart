@@ -55,8 +55,8 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -89,8 +89,8 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
   }
 
   void _validatePhone() {
-    final phone = _phoneController.text;
-    final isValid = phone.isNotEmpty && phone.length >= 8;
+    final String phone = _phoneController.text;
+    final bool isValid = phone.isNotEmpty && phone.length >= 8;
     if (isValid != _isPhoneValid) {
       setState(() {
         _isPhoneValid = isValid;
@@ -144,8 +144,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -315,5 +314,4 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen>
         ),
       ),
     );
-  }
 }

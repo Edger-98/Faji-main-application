@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../error/failures.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 
 part 'base_state.freezed.dart';
 
@@ -26,7 +26,7 @@ extension BaseStateX<T> on BaseState<T> {
       );
 
   Failure? get failureOrNull => maybeWhen(
-        error: (failure) => failure,
+        error: (Failure failure) => failure,
         orElse: () => null,
       );
 }

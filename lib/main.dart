@@ -20,11 +20,11 @@ void main() async {
   await StripeService.initialize();
   
   // Initialize SharedPreferences
-  final sharedPreferences = await SharedPreferences.getInstance();
+  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   
   // Create ProviderContainer to initialize auth token
-  final container = ProviderContainer(
-    overrides: [
+  final ProviderContainer container = ProviderContainer(
+    overrides: <Override>[
       // Override SharedPreferences provider
       sharedPreferencesProvider.overrideWithValue(sharedPreferences),
     ],
@@ -52,7 +52,7 @@ class MyApp extends ConsumerWidget {
     
     // Update system brightness when app starts
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final Brightness brightness = MediaQuery.platformBrightnessOf(context);
+      final brightness = MediaQuery.platformBrightnessOf(context);
       ref.read(themeProvider.notifier).updateSystemBrightness(
         isSystemDark: brightness == Brightness.dark,
       );
@@ -68,8 +68,7 @@ class MyApp extends ConsumerWidget {
       designSize: const Size(393, 852), // iPhone 14 Pro size from Figma
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) {
-        return ToastificationWrapper(
+      builder: (BuildContext context, Widget? child) => ToastificationWrapper(
           child: GestureDetector(
             // Track user interactions to reset inactivity timer
             onTap: () => InactivityTimeoutService().resetTimer(),
@@ -84,8 +83,7 @@ class MyApp extends ConsumerWidget {
               debugShowCheckedModeBanner: false,
             ),
           ),
-        );
-      },
+        ),
     );
   }
 

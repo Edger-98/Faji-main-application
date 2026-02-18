@@ -5,9 +5,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Organizer profile card
 class OrganizerCard extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final VoidCallback? onTap;
 
   const OrganizerCard({
     super.key,
@@ -15,10 +12,12 @@ class OrganizerCard extends StatelessWidget {
     required this.name,
     this.onTap,
   });
+  final String imageUrl;
+  final String name;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         width: 196.w,
@@ -83,5 +82,4 @@ class OrganizerCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -2,12 +2,10 @@ import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../config/cloudinary_config.dart';
+import 'package:fajimobileapp/core/config/cloudinary_config.dart';
 
 /// Service for handling image uploads to Cloudinary
 class CloudinaryService {
-  late final CloudinaryPublic _cloudinary;
-  final ImagePicker _imagePicker = ImagePicker();
   
   CloudinaryService() {
     if (CloudinaryConfig.isConfigured) {
@@ -18,11 +16,13 @@ class CloudinaryService {
       );
     }
   }
+  late final CloudinaryPublic _cloudinary;
+  final ImagePicker _imagePicker = ImagePicker();
   
   /// Pick image from gallery
   Future<File?> pickImageFromGallery() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1920,
         maxHeight: 1920,
@@ -31,10 +31,10 @@ class CloudinaryService {
       
       if (image == null) return null;
       
-      final file = File(image.path);
+      final File file = File(image.path);
       
       // Check file size
-      final fileSize = await file.length();
+      final int fileSize = await file.length();
       if (fileSize > CloudinaryConfig.maxFileSizeBytes) {
         throw Exception('Image size exceeds 10MB limit');
       }
@@ -48,7 +48,7 @@ class CloudinaryService {
   /// Pick image from camera
   Future<File?> pickImageFromCamera() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: ImageSource.camera,
         maxWidth: 1920,
         maxHeight: 1920,
@@ -57,10 +57,10 @@ class CloudinaryService {
       
       if (image == null) return null;
       
-      final file = File(image.path);
+      final File file = File(image.path);
       
       // Check file size
-      final fileSize = await file.length();
+      final int fileSize = await file.length();
       if (fileSize > CloudinaryConfig.maxFileSizeBytes) {
         throw Exception('Image size exceeds 10MB limit');
       }
@@ -83,7 +83,7 @@ class CloudinaryService {
     }
     
     try {
-      final response = await _cloudinary.uploadFile(
+      final CloudinaryResponse response = await _cloudinary.uploadFile(
         CloudinaryFile.fromFile(
           imageFile.path,
           folder: folder,
@@ -99,31 +99,25 @@ class CloudinaryService {
   }
   
   /// Upload event image
-  Future<String> uploadEventImage(File imageFile, String eventId) async {
-    return await uploadImage(
+  Future<String> uploadEventImage(File imageFile, String eventId) async => await uploadImage(
       imageFile: imageFile,
       folder: CloudinaryConfig.eventImagesFolder,
       publicId: 'event_$eventId',
     );
-  }
   
   /// Upload user avatar
-  Future<String> uploadUserAvatar(File imageFile, String userId) async {
-    return await uploadImage(
+  Future<String> uploadUserAvatar(File imageFile, String userId) async => await uploadImage(
       imageFile: imageFile,
       folder: CloudinaryConfig.userAvatarsFolder,
       publicId: 'user_$userId',
     );
-  }
   
   /// Upload portfolio image
-  Future<String> uploadPortfolioImage(File imageFile, String providerId) async {
-    return await uploadImage(
+  Future<String> uploadPortfolioImage(File imageFile, String providerId) async => await uploadImage(
       imageFile: imageFile,
       folder: CloudinaryConfig.portfolioFolder,
       publicId: 'portfolio_${providerId}_${DateTime.now().millisecondsSinceEpoch}',
     );
-  }
   
   /// Delete image from Cloudinary (requires API key/secret - backend only)
   /// This should be handled by the backend for security
@@ -145,7 +139,7 @@ class CloudinaryService {
     // Insert transformation into Cloudinary URL
     // Example: https://res.cloudinary.com/cloud/image/upload/v123/image.jpg
     // Becomes: https://res.cloudinary.com/cloud/image/upload/c_fill,w_300,h_300/v123/image.jpg
-    final parts = imageUrl.split('/upload/');
+    final List<String> parts = imageUrl.split('/upload/');
     if (parts.length == 2) {
       return '${parts[0]}/upload/$transformation/${parts[1]}';
     }
@@ -154,22 +148,14 @@ class CloudinaryService {
   }
   
   /// Get thumbnail URL
-  String getThumbnailUrl(String imageUrl) {
-    return getOptimizedUrl(imageUrl, transformation: CloudinaryConfig.thumbnailTransform);
-  }
+  String getThumbnailUrl(String imageUrl) => getOptimizedUrl(imageUrl, transformation: CloudinaryConfig.thumbnailTransform);
   
   /// Get card-sized URL
-  String getCardUrl(String imageUrl) {
-    return getOptimizedUrl(imageUrl, transformation: CloudinaryConfig.cardTransform);
-  }
+  String getCardUrl(String imageUrl) => getOptimizedUrl(imageUrl, transformation: CloudinaryConfig.cardTransform);
   
   /// Get full-sized URL
-  String getFullUrl(String imageUrl) {
-    return getOptimizedUrl(imageUrl, transformation: CloudinaryConfig.fullTransform);
-  }
+  String getFullUrl(String imageUrl) => getOptimizedUrl(imageUrl, transformation: CloudinaryConfig.fullTransform);
 }
 
 /// Provider for CloudinaryService
-final cloudinaryServiceProvider = Provider<CloudinaryService>((ref) {
-  return CloudinaryService();
-});
+final Provider<CloudinaryService> cloudinaryServiceProvider = Provider<CloudinaryService>((ProviderRef<CloudinaryService> ref) => CloudinaryService());

@@ -9,12 +9,12 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Co-hosts are invited collaborators who share revenue
 /// NOT vendors or bookable resources
 class InviteCoHostScreen extends StatefulWidget {
-  final String eventId;
 
   const InviteCoHostScreen({
     super.key,
     required this.eventId,
   });
+  final String eventId;
 
   @override
   State<InviteCoHostScreen> createState() => _InviteCoHostScreenState();
@@ -22,7 +22,7 @@ class InviteCoHostScreen extends StatefulWidget {
 
 class _InviteCoHostScreenState extends State<InviteCoHostScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _selectedUsers = [];
+  final List<String> _selectedUsers = <String>[];
 
   @override
   void dispose() {
@@ -31,8 +31,7 @@ class _InviteCoHostScreenState extends State<InviteCoHostScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
@@ -170,7 +169,6 @@ class _InviteCoHostScreenState extends State<InviteCoHostScreen> {
         ],
       ),
     );
-  }
 
   Widget _buildUserItem({
     required String userId,
@@ -178,7 +176,7 @@ class _InviteCoHostScreenState extends State<InviteCoHostScreen> {
     required String email,
     required String avatarUrl,
   }) {
-    final isSelected = _selectedUsers.contains(userId);
+    final bool isSelected = _selectedUsers.contains(userId);
 
     return GestureDetector(
       onTap: () {
@@ -207,7 +205,7 @@ class _InviteCoHostScreenState extends State<InviteCoHostScreen> {
           ),
         ),
         child: Row(
-          children: [
+          children: <Widget>[
             // Avatar
             Container(
               width: 48.w,
@@ -233,7 +231,7 @@ class _InviteCoHostScreenState extends State<InviteCoHostScreen> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Text(
                     name,
                     style: AppTypography.bodyMedium.copyWith(

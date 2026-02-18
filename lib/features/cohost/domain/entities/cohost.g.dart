@@ -12,7 +12,6 @@ _$CohostImpl _$$CohostImplFromJson(Map json) =>
         id: $checkedConvert('id', (v) => v as String),
         name: $checkedConvert('name', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
-        avatar: $checkedConvert('avatar', (v) => v as String?),
         revenueShare: $checkedConvert(
           'revenueShare',
           (v) => (v as num).toDouble(),
@@ -25,6 +24,7 @@ _$CohostImpl _$$CohostImplFromJson(Map json) =>
           (v) =>
               CohostPermissions.fromJson(Map<String, dynamic>.from(v as Map)),
         ),
+        avatar: $checkedConvert('avatar', (v) => v as String?),
       );
       return val;
     });
@@ -34,12 +34,12 @@ Map<String, dynamic> _$$CohostImplToJson(_$CohostImpl instance) =>
       'id': instance.id,
       'name': instance.name,
       'email': instance.email,
-      if (instance.avatar case final value?) 'avatar': value,
       'revenueShare': instance.revenueShare,
       'role': instance.role,
       'joinedAt': instance.joinedAt,
       'earnings': instance.earnings,
       'permissions': instance.permissions.toJson(),
+      if (instance.avatar case final value?) 'avatar': value,
     };
 
 _$CohostPermissionsImpl _$$CohostPermissionsImplFromJson(Map json) =>

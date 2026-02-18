@@ -1,15 +1,13 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../repositories/auth_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 
 /// Delete account use case
 class DeleteAccountUseCase {
-  final AuthRepository repository;
 
   DeleteAccountUseCase(this.repository);
+  final AuthRepository repository;
 
-  Future<Either<Failure, bool>> call(String id) async {
-    return await repository.deleteAccount(id);
-  }
+  Future<Either<Failure, bool>> call(String id) async => await repository.deleteAccount(id);
 }

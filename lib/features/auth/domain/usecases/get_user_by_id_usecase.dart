@@ -1,16 +1,14 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/user_entity.dart';
-import '../repositories/auth_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 
 /// Get user by ID use case
 class GetUserByIdUseCase {
-  final AuthRepository repository;
 
   GetUserByIdUseCase(this.repository);
+  final AuthRepository repository;
 
-  Future<Either<Failure, UserEntity>> call(String id) async {
-    return await repository.getUserById(id);
-  }
+  Future<Either<Failure, UserEntity>> call(String id) async => await repository.getUserById(id);
 }

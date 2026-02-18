@@ -11,8 +11,7 @@ class EventDetailsScreen extends StatelessWidget {
   const EventDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: SafeArea(
         top: false,
@@ -497,10 +496,8 @@ class EventDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildTicketCard(BuildContext context, String title, String price, String seats, Color accentColor) {
-    return Container(
+  Widget _buildTicketCard(BuildContext context, String title, String price, String seats, Color accentColor) => Container(
       width: 261.w,
       height: 73.h,
       padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 3.h),
@@ -579,10 +576,8 @@ class EventDetailsScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildParticipantAvatar(String imagePath) {
-    return Transform.translate(
+  Widget _buildParticipantAvatar(String imagePath) => Transform.translate(
       offset: Offset(-11.w, 0),
       child: Container(
         width: 30.6.w,
@@ -597,10 +592,8 @@ class EventDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildReviewCard(BuildContext context, String name, double rating, String review) {
-    return Padding(
+  Widget _buildReviewCard(BuildContext context, String name, double rating, String review) => Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Container(
         width: 337.w,
@@ -669,5 +662,4 @@ class EventDetailsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 }

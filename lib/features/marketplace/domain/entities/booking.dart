@@ -9,23 +9,16 @@ class Booking with _$Booking {
   const factory Booking({
     required String id,
     required String eventId,
-    String? eventName,
-    required String hostId,
+    required String hostId, required String vendorId, required String resourceId, required String status, required String paymentOption, required String createdAt, required String updatedAt, String? eventName,
     String? hostName,
-    required String vendorId,
     String? vendorName,
-    required String resourceId,
     String? resourceTitle,
-    required String status,
-    required String paymentOption,
     double? offeredPrice,
     double? agreedPrice,
     double? percentageSplit,
     String? message,
     String? eventDate,
     String? escrowStatus,
-    required String createdAt,
-    required String updatedAt,
   }) = _Booking;
 
   factory Booking.fromJson(Map<String, dynamic> json) =>

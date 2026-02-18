@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'bank_details.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/bank_details.dart';
 
 part 'registration_status.freezed.dart';
 part 'registration_status.g.dart';
@@ -13,8 +13,7 @@ class RegistrationStatus with _$RegistrationStatus {
     required bool documentsUploaded,
     required bool portfolioUploaded,
     required bool bankDetailsAdded,
-    String? rejectionReason,
-    required String updatedAt,
+    required String updatedAt, String? rejectionReason,
   }) = _RegistrationStatus;
 
   factory RegistrationStatus.fromJson(Map<String, dynamic> json) =>
@@ -30,13 +29,8 @@ class VendorRegistrationProfile with _$VendorRegistrationProfile {
     required String bio,
     required String location,
     required String phoneNumber,
-    String? website,
-    required String status,
-    required List<String> documents,
-    required List<String> portfolio,
+    required String status, required List<String> documents, required List<String> portfolio, required String createdAt, required String updatedAt, String? website,
     BankDetailsResponse? bankDetails,
-    required String createdAt,
-    required String updatedAt,
   }) = _VendorRegistrationProfile;
 
   factory VendorRegistrationProfile.fromJson(Map<String, dynamic> json) =>

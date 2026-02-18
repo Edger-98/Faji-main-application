@@ -1,34 +1,36 @@
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/withdraw_request.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import '../providers/wallet_providers.dart';
-import '../viewmodels/withdraw_viewmodel.dart';
+import 'package:fajimobileapp/features/wallet/presentation/providers/wallet_providers.dart';
+import 'package:fajimobileapp/features/wallet/presentation/viewmodels/withdraw_viewmodel.dart';
 
 class ReviewWithdrawalScreen extends HookConsumerWidget {
-  final String amount;
 
   const ReviewWithdrawalScreen({
     super.key,
     required this.amount,
   });
+  final String amount;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final withdrawViewModel = ref.watch(withdrawViewModelProvider.notifier);
+    final ThemeData theme = Theme.of(context);
+    final WithdrawViewModel withdrawViewModel = ref.watch(withdrawViewModelProvider.notifier);
     
-    final transactionFee = 10.0;
-    final amountValue = double.tryParse(amount) ?? 0.0;
-    final totalAmount = amountValue - transactionFee;
+    const double transactionFee = 10.0;
+    final double amountValue = double.tryParse(amount) ?? 0.0;
+    final double totalAmount = amountValue - transactionFee;
 
     // Listen to withdrawal state changes
-    ref.listen(withdrawViewModelProvider, (previous, next) {
+    ref.listen(withdrawViewModelProvider, (WithdrawState? previous, WithdrawState next) {
       next.when(
         initial: () {},
         loading: () {},
-        success: (response) {
+        success: (WithdrawResponse response) {
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -39,7 +41,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
           // Navigate back to wallet
           context.go('/wallet');
         },
-        error: (failure) {
+        error: (Failure failure) {
           // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -66,14 +68,14 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             _buildAppBar(context),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     const SizedBox(height: 32),
                     _buildWithdrawingToSection(context),
                     const SizedBox(height: 24),
@@ -99,18 +101,18 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Row(
-        children: [
+        children: <Widget>[
           GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
               width: 50,
               height: 50,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
@@ -139,7 +141,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
   }
 
   Widget _buildWithdrawingToSection(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Text(
       'Withdrawing To: ',
@@ -153,10 +155,10 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
   }
 
   Widget _buildBankInfo(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Row(
-      children: [
+      children: <Widget>[
         Container(
           width: 54,
           height: 55,
@@ -164,7 +166,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
             color: AppColors.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(27),
           ),
-          child: Center(
+          child: const Center(
             child: Icon(
               Icons.account_balance,
               color: AppColors.onSurface,
@@ -176,7 +178,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               Text(
                 'Republic Bank',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -205,7 +207,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
   }
 
   Widget _buildWithdrawalAmountCard(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Container(
       width: double.infinity,
@@ -215,9 +217,9 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
         borderRadius: BorderRadius.circular(31),
       ),
       child: Column(
-        children: [
+        children: <Widget>[
           Row(
-            children: [
+            children: <Widget>[
               Container(
                 width: 54,
                 height: 55,
@@ -235,7 +237,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     Text(
                       'Withdrawal Amount',
                       style: theme.textTheme.titleLarge?.copyWith(
@@ -265,7 +267,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
+            children: <Widget>[
               Text(
                 amount,
                 style: theme.textTheme.displayLarge?.copyWith(
@@ -280,7 +282,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  'TTD\$',
+                  r'TTD$',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontFamily: AppTypography.modicaPro,
                     fontSize: 18,
@@ -301,10 +303,10 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
     double fee,
     double total,
   ) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Column(
-      children: [
+      children: <Widget>[
         _buildDetailRow(
           context,
           'Transection fee',
@@ -332,8 +334,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
     String label,
     String value,
     ThemeData theme,
-  ) {
-    return Row(
+  ) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -358,12 +359,11 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
         ),
       ],
     );
-  }
 
   Widget _buildWithdrawButton(BuildContext context, WidgetRef ref, VoidCallback onWithdraw) {
-    final theme = Theme.of(context);
-    final withdrawState = ref.watch(withdrawViewModelProvider);
-    final isLoading = withdrawState.maybeWhen(
+    final ThemeData theme = Theme.of(context);
+    final WithdrawState withdrawState = ref.watch(withdrawViewModelProvider);
+    final bool isLoading = withdrawState.maybeWhen(
       loading: () => true,
       orElse: () => false,
     );
@@ -383,7 +383,7 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
           ),
           child: Center(
             child: isLoading
-                ? SizedBox(
+                ? const SizedBox(
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
@@ -410,13 +410,13 @@ class ReviewWithdrawalScreen extends HookConsumerWidget {
 class DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final Paint paint = Paint()
       ..color = AppColors.onSurface
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
 
-    const dashWidth = 5.0;
-    const dashSpace = 5.0;
+    const double dashWidth = 5.0;
+    const double dashSpace = 5.0;
     double startX = 0;
 
     while (startX < size.width) {

@@ -1,17 +1,15 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../repositories/vendor_registration_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/repositories/vendor_registration_repository.dart';
 
 class DeletePortfolioUseCase {
-  final VendorRegistrationRepository repository;
 
   DeletePortfolioUseCase(this.repository);
+  final VendorRegistrationRepository repository;
 
   Future<Either<Failure, void>> call({
     required String portfolioId,
-  }) async {
-    return await repository.deletePortfolio(
+  }) async => await repository.deletePortfolio(
       portfolioId: portfolioId,
     );
-  }
 }

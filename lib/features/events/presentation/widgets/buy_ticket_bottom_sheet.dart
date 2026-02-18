@@ -1,42 +1,44 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_response.dart';
+import 'package:fajimobileapp/features/tickets/domain/usecases/purchase_tickets_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/design_system/design_system.dart';
-import '../../../../core/services/stripe_service.dart';
-import '../../domain/entities/event_entity.dart';
-import '../../../tickets/domain/entities/purchase_ticket_request.dart';
-import '../../../tickets/presentation/providers/ticket_providers.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/services/stripe_service.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_request.dart';
+import 'package:fajimobileapp/features/tickets/presentation/providers/ticket_providers.dart';
 
 /// Bottom sheet for buying tickets
 class BuyTicketBottomSheet extends ConsumerStatefulWidget {
-  final EventEntity event;
 
   const BuyTicketBottomSheet({
     super.key,
     required this.event,
   });
+  final EventEntity event;
 
   @override
   ConsumerState<BuyTicketBottomSheet> createState() => _BuyTicketBottomSheetState();
 
-  static Future<void> show(BuildContext context, EventEntity event) {
-    return showModalBottomSheet(
+  static Future<void> show(BuildContext context, EventEntity event) => showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => BuyTicketBottomSheet(event: event),
     );
-  }
 }
 
 class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
   int _ticketCount = 1;
   final TextEditingController _promoController = TextEditingController();
   bool _promoApplied = false;
-  double _discount = 0.0;
+  double _discount = 0;
   bool _isProcessing = false;
 
   @override
@@ -83,21 +85,21 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
       print('   Quantity: $_ticketCount');
       print('   Promo Code: ${_promoController.text.isEmpty ? "none" : _promoController.text}');
 
-      final purchaseUseCase = ref.read(purchaseTicketsUseCaseProvider);
+      final PurchaseTicketsUseCase purchaseUseCase = ref.read(purchaseTicketsUseCaseProvider);
       
-      final request = PurchaseTicketRequest(
+      final PurchaseTicketRequest request = PurchaseTicketRequest(
         eventId: widget.event.id,
         quantity: _ticketCount,
         promoCode: _promoController.text.isEmpty ? null : _promoController.text,
         paymentMethod: 'stripe', // Use Stripe as required by backend
       );
 
-      final result = await purchaseUseCase(request);
+      final Either<Failure, PurchaseTicketResponse> result = await purchaseUseCase(request);
 
       if (!mounted) return;
 
       result.fold(
-        (failure) {
+        (Failure failure) {
           print('❌ Purchase failed: ${failure.message}');
           setState(() => _isProcessing = false);
           
@@ -109,7 +111,7 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
             ),
           );
         },
-        (response) async {
+        (PurchaseTicketResponse response) async {
           print('✅ Purchase successful!');
           print('   Order ID: ${response.orderId}');
           print('   Tickets: ${response.tickets.length}');
@@ -144,12 +146,12 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
             
             try {
               // Create Stripe service instance
-              final stripeService = StripeService();
+              final StripeService stripeService = StripeService();
               
               print('💳 Calling presentPaymentSheet...');
               
               // Present Stripe payment sheet
-              final success = await stripeService.presentPaymentSheet(
+              final bool success = await stripeService.presentPaymentSheet(
                 clientSecret: response.payment.clientSecret!,
               );
 
@@ -184,25 +186,37 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
               print('❌ Stack trace: $stackTrace');
               
               if (mounted) {
-                // Check if it's a Stripe initialization error
-                if (e.toString().contains('not initialized')) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Stripe is not configured. Please contact support.'),
-                      backgroundColor: context.colors.error,
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 5),
-                    ),
-                  );
+                var errorMessage = 'Payment error occurred';
+                
+                // Check for specific Stripe configuration errors
+                if (e.toString().contains('STRIPE NOT CONFIGURED') || 
+                    e.toString().contains('Publishable key')) {
+                  errorMessage = '''
+Stripe payment is not configured properly.
+
+To fix this:
+1. Get your Stripe publishable key from https://dashboard.stripe.com/test/apikeys
+2. Update the .env file with your real key
+3. Hot restart the app
+
+Contact support if you need help setting up payments.
+                  ''';
+                } else if (e.toString().contains('StripeConfigException')) {
+                  errorMessage = 'Payment system configuration error. Please contact support.';
+                } else if (e.toString().contains('not initialized')) {
+                  errorMessage = 'Payment system not initialized. Please restart the app.';
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Payment error: ${e.toString()}'),
-                      backgroundColor: context.colors.error,
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
+                  errorMessage = 'Payment failed: ${e}';
                 }
+                
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(errorMessage),
+                    backgroundColor: context.colors.error,
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 8),
+                  ),
+                );
               }
             }
           } else if (response.payment.paymentUrl != null && response.payment.paymentUrl!.isNotEmpty) {
@@ -211,7 +225,7 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
             
             Navigator.pop(context);
             
-            final uri = Uri.parse(response.payment.paymentUrl!);
+            final Uri uri = Uri.parse(response.payment.paymentUrl!);
             if (await canLaunchUrl(uri)) {
               await launchUrl(
                 uri,
@@ -266,10 +280,9 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
         
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: ${e.toString()}'),
+            content: Text('Error: ${e}'),
             backgroundColor: context.colors.error,
             behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 4),
           ),
         );
       }
@@ -279,10 +292,10 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
   @override
   Widget build(BuildContext context) {
     // Check if event is sold out or free
-    final isSoldOut = widget.event.isSoldOut;
-    final isFree = widget.event.isFree;
+    final bool isSoldOut = widget.event.isSoldOut;
+    final bool isFree = widget.event.isFree;
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
@@ -292,8 +305,7 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
-        builder: (context, scrollController) {
-          return Column(
+        builder: (BuildContext context, ScrollController scrollController) => Column(
             children: [
               // Drag handle
               Container(
@@ -693,14 +705,12 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
                 ),
               ),
             ],
-          );
-        },
+          ),
       ),
     );
   }
 
-  Widget _buildPriceRow(String label, String value, BuildContext context, {Color? color}) {
-    return Row(
+  Widget _buildPriceRow(String label, String value, BuildContext context, {Color? color}) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -718,5 +728,4 @@ class _BuyTicketBottomSheetState extends ConsumerState<BuyTicketBottomSheet> {
         ),
       ],
     );
-  }
 }

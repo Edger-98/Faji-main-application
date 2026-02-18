@@ -9,18 +9,17 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Main bottom navigation bar with 5 tabs
 /// Home | Vendors | My Events | Wallet | Profile
 class MainBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
 
   const MainBottomNav({
     super.key,
     required this.currentIndex,
     required this.onTap,
   });
+  final int currentIndex;
+  final ValueChanged<int> onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       color: Colors.transparent,
       padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 20.h),
       child: SafeArea(
@@ -79,7 +78,6 @@ class MainBottomNav extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Widget _buildNavItem({
     required BuildContext context,
@@ -88,7 +86,7 @@ class MainBottomNav extends StatelessWidget {
     required String label,
     required int index,
   }) {
-    final bool isActive = currentIndex == index;
+    final isActive = currentIndex == index;
     
     return GestureDetector(
       onTap: () => onTap(index),
@@ -100,7 +98,7 @@ class MainBottomNav extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,

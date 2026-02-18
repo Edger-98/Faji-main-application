@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resource_category.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cohost_profile_entity.freezed.dart';
 

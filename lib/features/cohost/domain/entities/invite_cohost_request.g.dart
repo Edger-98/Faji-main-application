@@ -46,9 +46,9 @@ _$InviteCohostResponseImpl _$$InviteCohostResponseImplFromJson(Map json) =>
           (v) => (v as num).toDouble(),
         ),
         status: $checkedConvert('status', (v) => v as String),
-        message: $checkedConvert('message', (v) => v as String?),
         createdAt: $checkedConvert('createdAt', (v) => v as String),
         expiresAt: $checkedConvert('expiresAt', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String?),
       );
       return val;
     });
@@ -63,9 +63,9 @@ Map<String, dynamic> _$$InviteCohostResponseImplToJson(
   'invitee': instance.invitee.toJson(),
   'revenueShare': instance.revenueShare,
   'status': instance.status,
-  if (instance.message case final value?) 'message': value,
   'createdAt': instance.createdAt,
   'expiresAt': instance.expiresAt,
+  if (instance.message case final value?) 'message': value,
 };
 
 _$InviteHostImpl _$$InviteHostImplFromJson(Map json) =>

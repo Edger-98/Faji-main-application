@@ -16,8 +16,7 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
   int ticketCount = 3;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: Stack(
         children: [
@@ -279,5 +278,4 @@ class _BuyTicketScreenState extends State<BuyTicketScreen> {
         ],
       ),
     );
-  }
 }

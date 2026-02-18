@@ -5,13 +5,12 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// PROMOTE Tab - Event promotion tools
 class PromoteTab extends ConsumerWidget {
-  final String eventId;
 
   const PromoteTab({super.key, required this.eventId});
+  final String eventId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListView(
+  Widget build(BuildContext context, WidgetRef ref) => ListView(
       padding: EdgeInsets.all(16.w),
       children: [
         // Header text
@@ -36,10 +35,8 @@ class PromoteTab extends ConsumerWidget {
         SizedBox(height: 100.h),
       ],
     );
-  }
 
-  Widget _buildPartyPromotersCard() {
-    return Container(
+  Widget _buildPartyPromotersCard() => Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
@@ -133,10 +130,8 @@ class PromoteTab extends ConsumerWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildBroadcastCard() {
-    return Container(
+  Widget _buildBroadcastCard() => Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
@@ -200,5 +195,4 @@ class PromoteTab extends ConsumerWidget {
         ],
       ),
     );
-  }
 }

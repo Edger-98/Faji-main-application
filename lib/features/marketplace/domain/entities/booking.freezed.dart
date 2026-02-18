@@ -23,45 +23,45 @@ Booking _$BookingFromJson(Map<String, dynamic> json) {
 mixin _$Booking {
   String get id => throw _privateConstructorUsedError;
   String get eventId => throw _privateConstructorUsedError;
-  String? get eventName => throw _privateConstructorUsedError;
   String get hostId => throw _privateConstructorUsedError;
-  String? get hostName => throw _privateConstructorUsedError;
   String get vendorId => throw _privateConstructorUsedError;
-  String? get vendorName => throw _privateConstructorUsedError;
   String get resourceId => throw _privateConstructorUsedError;
-  String? get resourceTitle => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get paymentOption => throw _privateConstructorUsedError;
+  String get createdAt => throw _privateConstructorUsedError;
+  String get updatedAt => throw _privateConstructorUsedError;
+  String? get eventName => throw _privateConstructorUsedError;
+  String? get hostName => throw _privateConstructorUsedError;
+  String? get vendorName => throw _privateConstructorUsedError;
+  String? get resourceTitle => throw _privateConstructorUsedError;
   double? get offeredPrice => throw _privateConstructorUsedError;
   double? get agreedPrice => throw _privateConstructorUsedError;
   double? get percentageSplit => throw _privateConstructorUsedError;
   String? get message => throw _privateConstructorUsedError;
   String? get eventDate => throw _privateConstructorUsedError;
   String? get escrowStatus => throw _privateConstructorUsedError;
-  String get createdAt => throw _privateConstructorUsedError;
-  String get updatedAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
       String id,
       String eventId,
-      String? eventName,
       String hostId,
-      String? hostName,
       String vendorId,
-      String? vendorName,
       String resourceId,
-      String? resourceTitle,
       String status,
       String paymentOption,
+      String createdAt,
+      String updatedAt,
+      String? eventName,
+      String? hostName,
+      String? vendorName,
+      String? resourceTitle,
       double? offeredPrice,
       double? agreedPrice,
       double? percentageSplit,
       String? message,
       String? eventDate,
       String? escrowStatus,
-      String createdAt,
-      String updatedAt,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -70,23 +70,23 @@ mixin _$Booking {
     TResult? Function(
       String id,
       String eventId,
-      String? eventName,
       String hostId,
-      String? hostName,
       String vendorId,
-      String? vendorName,
       String resourceId,
-      String? resourceTitle,
       String status,
       String paymentOption,
+      String createdAt,
+      String updatedAt,
+      String? eventName,
+      String? hostName,
+      String? vendorName,
+      String? resourceTitle,
       double? offeredPrice,
       double? agreedPrice,
       double? percentageSplit,
       String? message,
       String? eventDate,
       String? escrowStatus,
-      String createdAt,
-      String updatedAt,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -95,23 +95,23 @@ mixin _$Booking {
     TResult Function(
       String id,
       String eventId,
-      String? eventName,
       String hostId,
-      String? hostName,
       String vendorId,
-      String? vendorName,
       String resourceId,
-      String? resourceTitle,
       String status,
       String paymentOption,
+      String createdAt,
+      String updatedAt,
+      String? eventName,
+      String? hostName,
+      String? vendorName,
+      String? resourceTitle,
       double? offeredPrice,
       double? agreedPrice,
       double? percentageSplit,
       String? message,
       String? eventDate,
       String? escrowStatus,
-      String createdAt,
-      String updatedAt,
     )?
     $default, {
     required TResult orElse(),
@@ -147,23 +147,23 @@ abstract class $BookingCopyWith<$Res> {
   $Res call({
     String id,
     String eventId,
-    String? eventName,
     String hostId,
-    String? hostName,
     String vendorId,
-    String? vendorName,
     String resourceId,
-    String? resourceTitle,
     String status,
     String paymentOption,
+    String createdAt,
+    String updatedAt,
+    String? eventName,
+    String? hostName,
+    String? vendorName,
+    String? resourceTitle,
     double? offeredPrice,
     double? agreedPrice,
     double? percentageSplit,
     String? message,
     String? eventDate,
     String? escrowStatus,
-    String createdAt,
-    String updatedAt,
   });
 }
 
@@ -184,23 +184,23 @@ class _$BookingCopyWithImpl<$Res, $Val extends Booking>
   $Res call({
     Object? id = null,
     Object? eventId = null,
-    Object? eventName = freezed,
     Object? hostId = null,
-    Object? hostName = freezed,
     Object? vendorId = null,
-    Object? vendorName = freezed,
     Object? resourceId = null,
-    Object? resourceTitle = freezed,
     Object? status = null,
     Object? paymentOption = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? eventName = freezed,
+    Object? hostName = freezed,
+    Object? vendorName = freezed,
+    Object? resourceTitle = freezed,
     Object? offeredPrice = freezed,
     Object? agreedPrice = freezed,
     Object? percentageSplit = freezed,
     Object? message = freezed,
     Object? eventDate = freezed,
     Object? escrowStatus = freezed,
-    Object? createdAt = null,
-    Object? updatedAt = null,
   }) {
     return _then(
       _value.copyWith(
@@ -212,34 +212,18 @@ class _$BookingCopyWithImpl<$Res, $Val extends Booking>
                 ? _value.eventId
                 : eventId // ignore: cast_nullable_to_non_nullable
                       as String,
-            eventName: freezed == eventName
-                ? _value.eventName
-                : eventName // ignore: cast_nullable_to_non_nullable
-                      as String?,
             hostId: null == hostId
                 ? _value.hostId
                 : hostId // ignore: cast_nullable_to_non_nullable
                       as String,
-            hostName: freezed == hostName
-                ? _value.hostName
-                : hostName // ignore: cast_nullable_to_non_nullable
-                      as String?,
             vendorId: null == vendorId
                 ? _value.vendorId
                 : vendorId // ignore: cast_nullable_to_non_nullable
                       as String,
-            vendorName: freezed == vendorName
-                ? _value.vendorName
-                : vendorName // ignore: cast_nullable_to_non_nullable
-                      as String?,
             resourceId: null == resourceId
                 ? _value.resourceId
                 : resourceId // ignore: cast_nullable_to_non_nullable
                       as String,
-            resourceTitle: freezed == resourceTitle
-                ? _value.resourceTitle
-                : resourceTitle // ignore: cast_nullable_to_non_nullable
-                      as String?,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
@@ -248,6 +232,30 @@ class _$BookingCopyWithImpl<$Res, $Val extends Booking>
                 ? _value.paymentOption
                 : paymentOption // ignore: cast_nullable_to_non_nullable
                       as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as String,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as String,
+            eventName: freezed == eventName
+                ? _value.eventName
+                : eventName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hostName: freezed == hostName
+                ? _value.hostName
+                : hostName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            vendorName: freezed == vendorName
+                ? _value.vendorName
+                : vendorName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            resourceTitle: freezed == resourceTitle
+                ? _value.resourceTitle
+                : resourceTitle // ignore: cast_nullable_to_non_nullable
+                      as String?,
             offeredPrice: freezed == offeredPrice
                 ? _value.offeredPrice
                 : offeredPrice // ignore: cast_nullable_to_non_nullable
@@ -272,14 +280,6 @@ class _$BookingCopyWithImpl<$Res, $Val extends Booking>
                 ? _value.escrowStatus
                 : escrowStatus // ignore: cast_nullable_to_non_nullable
                       as String?,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as String,
-            updatedAt: null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as String,
           )
           as $Val,
     );
@@ -297,23 +297,23 @@ abstract class _$$BookingImplCopyWith<$Res> implements $BookingCopyWith<$Res> {
   $Res call({
     String id,
     String eventId,
-    String? eventName,
     String hostId,
-    String? hostName,
     String vendorId,
-    String? vendorName,
     String resourceId,
-    String? resourceTitle,
     String status,
     String paymentOption,
+    String createdAt,
+    String updatedAt,
+    String? eventName,
+    String? hostName,
+    String? vendorName,
+    String? resourceTitle,
     double? offeredPrice,
     double? agreedPrice,
     double? percentageSplit,
     String? message,
     String? eventDate,
     String? escrowStatus,
-    String createdAt,
-    String updatedAt,
   });
 }
 
@@ -333,23 +333,23 @@ class __$$BookingImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? eventId = null,
-    Object? eventName = freezed,
     Object? hostId = null,
-    Object? hostName = freezed,
     Object? vendorId = null,
-    Object? vendorName = freezed,
     Object? resourceId = null,
-    Object? resourceTitle = freezed,
     Object? status = null,
     Object? paymentOption = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
+    Object? eventName = freezed,
+    Object? hostName = freezed,
+    Object? vendorName = freezed,
+    Object? resourceTitle = freezed,
     Object? offeredPrice = freezed,
     Object? agreedPrice = freezed,
     Object? percentageSplit = freezed,
     Object? message = freezed,
     Object? eventDate = freezed,
     Object? escrowStatus = freezed,
-    Object? createdAt = null,
-    Object? updatedAt = null,
   }) {
     return _then(
       _$BookingImpl(
@@ -361,34 +361,18 @@ class __$$BookingImplCopyWithImpl<$Res>
             ? _value.eventId
             : eventId // ignore: cast_nullable_to_non_nullable
                   as String,
-        eventName: freezed == eventName
-            ? _value.eventName
-            : eventName // ignore: cast_nullable_to_non_nullable
-                  as String?,
         hostId: null == hostId
             ? _value.hostId
             : hostId // ignore: cast_nullable_to_non_nullable
                   as String,
-        hostName: freezed == hostName
-            ? _value.hostName
-            : hostName // ignore: cast_nullable_to_non_nullable
-                  as String?,
         vendorId: null == vendorId
             ? _value.vendorId
             : vendorId // ignore: cast_nullable_to_non_nullable
                   as String,
-        vendorName: freezed == vendorName
-            ? _value.vendorName
-            : vendorName // ignore: cast_nullable_to_non_nullable
-                  as String?,
         resourceId: null == resourceId
             ? _value.resourceId
             : resourceId // ignore: cast_nullable_to_non_nullable
                   as String,
-        resourceTitle: freezed == resourceTitle
-            ? _value.resourceTitle
-            : resourceTitle // ignore: cast_nullable_to_non_nullable
-                  as String?,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
@@ -397,6 +381,30 @@ class __$$BookingImplCopyWithImpl<$Res>
             ? _value.paymentOption
             : paymentOption // ignore: cast_nullable_to_non_nullable
                   as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as String,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as String,
+        eventName: freezed == eventName
+            ? _value.eventName
+            : eventName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hostName: freezed == hostName
+            ? _value.hostName
+            : hostName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        vendorName: freezed == vendorName
+            ? _value.vendorName
+            : vendorName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        resourceTitle: freezed == resourceTitle
+            ? _value.resourceTitle
+            : resourceTitle // ignore: cast_nullable_to_non_nullable
+                  as String?,
         offeredPrice: freezed == offeredPrice
             ? _value.offeredPrice
             : offeredPrice // ignore: cast_nullable_to_non_nullable
@@ -421,14 +429,6 @@ class __$$BookingImplCopyWithImpl<$Res>
             ? _value.escrowStatus
             : escrowStatus // ignore: cast_nullable_to_non_nullable
                   as String?,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as String,
-        updatedAt: null == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as String,
       ),
     );
   }
@@ -440,23 +440,23 @@ class _$BookingImpl implements _Booking {
   const _$BookingImpl({
     required this.id,
     required this.eventId,
-    this.eventName,
     required this.hostId,
-    this.hostName,
     required this.vendorId,
-    this.vendorName,
     required this.resourceId,
-    this.resourceTitle,
     required this.status,
     required this.paymentOption,
+    required this.createdAt,
+    required this.updatedAt,
+    this.eventName,
+    this.hostName,
+    this.vendorName,
+    this.resourceTitle,
     this.offeredPrice,
     this.agreedPrice,
     this.percentageSplit,
     this.message,
     this.eventDate,
     this.escrowStatus,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   factory _$BookingImpl.fromJson(Map<String, dynamic> json) =>
@@ -467,23 +467,27 @@ class _$BookingImpl implements _Booking {
   @override
   final String eventId;
   @override
-  final String? eventName;
-  @override
   final String hostId;
-  @override
-  final String? hostName;
   @override
   final String vendorId;
   @override
-  final String? vendorName;
-  @override
   final String resourceId;
-  @override
-  final String? resourceTitle;
   @override
   final String status;
   @override
   final String paymentOption;
+  @override
+  final String createdAt;
+  @override
+  final String updatedAt;
+  @override
+  final String? eventName;
+  @override
+  final String? hostName;
+  @override
+  final String? vendorName;
+  @override
+  final String? resourceTitle;
   @override
   final double? offeredPrice;
   @override
@@ -496,14 +500,10 @@ class _$BookingImpl implements _Booking {
   final String? eventDate;
   @override
   final String? escrowStatus;
-  @override
-  final String createdAt;
-  @override
-  final String updatedAt;
 
   @override
   String toString() {
-    return 'Booking(id: $id, eventId: $eventId, eventName: $eventName, hostId: $hostId, hostName: $hostName, vendorId: $vendorId, vendorName: $vendorName, resourceId: $resourceId, resourceTitle: $resourceTitle, status: $status, paymentOption: $paymentOption, offeredPrice: $offeredPrice, agreedPrice: $agreedPrice, percentageSplit: $percentageSplit, message: $message, eventDate: $eventDate, escrowStatus: $escrowStatus, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Booking(id: $id, eventId: $eventId, hostId: $hostId, vendorId: $vendorId, resourceId: $resourceId, status: $status, paymentOption: $paymentOption, createdAt: $createdAt, updatedAt: $updatedAt, eventName: $eventName, hostName: $hostName, vendorName: $vendorName, resourceTitle: $resourceTitle, offeredPrice: $offeredPrice, agreedPrice: $agreedPrice, percentageSplit: $percentageSplit, message: $message, eventDate: $eventDate, escrowStatus: $escrowStatus)';
   }
 
   @override
@@ -513,22 +513,26 @@ class _$BookingImpl implements _Booking {
             other is _$BookingImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.eventId, eventId) || other.eventId == eventId) &&
-            (identical(other.eventName, eventName) ||
-                other.eventName == eventName) &&
             (identical(other.hostId, hostId) || other.hostId == hostId) &&
-            (identical(other.hostName, hostName) ||
-                other.hostName == hostName) &&
             (identical(other.vendorId, vendorId) ||
                 other.vendorId == vendorId) &&
-            (identical(other.vendorName, vendorName) ||
-                other.vendorName == vendorName) &&
             (identical(other.resourceId, resourceId) ||
                 other.resourceId == resourceId) &&
-            (identical(other.resourceTitle, resourceTitle) ||
-                other.resourceTitle == resourceTitle) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.paymentOption, paymentOption) ||
                 other.paymentOption == paymentOption) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.eventName, eventName) ||
+                other.eventName == eventName) &&
+            (identical(other.hostName, hostName) ||
+                other.hostName == hostName) &&
+            (identical(other.vendorName, vendorName) ||
+                other.vendorName == vendorName) &&
+            (identical(other.resourceTitle, resourceTitle) ||
+                other.resourceTitle == resourceTitle) &&
             (identical(other.offeredPrice, offeredPrice) ||
                 other.offeredPrice == offeredPrice) &&
             (identical(other.agreedPrice, agreedPrice) ||
@@ -539,11 +543,7 @@ class _$BookingImpl implements _Booking {
             (identical(other.eventDate, eventDate) ||
                 other.eventDate == eventDate) &&
             (identical(other.escrowStatus, escrowStatus) ||
-                other.escrowStatus == escrowStatus) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.escrowStatus == escrowStatus));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -552,23 +552,23 @@ class _$BookingImpl implements _Booking {
     runtimeType,
     id,
     eventId,
-    eventName,
     hostId,
-    hostName,
     vendorId,
-    vendorName,
     resourceId,
-    resourceTitle,
     status,
     paymentOption,
+    createdAt,
+    updatedAt,
+    eventName,
+    hostName,
+    vendorName,
+    resourceTitle,
     offeredPrice,
     agreedPrice,
     percentageSplit,
     message,
     eventDate,
     escrowStatus,
-    createdAt,
-    updatedAt,
   ]);
 
   /// Create a copy of Booking
@@ -585,46 +585,46 @@ class _$BookingImpl implements _Booking {
     TResult Function(
       String id,
       String eventId,
-      String? eventName,
       String hostId,
-      String? hostName,
       String vendorId,
-      String? vendorName,
       String resourceId,
-      String? resourceTitle,
       String status,
       String paymentOption,
+      String createdAt,
+      String updatedAt,
+      String? eventName,
+      String? hostName,
+      String? vendorName,
+      String? resourceTitle,
       double? offeredPrice,
       double? agreedPrice,
       double? percentageSplit,
       String? message,
       String? eventDate,
       String? escrowStatus,
-      String createdAt,
-      String updatedAt,
     )
     $default,
   ) {
     return $default(
       id,
       eventId,
-      eventName,
       hostId,
-      hostName,
       vendorId,
-      vendorName,
       resourceId,
-      resourceTitle,
       status,
       paymentOption,
+      createdAt,
+      updatedAt,
+      eventName,
+      hostName,
+      vendorName,
+      resourceTitle,
       offeredPrice,
       agreedPrice,
       percentageSplit,
       message,
       eventDate,
       escrowStatus,
-      createdAt,
-      updatedAt,
     );
   }
 
@@ -634,46 +634,46 @@ class _$BookingImpl implements _Booking {
     TResult? Function(
       String id,
       String eventId,
-      String? eventName,
       String hostId,
-      String? hostName,
       String vendorId,
-      String? vendorName,
       String resourceId,
-      String? resourceTitle,
       String status,
       String paymentOption,
+      String createdAt,
+      String updatedAt,
+      String? eventName,
+      String? hostName,
+      String? vendorName,
+      String? resourceTitle,
       double? offeredPrice,
       double? agreedPrice,
       double? percentageSplit,
       String? message,
       String? eventDate,
       String? escrowStatus,
-      String createdAt,
-      String updatedAt,
     )?
     $default,
   ) {
     return $default?.call(
       id,
       eventId,
-      eventName,
       hostId,
-      hostName,
       vendorId,
-      vendorName,
       resourceId,
-      resourceTitle,
       status,
       paymentOption,
+      createdAt,
+      updatedAt,
+      eventName,
+      hostName,
+      vendorName,
+      resourceTitle,
       offeredPrice,
       agreedPrice,
       percentageSplit,
       message,
       eventDate,
       escrowStatus,
-      createdAt,
-      updatedAt,
     );
   }
 
@@ -683,23 +683,23 @@ class _$BookingImpl implements _Booking {
     TResult Function(
       String id,
       String eventId,
-      String? eventName,
       String hostId,
-      String? hostName,
       String vendorId,
-      String? vendorName,
       String resourceId,
-      String? resourceTitle,
       String status,
       String paymentOption,
+      String createdAt,
+      String updatedAt,
+      String? eventName,
+      String? hostName,
+      String? vendorName,
+      String? resourceTitle,
       double? offeredPrice,
       double? agreedPrice,
       double? percentageSplit,
       String? message,
       String? eventDate,
       String? escrowStatus,
-      String createdAt,
-      String updatedAt,
     )?
     $default, {
     required TResult orElse(),
@@ -708,23 +708,23 @@ class _$BookingImpl implements _Booking {
       return $default(
         id,
         eventId,
-        eventName,
         hostId,
-        hostName,
         vendorId,
-        vendorName,
         resourceId,
-        resourceTitle,
         status,
         paymentOption,
+        createdAt,
+        updatedAt,
+        eventName,
+        hostName,
+        vendorName,
+        resourceTitle,
         offeredPrice,
         agreedPrice,
         percentageSplit,
         message,
         eventDate,
         escrowStatus,
-        createdAt,
-        updatedAt,
       );
     }
     return orElse();
@@ -768,23 +768,23 @@ abstract class _Booking implements Booking {
   const factory _Booking({
     required final String id,
     required final String eventId,
-    final String? eventName,
     required final String hostId,
-    final String? hostName,
     required final String vendorId,
-    final String? vendorName,
     required final String resourceId,
-    final String? resourceTitle,
     required final String status,
     required final String paymentOption,
+    required final String createdAt,
+    required final String updatedAt,
+    final String? eventName,
+    final String? hostName,
+    final String? vendorName,
+    final String? resourceTitle,
     final double? offeredPrice,
     final double? agreedPrice,
     final double? percentageSplit,
     final String? message,
     final String? eventDate,
     final String? escrowStatus,
-    required final String createdAt,
-    required final String updatedAt,
   }) = _$BookingImpl;
 
   factory _Booking.fromJson(Map<String, dynamic> json) = _$BookingImpl.fromJson;
@@ -794,23 +794,27 @@ abstract class _Booking implements Booking {
   @override
   String get eventId;
   @override
-  String? get eventName;
-  @override
   String get hostId;
-  @override
-  String? get hostName;
   @override
   String get vendorId;
   @override
-  String? get vendorName;
-  @override
   String get resourceId;
-  @override
-  String? get resourceTitle;
   @override
   String get status;
   @override
   String get paymentOption;
+  @override
+  String get createdAt;
+  @override
+  String get updatedAt;
+  @override
+  String? get eventName;
+  @override
+  String? get hostName;
+  @override
+  String? get vendorName;
+  @override
+  String? get resourceTitle;
   @override
   double? get offeredPrice;
   @override
@@ -823,10 +827,6 @@ abstract class _Booking implements Booking {
   String? get eventDate;
   @override
   String? get escrowStatus;
-  @override
-  String get createdAt;
-  @override
-  String get updatedAt;
 
   /// Create a copy of Booking
   /// with the given fields replaced by the non-null parameter values.

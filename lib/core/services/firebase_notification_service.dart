@@ -6,9 +6,9 @@ import 'package:flutter/foundation.dart';
 
 /// Firebase Cloud Messaging service for push notifications
 class FirebaseNotificationService {
-  static final FirebaseNotificationService _instance = FirebaseNotificationService._internal();
   factory FirebaseNotificationService() => _instance;
   FirebaseNotificationService._internal();
+  static final FirebaseNotificationService _instance = FirebaseNotificationService._internal();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
@@ -20,11 +20,8 @@ class FirebaseNotificationService {
   Future<void> initialize() async {
     try {
       // Request permission for iOS
-      final settings = await _firebaseMessaging.requestPermission(
-        alert: true,
+      final NotificationSettings settings = await _firebaseMessaging.requestPermission(
         badge: true,
-        sound: true,
-        provisional: false,
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
@@ -44,7 +41,7 @@ class FirebaseNotificationService {
       debugPrint('📱 FCM Token: $_fcmToken');
 
       // Listen to token refresh
-      _firebaseMessaging.onTokenRefresh.listen((newToken) {
+      _firebaseMessaging.onTokenRefresh.listen((String newToken) {
         _fcmToken = newToken;
         debugPrint('🔄 FCM Token refreshed: $newToken');
         // TODO: Send token to backend
@@ -57,7 +54,7 @@ class FirebaseNotificationService {
       FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageTap);
 
       // Check if app was opened from a terminated state
-      final initialMessage = await _firebaseMessaging.getInitialMessage();
+      final RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
       if (initialMessage != null) {
         _handleMessageTap(initialMessage);
       }
@@ -70,14 +67,14 @@ class FirebaseNotificationService {
 
   /// Initialize local notifications plugin
   Future<void> _initializeLocalNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosSettings = DarwinInitializationSettings(
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
     );
 
-    const initSettings = InitializationSettings(
+    const InitializationSettings initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );
@@ -88,12 +85,11 @@ class FirebaseNotificationService {
     );
 
     // Create notification channel for Android
-    const androidChannel = AndroidNotificationChannel(
+    const AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
       'faji_notifications',
       'Faji Notifications',
       description: 'Notifications for events, bookings, and updates',
       importance: Importance.high,
-      playSound: true,
     );
 
     await _localNotifications
@@ -114,26 +110,25 @@ class FirebaseNotificationService {
 
   /// Show local notification
   Future<void> _showLocalNotification(RemoteMessage message) async {
-    final notification = message.notification;
+    final RemoteNotification? notification = message.notification;
     if (notification == null) return;
 
-    const androidDetails = AndroidNotificationDetails(
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'faji_notifications',
       'Faji Notifications',
       channelDescription: 'Notifications for events, bookings, and updates',
       importance: Importance.high,
       priority: Priority.high,
-      showWhen: true,
       icon: '@mipmap/ic_launcher',
     );
 
-    const iosDetails = DarwinNotificationDetails(
+    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
 
-    const details = NotificationDetails(
+    const NotificationDetails details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -194,16 +189,14 @@ class FirebaseNotificationService {
 
   /// Get notification permission status
   Future<bool> isPermissionGranted() async {
-    final settings = await _firebaseMessaging.getNotificationSettings();
+    final NotificationSettings settings = await _firebaseMessaging.getNotificationSettings();
     return settings.authorizationStatus == AuthorizationStatus.authorized;
   }
 
   /// Request notification permission
   Future<bool> requestPermission() async {
-    final settings = await _firebaseMessaging.requestPermission(
-      alert: true,
+    final NotificationSettings settings = await _firebaseMessaging.requestPermission(
       badge: true,
-      sound: true,
     );
     return settings.authorizationStatus == AuthorizationStatus.authorized;
   }

@@ -90,10 +90,10 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    Widget card = _buildCard(theme, colorScheme);
+    var card = _buildCard(theme, colorScheme);
 
     if (margin != null) {
       card = Padding(
@@ -125,8 +125,7 @@ class AppCard extends StatelessWidget {
     ThemeData theme,
     ColorScheme colorScheme,
     Widget cardChild,
-  ) {
-    return SizedBox(
+  ) => SizedBox(
       width: width,
       height: height,
       child: Card(
@@ -146,14 +145,12 @@ class AppCard extends StatelessWidget {
             : cardChild,
       ),
     );
-  }
 
   Widget _buildFilledCard(
     ThemeData theme,
     ColorScheme colorScheme,
     Widget cardChild,
-  ) {
-    return SizedBox(
+  ) => SizedBox(
       width: width,
       height: height,
       child: Card(
@@ -171,14 +168,12 @@ class AppCard extends StatelessWidget {
             : cardChild,
       ),
     );
-  }
 
   Widget _buildOutlinedCard(
     ThemeData theme,
     ColorScheme colorScheme,
     Widget cardChild,
-  ) {
-    return SizedBox(
+  ) => SizedBox(
       width: width,
       height: height,
       child: Card(
@@ -200,5 +195,4 @@ class AppCard extends StatelessWidget {
             : cardChild,
       ),
     );
-  }
 }

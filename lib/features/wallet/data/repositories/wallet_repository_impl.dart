@@ -1,27 +1,36 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/error/failures.dart';
-import '../../domain/entities/wallet_balance.dart';
-import '../../domain/entities/wallet_transaction.dart';
-import '../../domain/entities/withdraw_request.dart';
-import '../../domain/entities/topup_request.dart';
-import '../../domain/entities/earnings_breakdown.dart';
-import '../../domain/repositories/wallet_repository.dart';
-import '../datasources/wallet_remote_datasource.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:retrofit/dio.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/withdraw_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
+import 'package:fajimobileapp/features/wallet/domain/repositories/wallet_repository.dart';
+import 'package:fajimobileapp/features/wallet/data/datasources/wallet_remote_datasource.dart';
 
 class WalletRepositoryImpl implements WalletRepository {
-  final WalletRemoteDataSource remoteDataSource;
 
   WalletRepositoryImpl(this.remoteDataSource);
+  final WalletRemoteDataSource remoteDataSource;
 
   @override
   Future<Either<Failure, WalletBalance>> getWalletBalance() async {
     try {
-      final response = await remoteDataSource.getWalletBalance();
-      if (response.success && response.data != null) {
-        return Right(response.data!);
+      final HttpResponse response = await remoteDataSource.getWalletBalance();
+      
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+        
+        // Handle both wrapped and direct responses
+        final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>? ?? responseData;
+        
+        final WalletBalance walletBalance = WalletBalance.fromJson(data);
+        return Right(walletBalance);
       } else {
-        return Left(ServerFailure(message: response.message ?? 'Failed to get wallet balance'));
+        return const Left(ServerFailure(message: 'Failed to get wallet balance'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -37,7 +46,7 @@ class WalletRepositoryImpl implements WalletRepository {
     int limit = 20,
   }) async {
     try {
-      final response = await remoteDataSource.getWalletTransactions(
+      final ApiResponse<WalletTransactionsResponse> response = await remoteDataSource.getWalletTransactions(
         type,
         page,
         limit,
@@ -59,11 +68,18 @@ class WalletRepositoryImpl implements WalletRepository {
     required WithdrawRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.withdrawFunds(request);
-      if (response.success && response.data != null) {
-        return Right(response.data!);
+      final HttpResponse response = await remoteDataSource.withdrawFunds(request);
+      
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+        
+        // Handle both wrapped and direct responses
+        final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>? ?? responseData;
+        
+        final WithdrawResponse withdrawResponse = WithdrawResponse.fromJson(data);
+        return Right(withdrawResponse);
       } else {
-        return Left(ServerFailure(message: response.message ?? 'Failed to withdraw funds'));
+        return const Left(ServerFailure(message: 'Failed to withdraw funds'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -77,7 +93,7 @@ class WalletRepositoryImpl implements WalletRepository {
     required TopupRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.topupWallet(request);
+      final ApiResponse<TopupResponse> response = await remoteDataSource.topupWallet(request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -93,7 +109,7 @@ class WalletRepositoryImpl implements WalletRepository {
   @override
   Future<Either<Failure, EarningsBreakdown>> getEarningsBreakdown() async {
     try {
-      final response = await remoteDataSource.getEarningsBreakdown();
+      final ApiResponse<EarningsBreakdown> response = await remoteDataSource.getEarningsBreakdown();
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -111,22 +127,22 @@ class WalletRepositoryImpl implements WalletRepository {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return ServerFailure(message: 'Connection timeout');
+        return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
+        final int? statusCode = error.response?.statusCode;
         final message = error.response?.data?['message'] ?? 'Server error';
         if (statusCode == 401) {
-          return AuthFailure(message: 'Unauthorized');
+          return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {
-          return AuthFailure(message: 'Forbidden');
+          return const AuthFailure(message: 'Forbidden');
         } else if (statusCode == 404) {
-          return ServerFailure(message: 'Not found');
+          return const ServerFailure(message: 'Not found');
         }
         return ServerFailure(message: message);
       case DioExceptionType.cancel:
-        return ServerFailure(message: 'Request cancelled');
+        return const ServerFailure(message: 'Request cancelled');
       case DioExceptionType.connectionError:
-        return NetworkFailure(message: 'No internet connection');
+        return const NetworkFailure(message: 'No internet connection');
       default:
         return ServerFailure(message: error.message ?? 'Unknown error');
     }

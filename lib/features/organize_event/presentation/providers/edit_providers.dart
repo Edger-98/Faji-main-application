@@ -1,17 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/repositories/event_repository.dart';
-import 'event_providers.dart';
+import 'package:fajimobileapp/features/organize_event/data/repositories/event_repository.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/event_providers.dart';
 
 /// Event update notifier
-final eventUpdateProvider =
+final StateNotifierProvider<EventUpdateNotifier, AsyncValue<void>> eventUpdateProvider =
     StateNotifierProvider<EventUpdateNotifier, AsyncValue<void>>(
-  (ref) => EventUpdateNotifier(ref),
+  EventUpdateNotifier.new,
 );
 
 class EventUpdateNotifier extends StateNotifier<AsyncValue<void>> {
-  final Ref ref;
 
   EventUpdateNotifier(this.ref) : super(const AsyncValue.data(null));
+  final Ref ref;
 
   Future<void> updateEvent({
     required String eventId,
@@ -19,7 +19,7 @@ class EventUpdateNotifier extends StateNotifier<AsyncValue<void>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(eventRepositoryProvider);
+      final EventRepository repository = ref.read(eventRepositoryProvider);
       await repository.updateEvent(eventId, updates);
 
       // Refresh event details to get updated data

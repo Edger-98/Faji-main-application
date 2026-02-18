@@ -1,3 +1,5 @@
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/presentation/viewmodels/wallet_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,10 +10,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
-import '../providers/wallet_providers.dart';
-import '../../domain/entities/wallet_balance.dart';
-import '../../domain/entities/wallet_transaction.dart';
-import '../../domain/entities/earnings_breakdown.dart';
+import 'package:fajimobileapp/features/wallet/presentation/providers/wallet_providers.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
 
 /// Wallet Screen - Single source of truth for all earnings and withdrawals
 /// Purpose: Financial layer for all money flows
@@ -22,16 +24,16 @@ class WalletScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletViewModel = ref.watch(walletViewModelProvider.notifier);
-    final walletState = ref.watch(walletViewModelProvider);
-    final selectedFilter = useState('All');
-    final filters = ['All', 'Hosting', 'Co-hosting', 'Vendor'];
+    final WalletViewModel walletViewModel = ref.watch(walletViewModelProvider.notifier);
+    final WalletState walletState = ref.watch(walletViewModelProvider);
+    final ValueNotifier<String> selectedFilter = useState('All');
+    final List<String> filters = <String>['All', 'Hosting', 'Co-hosting', 'Vendor'];
 
     // Load wallet data on mount
     useEffect(() {
-      Future.microtask(() => walletViewModel.refreshAll());
+      Future.microtask(walletViewModel.refreshAll);
       return null;
-    }, []);
+    }, <Object?>[]);
 
     Future<void> refreshWallet() async {
       HapticFeedback.lightImpact();
@@ -64,9 +66,9 @@ class WalletScreen extends HookConsumerWidget {
           color: AppColors.primary,
           backgroundColor: AppColors.surfaceContainerHighest,
           child: CustomScrollView(
-            slivers: [
+            slivers: <Widget>[
               // Header
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: AppHeader(
                   title: 'Wallet',
                   subtitle: 'Manage your earnings and withdrawals',
@@ -80,8 +82,8 @@ class WalletScreen extends HookConsumerWidget {
                   child: walletState.balanceState.when(
                     initial: () => _buildBalanceCardSkeleton(context),
                     loading: () => _buildBalanceCardSkeleton(context),
-                    success: (balance) => _buildBalanceCard(context, balance),
-                    error: (failure) => _buildBalanceCardError(context, failure.message),
+                    success: (WalletBalance balance) => _buildBalanceCard(context, balance),
+                    error: (Failure failure) => _buildBalanceCardError(context, failure.message),
                   ),
                 ),
               ),
@@ -94,7 +96,7 @@ class WalletScreen extends HookConsumerWidget {
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: <Widget>[
                       Text(
                         'Earnings Breakdown',
                         style: AppTypography.titleMedium.copyWith(
@@ -105,8 +107,8 @@ class WalletScreen extends HookConsumerWidget {
                       walletState.earningsState.when(
                         initial: () => _buildEarningsSkeletons(context),
                         loading: () => _buildEarningsSkeletons(context),
-                        success: (earnings) => _buildEarningsBreakdown(context, earnings),
-                        error: (failure) => _buildEarningsError(context, failure.message),
+                        success: (EarningsBreakdown earnings) => _buildEarningsBreakdown(context, earnings),
+                        error: (Failure failure) => _buildEarningsError(context, failure.message),
                       ),
                     ],
                   ),
@@ -121,7 +123,7 @@ class WalletScreen extends HookConsumerWidget {
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Text(
                         'Recent Transactions',
                         style: AppTypography.titleMedium.copyWith(
@@ -133,7 +135,7 @@ class WalletScreen extends HookConsumerWidget {
                           HapticFeedback.lightImpact();
                           context.push(RouteManager.walletHistory);
                         },
-                        child: Text('View All'),
+                        child: const Text('View All'),
                       ),
                     ],
                   ),
@@ -149,14 +151,14 @@ class WalletScreen extends HookConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: filters.length,
                     separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                    itemBuilder: (context, index) {
-                      final filter = filters[index];
-                      final isSelected = selectedFilter.value == filter;
+                    itemBuilder: (BuildContext context, int index) {
+                      final String filter = filters[index];
+                      final bool isSelected = selectedFilter.value == filter;
                       
                       return FilterChip(
                         label: Text(filter),
                         selected: isSelected,
-                        onSelected: (selected) => onFilterChanged(filter),
+                        onSelected: (bool selected) => onFilterChanged(filter),
                         backgroundColor: context.colors.surfaceContainerHighest,
                         selectedColor: context.colors.primary,
                         labelStyle: AppTypography.labelMedium.copyWith(
@@ -174,11 +176,11 @@ class WalletScreen extends HookConsumerWidget {
               walletState.transactionsState.when(
                 initial: () => _buildTransactionsEmpty(context),
                 loading: () => _buildTransactionsLoading(context),
-                success: (transactionsResponse) => _buildTransactionsList(
+                success: (WalletTransactionsResponse transactionsResponse) => _buildTransactionsList(
                   context,
                   transactionsResponse.transactions,
                 ),
-                error: (failure) => _buildTransactionsError(context, failure.message),
+                error: (Failure failure) => _buildTransactionsError(context, failure.message),
               ),
 
               // Bottom padding for nav bar
@@ -191,8 +193,7 @@ class WalletScreen extends HookConsumerWidget {
   }
 
   // Balance Card with real data
-  Widget _buildBalanceCard(BuildContext context, WalletBalance balance) {
-    return Container(
+  Widget _buildBalanceCard(BuildContext context, WalletBalance balance) => Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -262,11 +263,9 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   // Balance Card Skeleton
-  Widget _buildBalanceCardSkeleton(BuildContext context) {
-    return Container(
+  Widget _buildBalanceCardSkeleton(BuildContext context) => Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -322,11 +321,9 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   // Balance Card Error
-  Widget _buildBalanceCardError(BuildContext context, String message) {
-    return Container(
+  Widget _buildBalanceCardError(BuildContext context, String message) => Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: context.colors.errorContainer,
@@ -353,11 +350,9 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   // Earnings Breakdown with real data
-  Widget _buildEarningsBreakdown(BuildContext context, EarningsBreakdown earnings) {
-    return Column(
+  Widget _buildEarningsBreakdown(BuildContext context, EarningsBreakdown earnings) => Column(
       children: [
         _buildEarningCard(
           context: context,
@@ -384,11 +379,9 @@ class WalletScreen extends HookConsumerWidget {
         ),
       ],
     );
-  }
 
   // Earnings Skeletons
-  Widget _buildEarningsSkeletons(BuildContext context) {
-    return Column(
+  Widget _buildEarningsSkeletons(BuildContext context) => Column(
       children: [
         _buildEarningCardSkeleton(context),
         SizedBox(height: 12.h),
@@ -397,10 +390,8 @@ class WalletScreen extends HookConsumerWidget {
         _buildEarningCardSkeleton(context),
       ],
     );
-  }
 
-  Widget _buildEarningCardSkeleton(BuildContext context) {
-    return Container(
+  Widget _buildEarningCardSkeleton(BuildContext context) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
@@ -444,11 +435,9 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   // Earnings Error
-  Widget _buildEarningsError(BuildContext context, String message) {
-    return Container(
+  Widget _buildEarningsError(BuildContext context, String message) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.colors.errorContainer,
@@ -469,7 +458,6 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   // Transactions List with real data
   Widget _buildTransactionsList(BuildContext context, List<WalletTransaction> transactions) {
@@ -481,7 +469,7 @@ class WalletScreen extends HookConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-          (context, index) => _buildTransactionItem(context, transactions[index]),
+          (BuildContext context, int index) => _buildTransactionItem(context, transactions[index]),
           childCount: transactions.length > 5 ? 5 : transactions.length,
         ),
       ),
@@ -489,8 +477,7 @@ class WalletScreen extends HookConsumerWidget {
   }
 
   // Transactions Loading
-  Widget _buildTransactionsLoading(BuildContext context) {
-    return SliverPadding(
+  Widget _buildTransactionsLoading(BuildContext context) => SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -499,10 +486,8 @@ class WalletScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
-  Widget _buildTransactionSkeleton(BuildContext context) {
-    return Container(
+  Widget _buildTransactionSkeleton(BuildContext context) => Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -555,11 +540,9 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   // Transactions Empty
-  Widget _buildTransactionsEmpty(BuildContext context) {
-    return SliverToBoxAdapter(
+  Widget _buildTransactionsEmpty(BuildContext context) => SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
         child: Column(
@@ -588,11 +571,9 @@ class WalletScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
   // Transactions Error
-  Widget _buildTransactionsError(BuildContext context, String message) {
-    return SliverToBoxAdapter(
+  Widget _buildTransactionsError(BuildContext context, String message) => SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Container(
@@ -618,15 +599,13 @@ class WalletScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
   Widget _buildBalanceAction({
     required BuildContext context,
     required IconData icon,
     required String label,
     required VoidCallback onTap,
-  }) {
-    return GestureDetector(
+  }) => GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -649,7 +628,6 @@ class WalletScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
 
   Widget _buildEarningCard({
     required BuildContext context,
@@ -657,8 +635,7 @@ class WalletScreen extends HookConsumerWidget {
     required String title,
     required String amount,
     required Color color,
-  }) {
-    return Container(
+  }) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
@@ -705,7 +682,6 @@ class WalletScreen extends HookConsumerWidget {
         ],
       ),
     );
-  }
 
   Widget _buildTransactionItem(BuildContext context, WalletTransaction transaction) {
     // Determine icon and color based on transaction type
@@ -729,7 +705,7 @@ class WalletScreen extends HookConsumerWidget {
     // Format date
     String formattedDate;
     try {
-      final date = DateTime.parse(transaction.createdAt);
+      final DateTime date = DateTime.parse(transaction.createdAt);
       formattedDate = '${_getMonthName(date.month)} ${date.day}, ${date.year}';
     } catch (e) {
       formattedDate = transaction.createdAt;
@@ -743,7 +719,7 @@ class WalletScreen extends HookConsumerWidget {
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           Container(
             width: 40.w,
             height: 40.h,
@@ -761,7 +737,7 @@ class WalletScreen extends HookConsumerWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   transaction.description,
                   style: AppTypography.bodyMedium.copyWith(
@@ -794,7 +770,7 @@ class WalletScreen extends HookConsumerWidget {
   }
 
   String _getMonthName(int month) {
-    const months = [
+    const List<String> months = <String>[
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];

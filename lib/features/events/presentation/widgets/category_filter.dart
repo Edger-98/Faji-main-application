@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Category filter chips
 class CategoryFilter extends StatelessWidget {
-  final List<String> categories;
-  final String? selectedCategory;
-  final Function(String?) onCategorySelected;
 
   const CategoryFilter({
     super.key,
@@ -15,10 +12,12 @@ class CategoryFilter extends StatelessWidget {
     this.selectedCategory,
     required this.onCategorySelected,
   });
+  final List<String> categories;
+  final String? selectedCategory;
+  final Function(String?) onCategorySelected;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 40.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -51,15 +50,13 @@ class CategoryFilter extends StatelessWidget {
         },
       ),
     );
-  }
 
   Widget _buildCategoryChip(
     BuildContext context,
     String label,
     bool isSelected,
     VoidCallback onTap,
-  ) {
-    return GestureDetector(
+  ) => GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -78,5 +75,4 @@ class CategoryFilter extends StatelessWidget {
         ),
       ),
     );
-  }
 }

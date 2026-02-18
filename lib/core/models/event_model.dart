@@ -1,30 +1,8 @@
-import 'theme_model.dart';
-import 'poster_model.dart';
-import 'ticketing_model.dart';
+import 'package:fajimobileapp/core/models/theme_model.dart';
+import 'package:fajimobileapp/core/models/poster_model.dart';
+import 'package:fajimobileapp/core/models/ticketing_model.dart';
 
-class EventModel {
-  final String id;
-  final String name;
-  final String? description;
-  final String category;
-  final String emoji;
-  final DateTime startDate;
-  final DateTime endDate;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String status;
-  final String role;
-  final bool isBookmarked;
-  final HostModel host;
-  final LocationModel? location;
-  final BudgetModel budget;
-  final EventSettingsModel settings;
-  final EventMediaModel media;
-  final EventStatsModel stats;
-  final String colorTheme;
-  final ThemeModel? theme;
-  final PosterModel? poster;
-  final TicketingModel? ticketing; // NEW: Ticketing information
+class EventModel { // NEW: Ticketing information
 
   EventModel({
     required this.id,
@@ -193,9 +171,30 @@ class EventModel {
       rethrow;
     }
   }
+  final String id;
+  final String name;
+  final String? description;
+  final String category;
+  final String emoji;
+  final DateTime startDate;
+  final DateTime endDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String status;
+  final String role;
+  final bool isBookmarked;
+  final HostModel host;
+  final LocationModel? location;
+  final BudgetModel budget;
+  final EventSettingsModel settings;
+  final EventMediaModel media;
+  final EventStatsModel stats;
+  final String colorTheme;
+  final ThemeModel? theme;
+  final PosterModel? poster;
+  final TicketingModel? ticketing;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
       'description': description,
@@ -208,10 +207,9 @@ class EventModel {
       'isBookmarked': isBookmarked,
       'colorTheme': colorTheme,
     };
-  }
 
   // Helper method to safely parse DateTime from various formats
-  static DateTime _parseDateTime(dynamic value) {
+  static DateTime _parseDateTime(value) {
     if (value == null) {
       return DateTime.now();
     }
@@ -254,9 +252,6 @@ class EventModel {
 }
 
 class HostModel {
-  final String id;
-  final String name;
-  final String? avatar;
 
   HostModel({
     required this.id,
@@ -304,13 +299,12 @@ class HostModel {
       rethrow;
     }
   }
+  final String id;
+  final String name;
+  final String? avatar;
 }
 
 class LocationModel {
-  final String address;
-  final double latitude;
-  final double longitude;
-  final String? placeId;
 
   LocationModel({
     required this.address,
@@ -337,15 +331,13 @@ class LocationModel {
       placeId: json['placeId'] as String?,
     );
   }
+  final String address;
+  final double latitude;
+  final double longitude;
+  final String? placeId;
 }
 
 class BudgetModel {
-  final double total;
-  final double spent;
-  final double remaining;
-  final String currency;
-  final String currencySymbol;
-  final double? progress;
 
   BudgetModel({
     required this.total,
@@ -366,18 +358,15 @@ class BudgetModel {
       progress: json['progress'] != null ? (json['progress'] as num).toDouble() : null,
     );
   }
+  final double total;
+  final double spent;
+  final double remaining;
+  final String currency;
+  final String currencySymbol;
+  final double? progress;
 }
 
 class EventSettingsModel {
-  final bool isPublic;
-  final String websiteLink;
-  final String rsvpButtonText;
-  final bool keepMemoriesPrivate;
-  final bool disableGuestMemories;
-  final bool acceptGuestContributions;
-  final bool disablePublicRSVP;
-  final bool enableWebhook;
-  final String? webhookUrl;
 
   EventSettingsModel({
     required this.isPublic,
@@ -404,9 +393,17 @@ class EventSettingsModel {
       webhookUrl: json['webhookUrl'] as String?,
     );
   }
+  final bool isPublic;
+  final String websiteLink;
+  final String rsvpButtonText;
+  final bool keepMemoriesPrivate;
+  final bool disableGuestMemories;
+  final bool acceptGuestContributions;
+  final bool disablePublicRSVP;
+  final bool enableWebhook;
+  final String? webhookUrl;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'isPublic': isPublic,
       'websiteLink': websiteLink,
       'rsvpButtonText': rsvpButtonText,
@@ -417,12 +414,9 @@ class EventSettingsModel {
       'enableWebhook': enableWebhook,
       'webhookUrl': webhookUrl,
     };
-  }
 }
 
 class EventMediaModel {
-  final String? poster;
-  final List<String> preEventMedia;
 
   EventMediaModel({
     this.poster,
@@ -437,16 +431,11 @@ class EventMediaModel {
           : [],
     );
   }
+  final String? poster;
+  final List<String> preEventMedia;
 }
 
 class EventStatsModel {
-  final int expectedGuests;
-  final int confirmedGuests;
-  final int invitedGuests;
-  final int taskCount;
-  final int completedTasks;
-  final int vendorCount;
-  final int plannerCount;
 
   EventStatsModel({
     required this.expectedGuests,
@@ -472,4 +461,11 @@ class EventStatsModel {
       plannerCount: data['plannerCount'] as int? ?? 0,
     );
   }
+  final int expectedGuests;
+  final int confirmedGuests;
+  final int invitedGuests;
+  final int taskCount;
+  final int completedTasks;
+  final int vendorCount;
+  final int plannerCount;
 }

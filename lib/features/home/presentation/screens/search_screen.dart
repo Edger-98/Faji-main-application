@@ -9,7 +9,7 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/services/location_service.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -21,14 +21,14 @@ class _SearchScreenState extends State<SearchScreen> {
   Position? _userLocation;
   bool _isLoadingLocation = false;
   
-  final List<String> _categories = [
+  final List<String> _categories = <String>[
     'All',
     'Events',
     'Hosts',
     'Venues',
   ];
   
-  final List<String> _recentSearches = [
+  final List<String> _recentSearches = <String>[
     'Music Festival',
     'Tech Conference',
     'Food & Wine',
@@ -43,7 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> _getUserLocation() async {
     setState(() => _isLoadingLocation = true);
     
-    final position = await LocationService.getCurrentLocation();
+    final Position? position = await LocationService.getCurrentLocation();
     
     if (mounted) {
       setState(() {
@@ -54,8 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       body: SafeArea(
         child: Column(
@@ -212,14 +211,13 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildRecentSearches() {
     if (_recentSearches.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Icon(
               Icons.search_rounded,
               size: 64.sp,
@@ -248,10 +246,10 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: <Widget>[
               Text(
                 'Recent Searches',
                 style: AppTypography.titleMedium.copyWith(
@@ -262,7 +260,7 @@ class _SearchScreenState extends State<SearchScreen> {
               TextButton(
                 onPressed: () {
                   HapticFeedback.lightImpact();
-                  setState(() => _recentSearches.clear());
+                  setState(_recentSearches.clear);
                 },
                 child: Text(
                   'Clear',
@@ -274,14 +272,13 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
           SizedBox(height: 12.h),
-          ..._recentSearches.map((search) => _buildRecentSearchItem(search)),
+          ..._recentSearches.map(_buildRecentSearchItem),
         ],
       ),
     );
   }
 
-  Widget _buildRecentSearchItem(String search) {
-    return GestureDetector(
+  Widget _buildRecentSearchItem(String search) => GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
         _searchController.text = search;
@@ -319,30 +316,29 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildSearchResults() {
     // Mock search results
-    final results = [
-      {
+    final List<Map<String, String>> results = <Map<String, String>>[
+      <String, String>{
         'title': 'Summer Music Festival 2025',
         'subtitle': 'Central Park, New York',
         'date': 'Jul 15, 2025',
-        'price': '\$45.00',
+        'price': r'$45.00',
         'image': 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400',
       },
-      {
+      <String, String>{
         'title': 'Tech Innovation Summit',
         'subtitle': 'Convention Center, SF',
         'date': 'Aug 20, 2025',
-        'price': '\$120.00',
+        'price': r'$120.00',
         'image': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400',
       },
-      {
+      <String, String>{
         'title': 'Food & Wine Tasting',
         'subtitle': 'Downtown Plaza',
         'date': 'Sep 5, 2025',
-        'price': '\$65.00',
+        'price': r'$65.00',
         'image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
       },
     ];
@@ -351,15 +347,14 @@ class _SearchScreenState extends State<SearchScreen> {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       itemCount: results.length,
       separatorBuilder: (_, __) => SizedBox(height: 16.h),
-      itemBuilder: (context, index) {
-        final result = results[index];
+      itemBuilder: (BuildContext context, int index) {
+        final Map<String, String> result = results[index];
         return _buildResultCard(result);
       },
     );
   }
 
-  Widget _buildResultCard(Map<String, String> result) {
-    return GestureDetector(
+  Widget _buildResultCard(Map<String, String> result) => GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
         // TODO: Navigate to event details with actual event ID
@@ -446,7 +441,6 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
-  }
 
   @override
   void dispose() {

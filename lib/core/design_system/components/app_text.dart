@@ -21,15 +21,13 @@ class AppText extends StatelessWidget {
   final TextOverflow? overflow;
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
+  Widget build(BuildContext context) => Text(
       text,
       style: style,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
     );
-  }
 
   // Predefined text styles with responsive sizing - Using Modica Pro
   static Widget headlineLarge(
@@ -37,8 +35,7 @@ class AppText extends StatelessWidget {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -53,15 +50,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget displayLarge(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -76,15 +71,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget bodyLarge(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -99,15 +92,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget bodyMedium(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -122,15 +113,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget labelLarge(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -145,15 +134,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget titleLarge(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -168,15 +155,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget headlineMedium(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -191,15 +176,13 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget displayMedium(
     String text, {
     Color? color,
     TextAlign? textAlign,
     int? maxLines,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -214,7 +197,6 @@ class AppText extends StatelessWidget {
         maxLines: maxLines,
       ),
     );
-  }
 
   static Widget bodySmall(
     String text, {
@@ -223,8 +205,7 @@ class AppText extends StatelessWidget {
     int? maxLines,
     TextDecoration? decoration,
     TextOverflow? overflow,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -241,7 +222,6 @@ class AppText extends StatelessWidget {
         overflow: overflow,
       ),
     );
-  }
 
   static Widget titleMedium(
     String text, {
@@ -249,8 +229,7 @@ class AppText extends StatelessWidget {
     TextAlign? textAlign,
     int? maxLines,
     TextOverflow? overflow,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -266,7 +245,6 @@ class AppText extends StatelessWidget {
         overflow: overflow,
       ),
     );
-  }
 
   static Widget titleSmall(
     String text, {
@@ -274,8 +252,7 @@ class AppText extends StatelessWidget {
     TextAlign? textAlign,
     int? maxLines,
     TextOverflow? overflow,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -291,7 +268,6 @@ class AppText extends StatelessWidget {
         overflow: overflow,
       ),
     );
-  }
 
   static Widget headlineSmall(
     String text, {
@@ -299,8 +275,7 @@ class AppText extends StatelessWidget {
     TextAlign? textAlign,
     int? maxLines,
     TextOverflow? overflow,
-  }) {
-    return Builder(
+  }) => Builder(
       builder: (context) => AppText(
         text,
         style: TextStyle(
@@ -316,5 +291,4 @@ class AppText extends StatelessWidget {
         overflow: overflow,
       ),
     );
-  }
 }

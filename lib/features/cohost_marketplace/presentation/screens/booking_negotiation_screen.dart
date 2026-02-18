@@ -1,3 +1,5 @@
+import 'package:fajimobileapp/core/network/api_result.dart';
+import 'package:fajimobileapp/features/cohost_marketplace/data/repositories/marketplace_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,8 +57,8 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
   Future<void> _sendBookingRequest() async {
     if (_selectedPaymentOption == PaymentOption.upfrontPayment && _priceController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please enter an offer amount'),
+        const SnackBar(
+          content: Text('Please enter an offer amount'),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -66,8 +68,8 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
 
     if (_selectedPaymentOption == PaymentOption.ticketSalesSplit && _percentageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please enter a percentage split'),
+        const SnackBar(
+          content: Text('Please enter a percentage split'),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
         ),
@@ -78,9 +80,9 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
     setState(() => _isLoading = true);
 
     try {
-      final repository = ref.read(marketplaceRepositoryProvider);
+      final MarketplaceRepository repository = ref.read(marketplaceRepositoryProvider);
       
-      final result = await repository.createBooking(
+      final ApiResult<BookingEntity> result = await repository.createBooking(
         eventId: widget.eventId,
         cohostId: widget.resource.cohostId,
         resourceId: widget.resource.id,
@@ -97,19 +99,19 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
       if (!mounted) return;
 
       result.when(
-        success: (booking) {
+        success: (BookingEntity booking) {
           // Show success dialog
           showDialog(
             context: context,
             barrierDismissible: false,
-            builder: (dialogContext) => AlertDialog(
+            builder: (BuildContext dialogContext) => AlertDialog(
               backgroundColor: AppColors.surface,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   Container(
                     width: 80.w,
                     height: 80.h,
@@ -172,7 +174,7 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
             ),
           );
         },
-        failure: (error) {
+        failure: (String error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(error),
@@ -190,8 +192,7 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -686,5 +687,4 @@ class _BookingNegotiationScreenState extends ConsumerState<BookingNegotiationScr
         ),
       ),
     );
-  }
 }

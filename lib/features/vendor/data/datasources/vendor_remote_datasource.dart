@@ -11,6 +11,10 @@ abstract class VendorRemoteDataSource {
 
   // ========== Vendor Registration ==========
 
+  /// Check vendor registration status
+  @GET('/vendor-registration/check-status')
+  Future<HttpResponse<dynamic>> checkVendorStatus();
+
   /// Register as vendor (simple version - just basic fields)
   @POST('/vendor-registration/register')
   Future<HttpResponse<dynamic>> registerVendor(

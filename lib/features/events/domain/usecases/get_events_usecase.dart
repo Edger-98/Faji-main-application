@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/event_entity.dart';
-import '../repositories/event_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/domain/repositories/event_repository.dart';
 
 class GetEventsUseCase {
-  final EventRepository repository;
   
   GetEventsUseCase(this.repository);
+  final EventRepository repository;
   
   Future<Either<Failure, List<EventEntity>>> call({
     int? page,
@@ -19,8 +19,7 @@ class GetEventsUseCase {
     double? minPrice,
     double? maxPrice,
     String? location,
-  }) async {
-    return await repository.getEvents(
+  }) async => await repository.getEvents(
       page: page,
       limit: limit,
       category: category,
@@ -31,5 +30,4 @@ class GetEventsUseCase {
       maxPrice: maxPrice,
       location: location,
     );
-  }
 }

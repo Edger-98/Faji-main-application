@@ -37,7 +37,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+    _scaleAnimation = Tween<double>(begin: 1, end: 1.1).animate(
       CurvedAnimation(
         parent: _successAnimationController,
         curve: Curves.easeInOut,
@@ -69,7 +69,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
     HapticFeedback.mediumImpact();
     
     // Get email from registration state
-    final email = ref.read(registrationViewModelProvider).email;
+    final String? email = ref.read(registrationViewModelProvider).email;
     if (email == null) {
       ToastService.showError(
         context: context,
@@ -99,7 +99,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
     await ref.read(registrationViewModelProvider.notifier).verifyOtp(otp);
     
     // Check the result
-    final state = ref.read(registrationViewModelProvider);
+    final RegistrationState state = ref.read(registrationViewModelProvider);
     state.stepState.when(
       initial: () {},
       loading: () {},
@@ -109,16 +109,14 @@ class _PinScreenState extends ConsumerState<PinScreen>
           context.goNamed(RouteManager.authPhoneName);
         }
       },
-      error: (failure) {
+      error: (Failure failure) {
         // Show error and clear PIN
         if (mounted) {
           ToastService.showError(
             context: context,
             message: failure.message,
           );
-          setState(() {
-            _pinController.clear();
-          });
+          setState(_pinController.clear);
         }
       },
     );
@@ -134,7 +132,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
 
   @override
   Widget build(BuildContext context) {
-    final pin = _pinController.text;
+    final String pin = _pinController.text;
 
     return Scaffold(
       backgroundColor: const Color(0xFF1F1F1F),
@@ -152,7 +150,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     const SizedBox(height: 40),
 
                     // Back button
@@ -190,8 +188,8 @@ class _PinScreenState extends ConsumerState<PinScreen>
                     const SizedBox(height: 16),
 
                     Consumer(
-                      builder: (context, ref, child) {
-                        final email = ref.watch(registrationViewModelProvider).email ?? 'your email';
+                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                        final String email = ref.watch(registrationViewModelProvider).email ?? 'your email';
                         return Text(
                           'We sent a verification code to your email\n$email',
                           style: const TextStyle(
@@ -210,19 +208,17 @@ class _PinScreenState extends ConsumerState<PinScreen>
                     ScaleTransition(
                       scale: _scaleAnimation,
                       child: GestureDetector(
-                        onTap: () {
-                          _focusNode.requestFocus();
-                        },
+                        onTap: _focusNode.requestFocus,
                         child: Container(
                           color: Colors.transparent,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 20),
                           child: Column(
-                            children: [
+                            children: <Widget>[
                               // Show/Hide toggle
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
+                                children: <Widget>[
                                   GestureDetector(
                                     onTap: () {
                                       HapticFeedback.lightImpact();
@@ -243,8 +239,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
-                                  children: List.generate(6, (i) {
-                                    return SizedBox(
+                                  children: List.generate(6, (int i) => SizedBox(
                                       width: 23,
                                       child: Center(
                                         child: i < pin.length
@@ -267,8 +262,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
                                                   )
                                             : const SizedBox(),
                                       ),
-                                    );
-                                  }),
+                                    )),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -277,8 +271,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
                               Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
-                                children: List.generate(6, (i) {
-                                  return Container(
+                                children: List.generate(6, (int i) => Container(
                                     width: 23,
                                     height: 3,
                                     decoration: BoxDecoration(
@@ -287,8 +280,7 @@ class _PinScreenState extends ConsumerState<PinScreen>
                                           : const Color(0xFF454545),
                                       borderRadius: BorderRadius.circular(1.5),
                                     ),
-                                  );
-                                }),
+                                  )),
                               ),
 
                               // Hidden input field
@@ -302,10 +294,10 @@ class _PinScreenState extends ConsumerState<PinScreen>
                                     keyboardType: TextInputType.number,
                                     maxLength: 6,
                                     autofocus: true,
-                                    inputFormatters: [
+                                    inputFormatters: <TextInputFormatter>[
                                       FilteringTextInputFormatter.digitsOnly,
                                     ],
-                                    onChanged: (value) {
+                                    onChanged: (String value) {
                                       if (value.length > pin.length) {
                                         _triggerHaptic();
                                       }
@@ -356,9 +348,9 @@ class _PinScreenState extends ConsumerState<PinScreen>
                             fontWeight: FontWeight.w100,
                             height: 1.2,
                           ),
-                          children: [
+                          children: <InlineSpan>[
                             const TextSpan(
-                              text: 'Didn\'t receive code? ',
+                              text: "Didn't receive code? ",
                               style: TextStyle(color: Color(0xFFA1A1A1)),
                             ),
                             TextSpan(

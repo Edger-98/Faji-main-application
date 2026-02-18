@@ -5,14 +5,6 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Upcoming event card with date badge and organizer info
 class UpcomingEventCard extends StatelessWidget {
-  final String imageUrl;
-  final String month;
-  final String day;
-  final String organizerName;
-  final String organizerLocation;
-  final String? organizerAvatar;
-  final bool isLive;
-  final VoidCallback? onTap;
 
   const UpcomingEventCard({
     super.key,
@@ -25,10 +17,17 @@ class UpcomingEventCard extends StatelessWidget {
     this.isLive = false,
     this.onTap,
   });
+  final String imageUrl;
+  final String month;
+  final String day;
+  final String organizerName;
+  final String organizerLocation;
+  final String? organizerAvatar;
+  final bool isLive;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         width: 196.w,
@@ -163,5 +162,4 @@ class UpcomingEventCard extends StatelessWidget {
         ),
       ),
     );
-  }
 }

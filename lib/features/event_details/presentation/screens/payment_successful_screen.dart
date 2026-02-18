@@ -11,8 +11,7 @@ class PaymentSuccessfulScreen extends StatelessWidget {
   const PaymentSuccessfulScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: Stack(
         children: [
@@ -191,5 +190,4 @@ class PaymentSuccessfulScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 }

@@ -40,10 +40,10 @@ class AppBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: backgroundColor ?? colorScheme.surface,
         borderRadius: const BorderRadius.vertical(
@@ -114,8 +114,7 @@ class AppBottomSheet extends StatelessWidget {
     bool enableDrag = true,
     bool isDismissible = true,
     bool useRootNavigator = false,
-  }) {
-    return showModalBottomSheet<T>(
+  }) => showModalBottomSheet<T>(
       context: context,
       isScrollControlled: isScrollControlled,
       enableDrag: enableDrag,
@@ -137,7 +136,6 @@ class AppBottomSheet extends StatelessWidget {
         child: child,
       ),
     );
-  }
 
   /// Show draggable scrollable bottom sheet
   static Future<T?> showDraggable<T>(
@@ -152,8 +150,7 @@ class AppBottomSheet extends StatelessWidget {
     double minChildSize = 0.25,
     double maxChildSize = 0.9,
     bool expand = false,
-  }) {
-    return showModalBottomSheet<T>(
+  }) => showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -178,7 +175,6 @@ class AppBottomSheet extends StatelessWidget {
         },
       ),
     );
-  }
 
   /// Show persistent bottom sheet
   static PersistentBottomSheetController showPersistent(
@@ -192,8 +188,7 @@ class AppBottomSheet extends StatelessWidget {
     ShapeBorder? shape,
     double? elevation,
     AnimationController? transitionAnimationController,
-  }) {
-    return showBottomSheet(
+  }) => showBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -209,5 +204,4 @@ class AppBottomSheet extends StatelessWidget {
         child: child,
       ),
     );
-  }
 }

@@ -1,3 +1,6 @@
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/vendor/presentation/providers/vendor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,7 +38,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
     
     // Try to get from current user provider
-    final currentUser = ref.read(currentUserProvider);
+    final UserEntity? currentUser = ref.read(currentUserProvider);
     
     if (currentUser != null) {
       if (mounted) {
@@ -48,8 +51,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
 
     // Fallback to saved user data
-    final localDataSource = ref.read(authLocalDataSourceProvider);
-    final userData = await localDataSource.getUserData();
+    final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
+    final Map<String, String?> userData = await localDataSource.getUserData();
     
     if (userData['firstName'] != null && userData['email'] != null) {
       if (mounted) {
@@ -65,7 +68,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     HapticFeedback.lightImpact();
     
     try {
-      final InAppReview inAppReview = InAppReview.instance;
+      final inAppReview = InAppReview.instance;
       
       if (await inAppReview.isAvailable()) {
         await inAppReview.requestReview();
@@ -79,7 +82,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Unable to open app store: ${e.toString()}'),
+            content: Text('Unable to open app store: ${e}'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -90,10 +93,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _showLogoutDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         title: const Text('Log Out'),
         content: const Text('Are you sure you want to log out?'),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
@@ -124,7 +127,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Logout failed: ${e.toString()}'),
+            content: Text('Logout failed: ${e}'),
             backgroundColor: const Color(0xFFCA4638),
           ),
         );
@@ -135,7 +138,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     // Watch for user changes
-    ref.listen(currentUserProvider, (previous, next) {
+    ref.listen(currentUserProvider, (UserEntity? previous, UserEntity? next) {
       if (next != null) {
         setState(() {
           _userName = '${next.firstName} ${next.lastName}';
@@ -148,17 +151,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
-          children: [
+          children: <Widget>[
             // Header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               child: Row(
-                children: [
+                children: <Widget>[
                   // Back button
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.searchBarBackground,
                       shape: BoxShape.circle,
                     ),
@@ -173,7 +176,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.searchBarBackground,
                       shape: BoxShape.circle,
                     ),
@@ -190,7 +193,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                children: [
+                children: <Widget>[
                   const SizedBox(height: 31),
                   // Profile picture
                   Center(
@@ -230,10 +233,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Personal section
                   _buildSectionHeader('Personal'),
                   const SizedBox(height: 3),
-                  _buildMenuItem(
-                    Icons.storefront_rounded, 
-                    'Become a Vendor',
-                    onTap: () => context.push(RouteManager.vendorRegistration),
+                  // Conditionally show vendor option based on status
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final vendorStatusAsync = ref.watch(vendorStatusProvider);
+                      
+                      return vendorStatusAsync.when(
+                        data: (vendorStatus) {
+                          // If user is already a vendor, don't show "Become a Vendor"
+                          if (vendorStatus != null && vendorStatus.hasVendorAccount) {
+                            // Optionally show vendor dashboard link instead
+                            return _buildMenuItem(
+                              Icons.storefront_rounded,
+                              'Vendor Dashboard',
+                              onTap: () => context.push(RouteManager.vendorDashboard),
+                            );
+                          }
+                          
+                          // Show "Become a Vendor" if not a vendor
+                          return _buildMenuItem(
+                            Icons.storefront_rounded,
+                            'Become a Vendor',
+                            onTap: () => context.push(RouteManager.vendorRegistration),
+                          );
+                        },
+                        loading: () => _buildMenuItem(
+                          Icons.storefront_rounded,
+                          'Become a Vendor',
+                          onTap: null, // Disabled while loading
+                        ),
+                        error: (_, __) => _buildMenuItem(
+                          Icons.storefront_rounded,
+                          'Become a Vendor',
+                          onTap: () => context.push(RouteManager.vendorRegistration),
+                        ),
+                      );
+                    },
                   ),
                   _buildMenuItem(
                     Icons.person_outline, 
@@ -266,7 +301,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 20),
                   // Log out button
                   GestureDetector(
-                    onTap: () => _showLogoutDialog(),
+                    onTap: _showLogoutDialog,
                     child: Container(
                       height: 51,
                       decoration: BoxDecoration(
@@ -275,7 +310,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        children: <Widget>[
                           const Icon(
                             Icons.logout,
                             color: Color(0xFFCA4638),
@@ -304,8 +339,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Text(
+  Widget _buildSectionHeader(String title) => Text(
       title,
       style: AppTypography.bodyMedium.copyWith(
         color: AppColors.textSecondary,
@@ -313,10 +347,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         fontSize: 15,
       ),
     );
-  }
 
-  Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {
-    return InkWell(
+  Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) => InkWell(
       onTap: onTap != null ? () {
         HapticFeedback.lightImpact();
         onTap();
@@ -359,13 +391,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildDivider() {
-    return Container(
+  Widget _buildDivider() => Container(
       height: 0.6,
       margin: const EdgeInsets.only(left: 25),
       color: const Color(0xFF2E2E2E),
     );
-  }
 }

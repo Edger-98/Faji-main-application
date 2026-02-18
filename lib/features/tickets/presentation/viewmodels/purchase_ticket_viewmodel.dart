@@ -1,17 +1,19 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/ticket_entity.dart';
-import '../../domain/usecases/create_ticket_usecase.dart';
-import '../providers/ticket_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/ticket_entity.dart';
+import 'package:fajimobileapp/features/tickets/domain/usecases/create_ticket_usecase.dart';
+import 'package:fajimobileapp/features/tickets/presentation/providers/ticket_providers.dart';
 
 /// Purchase Ticket ViewModel
 class PurchaseTicketViewModel
     extends StateNotifier<BaseState<TicketEntity>> {
-  final CreateTicketUseCase _createTicketUseCase;
 
   PurchaseTicketViewModel(this._createTicketUseCase)
       : super(const BaseState.initial());
+  final CreateTicketUseCase _createTicketUseCase;
 
   /// Purchase ticket
   Future<void> purchaseTicket({
@@ -24,7 +26,7 @@ class PurchaseTicketViewModel
   }) async {
     state = const BaseState.loading();
 
-    final result = await _createTicketUseCase(
+    final Either<Failure, TicketEntity> result = await _createTicketUseCase(
       userId: userId,
       eventId: eventId,
       ticketId: ticketId,
@@ -35,8 +37,8 @@ class PurchaseTicketViewModel
     );
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (ticket) => state = BaseState.success(ticket),
+      (Failure failure) => state = BaseState.error(failure),
+      (TicketEntity ticket) => state = BaseState.success(ticket),
     );
   }
 
@@ -47,9 +49,9 @@ class PurchaseTicketViewModel
 }
 
 /// Purchase Ticket ViewModel Provider
-final purchaseTicketViewModelProvider = StateNotifierProvider.autoDispose<
+final AutoDisposeStateNotifierProvider<PurchaseTicketViewModel, BaseState<TicketEntity>> purchaseTicketViewModelProvider = StateNotifierProvider.autoDispose<
     PurchaseTicketViewModel, BaseState<TicketEntity>>(
-  (ref) => PurchaseTicketViewModel(
+  (AutoDisposeStateNotifierProviderRef<PurchaseTicketViewModel, BaseState<TicketEntity>> ref) => PurchaseTicketViewModel(
     ref.watch(createTicketUseCaseProvider),
   ),
 );

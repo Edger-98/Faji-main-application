@@ -1,19 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/error/failures.dart';
-import '../../domain/entities/invite_cohost_request.dart';
-import '../../domain/entities/cohost_invitation.dart';
-import '../../domain/entities/accept_invitation_response.dart';
-import '../../domain/entities/cohost.dart';
-import '../../domain/entities/cohost_dashboard.dart';
-import '../../domain/entities/remove_cohost_response.dart';
-import '../../domain/repositories/cohost_repository.dart';
-import '../datasources/cohost_remote_datasource.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/invite_cohost_request.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_invitation.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/accept_invitation_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_dashboard.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/remove_cohost_response.dart';
+import 'package:fajimobileapp/features/cohost/domain/repositories/cohost_repository.dart';
+import 'package:fajimobileapp/features/cohost/data/datasources/cohost_remote_datasource.dart';
 
 class CohostRepositoryImpl implements CohostRepository {
-  final CohostRemoteDataSource remoteDataSource;
 
   CohostRepositoryImpl(this.remoteDataSource);
+  final CohostRemoteDataSource remoteDataSource;
 
   @override
   Future<Either<Failure, InviteCohostResponse>> inviteCohost({
@@ -21,7 +22,7 @@ class CohostRepositoryImpl implements CohostRepository {
     required InviteCohostRequest request,
   }) async {
     try {
-      final response = await remoteDataSource.inviteCohost(eventId, request);
+      final ApiResponse<InviteCohostResponse> response = await remoteDataSource.inviteCohost(eventId, request);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -41,7 +42,7 @@ class CohostRepositoryImpl implements CohostRepository {
     int limit = 20,
   }) async {
     try {
-      final response = await remoteDataSource.getCohostInvitations(
+      final ApiResponse<CohostInvitationsResponse> response = await remoteDataSource.getCohostInvitations(
         status,
         page,
         limit,
@@ -63,7 +64,7 @@ class CohostRepositoryImpl implements CohostRepository {
     required String invitationId,
   }) async {
     try {
-      final response = await remoteDataSource.acceptInvitation(invitationId);
+      final ApiResponse<AcceptInvitationResponse> response = await remoteDataSource.acceptInvitation(invitationId);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -82,8 +83,8 @@ class CohostRepositoryImpl implements CohostRepository {
     String? reason,
   }) async {
     try {
-      final request = DeclineInvitationRequest(reason: reason);
-      final response = await remoteDataSource.declineInvitation(
+      final DeclineInvitationRequest request = DeclineInvitationRequest(reason: reason);
+      final ApiResponse<DeclineInvitationResponse> response = await remoteDataSource.declineInvitation(
         invitationId,
         request,
       );
@@ -104,7 +105,7 @@ class CohostRepositoryImpl implements CohostRepository {
     required String eventId,
   }) async {
     try {
-      final response = await remoteDataSource.getEventCohosts(eventId);
+      final ApiResponse<EventCohostsResponse> response = await remoteDataSource.getEventCohosts(eventId);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -123,7 +124,7 @@ class CohostRepositoryImpl implements CohostRepository {
     required String cohostId,
   }) async {
     try {
-      final response = await remoteDataSource.removeCohost(eventId, cohostId);
+      final ApiResponse<RemoveCohostResponse> response = await remoteDataSource.removeCohost(eventId, cohostId);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -141,7 +142,7 @@ class CohostRepositoryImpl implements CohostRepository {
     required String eventId,
   }) async {
     try {
-      final response = await remoteDataSource.getCohostDashboard(eventId);
+      final ApiResponse<CohostDashboard> response = await remoteDataSource.getCohostDashboard(eventId);
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
@@ -159,22 +160,22 @@ class CohostRepositoryImpl implements CohostRepository {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return ServerFailure(message: 'Connection timeout');
+        return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
+        final int? statusCode = error.response?.statusCode;
         final message = error.response?.data?['message'] ?? 'Server error';
         if (statusCode == 401) {
-          return AuthFailure(message: 'Unauthorized');
+          return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {
-          return AuthFailure(message: 'Forbidden');
+          return const AuthFailure(message: 'Forbidden');
         } else if (statusCode == 404) {
-          return ServerFailure(message: 'Not found');
+          return const ServerFailure(message: 'Not found');
         }
         return ServerFailure(message: message);
       case DioExceptionType.cancel:
-        return ServerFailure(message: 'Request cancelled');
+        return const ServerFailure(message: 'Request cancelled');
       case DioExceptionType.connectionError:
-        return NetworkFailure(message: 'No internet connection');
+        return const NetworkFailure(message: 'No internet connection');
       default:
         return ServerFailure(message: error.message ?? 'Unknown error');
     }

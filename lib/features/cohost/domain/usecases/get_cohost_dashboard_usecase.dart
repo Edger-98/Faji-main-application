@@ -1,18 +1,16 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/cohost_dashboard.dart';
-import '../repositories/cohost_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/cohost/domain/entities/cohost_dashboard.dart';
+import 'package:fajimobileapp/features/cohost/domain/repositories/cohost_repository.dart';
 
 class GetCohostDashboardUseCase {
-  final CohostRepository repository;
 
   GetCohostDashboardUseCase(this.repository);
+  final CohostRepository repository;
 
   Future<Either<Failure, CohostDashboard>> call({
     required String eventId,
-  }) async {
-    return await repository.getCohostDashboard(
+  }) async => await repository.getCohostDashboard(
       eventId: eventId,
     );
-  }
 }

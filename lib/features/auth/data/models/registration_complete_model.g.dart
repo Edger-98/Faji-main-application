@@ -10,7 +10,10 @@ RegistrationCompleteModel _$RegistrationCompleteModelFromJson(Map json) =>
     $checkedCreate('RegistrationCompleteModel', json, ($checkedConvert) {
       final val = RegistrationCompleteModel(
         message: $checkedConvert('message', (v) => v as String),
-        token: $checkedConvert('token', (v) => v as String),
+        token: $checkedConvert('accessToken', (v) => v as String),
+        refreshToken: $checkedConvert('refreshToken', (v) => v as String?),
+        expiresIn: $checkedConvert('expiresIn', (v) => (v as num?)?.toInt()),
+        tokenType: $checkedConvert('tokenType', (v) => v as String?),
         userId: $checkedConvert('userId', (v) => v as String),
         user: $checkedConvert(
           'user',
@@ -18,13 +21,16 @@ RegistrationCompleteModel _$RegistrationCompleteModelFromJson(Map json) =>
         ),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'token': 'accessToken'});
 
 Map<String, dynamic> _$RegistrationCompleteModelToJson(
   RegistrationCompleteModel instance,
 ) => <String, dynamic>{
   'message': instance.message,
-  'token': instance.token,
+  'accessToken': instance.token,
+  if (instance.refreshToken case final value?) 'refreshToken': value,
+  if (instance.expiresIn case final value?) 'expiresIn': value,
+  if (instance.tokenType case final value?) 'tokenType': value,
   'userId': instance.userId,
   'user': instance.user.toJson(),
 };

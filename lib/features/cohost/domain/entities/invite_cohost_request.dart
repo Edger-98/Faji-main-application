@@ -26,9 +26,7 @@ class InviteCohostResponse with _$InviteCohostResponse {
     required InviteInvitee invitee,
     required double revenueShare,
     required String status,
-    String? message,
-    required String createdAt,
-    required String expiresAt,
+    required String createdAt, required String expiresAt, String? message,
   }) = _InviteCohostResponse;
 
   factory InviteCohostResponse.fromJson(Map<String, dynamic> json) =>

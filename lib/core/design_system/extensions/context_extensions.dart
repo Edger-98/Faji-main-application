@@ -13,9 +13,9 @@ extension BuildContextExtensions on BuildContext {
 
 /// Clean styles accessor
 class AppStyles {
-  final BuildContext context;
   
   AppStyles.of(this.context);
+  final BuildContext context;
   
   TextTheme get _textTheme => Theme.of(context).textTheme;
   
@@ -47,9 +47,9 @@ class AppStyles {
 
 /// Clean colors accessor
 class AppColorsExtension {
-  final BuildContext context;
   
   AppColorsExtension.of(this.context);
+  final BuildContext context;
   
   ColorScheme get _colorScheme => Theme.of(context).colorScheme;
   

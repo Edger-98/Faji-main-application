@@ -1,41 +1,38 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/vendor_dashboard.dart';
-import '../../domain/entities/vendor_profile.dart';
-import '../../domain/entities/vendor_stats.dart';
-import '../../domain/usecases/get_vendor_dashboard_usecase.dart';
-import '../../domain/usecases/get_my_vendor_profile_usecase.dart';
-import '../../domain/usecases/get_vendor_stats_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_dashboard.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_profile.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_stats.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/get_vendor_dashboard_usecase.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/get_my_vendor_profile_usecase.dart';
+import 'package:fajimobileapp/features/marketplace/domain/usecases/get_vendor_stats_usecase.dart';
 
 // State for vendor dashboard
 class VendorDashboardState {
-  final BaseState<VendorDashboard> dashboardState;
-  final BaseState<VendorProfile> profileState;
-  final BaseState<VendorStats> statsState;
 
   VendorDashboardState({
     required this.dashboardState,
     required this.profileState,
     required this.statsState,
   });
+  final BaseState<VendorDashboard> dashboardState;
+  final BaseState<VendorProfile> profileState;
+  final BaseState<VendorStats> statsState;
 
   VendorDashboardState copyWith({
     BaseState<VendorDashboard>? dashboardState,
     BaseState<VendorProfile>? profileState,
     BaseState<VendorStats>? statsState,
-  }) {
-    return VendorDashboardState(
+  }) => VendorDashboardState(
       dashboardState: dashboardState ?? this.dashboardState,
       profileState: profileState ?? this.profileState,
       statsState: statsState ?? this.statsState,
     );
-  }
 }
 
 class VendorDashboardViewModel extends StateNotifier<VendorDashboardState> {
-  final GetVendorDashboardUseCase _getVendorDashboardUseCase;
-  final GetMyVendorProfileUseCase _getMyVendorProfileUseCase;
-  final GetVendorStatsUseCase _getVendorStatsUseCase;
 
   VendorDashboardViewModel(
     this._getVendorDashboardUseCase,
@@ -46,6 +43,9 @@ class VendorDashboardViewModel extends StateNotifier<VendorDashboardState> {
           profileState: const BaseState.initial(),
           statsState: const BaseState.initial(),
         ));
+  final GetVendorDashboardUseCase _getVendorDashboardUseCase;
+  final GetMyVendorProfileUseCase _getMyVendorProfileUseCase;
+  final GetVendorStatsUseCase _getVendorStatsUseCase;
 
   /// Get vendor dashboard
   Future<void> getVendorDashboard() async {
@@ -53,13 +53,13 @@ class VendorDashboardViewModel extends StateNotifier<VendorDashboardState> {
       dashboardState: const BaseState.loading(),
     );
 
-    final result = await _getVendorDashboardUseCase();
+    final Either<Failure, VendorDashboard> result = await _getVendorDashboardUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         dashboardState: BaseState.error(failure),
       ),
-      (dashboard) => state = state.copyWith(
+      (VendorDashboard dashboard) => state = state.copyWith(
         dashboardState: BaseState.success(dashboard),
       ),
     );
@@ -71,13 +71,13 @@ class VendorDashboardViewModel extends StateNotifier<VendorDashboardState> {
       profileState: const BaseState.loading(),
     );
 
-    final result = await _getMyVendorProfileUseCase();
+    final Either<Failure, VendorProfile> result = await _getMyVendorProfileUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         profileState: BaseState.error(failure),
       ),
-      (profile) => state = state.copyWith(
+      (VendorProfile profile) => state = state.copyWith(
         profileState: BaseState.success(profile),
       ),
     );
@@ -89,13 +89,13 @@ class VendorDashboardViewModel extends StateNotifier<VendorDashboardState> {
       statsState: const BaseState.loading(),
     );
 
-    final result = await _getVendorStatsUseCase();
+    final Either<Failure, VendorStats> result = await _getVendorStatsUseCase();
 
     result.fold(
-      (failure) => state = state.copyWith(
+      (Failure failure) => state = state.copyWith(
         statsState: BaseState.error(failure),
       ),
-      (stats) => state = state.copyWith(
+      (VendorStats stats) => state = state.copyWith(
         statsState: BaseState.success(stats),
       ),
     );
@@ -103,7 +103,7 @@ class VendorDashboardViewModel extends StateNotifier<VendorDashboardState> {
 
   /// Refresh all
   Future<void> refreshAll() async {
-    await Future.wait([
+    await Future.wait(<Future<void>>[
       getVendorDashboard(),
       getMyVendorProfile(),
       getVendorStats(),

@@ -8,8 +8,7 @@ class TrendingOrganizersSection extends StatelessWidget {
   const TrendingOrganizersSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       children: [
         SectionHeader(
           title: 'Trending Organizers',
@@ -45,5 +44,4 @@ class TrendingOrganizersSection extends StatelessWidget {
         ),
       ],
     );
-  }
 }

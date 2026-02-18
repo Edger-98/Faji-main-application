@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import '../../domain/entities/auth_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
 
 AuthTokenModel authTokenModelFromJson(String str) =>
     AuthTokenModel.fromJson(json.decode(str) as Map<String, dynamic>);
@@ -12,10 +12,6 @@ AuthTokenModel authTokenModelFromJson(String str) =>
 String authTokenModelToJson(AuthTokenModel data) => json.encode(data.toJson());
 
 class AuthTokenModel {
-  final String token;
-  final String userId;
-  final String email;
-  final String role;
 
   AuthTokenModel({
     required this.token,
@@ -29,7 +25,7 @@ class AuthTokenModel {
     if (json.containsKey('user') && json['user'] is Map) {
       final user = json['user'] as Map<String, dynamic>;
       return AuthTokenModel(
-        token: json['token'] as String? ?? '',
+        token: json['accessToken'] as String? ?? json['token'] as String? ?? '',
         userId: user['_id'] as String? ?? user['id'] as String? ?? '',
         email: user['email'] as String? ?? '',
         role: user['role'] as String? ?? 'Attendee',
@@ -38,27 +34,10 @@ class AuthTokenModel {
     
     // Handle direct response
     return AuthTokenModel(
-      token: json['token'] as String? ?? '',
+      token: json['accessToken'] as String? ?? json['token'] as String? ?? '',
       userId: json['userId'] as String? ?? json['_id'] as String? ?? '',
       email: json['email'] as String? ?? '',
       role: json['role'] as String? ?? 'Attendee',
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-        'token': token,
-        'userId': userId,
-        'email': email,
-        'role': role,
-      };
-
-  /// Convert to entity
-  AuthTokenEntity toEntity() {
-    return AuthTokenEntity(
-      token: token,
-      userId: userId,
-      email: email,
-      role: role,
     );
   }
 
@@ -71,4 +50,23 @@ class AuthTokenModel {
       role: entity.role,
     );
   }
+  final String token;
+  final String userId;
+  final String email;
+  final String role;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'token': token,
+        'userId': userId,
+        'email': email,
+        'role': role,
+      };
+
+  /// Convert to entity
+  AuthTokenEntity toEntity() => AuthTokenEntity(
+      token: token,
+      userId: userId,
+      email: email,
+      role: role,
+    );
 }

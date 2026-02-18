@@ -9,8 +9,7 @@ class TicketInformationScreen extends StatelessWidget {
   const TicketInformationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: Stack(
         children: [
@@ -148,10 +147,8 @@ class TicketInformationScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 
-  Widget _buildInfoCard(BuildContext context, String label, String value, {bool showStar = false}) {
-    return Container(
+  Widget _buildInfoCard(BuildContext context, String label, String value, {bool showStar = false}) => Container(
       width: showStar ? 110.w : (label == 'Tickets Price' ? 109.w : 110.w),
       height: 96.h,
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
@@ -188,5 +185,4 @@ class TicketInformationScreen extends StatelessWidget {
         ],
       ),
     );
-  }
 }

@@ -42,8 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       extendBody: true, // Extend body behind bottom nav
       body: IndexedStack(
@@ -82,10 +81,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
       ),
     );
-  }
 
-  Widget _buildHomeContent() {
-    return SafeArea(
+  Widget _buildHomeContent() => SafeArea(
       bottom: false,
       child: RefreshIndicator(
         onRefresh: _refreshHome,
@@ -151,5 +148,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
     );
-  }
 }

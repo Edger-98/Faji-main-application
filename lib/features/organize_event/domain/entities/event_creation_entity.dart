@@ -12,6 +12,7 @@ class EventCreationEntity with _$EventCreationEntity {
     // Step 1: Event Details
     String? title,
     String? description,
+    String? category, // Added category field
     String? imageUrl, // Cloudinary image URL (replaces poster/theme)
     String? localImagePath, // Local file path before upload
     DateTime? eventDate,
@@ -26,6 +27,10 @@ class EventCreationEntity with _$EventCreationEntity {
     @Default(false) bool enableWishlist,
     @Default(false) bool enableBudgetTracking,
     @Default(false) bool enableCohostMarketplace,
+    
+    // Step 3: Location Data
+    double? latitude,
+    double? longitude,
     
     // Co-host data (if enabled)
     List<String>? selectedCohostIds,

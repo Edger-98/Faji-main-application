@@ -1,17 +1,19 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/base/base_state.dart';
-import '../../domain/entities/withdraw_request.dart';
-import '../../domain/usecases/withdraw_funds_usecase.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/withdraw_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/usecases/withdraw_funds_usecase.dart';
 
 // State for withdraw
 typedef WithdrawState = BaseState<WithdrawResponse>;
 
 class WithdrawViewModel extends StateNotifier<WithdrawState> {
-  final WithdrawFundsUseCase _withdrawFundsUseCase;
 
   WithdrawViewModel(
     this._withdrawFundsUseCase,
   ) : super(const BaseState.initial());
+  final WithdrawFundsUseCase _withdrawFundsUseCase;
 
   /// Withdraw funds from wallet
   Future<void> withdrawFunds({
@@ -22,7 +24,7 @@ class WithdrawViewModel extends StateNotifier<WithdrawState> {
   }) async {
     state = const BaseState.loading();
 
-    final request = WithdrawRequest(
+    final WithdrawRequest request = WithdrawRequest(
       amount: amount,
       bankAccount: BankAccount(
         accountNumber: accountNumber,
@@ -31,11 +33,11 @@ class WithdrawViewModel extends StateNotifier<WithdrawState> {
       ),
     );
 
-    final result = await _withdrawFundsUseCase(request: request);
+    final Either<Failure, WithdrawResponse> result = await _withdrawFundsUseCase(request: request);
 
     result.fold(
-      (failure) => state = BaseState.error(failure),
-      (response) => state = BaseState.success(response),
+      (Failure failure) => state = BaseState.error(failure),
+      (WithdrawResponse response) => state = BaseState.success(response),
     );
   }
 

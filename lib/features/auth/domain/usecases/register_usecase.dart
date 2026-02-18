@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../entities/auth_token_entity.dart';
-import '../repositories/auth_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 
 /// Register/Signup use case
 class RegisterUseCase {
-  final AuthRepository repository;
 
   RegisterUseCase(this.repository);
+  final AuthRepository repository;
 
   Future<Either<Failure, AuthTokenEntity>> call({
     required String email,
@@ -20,8 +20,7 @@ class RegisterUseCase {
     bool pushNotificationsEnabled = false,
     String? image,
     String? expoPushToken,
-  }) async {
-    return await repository.signup(
+  }) async => await repository.signup(
       email: email,
       phoneNo: phoneNo,
       firstName: firstName,
@@ -32,5 +31,4 @@ class RegisterUseCase {
       image: image,
       expoPushToken: expoPushToken,
     );
-  }
 }

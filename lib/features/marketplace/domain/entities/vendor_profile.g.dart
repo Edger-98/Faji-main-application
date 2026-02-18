@@ -14,7 +14,6 @@ _$VendorProfileImpl _$$VendorProfileImplFromJson(Map json) => $checkedCreate(
       id: $checkedConvert('id', (v) => v as String),
       name: $checkedConvert('name', (v) => v as String),
       bio: $checkedConvert('bio', (v) => v as String),
-      profilePhoto: $checkedConvert('profilePhoto', (v) => v as String?),
       categories: $checkedConvert(
         'categories',
         (v) => (v as List<dynamic>).map((e) => e as String).toList(),
@@ -49,6 +48,7 @@ _$VendorProfileImpl _$$VendorProfileImplFromJson(Map json) => $checkedCreate(
             )
             .toList(),
       ),
+      profilePhoto: $checkedConvert('profilePhoto', (v) => v as String?),
     );
     return val;
   },
@@ -59,7 +59,6 @@ Map<String, dynamic> _$$VendorProfileImplToJson(_$VendorProfileImpl instance) =>
       'id': instance.id,
       'name': instance.name,
       'bio': instance.bio,
-      if (instance.profilePhoto case final value?) 'profilePhoto': value,
       'categories': instance.categories,
       'rating': instance.rating,
       'reviewCount': instance.reviewCount,
@@ -70,6 +69,7 @@ Map<String, dynamic> _$$VendorProfileImplToJson(_$VendorProfileImpl instance) =>
       'portfolio': instance.portfolio,
       'resources': instance.resources.map((e) => e.toJson()).toList(),
       'reviews': instance.reviews.map((e) => e.toJson()).toList(),
+      if (instance.profilePhoto case final value?) 'profilePhoto': value,
     };
 
 _$VendorResourceImpl _$$VendorResourceImplFromJson(Map json) =>

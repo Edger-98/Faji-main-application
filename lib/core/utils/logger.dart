@@ -2,7 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 
-import '../config/config.dart';
+import 'package:fajimobileapp/core/config/config.dart';
 
 /// Centralized logging utility
 class Logger {
@@ -59,8 +59,8 @@ class Logger {
 
   /// Internal logging method
   static void _log(String level, String message, [Object? error, StackTrace? stackTrace]) {
-    final timestamp = DateTime.now().toIso8601String();
-    final logMessage = '[$timestamp] [$level] $message';
+    final String timestamp = DateTime.now().toIso8601String();
+    final String logMessage = '[$timestamp] [$level] $message';
     
     if (kDebugMode) {
       // In debug mode, use developer.log for better formatting
@@ -109,7 +109,7 @@ class Logger {
   }
 
   /// Log API responses (with sensitive data filtering)
-  static void apiResponse(String method, String url, int statusCode, [dynamic data]) {
+  static void apiResponse(String method, String url, int statusCode, [data]) {
     if (_isLoggingEnabled() && (kDebugMode || _isDebugModeEnabled())) {
       final sanitizedData = _sanitizeData(data);
       debug('API Response: $method $url [$statusCode]', sanitizedData);
@@ -117,8 +117,8 @@ class Logger {
   }
 
   /// Sanitize sensitive data from logs
-  static dynamic _sanitizeData(dynamic data) {
-    bool isProduction = false;
+  static dynamic _sanitizeData(data) {
+    var isProduction = false;
     try {
       isProduction = Config.isProduction;
     } catch (e) {
@@ -131,14 +131,14 @@ class Logger {
     }
 
     if (data is Map<String, dynamic>) {
-      final sanitized = <String, dynamic>{};
-      data.forEach((key, value) {
+      final Map<String, dynamic> sanitized = <String, dynamic>{};
+      data.forEach((String key, value) {
         if (_isSensitiveKey(key)) {
           sanitized[key] = '***REDACTED***';
         } else if (value is Map<String, dynamic>) {
           sanitized[key] = _sanitizeData(value);
         } else if (value is List) {
-          sanitized[key] = value.map((item) => _sanitizeData(item)).toList();
+          sanitized[key] = value.map(_sanitizeData).toList();
         } else {
           sanitized[key] = value;
         }
@@ -147,7 +147,7 @@ class Logger {
     }
 
     if (data is List) {
-      return data.map((item) => _sanitizeData(item)).toList();
+      return data.map(_sanitizeData).toList();
     }
 
     return data;
@@ -155,7 +155,7 @@ class Logger {
 
   /// Check if a key contains sensitive information
   static bool _isSensitiveKey(String key) {
-    final sensitiveKeys = [
+    final List<String> sensitiveKeys = <String>[
       'password',
       'token',
       'secret',
@@ -172,7 +172,7 @@ class Logger {
       'cvc',
     ];
 
-    return sensitiveKeys.any((sensitiveKey) => 
+    return sensitiveKeys.any((String sensitiveKey) => 
       key.toLowerCase().contains(sensitiveKey));
   }
 }

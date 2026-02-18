@@ -18,12 +18,12 @@ class _WalletRemoteDataSource implements WalletRemoteDataSource {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<ApiResponse<WalletBalance>> getWalletBalance() async {
+  Future<HttpResponse<dynamic>> getWalletBalance() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ApiResponse<WalletBalance>>(
+    final _options = _setStreamType<HttpResponse<dynamic>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -33,18 +33,10 @@ class _WalletRemoteDataSource implements WalletRemoteDataSource {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<WalletBalance> _value;
-    try {
-      _value = ApiResponse<WalletBalance>.fromJson(
-        _result.data!,
-        (json) => WalletBalance.fromJson(json as Map<String, dynamic>),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
   }
 
   @override
@@ -88,14 +80,12 @@ class _WalletRemoteDataSource implements WalletRemoteDataSource {
   }
 
   @override
-  Future<ApiResponse<WithdrawResponse>> withdrawFunds(
-    WithdrawRequest request,
-  ) async {
+  Future<HttpResponse<dynamic>> withdrawFunds(WithdrawRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = request;
-    final _options = _setStreamType<ApiResponse<WithdrawResponse>>(
+    final _options = _setStreamType<HttpResponse<dynamic>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -105,18 +95,10 @@ class _WalletRemoteDataSource implements WalletRemoteDataSource {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<WithdrawResponse> _value;
-    try {
-      _value = ApiResponse<WithdrawResponse>.fromJson(
-        _result.data!,
-        (json) => WithdrawResponse.fromJson(json as Map<String, dynamic>),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
   }
 
   @override

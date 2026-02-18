@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/core/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,44 +11,44 @@ import 'package:fajimobileapp/features/events/presentation/providers/event_provi
 
 /// SETTINGS Tab - Event settings and preferences with REAL API DATA
 class SettingsTab extends ConsumerWidget {
-  final String eventId;
 
   const SettingsTab({super.key, required this.eventId});
+  final String eventId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventAsync = ref.watch(eventDetailsProvider(eventId));
+    final AsyncValue<EventModel> eventAsync = ref.watch(eventDetailsProvider(eventId));
 
     return eventAsync.when(
-      data: (event) => ListView(
+      data: (EventModel event) => ListView(
         padding: EdgeInsets.all(16.w),
-        children: [
+        children: <Widget>[
           _buildPublicitySection(context, ref, event),
           SizedBox(height: 24.h),
           _buildEventLinkSection(context, event),
           SizedBox(height: 24.h),
           _buildRSVPSection(context, ref, event),
-          SizedBox(height: 24.h),
-          _buildPosterSection(context, ref, event),
-          SizedBox(height: 24.h),
-          _buildMediaSection(context, ref),
-          SizedBox(height: 24.h),
-          _buildNoteSection(context, ref, event),
-          SizedBox(height: 24.h),
-          _buildPreferencesSection(context, ref, event),
+          // SizedBox(height: 24.h),
+          // _buildPosterSection(context, ref, event),
+          // SizedBox(height: 24.h),
+          // _buildMediaSection(context, ref),
+          // SizedBox(height: 24.h),
+          // _buildNoteSection(context, ref, event),
+          // SizedBox(height: 24.h),
+          // _buildPreferencesSection(context, ref, event),
           SizedBox(height: 24.h),
           _buildDangerZoneSection(context, ref, event),
           SizedBox(height: 100.h),
         ],
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
+      error: (Object error, StackTrace stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
             SizedBox(height: 16.h),
-            Text('Failed to load settings'),
+            const Text('Failed to load settings'),
             SizedBox(height: 8.h),
             ElevatedButton(
               onPressed: () => ref.invalidate(eventDetailsProvider(eventId)),
@@ -59,9 +60,8 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildPublicitySection(BuildContext context, WidgetRef ref, event) {
-    return _buildSettingItem(
-      title: 'Make Event Public - Partyverse 🔥',
+  Widget _buildPublicitySection(BuildContext context, WidgetRef ref, event) => _buildSettingItem(
+      title: 'Make Event Public - Faji 🔥',
       subtitle: 'Let your event be visible & searchable on the Partyverse',
       trailing: Switch(
         value: event.settings.isPublic,
@@ -75,15 +75,14 @@ class SettingsTab extends ConsumerWidget {
         activeColor: const Color(0xFF4CAF50),
       ),
     );
-  }
 
   Widget _buildEventLinkSection(BuildContext context, event) {
     final websiteLink = event.settings.websiteLink;
-    final fullLink = 'https://faji.com/$websiteLink';
+    final String fullLink = 'https://faji.com/$websiteLink';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(
           'Event Website Link (shared with guests)',
           style: TextStyle(
@@ -113,7 +112,7 @@ class SettingsTab extends ConsumerWidget {
               border: Border.all(color: const Color(0xFF2A2A2A)),
             ),
             child: Row(
-              children: [
+              children: <Widget>[
                 Icon(Icons.link, size: 20.sp, color: const Color(0xFFFF8C42)),
                 SizedBox(width: 8.w),
                 Text(
@@ -153,7 +152,7 @@ class SettingsTab extends ConsumerWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(
           'RSVP Button Title (for your event link)',
           style: TextStyle(
@@ -174,7 +173,7 @@ class SettingsTab extends ConsumerWidget {
               border: Border.all(color: const Color(0xFF2A2A2A)),
             ),
             child: Row(
-              children: [
+              children: <Widget>[
                 Expanded(
                   child: Text(
                     rsvpButtonText,
@@ -201,7 +200,7 @@ class SettingsTab extends ConsumerWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Text(
           'Event Poster',
           style: TextStyle(
@@ -237,7 +236,7 @@ class SettingsTab extends ConsumerWidget {
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: <Widget>[
                         Icon(Icons.image_outlined,
                             size: 48.sp,
                             color: AppColors.onSurfaceVariant.withOpacity(0.3)),
@@ -260,8 +259,7 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildMediaSection(BuildContext context, WidgetRef ref) {
-    return Column(
+  Widget _buildMediaSection(BuildContext context, WidgetRef ref) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -309,10 +307,8 @@ class SettingsTab extends ConsumerWidget {
         ),
       ],
     );
-  }
 
-  Widget _buildNoteSection(BuildContext context, WidgetRef ref, event) {
-    return Column(
+  Widget _buildNoteSection(BuildContext context, WidgetRef ref, event) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -354,10 +350,8 @@ class SettingsTab extends ConsumerWidget {
         ),
       ],
     );
-  }
 
-  Widget _buildPreferencesSection(BuildContext context, WidgetRef ref, event) {
-    return Column(
+  Widget _buildPreferencesSection(BuildContext context, WidgetRef ref, event) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -456,14 +450,12 @@ class SettingsTab extends ConsumerWidget {
         ),
       ],
     );
-  }
 
   Widget _buildSettingItem({
     required String title,
     required String subtitle,
     required Widget trailing,
-  }) {
-    return Container(
+  }) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
@@ -505,13 +497,12 @@ class SettingsTab extends ConsumerWidget {
         ],
       ),
     );
-  }
 
-  void _updateSetting(
+  Future<void> _updateSetting(
     BuildContext context,
     WidgetRef ref,
     String key,
-    dynamic value,
+    value,
     String successMessage,
   ) async {
     try {
@@ -548,7 +539,7 @@ class SettingsTab extends ConsumerWidget {
     WidgetRef ref,
     String currentText,
   ) {
-    final options = [
+    final List<String> options = <String>[
       'Celebrate With Us',
       'Join Us',
       'RSVP Now',
@@ -563,12 +554,12 @@ class SettingsTab extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
-      builder: (context) => Container(
+      builder: (BuildContext context) => Container(
         padding: EdgeInsets.all(20.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Text(
               'Choose RSVP Button Text',
               style: TextStyle(
@@ -579,7 +570,7 @@ class SettingsTab extends ConsumerWidget {
               ),
             ),
             SizedBox(height: 20.h),
-            ...options.map((option) => ListTile(
+            ...options.map((String option) => ListTile(
                   title: Text(
                     option,
                     style: TextStyle(
@@ -590,7 +581,7 @@ class SettingsTab extends ConsumerWidget {
                     ),
                   ),
                   trailing: currentText == option
-                      ? Icon(Icons.check, color: AppColors.primary)
+                      ? const Icon(Icons.check, color: AppColors.primary)
                       : null,
                   onTap: () {
                     Navigator.pop(context);
@@ -610,8 +601,7 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  static Widget _buildDangerZoneSection(BuildContext context, WidgetRef ref, dynamic event) {
-    return Container(
+  static Widget _buildDangerZoneSection(BuildContext context, WidgetRef ref, event) => Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppColors.error.withOpacity(0.1),
@@ -680,12 +670,11 @@ class SettingsTab extends ConsumerWidget {
         ],
       ),
     );
-  }
 
-  static void _showDeleteConfirmation(BuildContext context, WidgetRef ref, dynamic event) {
+  static void _showDeleteConfirmation(BuildContext context, WidgetRef ref, event) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (BuildContext context) => AlertDialog(
         backgroundColor: AppColors.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
@@ -702,7 +691,7 @@ class SettingsTab extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Text(
               'Are you sure you want to delete "${event.name}"?',
               style: TextStyle(
@@ -726,7 +715,7 @@ class SettingsTab extends ConsumerWidget {
             ),
           ],
         ),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
@@ -759,15 +748,14 @@ class SettingsTab extends ConsumerWidget {
     );
   }
 
-  static void _deleteEvent(BuildContext context, WidgetRef ref, String eventId) async {
+  static Future<void> _deleteEvent(BuildContext context, WidgetRef ref, String eventId) async {
     // Get the root navigator state BEFORE showing any dialogs
-    final NavigatorState navigator = Navigator.of(context, rootNavigator: true);
+    final navigator = Navigator.of(context, rootNavigator: true);
     
     // Show loading
     navigator.push(
       PageRouteBuilder(
         opaque: false,
-        barrierDismissible: false,
         pageBuilder: (_, __, ___) => const Center(
           child: CircularProgressIndicator(color: AppColors.primary),
         ),
@@ -791,15 +779,15 @@ class SettingsTab extends ConsumerWidget {
       // Navigate to home and show success - wrap in Consumer to have access to ref
       navigator.pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (ctx) => Consumer(
-            builder: (context, ref, child) => Scaffold(
+          builder: (BuildContext ctx) => Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) => Scaffold(
               backgroundColor: AppColors.background,
               body: SafeArea(
                 child: Padding(
                   padding: EdgeInsets.all(24.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: <Widget>[
                       Container(
                         width: 100.w,
                         height: 100.h,
@@ -845,7 +833,7 @@ class SettingsTab extends ConsumerWidget {
                           ref.read(events_providers.userEventsProvider.notifier).getUserEvents();
                           
                           // Go to home - this will trigger the providers to reload
-                          navigator.popUntil((route) => route.isFirst);
+                          navigator.popUntil((Route route) => route.isFirst);
                         },
                         child: Container(
                           width: double.infinity,
@@ -874,7 +862,7 @@ class SettingsTab extends ConsumerWidget {
             ),
           ),
         ),
-        (route) => route.isFirst,
+        (Route route) => route.isFirst,
       );
     } catch (e) {
       // Close loading

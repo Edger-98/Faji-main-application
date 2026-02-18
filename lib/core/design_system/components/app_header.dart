@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../typography/app_typography.dart';
-import '../extensions/context_extensions.dart';
+import 'package:fajimobileapp/core/design_system/typography/app_typography.dart';
+import 'package:fajimobileapp/core/design_system/extensions/context_extensions.dart';
 
 /// Standardized header component for all main tabs
 /// Ensures consistent UX across Home, Vendors, Events, Wallet, Profile
 class AppHeader extends StatelessWidget {
-  final String title;
-  final String? subtitle;
-  final Widget? trailing;
 
   const AppHeader({
     super.key,
@@ -17,10 +14,12 @@ class AppHeader extends StatelessWidget {
     this.subtitle,
     this.trailing,
   });
+  final String title;
+  final String? subtitle;
+  final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 16.h),
       child: Row(
         children: [
@@ -51,5 +50,4 @@ class AppHeader extends StatelessWidget {
         ],
       ),
     );
-  }
 }

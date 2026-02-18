@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/models/guest_model.dart';
-import '../../data/repositories/guest_repository.dart';
+import 'package:fajimobileapp/core/models/guest_model.dart';
+import 'package:fajimobileapp/features/organize_event/data/repositories/guest_repository.dart';
 
 // Guest list provider with filters
-final guestListProvider = FutureProvider.autoDispose.family<GuestListResponse, GuestFilters>(
-  (ref, filters) async {
-    final repository = ref.read(guestRepositoryProvider);
+final AutoDisposeFutureProviderFamily<GuestListResponse, GuestFilters> guestListProvider = FutureProvider.autoDispose.family<GuestListResponse, GuestFilters>(
+  (AutoDisposeFutureProviderRef<GuestListResponse> ref, GuestFilters filters) async {
+    final GuestRepository repository = ref.read(guestRepositoryProvider);
     return repository.getGuests(
       filters.eventId,
       status: filters.status,
@@ -15,13 +15,13 @@ final guestListProvider = FutureProvider.autoDispose.family<GuestListResponse, G
 );
 
 // Current guest filter state
-final currentGuestStatusProvider = StateProvider.autoDispose<String>((ref) => 'all');
-final currentGuestSearchProvider = StateProvider.autoDispose<String>((ref) => '');
+final AutoDisposeStateProvider<String> currentGuestStatusProvider = StateProvider.autoDispose<String>((AutoDisposeStateProviderRef<String> ref) => 'all');
+final AutoDisposeStateProvider<String> currentGuestSearchProvider = StateProvider.autoDispose<String>((AutoDisposeStateProviderRef<String> ref) => '');
 
 // Computed provider for current filters
-final currentGuestFiltersProvider = Provider.autoDispose.family<GuestFilters, String>((ref, eventId) {
-  final status = ref.watch(currentGuestStatusProvider);
-  final search = ref.watch(currentGuestSearchProvider);
+final AutoDisposeProviderFamily<GuestFilters, String> currentGuestFiltersProvider = Provider.autoDispose.family<GuestFilters, String>((AutoDisposeProviderRef<GuestFilters> ref, String eventId) {
+  final String status = ref.watch(currentGuestStatusProvider);
+  final String search = ref.watch(currentGuestSearchProvider);
   
   return GuestFilters(
     eventId: eventId,
@@ -31,14 +31,14 @@ final currentGuestFiltersProvider = Provider.autoDispose.family<GuestFilters, St
 });
 
 // Guest add notifier
-final guestAddProvider = StateNotifierProvider<GuestAddNotifier, AsyncValue<void>>(
-  (ref) => GuestAddNotifier(ref),
+final StateNotifierProvider<GuestAddNotifier, AsyncValue<void>> guestAddProvider = StateNotifierProvider<GuestAddNotifier, AsyncValue<void>>(
+  GuestAddNotifier.new,
 );
 
 class GuestAddNotifier extends StateNotifier<AsyncValue<void>> {
-  final Ref ref;
 
   GuestAddNotifier(this.ref) : super(const AsyncValue.data(null));
+  final Ref ref;
 
   Future<void> addGuest({
     required String eventId,
@@ -48,7 +48,7 @@ class GuestAddNotifier extends StateNotifier<AsyncValue<void>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(guestRepositoryProvider);
+      final GuestRepository repository = ref.read(guestRepositoryProvider);
       await repository.addGuest(
         eventId,
         name: name,
@@ -67,15 +67,15 @@ class GuestAddNotifier extends StateNotifier<AsyncValue<void>> {
 }
 
 class GuestFilters {
-  final String eventId;
-  final String? status;
-  final String? search;
 
   GuestFilters({
     required this.eventId,
     this.status,
     this.search,
   });
+  final String eventId;
+  final String? status;
+  final String? search;
 
   @override
   bool operator ==(Object other) =>

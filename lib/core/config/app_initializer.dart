@@ -6,9 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import '../utils/logger.dart';
-import '../services/firebase_notification_service.dart';
-import 'config.dart';
+import 'package:fajimobileapp/core/utils/logger.dart';
+import 'package:fajimobileapp/core/services/firebase_notification_service.dart';
+import 'package:fajimobileapp/core/config/config.dart';
 
 /// Handles application initialization and setup
 class AppInitializer {
@@ -29,7 +29,7 @@ class AppInitializer {
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
       // Set preferred orientations
-      await SystemChrome.setPreferredOrientations([
+      await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
@@ -75,7 +75,7 @@ class AppInitializer {
       };
 
       // Handle errors outside of Flutter
-      PlatformDispatcher.instance.onError = (error, stack) {
+      PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
         Logger.error('Platform Error', error, stack);
         return true;
       };

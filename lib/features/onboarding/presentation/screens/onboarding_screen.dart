@@ -19,7 +19,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _currentPage = 0;
   static const String _onboardingCompleteKey = 'onboarding_complete';
 
-  final List<OnboardingPage> _pages = [
+  final List<OnboardingPage> _pages = <OnboardingPage>[
     OnboardingPage(
       emoji: '🎉',
       title: 'Create Amazing Events',
@@ -49,7 +49,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_onboardingCompleteKey, true);
     
     if (mounted) {
@@ -73,8 +73,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -160,10 +159,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildPage(OnboardingPage page) {
-    return Padding(
+  Widget _buildPage(OnboardingPage page) => Padding(
       padding: EdgeInsets.symmetric(horizontal: 32.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -214,10 +211,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ],
       ),
     );
-  }
 
-  Widget _buildIndicator(bool isActive) {
-    return AnimatedContainer(
+  Widget _buildIndicator(bool isActive) => AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       margin: EdgeInsets.symmetric(horizontal: 4.w),
       width: isActive ? 24.w : 8.w,
@@ -227,17 +222,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         borderRadius: BorderRadius.circular(4.r),
       ),
     );
-  }
 }
 
 class OnboardingPage {
-  final String emoji;
-  final String title;
-  final String description;
 
   OnboardingPage({
     required this.emoji,
     required this.title,
     required this.description,
   });
+  final String emoji;
+  final String title;
+  final String description;
 }

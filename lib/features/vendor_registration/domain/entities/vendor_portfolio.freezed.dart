@@ -23,15 +23,15 @@ VendorPortfolio _$VendorPortfolioFromJson(Map<String, dynamic> json) {
 mixin _$VendorPortfolio {
   String get id => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
-  String? get caption => throw _privateConstructorUsedError;
   String get uploadedAt => throw _privateConstructorUsedError;
+  String? get caption => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
       String id,
       String imageUrl,
-      String? caption,
       String uploadedAt,
+      String? caption,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -40,8 +40,8 @@ mixin _$VendorPortfolio {
     TResult? Function(
       String id,
       String imageUrl,
-      String? caption,
       String uploadedAt,
+      String? caption,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -50,8 +50,8 @@ mixin _$VendorPortfolio {
     TResult Function(
       String id,
       String imageUrl,
-      String? caption,
       String uploadedAt,
+      String? caption,
     )?
     $default, {
     required TResult orElse(),
@@ -87,7 +87,7 @@ abstract class $VendorPortfolioCopyWith<$Res> {
     $Res Function(VendorPortfolio) then,
   ) = _$VendorPortfolioCopyWithImpl<$Res, VendorPortfolio>;
   @useResult
-  $Res call({String id, String imageUrl, String? caption, String uploadedAt});
+  $Res call({String id, String imageUrl, String uploadedAt, String? caption});
 }
 
 /// @nodoc
@@ -107,8 +107,8 @@ class _$VendorPortfolioCopyWithImpl<$Res, $Val extends VendorPortfolio>
   $Res call({
     Object? id = null,
     Object? imageUrl = null,
-    Object? caption = freezed,
     Object? uploadedAt = null,
+    Object? caption = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -120,14 +120,14 @@ class _$VendorPortfolioCopyWithImpl<$Res, $Val extends VendorPortfolio>
                 ? _value.imageUrl
                 : imageUrl // ignore: cast_nullable_to_non_nullable
                       as String,
-            caption: freezed == caption
-                ? _value.caption
-                : caption // ignore: cast_nullable_to_non_nullable
-                      as String?,
             uploadedAt: null == uploadedAt
                 ? _value.uploadedAt
                 : uploadedAt // ignore: cast_nullable_to_non_nullable
                       as String,
+            caption: freezed == caption
+                ? _value.caption
+                : caption // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -143,7 +143,7 @@ abstract class _$$VendorPortfolioImplCopyWith<$Res>
   ) = __$$VendorPortfolioImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String imageUrl, String? caption, String uploadedAt});
+  $Res call({String id, String imageUrl, String uploadedAt, String? caption});
 }
 
 /// @nodoc
@@ -162,8 +162,8 @@ class __$$VendorPortfolioImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? imageUrl = null,
-    Object? caption = freezed,
     Object? uploadedAt = null,
+    Object? caption = freezed,
   }) {
     return _then(
       _$VendorPortfolioImpl(
@@ -175,14 +175,14 @@ class __$$VendorPortfolioImplCopyWithImpl<$Res>
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String,
-        caption: freezed == caption
-            ? _value.caption
-            : caption // ignore: cast_nullable_to_non_nullable
-                  as String?,
         uploadedAt: null == uploadedAt
             ? _value.uploadedAt
             : uploadedAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        caption: freezed == caption
+            ? _value.caption
+            : caption // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -194,8 +194,8 @@ class _$VendorPortfolioImpl implements _VendorPortfolio {
   const _$VendorPortfolioImpl({
     required this.id,
     required this.imageUrl,
-    this.caption,
     required this.uploadedAt,
+    this.caption,
   });
 
   factory _$VendorPortfolioImpl.fromJson(Map<String, dynamic> json) =>
@@ -206,13 +206,13 @@ class _$VendorPortfolioImpl implements _VendorPortfolio {
   @override
   final String imageUrl;
   @override
-  final String? caption;
-  @override
   final String uploadedAt;
+  @override
+  final String? caption;
 
   @override
   String toString() {
-    return 'VendorPortfolio(id: $id, imageUrl: $imageUrl, caption: $caption, uploadedAt: $uploadedAt)';
+    return 'VendorPortfolio(id: $id, imageUrl: $imageUrl, uploadedAt: $uploadedAt, caption: $caption)';
   }
 
   @override
@@ -223,15 +223,15 @@ class _$VendorPortfolioImpl implements _VendorPortfolio {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
-            (identical(other.caption, caption) || other.caption == caption) &&
             (identical(other.uploadedAt, uploadedAt) ||
-                other.uploadedAt == uploadedAt));
+                other.uploadedAt == uploadedAt) &&
+            (identical(other.caption, caption) || other.caption == caption));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, imageUrl, caption, uploadedAt);
+      Object.hash(runtimeType, id, imageUrl, uploadedAt, caption);
 
   /// Create a copy of VendorPortfolio
   /// with the given fields replaced by the non-null parameter values.
@@ -250,12 +250,12 @@ class _$VendorPortfolioImpl implements _VendorPortfolio {
     TResult Function(
       String id,
       String imageUrl,
-      String? caption,
       String uploadedAt,
+      String? caption,
     )
     $default,
   ) {
-    return $default(id, imageUrl, caption, uploadedAt);
+    return $default(id, imageUrl, uploadedAt, caption);
   }
 
   @override
@@ -264,12 +264,12 @@ class _$VendorPortfolioImpl implements _VendorPortfolio {
     TResult? Function(
       String id,
       String imageUrl,
-      String? caption,
       String uploadedAt,
+      String? caption,
     )?
     $default,
   ) {
-    return $default?.call(id, imageUrl, caption, uploadedAt);
+    return $default?.call(id, imageUrl, uploadedAt, caption);
   }
 
   @override
@@ -278,14 +278,14 @@ class _$VendorPortfolioImpl implements _VendorPortfolio {
     TResult Function(
       String id,
       String imageUrl,
-      String? caption,
       String uploadedAt,
+      String? caption,
     )?
     $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(id, imageUrl, caption, uploadedAt);
+      return $default(id, imageUrl, uploadedAt, caption);
     }
     return orElse();
   }
@@ -328,8 +328,8 @@ abstract class _VendorPortfolio implements VendorPortfolio {
   const factory _VendorPortfolio({
     required final String id,
     required final String imageUrl,
-    final String? caption,
     required final String uploadedAt,
+    final String? caption,
   }) = _$VendorPortfolioImpl;
 
   factory _VendorPortfolio.fromJson(Map<String, dynamic> json) =
@@ -340,9 +340,9 @@ abstract class _VendorPortfolio implements VendorPortfolio {
   @override
   String get imageUrl;
   @override
-  String? get caption;
-  @override
   String get uploadedAt;
+  @override
+  String? get caption;
 
   /// Create a copy of VendorPortfolio
   /// with the given fields replaced by the non-null parameter values.

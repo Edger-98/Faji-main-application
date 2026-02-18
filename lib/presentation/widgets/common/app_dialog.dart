@@ -67,7 +67,7 @@ class AppDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
     
     return AlertDialog(
       icon: icon,
@@ -132,8 +132,7 @@ class AppDialog extends StatelessWidget {
     Widget? icon,
     String? confirmText,
     VoidCallback? onConfirm,
-  }) {
-    return showDialog<void>(
+  }) => showDialog<void>(
       context: context,
       builder: (BuildContext context) => AppDialog.alert(
         title: title,
@@ -143,7 +142,6 @@ class AppDialog extends StatelessWidget {
         onConfirm: onConfirm,
       ),
     );
-  }
 
   /// Show confirmation dialog
   static Future<bool?> showConfirmation(
@@ -155,8 +153,7 @@ class AppDialog extends StatelessWidget {
     String? cancelText,
     VoidCallback? onConfirm,
     VoidCallback? onCancel,
-  }) {
-    return showDialog<bool>(
+  }) => showDialog<bool>(
       context: context,
       builder: (BuildContext context) => AppDialog.confirmation(
         title: title,
@@ -168,7 +165,6 @@ class AppDialog extends StatelessWidget {
         onCancel: onCancel,
       ),
     );
-  }
 
   /// Show loading dialog
   static void showLoading(

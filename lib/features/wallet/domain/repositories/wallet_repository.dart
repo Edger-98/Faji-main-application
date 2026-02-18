@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/wallet_balance.dart';
-import '../entities/wallet_transaction.dart';
-import '../entities/withdraw_request.dart';
-import '../entities/topup_request.dart';
-import '../entities/earnings_breakdown.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/withdraw_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
 
 abstract class WalletRepository {
   /// Get wallet balance

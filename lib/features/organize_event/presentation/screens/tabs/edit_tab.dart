@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/core/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,22 +9,21 @@ import 'package:intl/intl.dart';
 
 /// EDIT Tab - Edit event details with REAL API DATA
 class EditTab extends ConsumerStatefulWidget {
-  final String eventId;
 
   const EditTab({super.key, required this.eventId});
+  final String eventId;
 
   @override
   ConsumerState<EditTab> createState() => _EditTabState();
 }
 
 class _EditTabState extends ConsumerState<EditTab> {
-  final _titleController = TextEditingController();
-  final _categoryController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _guestCountController = TextEditingController();
-  final _budgetController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _guestCountController = TextEditingController();
+  final TextEditingController _budgetController = TextEditingController();
 
-  String? _selectedColorTheme;
   DateTime? _startDate;
   DateTime? _endDate;
   bool _isInitialized = false;
@@ -45,7 +45,6 @@ class _EditTabState extends ConsumerState<EditTab> {
       _descriptionController.text = event.description ?? '';
       _guestCountController.text = event.stats.expectedGuests.toString();
       _budgetController.text = event.budget.total.toStringAsFixed(0);
-      _selectedColorTheme = event.colorTheme;
       _startDate = event.startDate;
       _endDate = event.endDate;
       _isInitialized = true;
@@ -54,21 +53,17 @@ class _EditTabState extends ConsumerState<EditTab> {
 
   @override
   Widget build(BuildContext context) {
-    final eventAsync = ref.watch(eventDetailsProvider(widget.eventId));
+    final AsyncValue<EventModel> eventAsync = ref.watch(eventDetailsProvider(widget.eventId));
 
     return eventAsync.when(
-      data: (event) {
+      data: (EventModel event) {
         _initializeControllers(event);
         return Column(
-          children: [
+          children: <Widget>[
             Expanded(
               child: ListView(
                 padding: EdgeInsets.all(16.w),
-                children: [
-                  // Color themes
-                  _buildColorThemes(),
-                  SizedBox(height: 24.h),
-
+                children: <Widget>[
                   // Event name
                   _buildTextField(
                     label: 'Event Name',
@@ -104,13 +99,13 @@ class _EditTabState extends ConsumerState<EditTab> {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
+      error: (Object error, StackTrace stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
             SizedBox(height: 16.h),
-            Text('Failed to load event data'),
+            const Text('Failed to load event data'),
             SizedBox(height: 8.h),
             ElevatedButton(
               onPressed: () =>
@@ -123,54 +118,10 @@ class _EditTabState extends ConsumerState<EditTab> {
     );
   }
 
-  Widget _buildColorThemes() {
-    final themes = [
-      {'name': 'green', 'gradient': const LinearGradient(colors: [Color(0xFFB8E986), Color(0xFF8FD14F)])},
-      {'name': 'gray', 'gradient': const LinearGradient(colors: [Color(0xFF6B6B6B), Color(0xFF3A3A3A)])},
-      {'name': 'orange', 'gradient': const LinearGradient(colors: [Color(0xFFFF6B6B), Color(0xFFFF8C42)])},
-      {'name': 'purple', 'gradient': const LinearGradient(colors: [Color(0xFFB794F6), Color(0xFF9F7AEA)])},
-    ];
-
-    return SizedBox(
-      height: 80.h,
-      child: Row(
-        children: themes.map((theme) {
-          final isSelected = _selectedColorTheme == theme['name'];
-          return Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedColorTheme = theme['name'] as String;
-                });
-              },
-              child: Container(
-                margin: EdgeInsets.only(right: 8.w),
-                decoration: BoxDecoration(
-                  gradient: theme['gradient'] as LinearGradient,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: isSelected
-                      ? Border.all(color: Colors.white, width: 3)
-                      : null,
-                ),
-                child: Center(
-                  child: isSelected
-                      ? Icon(Icons.check_circle,
-                          size: 32.sp, color: Colors.white)
-                      : null,
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   Widget _buildTextField({
     required String label,
     required TextEditingController controller,
-  }) {
-    return Column(
+  }) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -207,13 +158,11 @@ class _EditTabState extends ConsumerState<EditTab> {
         ),
       ],
     );
-  }
 
   Widget _buildDropdownField({
     required String label,
     required TextEditingController controller,
-  }) {
-    return Column(
+  }) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -253,10 +202,8 @@ class _EditTabState extends ConsumerState<EditTab> {
         ),
       ],
     );
-  }
 
-  Widget _buildDateTimeSection() {
-    return Column(
+  Widget _buildDateTimeSection() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -316,14 +263,12 @@ class _EditTabState extends ConsumerState<EditTab> {
         ),
       ],
     );
-  }
 
   Widget _buildDateRow({
     required String label,
     required String date,
     VoidCallback? onTap,
-  }) {
-    return GestureDetector(
+  }) => GestureDetector(
       onTap: onTap,
       child: Row(
         children: [
@@ -361,15 +306,14 @@ class _EditTabState extends ConsumerState<EditTab> {
         ],
       ),
     );
-  }
 
   String _formatDateTime(DateTime dateTime) {
-    final formatter = DateFormat('EEE, MMM d, y; h:mm a');
+    final DateFormat formatter = DateFormat('EEE, MMM d, y; h:mm a');
     return formatter.format(dateTime);
   }
 
   Future<void> _selectStartDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime.now(),
@@ -377,7 +321,7 @@ class _EditTabState extends ConsumerState<EditTab> {
     );
 
     if (picked != null) {
-      final TimeOfDay? time = await showTimePicker(
+      final time = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(_startDate ?? DateTime.now()),
       );
@@ -397,7 +341,7 @@ class _EditTabState extends ConsumerState<EditTab> {
   }
 
   Future<void> _selectEndDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate: _endDate ?? _startDate ?? DateTime.now(),
       firstDate: _startDate ?? DateTime.now(),
@@ -405,7 +349,7 @@ class _EditTabState extends ConsumerState<EditTab> {
     );
 
     if (picked != null) {
-      final TimeOfDay? time = await showTimePicker(
+      final time = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(_endDate ?? DateTime.now()),
       );
@@ -424,8 +368,7 @@ class _EditTabState extends ConsumerState<EditTab> {
     }
   }
 
-  Widget _buildDescriptionField() {
-    return Column(
+  Widget _buildDescriptionField() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -507,10 +450,8 @@ class _EditTabState extends ConsumerState<EditTab> {
         ),
       ],
     );
-  }
 
-  Widget _buildLogisticsSection() {
-    return Column(
+  Widget _buildLogisticsSection() => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -538,15 +479,13 @@ class _EditTabState extends ConsumerState<EditTab> {
         ),
       ],
     );
-  }
 
   Widget _buildLogisticItem({
     required IconData icon,
     required String label,
     required TextEditingController controller,
     TextInputType? keyboardType,
-  }) {
-    return Container(
+  }) => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
@@ -590,16 +529,15 @@ class _EditTabState extends ConsumerState<EditTab> {
         ],
       ),
     );
-  }
 
   Widget _buildSaveButton() {
-    final isSaving = ref.watch(eventUpdateProvider).isLoading;
+    final bool isSaving = ref.watch(eventUpdateProvider).isLoading;
 
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.background,
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 20,
@@ -652,11 +590,10 @@ class _EditTabState extends ConsumerState<EditTab> {
     }
 
     // Prepare updates
-    final updates = <String, dynamic>{
+    final Map<String, dynamic> updates = <String, dynamic>{
       'name': _titleController.text,
       'category': _categoryController.text,
       'description': _descriptionController.text,
-      'colorTheme': _selectedColorTheme,
     };
 
     if (_startDate != null) {
@@ -668,12 +605,12 @@ class _EditTabState extends ConsumerState<EditTab> {
     }
 
     // Parse numbers
-    final guestCount = int.tryParse(_guestCountController.text);
+    final int? guestCount = int.tryParse(_guestCountController.text);
     if (guestCount != null) {
       updates['expectedGuests'] = guestCount;
     }
 
-    final budget = double.tryParse(_budgetController.text);
+    final double? budget = double.tryParse(_budgetController.text);
     if (budget != null) {
       updates['budget'] = budget;
     }

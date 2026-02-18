@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../core/network/api_response.dart';
-import '../../domain/entities/check_in_request.dart';
-import '../../domain/entities/my_ticket.dart';
-import '../../domain/entities/promo_code_validation.dart';
-import '../../domain/entities/purchase_ticket_request.dart';
-import '../../domain/entities/purchase_ticket_response.dart';
-import '../models/ticket_model.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/check_in_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/my_ticket.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/promo_code_validation.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_request.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/purchase_ticket_response.dart';
+import 'package:fajimobileapp/features/tickets/data/models/ticket_model.dart';
 
 part 'ticket_remote_datasource.g.dart';
 
@@ -33,7 +33,7 @@ abstract class TicketRemoteDataSource {
 
   /// Get my tickets
   @GET('/tickets/my-tickets')
-  Future<ApiResponse<MyTicketsResponse>> getMyTickets(
+  Future<HttpResponse<dynamic>> getMyTickets(
     @Query('status') String? status,
     @Query('page') int page,
     @Query('limit') int limit,

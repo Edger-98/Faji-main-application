@@ -37,12 +37,10 @@ class ThemeState {
   ThemeState copyWith({
     AppThemeMode? themeMode,
     bool? isSystemDark,
-  }) {
-    return ThemeState(
+  }) => ThemeState(
       themeMode: themeMode ?? this.themeMode,
       isSystemDark: isSystemDark ?? this.isSystemDark,
     );
-  }
 
   @override
   bool operator ==(Object other) {
@@ -72,11 +70,11 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
   /// Load saved theme from preferences
   Future<void> _loadTheme() async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? savedTheme = prefs.getString(_themeKey);
+      final prefs = await SharedPreferences.getInstance();
+      final savedTheme = prefs.getString(_themeKey);
       
       if (savedTheme != null) {
-        final AppThemeMode themeMode = AppThemeMode.values.firstWhere(
+        final themeMode = AppThemeMode.values.firstWhere(
           (AppThemeMode mode) => mode.name == savedTheme,
           orElse: () => AppThemeMode.system,
         );
@@ -91,7 +89,7 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
   /// Save theme to preferences
   Future<void> _saveTheme(AppThemeMode themeMode) async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_themeKey, themeMode.name);
     } on Exception {
       // Handle error silently
@@ -111,7 +109,7 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
 
   /// Toggle between light and dark theme
   Future<void> toggleTheme() async {
-    final AppThemeMode newMode = state.themeMode == AppThemeMode.light 
+    final newMode = state.themeMode == AppThemeMode.light 
         ? AppThemeMode.dark 
         : AppThemeMode.light;
     await setThemeMode(newMode);
@@ -123,18 +121,18 @@ final StateNotifierProvider<ThemeNotifier, ThemeState> themeProvider = StateNoti
 
 /// Current theme data provider
 final Provider<ThemeData> currentThemeProvider = Provider<ThemeData>((ProviderRef<ThemeData> ref) {
-  final ThemeState themeState = ref.watch(themeProvider);
+  final themeState = ref.watch(themeProvider);
   return FajiAppTheme.getTheme(themeState.effectiveBrightness);
 });
 
 /// Current brightness provider
 final Provider<Brightness> currentBrightnessProvider = Provider<Brightness>((ProviderRef<Brightness> ref) {
-  final ThemeState themeState = ref.watch(themeProvider);
+  final themeState = ref.watch(themeProvider);
   return themeState.effectiveBrightness;
 });
 
 /// Is dark theme provider
 final Provider<bool> isDarkThemeProvider = Provider<bool>((ProviderRef<bool> ref) {
-  final Brightness brightness = ref.watch(currentBrightnessProvider);
+  final brightness = ref.watch(currentBrightnessProvider);
   return brightness == Brightness.dark;
 });

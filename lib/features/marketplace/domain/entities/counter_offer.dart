@@ -21,8 +21,7 @@ class CounterOfferResponse with _$CounterOfferResponse {
     required String id,
     required String status,
     required double counterPrice,
-    String? message,
-    required String updatedAt,
+    required String updatedAt, String? message,
   }) = _CounterOfferResponse;
 
   factory CounterOfferResponse.fromJson(Map<String, dynamic> json) =>

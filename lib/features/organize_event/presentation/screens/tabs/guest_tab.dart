@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/features/organize_event/data/repositories/guest_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,9 +7,9 @@ import 'package:fajimobileapp/features/organize_event/presentation/providers/gue
 
 /// GUEST Tab - Shows guest list and management with REAL API DATA
 class GuestTab extends ConsumerStatefulWidget {
-  final String eventId;
 
   const GuestTab({super.key, required this.eventId});
+  final String eventId;
 
   @override
   ConsumerState<GuestTab> createState() => _GuestTabState();
@@ -25,17 +26,17 @@ class _GuestTabState extends ConsumerState<GuestTab> {
 
   @override
   Widget build(BuildContext context) {
-    final filters = ref.watch(currentGuestFiltersProvider(widget.eventId));
-    final guestsAsync = ref.watch(guestListProvider(filters));
+    final GuestFilters filters = ref.watch(currentGuestFiltersProvider(widget.eventId));
+    final AsyncValue<GuestListResponse> guestsAsync = ref.watch(guestListProvider(filters));
     
     return Column(
-      children: [
+      children: <Widget>[
         // Search and action buttons
         _buildSearchBar(),
 
         // Filter chips with stats
         guestsAsync.when(
-          data: (response) => _buildFilterChips(response.stats),
+          data: (GuestListResponse response) => _buildFilterChips(response.stats),
           loading: () => _buildFilterChips(null),
           error: (_, __) => _buildFilterChips(null),
         ),
@@ -43,15 +44,15 @@ class _GuestTabState extends ConsumerState<GuestTab> {
         // Guest list
         Expanded(
           child: guestsAsync.when(
-            data: (response) => _buildGuestList(response.guests),
+            data: (GuestListResponse response) => _buildGuestList(response.guests),
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(
+            error: (Object error, StackTrace stack) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   Icon(Icons.error_outline, size: 48.sp, color: Colors.red),
                   SizedBox(height: 16.h),
-                  Text('Failed to load guests'),
+                  const Text('Failed to load guests'),
                   SizedBox(height: 8.h),
                   ElevatedButton(
                     onPressed: () => ref.invalidate(guestListProvider(filters)),
@@ -69,8 +70,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
     );
   }
 
-  Widget _buildSearchBar() {
-    return Container(
+  Widget _buildSearchBar() => Container(
       padding: EdgeInsets.all(16.w),
       child: Row(
         children: [
@@ -163,16 +163,15 @@ class _GuestTabState extends ConsumerState<GuestTab> {
         ],
       ),
     );
-  }
 
   Widget _buildFilterChips(stats) {
-    final currentStatus = ref.watch(currentGuestStatusProvider);
+    final String currentStatus = ref.watch(currentGuestStatusProvider);
     
-    final filters = [
-      {'label': 'All', 'value': 'all', 'count': stats?.total ?? 0},
-      {'label': 'Confirmed', 'value': 'confirmed', 'count': stats?.confirmed ?? 0},
-      {'label': 'Invited', 'value': 'invited', 'count': stats?.invited ?? 0},
-      {'label': 'Declined', 'value': 'declined', 'count': stats?.declined ?? 0},
+    final List<Map<String, dynamic>> filters = <Map<String, dynamic>>[
+      <String, dynamic>{'label': 'All', 'value': 'all', 'count': stats?.total ?? 0},
+      <String, dynamic>{'label': 'Confirmed', 'value': 'confirmed', 'count': stats?.confirmed ?? 0},
+      <String, dynamic>{'label': 'Invited', 'value': 'invited', 'count': stats?.invited ?? 0},
+      <String, dynamic>{'label': 'Declined', 'value': 'declined', 'count': stats?.declined ?? 0},
     ];
 
     return Container(
@@ -181,10 +180,10 @@ class _GuestTabState extends ConsumerState<GuestTab> {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
-        separatorBuilder: (context, index) => SizedBox(width: 8.w),
-        itemBuilder: (context, index) {
-          final filter = filters[index];
-          final isSelected = currentStatus == filter['value'];
+        separatorBuilder: (BuildContext context, int index) => SizedBox(width: 8.w),
+        itemBuilder: (BuildContext context, int index) {
+          final Map<String, dynamic> filter = filters[index];
+          final bool isSelected = currentStatus == filter['value'];
 
           return GestureDetector(
             onTap: () {
@@ -224,7 +223,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: <Widget>[
             Icon(Icons.people_outline, size: 64.sp, color: AppColors.onSurfaceVariant.withOpacity(0.3)),
             SizedBox(height: 16.h),
             Text(
@@ -252,14 +251,14 @@ class _GuestTabState extends ConsumerState<GuestTab> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        final filters = ref.read(currentGuestFiltersProvider(widget.eventId));
+        final GuestFilters filters = ref.read(currentGuestFiltersProvider(widget.eventId));
         ref.invalidate(guestListProvider(filters));
       },
       child: ListView.separated(
         padding: EdgeInsets.all(16.w),
         itemCount: guests.length,
-        separatorBuilder: (context, index) => SizedBox(height: 12.h),
-        itemBuilder: (context, index) {
+        separatorBuilder: (BuildContext context, int index) => SizedBox(height: 12.h),
+        itemBuilder: (BuildContext context, int index) {
           final guest = guests[index];
           return _buildGuestItem(guest);
         },
@@ -280,13 +279,13 @@ class _GuestTabState extends ConsumerState<GuestTab> {
         : name.substring(0, name.length > 1 ? 2 : 1).toUpperCase();
     
     // Generate color based on name
-    final colors = [
+    final List<Color> colors = <Color>[
       const Color(0xFFFF8C42),
       const Color(0xFF5B9BD5),
       const Color(0xFFB8E986),
       const Color(0xFFFF6B9D),
     ];
-    final color = colors[name.hashCode % colors.length];
+    final Color color = colors[name.hashCode % colors.length];
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -295,7 +294,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
         border: Border.all(color: const Color(0xFF2A2A2A)),
       ),
       child: Row(
-        children: [
+        children: <Widget>[
           // Avatar
           Container(
             width: 48.w,
@@ -322,9 +321,9 @@ class _GuestTabState extends ConsumerState<GuestTab> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Row(
-                  children: [
+                  children: <Widget>[
                     Text(
                       name,
                       style: TextStyle(
@@ -334,7 +333,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
                         color: AppColors.onSurface,
                       ),
                     ),
-                    if (isOnline) ...[
+                    if (isOnline) ...<Widget>[
                       SizedBox(width: 8.w),
                       Container(
                         width: 8.w,
@@ -371,7 +370,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              children: <Widget>[
                 Icon(_getStatusIcon(status),
                     size: 14.sp, color: _getStatusColor(status)),
                 SizedBox(width: 4.w),
@@ -395,8 +394,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
     );
   }
 
-  Widget _buildBottomActions() {
-    return Container(
+  Widget _buildBottomActions() => Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.background,
@@ -475,20 +473,19 @@ class _GuestTabState extends ConsumerState<GuestTab> {
         ],
       ),
     );
-  }
   
   void _showAddGuestDialog() {
-    final nameController = TextEditingController();
-    final phoneController = TextEditingController();
-    final emailController = TextEditingController();
-    bool isLoading = false;
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController phoneController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    var isLoading = false;
     
     showDialog(
       context: context,
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
+      builder: (BuildContext dialogContext) => StatefulBuilder(
+        builder: (BuildContext context, setState) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A1A),
-        title: Text(
+        title: const Text(
           'Add Guest',
           style: TextStyle(
             fontFamily: AppTypography.modicaPro,
@@ -497,15 +494,15 @@ class _GuestTabState extends ConsumerState<GuestTab> {
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <Widget>[
             TextField(
               controller: nameController,
-              style: TextStyle(color: AppColors.onSurface),
-              decoration: InputDecoration(
+              style: const TextStyle(color: AppColors.onSurface),
+              decoration: const InputDecoration(
                 labelText: 'Name *',
                 labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color(0xFF2A2A2A)),
+                  borderSide: BorderSide(color: Color(0xFF2A2A2A)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.primary),
@@ -515,13 +512,13 @@ class _GuestTabState extends ConsumerState<GuestTab> {
             SizedBox(height: 12.h),
             TextField(
               controller: phoneController,
-              style: TextStyle(color: AppColors.onSurface),
+              style: const TextStyle(color: AppColors.onSurface),
               keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Phone',
                 labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color(0xFF2A2A2A)),
+                  borderSide: BorderSide(color: Color(0xFF2A2A2A)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.primary),
@@ -531,13 +528,13 @@ class _GuestTabState extends ConsumerState<GuestTab> {
             SizedBox(height: 12.h),
             TextField(
               controller: emailController,
-              style: TextStyle(color: AppColors.onSurface),
+              style: const TextStyle(color: AppColors.onSurface),
               keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: const Color(0xFF2A2A2A)),
+                  borderSide: BorderSide(color: Color(0xFF2A2A2A)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.primary),
@@ -546,10 +543,10 @@ class _GuestTabState extends ConsumerState<GuestTab> {
             ),
           ],
         ),
-        actions: [
+        actions: <Widget>[
           TextButton(
             onPressed: isLoading ? null : () => Navigator.pop(dialogContext),
-            child: Text('Cancel', style: TextStyle(color: AppColors.onSurfaceVariant)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.onSurfaceVariant)),
           ),
           ElevatedButton(
             onPressed: isLoading ? null : () async {
@@ -560,7 +557,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
                 return;
               }
               
-              final guestName = nameController.text;
+              final String guestName = nameController.text;
               
               // Set loading state
               setState(() {
@@ -579,7 +576,7 @@ class _GuestTabState extends ConsumerState<GuestTab> {
                 if (mounted) Navigator.pop(dialogContext);
                 
                 // Refresh the guest list immediately
-                final filters = ref.read(currentGuestFiltersProvider(widget.eventId));
+                final GuestFilters filters = ref.read(currentGuestFiltersProvider(widget.eventId));
                 ref.invalidate(guestListProvider(filters));
                 
                 if (mounted) {

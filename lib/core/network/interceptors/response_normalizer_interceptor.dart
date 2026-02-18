@@ -34,7 +34,7 @@ class ResponseNormalizerInterceptor extends Interceptor {
       // If response is a direct array, wrap it FIRST (before checking Map)
       if (data is List) {
         print('🔄 NORMALIZER: ✅ Detected direct array with ${data.length} items, wrapping...');
-        final normalized = <String, dynamic>{
+        final Map<String, dynamic> normalized = <String, dynamic>{
           'success': true,
           'message': 'Success',
           'data': data,
@@ -147,12 +147,12 @@ class ResponseNormalizerInterceptor extends Interceptor {
       }
       if (status is String) {
         // Only check for explicit HTTP-like status strings
-        final statusLower = status.toLowerCase();
+        final String statusLower = status.toLowerCase();
         if (statusLower == 'success' || statusLower == 'ok' || status == '200') {
           return true;
         }
         // If it's a number string, parse it
-        final statusCode = int.tryParse(status);
+        final int? statusCode = int.tryParse(status);
         if (statusCode != null) {
           return statusCode >= 200 && statusCode < 300;
         }

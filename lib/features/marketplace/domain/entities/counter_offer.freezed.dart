@@ -278,16 +278,16 @@ mixin _$CounterOfferResponse {
   String get id => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   double get counterPrice => throw _privateConstructorUsedError;
-  String? get message => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
       String id,
       String status,
       double counterPrice,
-      String? message,
       String updatedAt,
+      String? message,
     )
     $default,
   ) => throw _privateConstructorUsedError;
@@ -297,8 +297,8 @@ mixin _$CounterOfferResponse {
       String id,
       String status,
       double counterPrice,
-      String? message,
       String updatedAt,
+      String? message,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
@@ -308,8 +308,8 @@ mixin _$CounterOfferResponse {
       String id,
       String status,
       double counterPrice,
-      String? message,
       String updatedAt,
+      String? message,
     )?
     $default, {
     required TResult orElse(),
@@ -349,8 +349,8 @@ abstract class $CounterOfferResponseCopyWith<$Res> {
     String id,
     String status,
     double counterPrice,
-    String? message,
     String updatedAt,
+    String? message,
   });
 }
 
@@ -375,8 +375,8 @@ class _$CounterOfferResponseCopyWithImpl<
     Object? id = null,
     Object? status = null,
     Object? counterPrice = null,
-    Object? message = freezed,
     Object? updatedAt = null,
+    Object? message = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -392,14 +392,14 @@ class _$CounterOfferResponseCopyWithImpl<
                 ? _value.counterPrice
                 : counterPrice // ignore: cast_nullable_to_non_nullable
                       as double,
-            message: freezed == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                      as String?,
             updatedAt: null == updatedAt
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
                       as String,
+            message: freezed == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -419,8 +419,8 @@ abstract class _$$CounterOfferResponseImplCopyWith<$Res>
     String id,
     String status,
     double counterPrice,
-    String? message,
     String updatedAt,
+    String? message,
   });
 }
 
@@ -441,8 +441,8 @@ class __$$CounterOfferResponseImplCopyWithImpl<$Res>
     Object? id = null,
     Object? status = null,
     Object? counterPrice = null,
-    Object? message = freezed,
     Object? updatedAt = null,
+    Object? message = freezed,
   }) {
     return _then(
       _$CounterOfferResponseImpl(
@@ -458,14 +458,14 @@ class __$$CounterOfferResponseImplCopyWithImpl<$Res>
             ? _value.counterPrice
             : counterPrice // ignore: cast_nullable_to_non_nullable
                   as double,
-        message: freezed == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String?,
         updatedAt: null == updatedAt
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
                   as String,
+        message: freezed == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -478,8 +478,8 @@ class _$CounterOfferResponseImpl implements _CounterOfferResponse {
     required this.id,
     required this.status,
     required this.counterPrice,
-    this.message,
     required this.updatedAt,
+    this.message,
   });
 
   factory _$CounterOfferResponseImpl.fromJson(Map<String, dynamic> json) =>
@@ -492,13 +492,13 @@ class _$CounterOfferResponseImpl implements _CounterOfferResponse {
   @override
   final double counterPrice;
   @override
-  final String? message;
-  @override
   final String updatedAt;
+  @override
+  final String? message;
 
   @override
   String toString() {
-    return 'CounterOfferResponse(id: $id, status: $status, counterPrice: $counterPrice, message: $message, updatedAt: $updatedAt)';
+    return 'CounterOfferResponse(id: $id, status: $status, counterPrice: $counterPrice, updatedAt: $updatedAt, message: $message)';
   }
 
   @override
@@ -510,15 +510,15 @@ class _$CounterOfferResponseImpl implements _CounterOfferResponse {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.counterPrice, counterPrice) ||
                 other.counterPrice == counterPrice) &&
-            (identical(other.message, message) || other.message == message) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, status, counterPrice, message, updatedAt);
+      Object.hash(runtimeType, id, status, counterPrice, updatedAt, message);
 
   /// Create a copy of CounterOfferResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -539,12 +539,12 @@ class _$CounterOfferResponseImpl implements _CounterOfferResponse {
       String id,
       String status,
       double counterPrice,
-      String? message,
       String updatedAt,
+      String? message,
     )
     $default,
   ) {
-    return $default(id, status, counterPrice, message, updatedAt);
+    return $default(id, status, counterPrice, updatedAt, message);
   }
 
   @override
@@ -554,12 +554,12 @@ class _$CounterOfferResponseImpl implements _CounterOfferResponse {
       String id,
       String status,
       double counterPrice,
-      String? message,
       String updatedAt,
+      String? message,
     )?
     $default,
   ) {
-    return $default?.call(id, status, counterPrice, message, updatedAt);
+    return $default?.call(id, status, counterPrice, updatedAt, message);
   }
 
   @override
@@ -569,14 +569,14 @@ class _$CounterOfferResponseImpl implements _CounterOfferResponse {
       String id,
       String status,
       double counterPrice,
-      String? message,
       String updatedAt,
+      String? message,
     )?
     $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(id, status, counterPrice, message, updatedAt);
+      return $default(id, status, counterPrice, updatedAt, message);
     }
     return orElse();
   }
@@ -620,8 +620,8 @@ abstract class _CounterOfferResponse implements CounterOfferResponse {
     required final String id,
     required final String status,
     required final double counterPrice,
-    final String? message,
     required final String updatedAt,
+    final String? message,
   }) = _$CounterOfferResponseImpl;
 
   factory _CounterOfferResponse.fromJson(Map<String, dynamic> json) =
@@ -634,9 +634,9 @@ abstract class _CounterOfferResponse implements CounterOfferResponse {
   @override
   double get counterPrice;
   @override
-  String? get message;
-  @override
   String get updatedAt;
+  @override
+  String? get message;
 
   /// Create a copy of CounterOfferResponse
   /// with the given fields replaced by the non-null parameter values.

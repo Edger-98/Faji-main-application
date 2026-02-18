@@ -1,11 +1,12 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/api_service.dart';
-import '../../../../core/models/message_model.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/core/models/message_model.dart';
 
 class MessageRepository {
-  final ApiService _api;
   
   MessageRepository(this._api);
+  final ApiService _api;
   
   Future<List<MessageModel>> getMessages(
     String eventId, {
@@ -14,17 +15,17 @@ class MessageRepository {
     String? before,
   }) async {
     try {
-      final params = <String, dynamic>{
+      final Map<String, dynamic> params = <String, dynamic>{
         'page': page,
         'limit': limit,
       };
       
       if (before != null) params['before'] = before;
       
-      final response = await _api.get('/events/$eventId/messages', params: params);
+      final Response response = await _api.get('/events/$eventId/messages', params: params);
       
       final data = response.data['data'];
-      final messages = (data['messages'] as List)
+      final List<MessageModel> messages = (data['messages'] as List)
           .map((e) => MessageModel.fromJson(e as Map<String, dynamic>))
           .toList();
       
@@ -39,7 +40,7 @@ class MessageRepository {
     String content,
   ) async {
     try {
-      final response = await _api.post('/events/$eventId/messages', data: {
+      final Response response = await _api.post('/events/$eventId/messages', data: <String, String>{
         'content': content,
         'type': 'user',
       });
@@ -51,6 +52,4 @@ class MessageRepository {
   }
 }
 
-final messageRepositoryProvider = Provider<MessageRepository>((ref) {
-  return MessageRepository(ref.read(apiServiceProvider));
-});
+final Provider<MessageRepository> messageRepositoryProvider = Provider<MessageRepository>((ProviderRef<MessageRepository> ref) => MessageRepository(ref.read(apiServiceProvider)));

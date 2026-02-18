@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/core/network/api_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,14 +13,14 @@ import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/bookin
 /// Screen for hosts to send booking requests to vendors
 /// CRITICAL: Only hosts can initiate bookings (vendors are passive)
 class VendorBookingRequestScreen extends ConsumerStatefulWidget {
-  final String vendorId;
-  final String serviceId;
 
   const VendorBookingRequestScreen({
     super.key,
     required this.vendorId,
     required this.serviceId,
   });
+  final String vendorId;
+  final String serviceId;
 
   @override
   ConsumerState<VendorBookingRequestScreen> createState() => _VendorBookingRequestScreenState();
@@ -37,8 +38,7 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       appBar: AppBar(
         backgroundColor: context.colors.surface,
@@ -237,14 +237,13 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
         ),
       ),
     );
-  }
 
   Widget _buildEventOption({
     required String eventId,
     required String eventName,
     required String eventDate,
   }) {
-    final isSelected = _selectedEventId == eventId;
+    final bool isSelected = _selectedEventId == eventId;
 
     return GestureDetector(
       onTap: () {
@@ -267,7 +266,7 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
           ),
         ),
         child: Row(
-          children: [
+          children: <Widget>[
             Container(
               width: 40.w,
               height: 40.h,
@@ -289,7 +288,7 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Text(
                     eventName,
                     style: AppTypography.bodyMedium.copyWith(
@@ -332,15 +331,15 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
       print('   eventId: $_selectedEventId');
       print('   message: ${_messageController.text}');
       
-      final repository = ref.read(marketplaceRepositoryProvider);
+      final MarketplaceRepository repository = ref.read(marketplaceRepositoryProvider);
       
       // Create booking with upfront payment option (default)
-      final result = await repository.createBooking(
+      final ApiResult<BookingEntity> result = await repository.createBooking(
         eventId: _selectedEventId!,
         cohostId: widget.vendorId,
         resourceId: widget.serviceId,
         paymentOption: PaymentOption.upfrontPayment,
-        offeredPrice: 500.0, // TODO: Get actual price from vendor service
+        offeredPrice: 500, // TODO: Get actual price from vendor service
         message: _messageController.text.isNotEmpty ? _messageController.text : null,
         eventDate: DateTime.now().add(const Duration(days: 30)), // TODO: Get from selected event
       );
@@ -350,7 +349,7 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
       setState(() => _isLoading = false);
       
       result.when(
-        success: (booking) {
+        success: (BookingEntity booking) {
           print('✅ Booking request sent successfully');
           print('   bookingId: ${booking.id}');
           
@@ -364,11 +363,11 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
           
           context.pop();
         },
-        failure: (error) {
+        failure: (String error) {
           print('❌ Booking request failed: $error');
           
           // Show user-friendly error message
-          String errorMessage = 'Failed to send booking request';
+          var errorMessage = 'Failed to send booking request';
           if (error.contains('Network') || error.contains('Connection')) {
             errorMessage = 'Network error. Please check your connection.';
           } else if (error.contains('401') || error.contains('Unauthorized')) {
@@ -385,7 +384,6 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
             SnackBar(
               content: Text(errorMessage),
               backgroundColor: context.colors.error,
-              duration: const Duration(seconds: 4),
             ),
           );
         },
@@ -400,9 +398,8 @@ class _VendorBookingRequestScreenState extends ConsumerState<VendorBookingReques
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text('Error: ${e}'),
           backgroundColor: context.colors.error,
-          duration: const Duration(seconds: 4),
         ),
       );
     }

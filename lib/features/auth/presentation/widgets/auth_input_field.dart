@@ -7,8 +7,7 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Input field component matching Figma design system
 class AuthInputField extends StatelessWidget {
   const AuthInputField({
-    super.key,
-    required this.hintText,
+    required this.hintText, super.key,
     this.controller,
     this.focusNode,
     this.keyboardType = TextInputType.text,
@@ -28,8 +27,7 @@ class AuthInputField extends StatelessWidget {
   final Widget? suffixWidget;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       width: double.infinity,
       height: 69.h, // Responsive height from Figma
       decoration: BoxDecoration(
@@ -86,5 +84,4 @@ class AuthInputField extends StatelessWidget {
         ),
       ),
     );
-  }
 }

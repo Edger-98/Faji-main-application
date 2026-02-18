@@ -1,14 +1,5 @@
 /// Ticketing information model
 class TicketingModel {
-  final bool enabled;
-  final double price;
-  final String currency;
-  final String currencySymbol;
-  final int? totalTickets;
-  final int? availableTickets;
-  final int? soldTickets;
-  final bool isSoldOut;
-  final bool isFree;
 
   TicketingModel({
     required this.enabled,
@@ -35,9 +26,17 @@ class TicketingModel {
       isFree: json['isFree'] as bool? ?? true,
     );
   }
+  final bool enabled;
+  final double price;
+  final String currency;
+  final String currencySymbol;
+  final int? totalTickets;
+  final int? availableTickets;
+  final int? soldTickets;
+  final bool isSoldOut;
+  final bool isFree;
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'enabled': enabled,
       'price': price,
       'currency': currency,
@@ -48,7 +47,6 @@ class TicketingModel {
       'isSoldOut': isSoldOut,
       'isFree': isFree,
     };
-  }
 
   // Helper getters
   int get ticketsRemaining => availableTickets ?? 0;

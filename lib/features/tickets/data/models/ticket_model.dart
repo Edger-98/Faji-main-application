@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../../domain/entities/ticket_entity.dart';
+import 'package:fajimobileapp/features/tickets/domain/entities/ticket_entity.dart';
 
 TicketModel ticketModelFromJson(String str) =>
     TicketModel.fromJson(json.decode(str) as Map<String, dynamic>);
@@ -8,15 +8,6 @@ TicketModel ticketModelFromJson(String str) =>
 String ticketModelToJson(TicketModel data) => json.encode(data.toJson());
 
 class TicketModel {
-  final String id;
-  final String userId;
-  final String eventId;
-  final int ticketId;
-  final DateTime purchasedDate;
-  final String? promoCode;
-  final int quantity;
-  final String transactionId;
-  final DateTime? createdAt;
 
   TicketModel({
     required this.id,
@@ -46,33 +37,6 @@ class TicketModel {
             : null,
       );
 
-  Map<String, dynamic> toJson() => {
-        '_id': id,
-        'userId': userId,
-        'eventId': eventId,
-        'ticketId': ticketId,
-        'purchasedDate': purchasedDate.toIso8601String(),
-        if (promoCode != null) 'promoCode': promoCode,
-        'quantity': quantity,
-        'transactionId': transactionId,
-        if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
-      };
-
-  /// Convert to entity
-  TicketEntity toEntity() {
-    return TicketEntity(
-      id: id,
-      userId: userId,
-      eventId: eventId,
-      ticketId: ticketId,
-      purchasedDate: purchasedDate,
-      promoCode: promoCode,
-      quantity: quantity,
-      transactionId: transactionId,
-      createdAt: createdAt,
-    );
-  }
-
   /// Create from entity
   factory TicketModel.fromEntity(TicketEntity entity) {
     return TicketModel(
@@ -87,4 +51,38 @@ class TicketModel {
       createdAt: entity.createdAt,
     );
   }
+  final String id;
+  final String userId;
+  final String eventId;
+  final int ticketId;
+  final DateTime purchasedDate;
+  final String? promoCode;
+  final int quantity;
+  final String transactionId;
+  final DateTime? createdAt;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        '_id': id,
+        'userId': userId,
+        'eventId': eventId,
+        'ticketId': ticketId,
+        'purchasedDate': purchasedDate.toIso8601String(),
+        if (promoCode != null) 'promoCode': promoCode,
+        'quantity': quantity,
+        'transactionId': transactionId,
+        if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
+      };
+
+  /// Convert to entity
+  TicketEntity toEntity() => TicketEntity(
+      id: id,
+      userId: userId,
+      eventId: eventId,
+      ticketId: ticketId,
+      purchasedDate: purchasedDate,
+      promoCode: promoCode,
+      quantity: quantity,
+      transactionId: transactionId,
+      createdAt: createdAt,
+    );
 }

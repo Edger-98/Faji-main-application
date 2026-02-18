@@ -1,5 +1,6 @@
 /// Features module exports
 /// This file provides a single entry point for all feature modules
+library;
 
 // Auth feature
 export 'auth/auth_feature.dart';

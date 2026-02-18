@@ -2,30 +2,28 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fajimobileapp/core/network/api_response.dart';
+import 'package:retrofit/dio.dart';
 
-import '../../../../core/error/failures.dart';
-import '../../../../core/network/network_info.dart';
-import '../../../../core/services/api_service.dart';
-import '../../domain/entities/auth_token_entity.dart';
-import '../../domain/entities/registration_complete_entity.dart';
-import '../../domain/entities/registration_session_entity.dart';
-import '../../domain/entities/registration_token_entity.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../datasources/auth_local_datasource.dart';
-import '../datasources/auth_remote_datasource.dart';
-import '../models/auth_token_model.dart';
-import '../models/registration_complete_model.dart';
-import '../models/registration_session_model.dart';
-import '../models/registration_token_model.dart';
-import '../models/user_model.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/core/network/network_info.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_complete_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_session_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_token_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
+import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:fajimobileapp/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:fajimobileapp/features/auth/data/models/auth_token_model.dart';
+import 'package:fajimobileapp/features/auth/data/models/registration_complete_model.dart';
+import 'package:fajimobileapp/features/auth/data/models/registration_session_model.dart';
+import 'package:fajimobileapp/features/auth/data/models/registration_token_model.dart';
+import 'package:fajimobileapp/features/auth/data/models/user_model.dart';
 
 /// Auth repository implementation
-class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
-  final AuthLocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
-  final apiService; // Add API service for token management
+class AuthRepositoryImpl implements AuthRepository { // Add API service for token management
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
@@ -33,6 +31,10 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.networkInfo,
     required this.apiService,
   });
+  final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
+  final apiService;
 
   // ========== Multi-Step Registration Flow ==========
 
@@ -45,15 +47,15 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.registerEmail({'email': email});
+      final HttpResponse response = await remoteDataSource.registerEmail(<String, dynamic>{'email': email});
 
       if (response.response.statusCode == 200) {
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         final data = responseData['data'] ?? responseData;
-        final model = RegistrationSessionModel.fromJson(data);
+        final RegistrationSessionModel model = RegistrationSessionModel.fromJson(data);
         return Right(model.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Failed to register email'));
+        return const Left(ServerFailure(message: 'Failed to register email'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -73,19 +75,19 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.verifyRegistrationOtp({
+      final HttpResponse response = await remoteDataSource.verifyRegistrationOtp(<String, dynamic>{
         'email': email,
         'otp': otp,
         'sessionId': sessionId,
       });
 
       if (response.response.statusCode == 200) {
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         final data = responseData['data'] ?? responseData;
-        final model = RegistrationTokenModel.fromJson(data);
+        final RegistrationTokenModel model = RegistrationTokenModel.fromJson(data);
         return Right(model.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Failed to verify OTP'));
+        return const Left(ServerFailure(message: 'Failed to verify OTP'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -104,18 +106,18 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.addPhone({
+      final HttpResponse response = await remoteDataSource.addPhone(<String, dynamic>{
         'phoneNo': phoneNo,
         'registrationToken': registrationToken,
       });
 
       if (response.response.statusCode == 200) {
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         final data = responseData['data'] ?? responseData;
-        final model = RegistrationTokenModel.fromJson(data);
+        final RegistrationTokenModel model = RegistrationTokenModel.fromJson(data);
         return Right(model.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Failed to add phone number'));
+        return const Left(ServerFailure(message: 'Failed to add phone number'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -135,19 +137,19 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.addName({
+      final HttpResponse response = await remoteDataSource.addName(<String, dynamic>{
         'firstName': firstName,
         'lastName': lastName,
         'registrationToken': registrationToken,
       });
 
       if (response.response.statusCode == 200) {
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         final data = responseData['data'] ?? responseData;
-        final model = RegistrationTokenModel.fromJson(data);
+        final RegistrationTokenModel model = RegistrationTokenModel.fromJson(data);
         return Right(model.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Failed to add name'));
+        return const Left(ServerFailure(message: 'Failed to add name'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -168,7 +170,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.completeRegistration({
+      final HttpResponse response = await remoteDataSource.completeRegistration(<String, dynamic>{
         'password': password,
         'role': role,
         'registrationToken': registrationToken,
@@ -176,14 +178,14 @@ class AuthRepositoryImpl implements AuthRepository {
       });
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         
         // The normalizer wraps the response as: {success: true, message: "...", data: {...}}
         // Extract the data field which contains the actual registration response
-        final data = responseData['data'] as Map<String, dynamic>? ?? responseData;
+        final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>? ?? responseData;
         
         // Parse the registration complete model
-        final model = RegistrationCompleteModel.fromJson(data);
+        final RegistrationCompleteModel model = RegistrationCompleteModel.fromJson(data);
         
         // Save auth data
         await saveAuthData(model.token, model.userId);
@@ -198,7 +200,7 @@ class AuthRepositoryImpl implements AuthRepository {
         
         return Right(model.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Failed to complete registration'));
+        return const Left(ServerFailure(message: 'Failed to complete registration'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -221,7 +223,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.login({
+      final HttpResponse response = await remoteDataSource.login(<String, dynamic>{
         'email': email,
         'password': password,
         if (expoPushToken != null) 'expoPushToken': expoPushToken,
@@ -229,18 +231,18 @@ class AuthRepositoryImpl implements AuthRepository {
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         // Parse the response data - handle both wrapped and direct responses
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         
         // Check if response has 'data' field (wrapped response)
-        final actualData = responseData.containsKey('data') 
+        final Map<String, dynamic> actualData = responseData.containsKey('data') 
             ? responseData['data'] as Map<String, dynamic>
             : responseData;
         
-        final authData = AuthTokenModel.fromJson(actualData);
+        final AuthTokenModel authData = AuthTokenModel.fromJson(actualData);
         await saveAuthData(authData.token, authData.userId);
         
         // Save user data for quick access
-        final userObj = actualData['user'] as Map<String, dynamic>?;
+        final Map<String, dynamic>? userObj = actualData['user'] as Map<String, dynamic>?;
         await localDataSource.saveUserData(
           (userObj?['firstName'] as String?) ?? '',
           (userObj?['lastName'] as String?) ?? '',
@@ -251,7 +253,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(authData.toEntity());
       } else {
         // Extract error message from response
-        final responseData = response.data as Map<String, dynamic>?;
+        final Map<String, dynamic>? responseData = response.data as Map<String, dynamic>?;
         final errorMessage = responseData?['message'] ?? 
                            responseData?['msg'] ?? 
                            responseData?['error'] ?? 
@@ -282,7 +284,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.signup({
+      final HttpResponse response = await remoteDataSource.signup(<String, dynamic>{
         'email': email,
         'phoneNo': phoneNo,
         'firstName': firstName,
@@ -296,12 +298,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         // Parse the response data directly
-        final responseData = response.data as Map<String, dynamic>;
-        final authData = AuthTokenModel.fromJson(responseData);
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+        final AuthTokenModel authData = AuthTokenModel.fromJson(responseData);
         await saveAuthData(authData.token, authData.userId);
         return Right(authData.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Signup failed'));
+        return const Left(ServerFailure(message: 'Signup failed'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -319,14 +321,14 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.sendOtp({
+      final HttpResponse response = await remoteDataSource.sendOtp(<String, dynamic>{
         'email': email,
       });
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Failed to send OTP'));
+        return const Left(ServerFailure(message: 'Failed to send OTP'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -345,7 +347,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.verifyOtp({
+      final HttpResponse response = await remoteDataSource.verifyOtp(<String, dynamic>{
         'email': email,
         'otp': otp,
       });
@@ -353,7 +355,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Invalid OTP'));
+        return const Left(ServerFailure(message: 'Invalid OTP'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -371,14 +373,78 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.forgetPassword({
+      final HttpResponse response = await remoteDataSource.forgetPassword(<String, dynamic>{
         'email': email,
       });
 
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Failed to send reset link'));
+        return const Left(ServerFailure(message: 'Failed to send reset link'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyPasswordResetOtp({
+    required String email,
+    required String otp,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final HttpResponse response = await remoteDataSource.verifyPasswordResetOtp(<String, dynamic>{
+        'email': email,
+        'otp': otp,
+      });
+
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        // Extract resetToken from response
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>? ?? responseData;
+        final String? resetToken = data['resetToken'] as String?;
+        
+        if (resetToken != null) {
+          return Right(resetToken);
+        } else {
+          return const Left(ServerFailure(message: 'Reset token not received'));
+        }
+      } else {
+        return const Left(ServerFailure(message: 'Invalid OTP'));
+      }
+    } on DioException catch (e) {
+      return Left(_handleDioError(e));
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> resetPassword({
+    required String resetToken,
+    required String newPassword,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure.noConnection());
+    }
+
+    try {
+      final HttpResponse response = await remoteDataSource.resetPassword(<String, dynamic>{
+        'resetToken': resetToken,
+        'newPassword': newPassword,
+        'confirmPassword': newPassword,
+      });
+
+      if (response.response.statusCode == 200 || response.response.statusCode == 201) {
+        return const Right(true);
+      } else {
+        return const Left(ServerFailure(message: 'Failed to reset password'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -398,9 +464,9 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.updatePassword(
+      final HttpResponse response = await remoteDataSource.updatePassword(
         token,
-        {
+        <String, dynamic>{
           'oldPassword': oldPassword,
           'newPassword': newPassword,
         },
@@ -409,7 +475,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Failed to update password'));
+        return const Left(ServerFailure(message: 'Failed to update password'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -425,11 +491,11 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.getUserById(id);
+      final HttpResponse response = await remoteDataSource.getUserById(id);
 
       if (response.response.statusCode == 200) {
         // Parse the response data - Response normalizer wraps it as {success, message, data}
-        final responseData = response.data as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
         
         // Check if response is normalized (has 'data' field)
         final dataField = responseData['data'];
@@ -441,14 +507,14 @@ class AuthRepositoryImpl implements AuthRepository {
             // Check if data contains 'user' field or is the user object itself
             userJson = dataField['user'] as Map<String, dynamic>? ?? dataField;
           } else {
-            return Left(ServerFailure(message: 'Invalid user data format'));
+            return const Left(ServerFailure(message: 'Invalid user data format'));
           }
         } else {
           // Response is not normalized, check for 'user' field
           userJson = responseData['user'] as Map<String, dynamic>? ?? responseData;
         }
         
-        final userData = UserModel.fromJson(userJson);
+        final UserModel userData = UserModel.fromJson(userJson);
         
         // Save user data locally for offline access
         await localDataSource.saveUserData(
@@ -460,12 +526,12 @@ class AuthRepositoryImpl implements AuthRepository {
         
         return Right(userData.toEntity());
       } else {
-        return Left(ServerFailure(message: 'Failed to get user'));
+        return const Left(ServerFailure(message: 'Failed to get user'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
-      return Left(ServerFailure(message: 'Error loading user: ${e.toString()}'));
+      return Left(ServerFailure(message: 'Error loading user: ${e}'));
     }
   }
 
@@ -487,7 +553,7 @@ class AuthRepositoryImpl implements AuthRepository {
         imageFile = File(imagePath);
       }
 
-      final response = await remoteDataSource.updateSettings(
+      final ApiResponse<UserModel> response = await remoteDataSource.updateSettings(
         id,
         firstName,
         lastName,
@@ -514,13 +580,13 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     try {
-      final response = await remoteDataSource.deleteAccount(id);
+      final HttpResponse response = await remoteDataSource.deleteAccount(id);
 
       if (response.response.statusCode == 200 || response.response.statusCode == 204) {
         await clearAuthData();
         return const Right(true);
       } else {
-        return Left(ServerFailure(message: 'Failed to delete account'));
+        return const Left(ServerFailure(message: 'Failed to delete account'));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -541,19 +607,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> isLoggedIn() async {
-    final token = await localDataSource.getToken();
+    final String? token = await localDataSource.getToken();
     return token != null && token.isNotEmpty;
   }
 
   @override
-  Future<String?> getToken() async {
-    return await localDataSource.getToken();
-  }
+  Future<String?> getToken() async => await localDataSource.getToken();
 
   @override
-  Future<String?> getUserId() async {
-    return await localDataSource.getUserId();
-  }
+  Future<String?> getUserId() async => await localDataSource.getUserId();
 
   @override
   Future<void> saveAuthData(String token, String userId) async {
@@ -577,10 +639,10 @@ class AuthRepositoryImpl implements AuthRepository {
       case DioExceptionType.receiveTimeout:
         return NetworkFailure.timeout();
       case DioExceptionType.badResponse:
-        final statusCode = error.response?.statusCode;
+        final int? statusCode = error.response?.statusCode;
         // Try multiple possible error message fields from backend
         final responseData = error.response?.data;
-        String message = 'An error occurred';
+        var message = 'An error occurred';
         
         if (responseData is Map<String, dynamic>) {
           message = responseData['message'] as String? ?? 

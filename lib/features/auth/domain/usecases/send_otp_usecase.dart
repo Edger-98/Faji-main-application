@@ -1,17 +1,15 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/error/failures.dart';
-import '../repositories/auth_repository.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/repositories/auth_repository.dart';
 
 /// Send OTP use case
 class SendOtpUseCase {
-  final AuthRepository repository;
 
   SendOtpUseCase(this.repository);
+  final AuthRepository repository;
 
   Future<Either<Failure, bool>> call({
     required String email,
-  }) async {
-    return await repository.sendOtp(email: email);
-  }
+  }) async => await repository.sendOtp(email: email);
 }

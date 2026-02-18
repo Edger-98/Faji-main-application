@@ -131,8 +131,8 @@ _$VerificationStatusImpl _$$VerificationStatusImplFromJson(Map json) =>
         threshold: $checkedConvert('threshold', (v) => (v as num).toInt()),
         meetsThreshold: $checkedConvert('meetsThreshold', (v) => v as bool),
         isVerified: $checkedConvert('isVerified', (v) => v as bool),
-        verifiedAt: $checkedConvert('verifiedAt', (v) => v as String?),
         canVerify: $checkedConvert('canVerify', (v) => v as bool),
+        verifiedAt: $checkedConvert('verifiedAt', (v) => v as String?),
       );
       return val;
     });
@@ -148,6 +148,6 @@ Map<String, dynamic> _$$VerificationStatusImplToJson(
   'threshold': instance.threshold,
   'meetsThreshold': instance.meetsThreshold,
   'isVerified': instance.isVerified,
-  if (instance.verifiedAt case final value?) 'verifiedAt': value,
   'canVerify': instance.canVerify,
+  if (instance.verifiedAt case final value?) 'verifiedAt': value,
 };

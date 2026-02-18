@@ -21,8 +21,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.background,
       body: SafeArea(
         child: Column(
@@ -237,7 +236,6 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildMessageBubble(
     BuildContext context,
@@ -245,8 +243,7 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
     String time, {
     bool isOrganizer = false,
     bool isUser = false,
-  }) {
-    return Column(
+  }) => Column(
       crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         if (!isUser)
@@ -316,5 +313,4 @@ class _OrganizerChatScreenState extends State<OrganizerChatScreen> {
         ],
       ],
     );
-  }
 }

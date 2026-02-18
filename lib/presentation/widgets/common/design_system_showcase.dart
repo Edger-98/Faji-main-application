@@ -10,13 +10,13 @@ class DesignSystemShowcase extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
-    final bool isDark = ref.watch(isDarkThemeProvider);
+    final theme = Theme.of(context);
+    final isDark = ref.watch(isDarkThemeProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Design System Showcase'),
-        actions: [
+        title: const Text('Design System Showcase'),
+        actions: <Widget>[
           IconButton(
             icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
             onPressed: () => ref.read(themeProvider.notifier).toggleTheme(),
@@ -24,17 +24,17 @@ class DesignSystemShowcase extends ConsumerWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.screenPadding),
+        padding: const EdgeInsets.all(AppSpacing.screenPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             // Colors Section
             _buildSection(
               'Colors',
               _buildColorsDemo(theme),
             ),
             
-            SizedBox(height: AppSpacing.sectionSpacing),
+            const SizedBox(height: AppSpacing.sectionSpacing),
             
             // Typography Section
             _buildSection(
@@ -42,7 +42,7 @@ class DesignSystemShowcase extends ConsumerWidget {
               _buildTypographyDemo(theme),
             ),
             
-            SizedBox(height: AppSpacing.sectionSpacing),
+            const SizedBox(height: AppSpacing.sectionSpacing),
             
             // Buttons Section
             _buildSection(
@@ -50,7 +50,7 @@ class DesignSystemShowcase extends ConsumerWidget {
               _buildButtonsDemo(),
             ),
             
-            SizedBox(height: AppSpacing.sectionSpacing),
+            const SizedBox(height: AppSpacing.sectionSpacing),
             
             // Cards Section
             _buildSection(
@@ -58,7 +58,7 @@ class DesignSystemShowcase extends ConsumerWidget {
               _buildCardsDemo(theme),
             ),
             
-            SizedBox(height: AppSpacing.sectionSpacing),
+            const SizedBox(height: AppSpacing.sectionSpacing),
             
             // Spacing Section
             _buildSection(
@@ -71,8 +71,7 @@ class DesignSystemShowcase extends ConsumerWidget {
     );
   }
 
-  Widget _buildSection(String title, Widget content) {
-    return Column(
+  Widget _buildSection(String title, Widget content) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -83,10 +82,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         content,
       ],
     );
-  }
 
-  Widget _buildColorsDemo(ThemeData theme) {
-    return Wrap(
+  Widget _buildColorsDemo(ThemeData theme) => Wrap(
       spacing: AppSpacing.elementSpacing,
       runSpacing: AppSpacing.elementSpacing,
       children: [
@@ -100,10 +97,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         _buildColorSwatch('Info', AppColors.info),
       ],
     );
-  }
 
-  Widget _buildColorSwatch(String name, Color color) {
-    return Column(
+  Widget _buildColorSwatch(String name, Color color) => Column(
       children: [
         Container(
           width: 60,
@@ -122,10 +117,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         ),
       ],
     );
-  }
 
-  Widget _buildTypographyDemo(ThemeData theme) {
-    return Column(
+  Widget _buildTypographyDemo(ThemeData theme) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Display Large', style: theme.textTheme.displayLarge),
@@ -139,10 +132,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         Text('Label Large', style: theme.textTheme.labelLarge),
       ],
     );
-  }
 
-  Widget _buildButtonsDemo() {
-    return Wrap(
+  Widget _buildButtonsDemo() => Wrap(
       spacing: AppSpacing.buttonSpacing,
       runSpacing: AppSpacing.buttonSpacing,
       children: [
@@ -169,10 +160,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         ),
       ],
     );
-  }
 
-  Widget _buildCardsDemo(ThemeData theme) {
-    return Column(
+  Widget _buildCardsDemo(ThemeData theme) => Column(
       children: [
         Card(
           child: Padding(
@@ -205,10 +194,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         ),
       ],
     );
-  }
 
-  Widget _buildSpacingDemo(ThemeData theme) {
-    return Column(
+  Widget _buildSpacingDemo(ThemeData theme) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSpacingItem('XS (4px)', AppSpacing.xs, theme),
@@ -219,10 +206,8 @@ class DesignSystemShowcase extends ConsumerWidget {
         _buildSpacingItem('XXL (24px)', AppSpacing.xxl, theme),
       ],
     );
-  }
 
-  Widget _buildSpacingItem(String label, double spacing, ThemeData theme) {
-    return Padding(
+  Widget _buildSpacingItem(String label, double spacing, ThemeData theme) => Padding(
       padding: EdgeInsets.symmetric(vertical: AppSpacing.xs),
       child: Row(
         children: [
@@ -241,5 +226,4 @@ class DesignSystemShowcase extends ConsumerWidget {
         ],
       ),
     );
-  }
 }

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:fajimobileapp/core/models/event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,7 +31,7 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
     if (!_tabController.indexIsChanging) {
       setState(() {
         // Update tab state
-        final tabs = ['upcoming', 'bookmarked', 'past'];
+        final List<String> tabs = <String>['upcoming', 'bookmarked', 'past'];
         ref.read(currentTabProvider.notifier).state = tabs[_tabController.index];
       });
     }
@@ -47,7 +48,7 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
     setState(() {
       _selectedFilter = filter;
       // Map filter to role
-      final roleMap = {
+      final Map<String, String> roleMap = <String, String>{
         'All': 'all',
         'Guest': 'guest',
         'Creator': 'creator',
@@ -58,8 +59,7 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
+  Widget build(BuildContext context) => SafeArea(
       bottom: false,
       child: Column(
         children: [
@@ -158,11 +158,10 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         ],
       ),
     );
-  }
 
   Widget _buildFilterChips() {
-    final filters = ['All', 'Guest', 'Creator', 'Co-Planner'];
-    final icons = {
+    final List<String> filters = <String>['All', 'Guest', 'Creator', 'Co-Planner'];
+    final Map<String, IconData> icons = <String, IconData>{
       'Guest': Icons.person_outline,
       'Creator': Icons.verified_outlined,
       'Co-Planner': Icons.people_outline,
@@ -174,10 +173,10 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 24.w),
         itemCount: filters.length,
-        separatorBuilder: (context, index) => SizedBox(width: 10.w),
-        itemBuilder: (context, index) {
-          final filter = filters[index];
-          final isSelected = _selectedFilter == filter;
+        separatorBuilder: (BuildContext context, int index) => SizedBox(width: 10.w),
+        itemBuilder: (BuildContext context, int index) {
+          final String filter = filters[index];
+          final bool isSelected = _selectedFilter == filter;
 
           return GestureDetector(
             onTap: () => _onFilterChanged(filter),
@@ -195,8 +194,8 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (icons.containsKey(filter)) ...[
+                children: <Widget>[
+                  if (icons.containsKey(filter)) ...<Widget>[
                     Icon(
                       icons[filter],
                       size: 15.sp,
@@ -224,18 +223,16 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
   }
 
   Widget _buildUpcomingTab() {
-    final eventsAsync = ref.watch(filteredEventsProvider);
+    final AsyncValue<List<EventModel>> eventsAsync = ref.watch(filteredEventsProvider);
 
     return eventsAsync.when(
-      data: (events) => Stack(
-        children: [
-          events.isEmpty
-              ? _buildEmptyState(
+      data: (List<EventModel> events) => Stack(
+        children: <Widget>[
+          if (events.isEmpty) _buildEmptyState(
                   icon: Icons.event_available,
                   title: 'No upcoming events',
                   subtitle: 'Create your first event to get started',
-                )
-              : RefreshIndicator(
+                ) else RefreshIndicator(
                   onRefresh: () async {
                     ref.invalidate(filteredEventsProvider);
                   },
@@ -262,15 +259,15 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
       loading: () => const Center(
         child: CircularProgressIndicator(),
       ),
-      error: (error, stack) => _buildErrorState(error),
+      error: (Object error, StackTrace stack) => _buildErrorState(error),
     );
   }
 
   Widget _buildBookmarkedTab() {
-    final eventsAsync = ref.watch(filteredEventsProvider);
+    final AsyncValue<List<EventModel>> eventsAsync = ref.watch(filteredEventsProvider);
 
     return eventsAsync.when(
-      data: (events) => events.isEmpty
+      data: (List<EventModel> events) => events.isEmpty
           ? _buildEmptyState(
               icon: Icons.bookmark_border,
               title: 'No bookmarked events',
@@ -283,9 +280,9 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
               child: ListView.separated(
                 padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 100.h),
                 itemCount: events.length,
-                separatorBuilder: (context, index) => SizedBox(height: 16.h),
-                itemBuilder: (context, index) {
-                  final event = events[index];
+                separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.h),
+                itemBuilder: (BuildContext context, int index) {
+                  final EventModel event = events[index];
                   return _buildEventCard(
                     eventId: event.id,
                     role: _formatRole(event.role),
@@ -298,15 +295,15 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
               ),
             ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error),
+      error: (Object error, StackTrace stack) => _buildErrorState(error),
     );
   }
 
   Widget _buildPastTab() {
-    final eventsAsync = ref.watch(filteredEventsProvider);
+    final AsyncValue<List<EventModel>> eventsAsync = ref.watch(filteredEventsProvider);
 
     return eventsAsync.when(
-      data: (events) => events.isEmpty
+      data: (List<EventModel> events) => events.isEmpty
           ? _buildEmptyState(
               icon: Icons.event_busy_outlined,
               title: 'No past events',
@@ -319,9 +316,9 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
               child: ListView.separated(
                 padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 100.h),
                 itemCount: events.length,
-                separatorBuilder: (context, index) => SizedBox(height: 16.h),
-                itemBuilder: (context, index) {
-                  final event = events[index];
+                separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.h),
+                itemBuilder: (BuildContext context, int index) {
+                  final EventModel event = events[index];
                   return _buildEventCard(
                     eventId: event.id,
                     role: _formatRole(event.role),
@@ -334,7 +331,7 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
               ),
             ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error),
+      error: (Object error, StackTrace stack) => _buildErrorState(error),
     );
   }
 
@@ -342,8 +339,7 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
     required IconData icon,
     required String title,
     required String subtitle,
-  }) {
-    return Center(
+  }) => Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -376,10 +372,8 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         ],
       ),
     );
-  }
 
-  Widget _buildErrorState(Object error) {
-    return Center(
+  Widget _buildErrorState(Object error) => Center(
       child: Padding(
         padding: EdgeInsets.all(24.w),
         child: Column(
@@ -426,10 +420,8 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         ),
       ),
     );
-  }
 
-  Widget _buildCreateEventButton() {
-    return Positioned(
+  Widget _buildCreateEventButton() => Positioned(
       right: 24.w,
       bottom: 24.h,
       child: GestureDetector(
@@ -538,14 +530,11 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         ),
       ),
     );
-  }
 
-  String _formatRole(String role) {
-    return role[0].toUpperCase() + role.substring(1).replaceAll('_', ' ').replaceAll('-', ' ');
-  }
+  String _formatRole(String role) => role[0].toUpperCase() + role.substring(1).replaceAll('_', ' ').replaceAll('-', ' ');
 
   String _formatDate(DateTime date) {
-    final months = [
+    final List<String> months = <String>[
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
@@ -567,14 +556,14 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
   }
 
   String _calculateCountdown(DateTime endDate) {
-    final now = DateTime.now();
-    final diff = endDate.difference(now);
+    final DateTime now = DateTime.now();
+    final Duration diff = endDate.difference(now);
 
     if (diff.isNegative) return 'Event ended';
 
-    final hours = diff.inHours;
-    final mins = diff.inMinutes % 60;
-    final secs = diff.inSeconds % 60;
+    final int hours = diff.inHours;
+    final int mins = diff.inMinutes % 60;
+    final int secs = diff.inSeconds % 60;
 
     return '$hours Hours $mins Mins $secs Secs';
   }
@@ -586,8 +575,7 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
     required String emoji,
     required String date,
     required String countdown,
-  }) {
-    return GestureDetector(
+  }) => GestureDetector(
       onTap: () {
         Navigator.push(
           context,
@@ -714,10 +702,8 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         ),
       ),
     );
-  }
 
-  Widget _buildTicketCard(BuildContext context, {required bool isLiked}) {
-    return Container(
+  Widget _buildTicketCard(BuildContext context, {required bool isLiked}) => Container(
       height: 267.h,
       decoration: BoxDecoration(
         color: AppColors.eventCardBlue,
@@ -850,5 +836,4 @@ class _TicketsContentState extends ConsumerState<TicketsContent>
         ],
       ),
     );
-  }
 }

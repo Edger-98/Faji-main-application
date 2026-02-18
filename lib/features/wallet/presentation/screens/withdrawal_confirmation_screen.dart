@@ -3,21 +3,21 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'dart:ui';
 
 class WithdrawalConfirmationScreen extends StatelessWidget {
-  final String amount;
 
   const WithdrawalConfirmationScreen({
     super.key,
     required this.amount,
   });
+  final String amount;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       body: Stack(
-        children: [
+        children: <Widget>[
           // Blurred background
           Positioned.fill(
             child: BackdropFilter(
@@ -30,7 +30,7 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
           // Content
           SafeArea(
             child: Column(
-              children: [
+              children: <Widget>[
                 const Spacer(),
                 _buildSuccessCard(context),
                 const Spacer(),
@@ -44,10 +44,10 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
   }
 
   Widget _buildSuccessCard(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 0),
+      margin: const EdgeInsets.symmetric(),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 43),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -55,7 +55,7 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children: <Widget>[
           _buildSuccessIcon(),
           const SizedBox(height: 11),
           Text(
@@ -87,8 +87,7 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSuccessIcon() {
-    return Container(
+  Widget _buildSuccessIcon() => Container(
       width: 72,
       height: 72,
       decoration: const BoxDecoration(
@@ -101,17 +100,16 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
         size: 40,
       ),
     );
-  }
 
   Widget _buildDoneButton(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     
     return Padding(
       padding: const EdgeInsets.fromLTRB(25, 0, 25, 101),
       child: GestureDetector(
         onTap: () {
           // Navigate back to wallet home or main screen
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.of(context).popUntil((Route route) => route.isFirst);
         },
         child: Container(
           width: double.infinity,

@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
 
 /// Event search bar widget
 class EventSearchBar extends StatefulWidget {
-  final String? hintText;
-  final Function(String)? onChanged;
-  final Function(String)? onSubmitted;
-  final VoidCallback? onClear;
-  final TextEditingController? controller;
-  final bool autofocus;
 
   const EventSearchBar({
     super.key,
@@ -21,6 +15,12 @@ class EventSearchBar extends StatefulWidget {
     this.controller,
     this.autofocus = false,
   });
+  final String? hintText;
+  final Function(String)? onChanged;
+  final Function(String)? onSubmitted;
+  final VoidCallback? onClear;
+  final TextEditingController? controller;
+  final bool autofocus;
 
   @override
   State<EventSearchBar> createState() => _EventSearchBarState();
@@ -49,7 +49,7 @@ class _EventSearchBarState extends State<EventSearchBar> {
   }
 
   void _onTextChanged() {
-    final hasText = _controller.text.isNotEmpty;
+    final bool hasText = _controller.text.isNotEmpty;
     if (hasText != _hasText) {
       setState(() {
         _hasText = hasText;
@@ -64,8 +64,7 @@ class _EventSearchBarState extends State<EventSearchBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       height: 48.h,
       decoration: BoxDecoration(
         color: context.colors.surfaceContainerHighest,
@@ -109,5 +108,4 @@ class _EventSearchBarState extends State<EventSearchBar> {
         ),
       ),
     );
-  }
 }

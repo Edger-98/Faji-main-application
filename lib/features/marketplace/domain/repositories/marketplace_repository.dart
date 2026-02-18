@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/marketplace_resource.dart';
-import '../entities/vendor_profile.dart';
-import '../entities/booking.dart';
-import '../entities/counter_offer.dart';
-import '../entities/vendor_stats.dart';
-import '../entities/vendor_dashboard.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/marketplace_resource.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_profile.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/booking.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/counter_offer.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_stats.dart';
+import 'package:fajimobileapp/features/marketplace/domain/entities/vendor_dashboard.dart';
 
 abstract class MarketplaceRepository {
   /// Get marketplace resources by category

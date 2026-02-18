@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'base_state.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
 
 /// Base ViewModel class for all features
 abstract class BaseViewModel<T> extends StateNotifier<BaseState<T>> {

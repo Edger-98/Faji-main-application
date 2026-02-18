@@ -1,22 +1,23 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/api_service.dart';
-import '../../../../core/models/task_model.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/core/models/task_model.dart';
 
 class TaskRepository {
-  final ApiService _api;
   
   TaskRepository(this._api);
+  final ApiService _api;
   
   Future<TaskListResponse> getTasks(String eventId) async {
     try {
-      final response = await _api.get('/events/$eventId/tasks');
+      final Response response = await _api.get('/events/$eventId/tasks');
       
       final data = response.data['data'];
-      final tasks = (data['tasks'] as List)
+      final List<TaskModel> tasks = (data['tasks'] as List)
           .map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
           .toList();
       
-      final stats = TaskStatsModel.fromJson(data['stats'] as Map<String, dynamic>);
+      final TaskStatsModel stats = TaskStatsModel.fromJson(data['stats'] as Map<String, dynamic>);
       
       return TaskListResponse(tasks: tasks, stats: stats);
     } catch (e) {
@@ -30,7 +31,7 @@ class TaskRepository {
     String status,
   ) async {
     try {
-      final response = await _api.patch('/events/$eventId/tasks/$taskId', data: {
+      final Response response = await _api.patch('/events/$eventId/tasks/$taskId', data: <String, String>{
         'status': status,
       });
       
@@ -42,15 +43,13 @@ class TaskRepository {
 }
 
 class TaskListResponse {
-  final List<TaskModel> tasks;
-  final TaskStatsModel stats;
 
   TaskListResponse({
     required this.tasks,
     required this.stats,
   });
+  final List<TaskModel> tasks;
+  final TaskStatsModel stats;
 }
 
-final taskRepositoryProvider = Provider<TaskRepository>((ref) {
-  return TaskRepository(ref.read(apiServiceProvider));
-});
+final Provider<TaskRepository> taskRepositoryProvider = Provider<TaskRepository>((ProviderRef<TaskRepository> ref) => TaskRepository(ref.read(apiServiceProvider)));

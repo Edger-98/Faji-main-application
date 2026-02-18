@@ -15,8 +15,7 @@ class BottomSheetService {
     bool enableDrag = true,
     double? height,
     String? title,
-  }) {
-    return showModalBottomSheet<T>(
+  }) => showModalBottomSheet<T>(
       context: context,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
@@ -82,7 +81,6 @@ class BottomSheetService {
         ),
       ),
     );
-  }
 
   /// Show a list bottom sheet
   static Future<T?> showList<T>({
@@ -90,8 +88,7 @@ class BottomSheetService {
     required String title,
     required List<BottomSheetItem<T>> items,
     T? selectedValue,
-  }) {
-    return show<T>(
+  }) => show<T>(
       context: context,
       title: title,
       child: ListView.builder(
@@ -128,7 +125,6 @@ class BottomSheetService {
         },
       ),
     );
-  }
 
   /// Show a confirmation bottom sheet
   static Future<bool?> showConfirmation({
@@ -138,8 +134,7 @@ class BottomSheetService {
     String confirmText = 'Confirm',
     String cancelText = 'Cancel',
     bool isDangerous = false,
-  }) {
-    return show<bool>(
+  }) => show<bool>(
       context: context,
       title: title,
       child: Padding(
@@ -179,18 +174,17 @@ class BottomSheetService {
         ),
       ),
     );
-  }
 }
 
 /// Bottom sheet item model
 class BottomSheetItem<T> {
-  final String label;
-  final T value;
-  final IconData? icon;
 
   const BottomSheetItem({
     required this.label,
     required this.value,
     this.icon,
   });
+  final String label;
+  final T value;
+  final IconData? icon;
 }

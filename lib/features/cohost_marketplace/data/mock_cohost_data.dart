@@ -4,7 +4,7 @@ import 'package:fajimobileapp/features/cohost_marketplace/domain/entities/resour
 /// Mock data for co-host resources (will be replaced with API data)
 class MockCohostData {
   static List<CohostResourceEntity> getMockResources({ResourceCategory? category}) {
-    final List<CohostResourceEntity> allResources = <CohostResourceEntity>[
+    final allResources = <CohostResourceEntity>[
       // Venue resources
       const CohostResourceEntity(
         id: 'venue_1',
@@ -18,7 +18,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.9,
         reviewCount: 47,
-        profilePhoto: null,
         eventsCompleted: 52,
         isVerified: true,
       ),
@@ -34,7 +33,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.7,
         reviewCount: 38,
-        profilePhoto: null,
         eventsCompleted: 41,
         isVerified: true,
       ),
@@ -52,7 +50,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.8,
         reviewCount: 89,
-        profilePhoto: null,
         eventsCompleted: 120,
         isVerified: true,
       ),
@@ -68,7 +65,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.9,
         reviewCount: 56,
-        profilePhoto: null,
         eventsCompleted: 78,
         isVerified: true,
       ),
@@ -86,7 +82,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.6,
         reviewCount: 34,
-        profilePhoto: null,
         eventsCompleted: 45,
         isVerified: true,
       ),
@@ -104,7 +99,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.9,
         reviewCount: 67,
-        profilePhoto: null,
         eventsCompleted: 95,
         isVerified: true,
       ),
@@ -113,7 +107,7 @@ class MockCohostData {
       const CohostResourceEntity(
         id: 'catering_1',
         cohostId: 'user_7',
-        cohostName: 'Chef Amaka\'s Kitchen',
+        cohostName: "Chef Amaka's Kitchen",
         category: ResourceCategory.catering,
         title: 'Full Service Catering',
         description: 'Professional catering for events of all sizes. Specializing in Nigerian and continental cuisine. Includes setup, service staff, and cleanup.',
@@ -122,7 +116,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.8,
         reviewCount: 72,
-        profilePhoto: null,
         eventsCompleted: 88,
         isVerified: true,
       ),
@@ -140,7 +133,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.9,
         reviewCount: 91,
-        profilePhoto: null,
         eventsCompleted: 134,
         isVerified: true,
       ),
@@ -158,7 +150,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.7,
         reviewCount: 53,
-        profilePhoto: null,
         eventsCompleted: 67,
         isVerified: true,
       ),
@@ -176,7 +167,6 @@ class MockCohostData {
         isAvailable: true,
         rating: 4.8,
         reviewCount: 64,
-        profilePhoto: null,
         eventsCompleted: 102,
         isVerified: true,
       ),

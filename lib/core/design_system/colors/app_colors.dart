@@ -149,7 +149,6 @@ class AppColors {
   /// Get color scheme for light theme
   static ColorScheme get lightColorScheme => const ColorScheme.light(
         primary: lightPrimary,
-        onPrimary: lightOnPrimary,
         primaryContainer: lightPrimaryContainer,
         onPrimaryContainer: lightOnPrimaryContainer,
         secondary: lightSecondary,
@@ -161,10 +160,8 @@ class AppColors {
         tertiaryContainer: lightTertiaryContainer,
         onTertiaryContainer: lightOnTertiaryContainer,
         error: lightError,
-        onError: lightOnError,
         errorContainer: lightErrorContainer,
         onErrorContainer: lightOnErrorContainer,
-        surface: lightSurface,
         onSurface: lightOnSurface,
         surfaceContainerHighest: lightSurfaceContainerHighest,
         onSurfaceVariant: lightOnSurfaceVariant,

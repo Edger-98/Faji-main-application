@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,16 +14,16 @@ class FlashDealSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final flashDealEvents = ref.watch(flashDealEventsProvider);
+    final AsyncValue<List<EventEntity>> flashDealEvents = ref.watch(flashDealEventsProvider);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 27.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: <Widget>[
               AppText.headlineMedium(
                 'Flash Deal',
                 color: context.colors.onSurface,
@@ -35,7 +36,7 @@ class FlashDealSection extends ConsumerWidget {
           ),
           SizedBox(height: 20.h),
           flashDealEvents.when(
-            data: (events) {
+            data: (List<EventEntity> events) {
               if (events.isEmpty) {
                 return Container(
                   height: 193.h,
@@ -52,8 +53,8 @@ class FlashDealSection extends ConsumerWidget {
                 );
               }
               
-              final flashEvent = events.first;
-              final discount = flashEvent.discountPercentage?.toInt() ?? 20;
+              final EventEntity flashEvent = events.first;
+              final int discount = flashEvent.discountPercentage?.toInt() ?? 20;
               
               return GestureDetector(
                 onTap: () {
@@ -66,7 +67,7 @@ class FlashDealSection extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(40.r),
                   ),
                   child: Stack(
-                    children: [
+                    children: <Widget>[
                       // Background image
                       Positioned.fill(
                         child: ClipRRect(
@@ -74,7 +75,7 @@ class FlashDealSection extends ConsumerWidget {
                           child: Image.network(
                             flashEvent.imageUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
+                            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) => Container(
                               color: context.colors.eventCardBlue,
                             ),
                           ),
@@ -87,9 +88,8 @@ class FlashDealSection extends ConsumerWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(40.r),
                             gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
-                              colors: [
+                              colors: <Color>[
                                 Colors.black.withOpacity(0.7),
                                 Colors.transparent,
                               ],
@@ -103,9 +103,9 @@ class FlashDealSection extends ConsumerWidget {
                         padding: EdgeInsets.all(29.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: <Widget>[
                             Row(
-                              children: [
+                              children: <Widget>[
                                 Container(
                                   width: 14.w,
                                   height: 14.h,
@@ -164,7 +164,7 @@ class FlashDealSection extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: Column(
-                            children: [
+                            children: <Widget>[
                               AppText.bodySmall(
                                 'Was \$${flashEvent.price.toStringAsFixed(0)}',
                                 decoration: TextDecoration.lineThrough,
@@ -195,7 +195,7 @@ class FlashDealSection extends ConsumerWidget {
                 ),
               ),
             ),
-            error: (error, stack) => Container(
+            error: (Object error, StackTrace stack) => Container(
               height: 193.h,
               decoration: BoxDecoration(
                 color: context.colors.eventCardBlue,

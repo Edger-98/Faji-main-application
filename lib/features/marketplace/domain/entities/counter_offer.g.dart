@@ -34,8 +34,8 @@ _$CounterOfferResponseImpl _$$CounterOfferResponseImplFromJson(Map json) =>
           'counterPrice',
           (v) => (v as num).toDouble(),
         ),
-        message: $checkedConvert('message', (v) => v as String?),
         updatedAt: $checkedConvert('updatedAt', (v) => v as String),
+        message: $checkedConvert('message', (v) => v as String?),
       );
       return val;
     });
@@ -46,6 +46,6 @@ Map<String, dynamic> _$$CounterOfferResponseImplToJson(
   'id': instance.id,
   'status': instance.status,
   'counterPrice': instance.counterPrice,
-  if (instance.message case final value?) 'message': value,
   'updatedAt': instance.updatedAt,
+  if (instance.message case final value?) 'message': value,
 };

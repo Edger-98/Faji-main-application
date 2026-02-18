@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
-import '../entities/vendor_registration.dart';
-import '../entities/vendor_document.dart';
-import '../entities/vendor_portfolio.dart';
-import '../entities/bank_details.dart';
-import '../entities/registration_status.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_registration.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_document.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/vendor_portfolio.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/bank_details.dart';
+import 'package:fajimobileapp/features/vendor_registration/domain/entities/registration_status.dart';
 
 abstract class VendorRegistrationRepository {
   /// Register as vendor

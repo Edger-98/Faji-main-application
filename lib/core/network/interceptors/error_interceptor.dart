@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 
-import '../../error/failures.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
 
 /// Interceptor to handle API errors
 class ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    final failure = _handleError(err);
+    final Failure failure = _handleError(err);
     
     // You can log the error here
     print('API Error: ${failure.message}');

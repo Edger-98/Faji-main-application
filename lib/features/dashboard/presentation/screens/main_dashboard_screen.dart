@@ -48,8 +48,7 @@ class _MainDashboardScreenState extends ConsumerState<MainDashboardScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: context.colors.surface,
       extendBody: true,
       body: PageView(
@@ -69,5 +68,4 @@ class _MainDashboardScreenState extends ConsumerState<MainDashboardScreen> {
         onTap: _onTabTapped,
       ),
     );
-  }
 }

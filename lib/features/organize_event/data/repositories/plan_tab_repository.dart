@@ -1,18 +1,19 @@
+import 'package:dio/src/response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/api_service.dart';
-import '../../../../core/models/budget_model.dart';
-import '../../../../core/models/vendor_model.dart';
-import '../../../../core/models/planner_model.dart';
+import 'package:fajimobileapp/core/services/api_service.dart';
+import 'package:fajimobileapp/core/models/budget_model.dart';
+import 'package:fajimobileapp/core/models/vendor_model.dart';
+import 'package:fajimobileapp/core/models/planner_model.dart';
 
 class PlanTabRepository {
-  final ApiService _api;
   
   PlanTabRepository(this._api);
+  final ApiService _api;
   
   /// Get event budget
   Future<BudgetDetailModel> getBudget(String eventId) async {
     try {
-      final response = await _api.get('/events/$eventId/budget');
+      final Response response = await _api.get('/events/$eventId/budget');
       return BudgetDetailModel.fromJson(response.data['data'] as Map<String, dynamic>);
     } catch (e) {
       throw Exception('Failed to load budget: $e');
@@ -22,9 +23,9 @@ class PlanTabRepository {
   /// Get event vendors
   Future<List<VendorModel>> getVendors(String eventId) async {
     try {
-      final response = await _api.get('/events/$eventId/vendors');
+      final Response response = await _api.get('/events/$eventId/vendors');
       final data = response.data['data'];
-      final vendors = (data['vendors'] as List)
+      final List<VendorModel> vendors = (data['vendors'] as List)
           .map((e) => VendorModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return vendors;
@@ -36,9 +37,9 @@ class PlanTabRepository {
   /// Get event planners
   Future<List<PlannerModel>> getPlanners(String eventId) async {
     try {
-      final response = await _api.get('/events/$eventId/planners');
+      final Response response = await _api.get('/events/$eventId/planners');
       final data = response.data['data'];
-      final planners = (data['planners'] as List)
+      final List<PlannerModel> planners = (data['planners'] as List)
           .map((e) => PlannerModel.fromJson(e as Map<String, dynamic>))
           .toList();
       return planners;
@@ -48,6 +49,4 @@ class PlanTabRepository {
   }
 }
 
-final planTabRepositoryProvider = Provider<PlanTabRepository>((ref) {
-  return PlanTabRepository(ref.read(apiServiceProvider));
-});
+final Provider<PlanTabRepository> planTabRepositoryProvider = Provider<PlanTabRepository>((ProviderRef<PlanTabRepository> ref) => PlanTabRepository(ref.read(apiServiceProvider)));

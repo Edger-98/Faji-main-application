@@ -6,9 +6,7 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 /// Custom PIN input widget matching Figma design
 class PinInputWidget extends StatefulWidget {
   const PinInputWidget({
-    super.key,
-    required this.length,
-    required this.onChanged,
+    required this.length, required this.onChanged, super.key,
     this.onCompleted,
   });
 
@@ -38,7 +36,7 @@ class _PinInputWidgetState extends State<PinInputWidget>
     );
     
     // Add listeners to controllers
-    for (int i = 0; i < widget.length; i++) {
+    for (var i = 0; i < widget.length; i++) {
       _controllers[i].addListener(() => _onTextChanged(i));
     }
     
@@ -50,10 +48,10 @@ class _PinInputWidgetState extends State<PinInputWidget>
 
   @override
   void dispose() {
-    for (final controller in _controllers) {
+    for (final TextEditingController controller in _controllers) {
       controller.dispose();
     }
-    for (final focusNode in _focusNodes) {
+    for (final FocusNode focusNode in _focusNodes) {
       focusNode.dispose();
     }
     _animationController.dispose();
@@ -61,7 +59,7 @@ class _PinInputWidgetState extends State<PinInputWidget>
   }
 
   void _onTextChanged(int index) {
-    final String value = _controllers[index].text;
+    final value = _controllers[index].text;
     
     if (value.isNotEmpty) {
       _animationController.forward(from: 0);
@@ -80,7 +78,7 @@ class _PinInputWidgetState extends State<PinInputWidget>
   }
 
   void _updateCurrentPin() {
-    _currentPin = _controllers.map((c) => c.text).join();
+    _currentPin = _controllers.map((TextEditingController c) => c.text).join();
     widget.onChanged(_currentPin);
     
     if (_currentPin.length == widget.length) {
@@ -89,8 +87,7 @@ class _PinInputWidgetState extends State<PinInputWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: () {
         // Find first empty field and focus it
         for (int i = 0; i < widget.length; i++) {
@@ -171,5 +168,4 @@ class _PinInputWidgetState extends State<PinInputWidget>
         ],
       ),
     );
-  }
 }

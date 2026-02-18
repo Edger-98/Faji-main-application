@@ -11,15 +11,17 @@ _$BookingImpl _$$BookingImplFromJson(Map json) =>
       final val = _$BookingImpl(
         id: $checkedConvert('id', (v) => v as String),
         eventId: $checkedConvert('eventId', (v) => v as String),
-        eventName: $checkedConvert('eventName', (v) => v as String?),
         hostId: $checkedConvert('hostId', (v) => v as String),
-        hostName: $checkedConvert('hostName', (v) => v as String?),
         vendorId: $checkedConvert('vendorId', (v) => v as String),
-        vendorName: $checkedConvert('vendorName', (v) => v as String?),
         resourceId: $checkedConvert('resourceId', (v) => v as String),
-        resourceTitle: $checkedConvert('resourceTitle', (v) => v as String?),
         status: $checkedConvert('status', (v) => v as String),
         paymentOption: $checkedConvert('paymentOption', (v) => v as String),
+        createdAt: $checkedConvert('createdAt', (v) => v as String),
+        updatedAt: $checkedConvert('updatedAt', (v) => v as String),
+        eventName: $checkedConvert('eventName', (v) => v as String?),
+        hostName: $checkedConvert('hostName', (v) => v as String?),
+        vendorName: $checkedConvert('vendorName', (v) => v as String?),
+        resourceTitle: $checkedConvert('resourceTitle', (v) => v as String?),
         offeredPrice: $checkedConvert(
           'offeredPrice',
           (v) => (v as num?)?.toDouble(),
@@ -35,8 +37,6 @@ _$BookingImpl _$$BookingImplFromJson(Map json) =>
         message: $checkedConvert('message', (v) => v as String?),
         eventDate: $checkedConvert('eventDate', (v) => v as String?),
         escrowStatus: $checkedConvert('escrowStatus', (v) => v as String?),
-        createdAt: $checkedConvert('createdAt', (v) => v as String),
-        updatedAt: $checkedConvert('updatedAt', (v) => v as String),
       );
       return val;
     });
@@ -45,23 +45,23 @@ Map<String, dynamic> _$$BookingImplToJson(_$BookingImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'eventId': instance.eventId,
-      if (instance.eventName case final value?) 'eventName': value,
       'hostId': instance.hostId,
-      if (instance.hostName case final value?) 'hostName': value,
       'vendorId': instance.vendorId,
-      if (instance.vendorName case final value?) 'vendorName': value,
       'resourceId': instance.resourceId,
-      if (instance.resourceTitle case final value?) 'resourceTitle': value,
       'status': instance.status,
       'paymentOption': instance.paymentOption,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      if (instance.eventName case final value?) 'eventName': value,
+      if (instance.hostName case final value?) 'hostName': value,
+      if (instance.vendorName case final value?) 'vendorName': value,
+      if (instance.resourceTitle case final value?) 'resourceTitle': value,
       if (instance.offeredPrice case final value?) 'offeredPrice': value,
       if (instance.agreedPrice case final value?) 'agreedPrice': value,
       if (instance.percentageSplit case final value?) 'percentageSplit': value,
       if (instance.message case final value?) 'message': value,
       if (instance.eventDate case final value?) 'eventDate': value,
       if (instance.escrowStatus case final value?) 'escrowStatus': value,
-      'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
     };
 
 _$CreateBookingRequestImpl _$$CreateBookingRequestImplFromJson(Map json) =>

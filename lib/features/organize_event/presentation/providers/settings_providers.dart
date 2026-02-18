@@ -1,17 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/repositories/event_repository.dart';
-import 'event_providers.dart';
+import 'package:fajimobileapp/features/organize_event/data/repositories/event_repository.dart';
+import 'package:fajimobileapp/features/organize_event/presentation/providers/event_providers.dart';
 
 /// Settings update notifier
-final settingsUpdateProvider =
+final StateNotifierProvider<SettingsUpdateNotifier, AsyncValue<void>> settingsUpdateProvider =
     StateNotifierProvider<SettingsUpdateNotifier, AsyncValue<void>>(
-  (ref) => SettingsUpdateNotifier(ref),
+  SettingsUpdateNotifier.new,
 );
 
 class SettingsUpdateNotifier extends StateNotifier<AsyncValue<void>> {
-  final Ref ref;
 
   SettingsUpdateNotifier(this.ref) : super(const AsyncValue.data(null));
+  final Ref ref;
 
   Future<void> updateSettings({
     required String eventId,
@@ -19,7 +19,7 @@ class SettingsUpdateNotifier extends StateNotifier<AsyncValue<void>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(eventRepositoryProvider);
+      final EventRepository repository = ref.read(eventRepositoryProvider);
       await repository.updateEvent(eventId, settings);
 
       // Refresh event details to get updated settings
@@ -35,25 +35,23 @@ class SettingsUpdateNotifier extends StateNotifier<AsyncValue<void>> {
   Future<void> updateSingleSetting({
     required String eventId,
     required String key,
-    required dynamic value,
-  }) async {
-    return updateSettings(
+    required value,
+  }) async => updateSettings(
       eventId: eventId,
       settings: {key: value},
     );
-  }
 }
 
 /// Media upload notifier
-final mediaUploadProvider =
+final StateNotifierProvider<MediaUploadNotifier, AsyncValue<String?>> mediaUploadProvider =
     StateNotifierProvider<MediaUploadNotifier, AsyncValue<String?>>(
-  (ref) => MediaUploadNotifier(ref),
+  MediaUploadNotifier.new,
 );
 
 class MediaUploadNotifier extends StateNotifier<AsyncValue<String?>> {
-  final Ref ref;
 
   MediaUploadNotifier(this.ref) : super(const AsyncValue.data(null));
+  final Ref ref;
 
   Future<String> uploadMedia({
     required String eventId,
@@ -62,9 +60,9 @@ class MediaUploadNotifier extends StateNotifier<AsyncValue<String?>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(eventRepositoryProvider);
+      final EventRepository repository = ref.read(eventRepositoryProvider);
       // TODO: Implement media upload in repository
-      final url = 'https://placeholder.com/media.jpg'; // Placeholder
+      const String url = 'https://placeholder.com/media.jpg'; // Placeholder
 
       // Refresh event details to get updated media
       ref.invalidate(eventDetailsProvider(eventId));

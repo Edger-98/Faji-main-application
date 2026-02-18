@@ -5,14 +5,14 @@ class LocationService {
   static Future<Position?> getCurrentLocation() async {
     try {
       // Check if location services are enabled
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      var serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         print('📍 Location services are disabled');
         return null;
       }
 
       // Check permission
-      var permission = await Permission.location.status;
+      PermissionStatus permission = await Permission.location.status;
       
       if (permission.isDenied) {
         permission = await Permission.location.request();
@@ -28,7 +28,7 @@ class LocationService {
       }
 
       // Get current position
-      Position position = await Geolocator.getCurrentPosition(
+      var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
@@ -60,7 +60,7 @@ class LocationService {
   }
 
   static Future<bool> requestLocationPermission() async {
-    var status = await Permission.location.request();
+    PermissionStatus status = await Permission.location.request();
     return status.isGranted;
   }
 }

@@ -35,13 +35,13 @@ class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final yourEvents = ref.watch(userEventsProvider);
+    final AsyncValue<List<EventEntity>> yourEvents = ref.watch(userEventsProvider);
 
     return Column(
-      children: [
+      children: <Widget>[
         SectionHeader(
           title: 'Your Events',
-          subtitle: 'Events you\'re hosting',
+          subtitle: "Events you're hosting",
           onViewAll: () {
             // Navigate to create event instead of view all
             context.push(RouteManager.eventCreationFlow);
@@ -52,22 +52,21 @@ class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
         SizedBox(
           height: 280.h,
           child: yourEvents.when(
-            data: (events) {
+            data: (List<EventEntity> events) {
               if (events.isEmpty) {
                 return _buildEmptyState(context);
               }
               return _buildEventsList(context, events);
             },
             loading: () => _buildLoadingState(context),
-            error: (error, stack) => _buildErrorState(context),
+            error: (Object error, StackTrace stack) => _buildErrorState(context),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildEventsList(BuildContext context, List<EventEntity> events) {
-    return ListView.separated(
+  Widget _buildEventsList(BuildContext context, List<EventEntity> events) => ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
@@ -100,19 +99,15 @@ class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
         );
       },
     );
-  }
 
-  Widget _buildLoadingState(BuildContext context) {
-    return Center(
+  Widget _buildLoadingState(BuildContext context) => Center(
       child: CircularProgressIndicator(
         color: context.colors.primary,
         strokeWidth: 3,
       ),
     );
-  }
 
-  Widget _buildEmptyState(BuildContext context) {
-    return Center(
+  Widget _buildEmptyState(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: Column(
@@ -174,10 +169,8 @@ class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
         ),
       ),
     );
-  }
 
-  Widget _buildErrorState(BuildContext context) {
-    return Center(
+  Widget _buildErrorState(BuildContext context) => Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: Column(
@@ -218,17 +211,16 @@ class _YourEventsSectionState extends ConsumerState<YourEventsSection> {
         ),
       ),
     );
-  }
 
   String _formatDate(DateTime date) {
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    final dayName = days[date.weekday - 1];
+    final List<String> days = <String>['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final String dayName = days[date.weekday - 1];
     return '$dayName ${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}';
   }
 
   String _formatTime(DateTime date) {
-    final hour = date.hour > 12 ? date.hour - 12 : date.hour;
-    final period = date.hour >= 12 ? 'PM' : 'AM';
+    final int hour = date.hour > 12 ? date.hour - 12 : date.hour;
+    final String period = date.hour >= 12 ? 'PM' : 'AM';
     return '${hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} $period';
   }
 }

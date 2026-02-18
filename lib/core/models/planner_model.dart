@@ -1,10 +1,4 @@
 class PlannerModel {
-  final String id;
-  final String name;
-  final String role;
-  final String? avatar;
-  final List<String> permissions;
-  final DateTime addedAt;
 
   PlannerModel({
     required this.id,
@@ -25,4 +19,10 @@ class PlannerModel {
       addedAt: DateTime.parse(json['addedAt'] as String),
     );
   }
+  final String id;
+  final String name;
+  final String role;
+  final String? avatar;
+  final List<String> permissions;
+  final DateTime addedAt;
 }

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class PosterModel {
-  final String id;
-  final String name;
-  final List<String> colors;
-  final String? category;
-  final String? description;
 
   PosterModel({
     required this.id,
@@ -14,17 +9,6 @@ class PosterModel {
     this.category,
     this.description,
   });
-
-  /// Convert hex color strings to Flutter Color objects
-  List<Color> get gradientColors {
-    return colors.map((hex) => _hexToColor(hex)).toList();
-  }
-
-  /// Convert hex string to Color
-  Color _hexToColor(String hex) {
-    final hexCode = hex.replaceAll('#', '');
-    return Color(int.parse('FF$hexCode', radix: 16));
-  }
 
   factory PosterModel.fromJson(Map<String, dynamic> json) {
     return PosterModel(
@@ -37,14 +21,26 @@ class PosterModel {
       description: json['description'] as String?,
     );
   }
+  final String id;
+  final String name;
+  final List<String> colors;
+  final String? category;
+  final String? description;
 
-  Map<String, dynamic> toJson() {
-    return {
+  /// Convert hex color strings to Flutter Color objects
+  List<Color> get gradientColors => colors.map((hex) => _hexToColor(hex)).toList();
+
+  /// Convert hex string to Color
+  Color _hexToColor(String hex) {
+    final String hexCode = hex.replaceAll('#', '');
+    return Color(int.parse('FF$hexCode', radix: 16));
+  }
+
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
       'colors': colors,
       'category': category,
       'description': description,
     };
-  }
 }

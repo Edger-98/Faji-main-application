@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/presentation/widgets/common/empty_state.dart';
 import 'package:fajimobileapp/presentation/widgets/common/animated_button.dart';
-import 'package:fajimobileapp/presentation/widgets/common/event_card_shimmer.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -15,7 +14,7 @@ class ChatListScreen extends StatefulWidget {
 class _ChatListScreenState extends State<ChatListScreen> {
   bool _showEventsChat = true;
   bool _isLoading = false;
-  List<String> _chats = ['chat1', 'chat2', 'chat3', 'chat4', 'chat5', 'chat6', 'chat7']; // Mock data
+  final List<String> _chats = <String>['chat1', 'chat2', 'chat3', 'chat4', 'chat5', 'chat6', 'chat7']; // Mock data
 
   Future<void> _refreshChats() async {
     HapticFeedback.lightImpact();
@@ -26,8 +25,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
@@ -132,7 +130,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       itemCount: 7,
                       separatorBuilder: (context, index) => const SizedBox(height: 15),
-                      itemBuilder: (context, index) => const ChatItemShimmer(),
+                      itemBuilder: (context, index) => Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
                     )
                   : _chats.isEmpty
                       ? EmptyState(
@@ -212,10 +214,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
-    return GestureDetector(
+  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) => GestureDetector(
       onTap: onTap,
       child: Container(
         height: 33,
@@ -235,7 +235,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
         ),
       ),
     );
-  }
 
   Widget _buildChatItem({
     required String name,
@@ -245,8 +244,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     bool isTyping = false,
     bool isEvent = false,
     bool hasAvatar = false,
-  }) {
-    return AnimatedButton(
+  }) => AnimatedButton(
       onTap: () {
         HapticFeedback.lightImpact();
         // Navigate to chat detail
@@ -367,5 +365,4 @@ class _ChatListScreenState extends State<ChatListScreen> {
       ],
       ),
     );
-  }
 }

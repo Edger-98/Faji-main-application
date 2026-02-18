@@ -29,8 +29,12 @@ class _HomeContentState extends ConsumerState<HomeContent> with AutomaticKeepAli
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
+      _loadInitialData();
     });
+  }
+
+  Future<void> _loadInitialData() async {
+    await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
   }
 
   Future<void> _refreshHome() async {
@@ -52,98 +56,91 @@ class _HomeContentState extends ConsumerState<HomeContent> with AutomaticKeepAli
         backgroundColor: AppColors.surfaceContainerHighest,
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
-          slivers: [
-            // Header with improved spacing
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 12.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Discover Events',
-                      style: AppTypography.headlineLarge.copyWith(
-                        color: context.colors.onSurface,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: -0.5,
-                      ),
+          slivers: <Widget>[
+                // Header with improved spacing
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 12.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Discover Events',
+                          style: AppTypography.headlineLarge.copyWith(
+                            color: context.colors.onSurface,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Find amazing experiences near you',
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: context.colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Find amazing experiences near you',
-                      style: AppTypography.bodyMedium.copyWith(
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                
+                // Enhanced Search Bar
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 20.h),
+                    child: const HomeSearchBar(),
+                  ),
+                ),
+                
+                // Hero Banner with better spacing
+                SliverToBoxAdapter(
+                  child: HeroBanner(
+                    onTap: () {
+                      context.push(RouteManager.eventsList);
+                    },
+                  ),
+                ),
+                
+                SliverToBoxAdapter(child: SizedBox(height: 32.h)),
+                
+                // Category Filter with better positioning
+                const SliverToBoxAdapter(
+                  child: CategoryFilterSection(),
+                ),
+                
+                SliverToBoxAdapter(child: SizedBox(height: 28.h)),
+                
+                // Trending Events (Horizontal Scroll)
+                const SliverToBoxAdapter(
+                  child: TrendingEventsSection(),
+                ),
+                
+                SliverToBoxAdapter(child: SizedBox(height: 32.h)),
+                
+                // Flash Deal - Commented out for now
+                // SliverToBoxAdapter(
+                //   child: FlashDealSection(),
+                // ),
+                // 
+                // SliverToBoxAdapter(child: SizedBox(height: 32.h)),
+                
+                // Upcoming Events (List Style)
+                const SliverToBoxAdapter(
+                  child: UpcomingEventsSection(),
+                ),
+                
+                SliverToBoxAdapter(child: SizedBox(height: 32.h)),
+                
+                // Your Events
+                const SliverToBoxAdapter(
+                  child: YourEventsSection(),
+                ),
+                
+                // Bottom padding for nav bar
+                SliverToBoxAdapter(child: SizedBox(height: 120.h)),
+              ],
             ),
-            
-            // Enhanced Search Bar
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 20.h),
-                child: HomeSearchBar(),
-              ),
-            ),
-            
-            // Hero Banner with better spacing
-            SliverToBoxAdapter(
-              child: HeroBanner(
-                onTap: () {
-                  context.push(RouteManager.eventsList);
-                },
-              ),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
-            
-            // Category Filter with better positioning
-            SliverToBoxAdapter(
-              child: CategoryFilterSection(),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 28.h)),
-            
-            // Trending Events (Horizontal Scroll)
-            SliverToBoxAdapter(
-              child: TrendingEventsSection(),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
-            
-            // Flash Deal - Moved up for better visibility
-            SliverToBoxAdapter(
-              child: FlashDealSection(),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
-            
-            // Upcoming Events (List Style)
-            SliverToBoxAdapter(
-              child: UpcomingEventsSection(),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
-            
-            // Your Events
-            SliverToBoxAdapter(
-              child: YourEventsSection(),
-            ),
-            
-            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
-            
-            // Trending Hosts
-            SliverToBoxAdapter(
-              child: TrendingOrganizersSection(),
-            ),
-            
-            // Bottom padding for nav bar
-            SliverToBoxAdapter(child: SizedBox(height: 120.h)),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }

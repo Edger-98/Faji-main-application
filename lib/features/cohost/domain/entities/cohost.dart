@@ -10,12 +10,7 @@ class Cohost with _$Cohost {
     required String id,
     required String name,
     required String email,
-    String? avatar,
-    required double revenueShare,
-    required String role,
-    required String joinedAt,
-    required double earnings,
-    required CohostPermissions permissions,
+    required double revenueShare, required String role, required String joinedAt, required double earnings, required CohostPermissions permissions, String? avatar,
   }) = _Cohost;
 
   factory Cohost.fromJson(Map<String, dynamic> json) =>

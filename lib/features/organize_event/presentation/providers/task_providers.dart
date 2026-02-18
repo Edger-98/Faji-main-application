@@ -1,29 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/models/task_model.dart';
-import '../../data/repositories/task_repository.dart';
+import 'package:fajimobileapp/core/models/task_model.dart';
+import 'package:fajimobileapp/features/organize_event/data/repositories/task_repository.dart';
 
 // Task list provider
-final taskListProvider = FutureProvider.autoDispose.family<TaskListResponse, String>(
-  (ref, eventId) async {
-    final repository = ref.read(taskRepositoryProvider);
+final AutoDisposeFutureProviderFamily<TaskListResponse, String> taskListProvider = FutureProvider.autoDispose.family<TaskListResponse, String>(
+  (AutoDisposeFutureProviderRef<TaskListResponse> ref, String eventId) async {
+    final TaskRepository repository = ref.read(taskRepositoryProvider);
     return repository.getTasks(eventId);
   },
 );
 
 // Task update notifier
-final taskUpdateProvider = StateNotifierProvider<TaskUpdateNotifier, AsyncValue<void>>(
-  (ref) => TaskUpdateNotifier(ref),
+final StateNotifierProvider<TaskUpdateNotifier, AsyncValue<void>> taskUpdateProvider = StateNotifierProvider<TaskUpdateNotifier, AsyncValue<void>>(
+  TaskUpdateNotifier.new,
 );
 
 class TaskUpdateNotifier extends StateNotifier<AsyncValue<void>> {
-  final Ref ref;
 
   TaskUpdateNotifier(this.ref) : super(const AsyncValue.data(null));
+  final Ref ref;
 
   Future<void> updateTaskStatus(String eventId, String taskId, String status) async {
     state = const AsyncValue.loading();
     try {
-      final repository = ref.read(taskRepositoryProvider);
+      final TaskRepository repository = ref.read(taskRepositoryProvider);
       await repository.updateTaskStatus(eventId, taskId, status);
       
       // Refresh task list

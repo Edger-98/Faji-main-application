@@ -1,24 +1,20 @@
+import 'package:dartz/dartz.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_complete_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_session_entity.dart';
+import 'package:fajimobileapp/features/auth/domain/entities/registration_token_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/base/base_state.dart';
-import '../../../../core/error/failures.dart';
-import '../../domain/usecases/add_name_usecase.dart';
-import '../../domain/usecases/add_phone_usecase.dart';
-import '../../domain/usecases/complete_registration_usecase.dart';
-import '../../domain/usecases/register_email_usecase.dart';
-import '../../domain/usecases/verify_registration_otp_usecase.dart';
-import '../providers/auth_providers.dart';
+import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/add_name_usecase.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/add_phone_usecase.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/complete_registration_usecase.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/register_email_usecase.dart';
+import 'package:fajimobileapp/features/auth/domain/usecases/verify_registration_otp_usecase.dart';
+import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 
 /// Registration state
 class RegistrationState {
-  final String? email;
-  final String? sessionId;
-  final String? registrationToken;
-  final String? phoneNo;
-  final String? firstName;
-  final String? lastName;
-  final int currentStep; // 1-5
-  final BaseState<dynamic> stepState;
 
   const RegistrationState({
     this.email,
@@ -30,6 +26,14 @@ class RegistrationState {
     this.currentStep = 1,
     this.stepState = const BaseState.initial(),
   });
+  final String? email;
+  final String? sessionId;
+  final String? registrationToken;
+  final String? phoneNo;
+  final String? firstName;
+  final String? lastName;
+  final int currentStep; // 1-5
+  final BaseState<dynamic> stepState;
 
   RegistrationState copyWith({
     String? email,
@@ -40,8 +44,7 @@ class RegistrationState {
     String? lastName,
     int? currentStep,
     BaseState<dynamic>? stepState,
-  }) {
-    return RegistrationState(
+  }) => RegistrationState(
       email: email ?? this.email,
       sessionId: sessionId ?? this.sessionId,
       registrationToken: registrationToken ?? this.registrationToken,
@@ -51,16 +54,10 @@ class RegistrationState {
       currentStep: currentStep ?? this.currentStep,
       stepState: stepState ?? this.stepState,
     );
-  }
 }
 
 /// Registration ViewModel
 class RegistrationViewModel extends StateNotifier<RegistrationState> {
-  final RegisterEmailUseCase _registerEmailUseCase;
-  final VerifyRegistrationOtpUseCase _verifyOtpUseCase;
-  final AddPhoneUseCase _addPhoneUseCase;
-  final AddNameUseCase _addNameUseCase;
-  final CompleteRegistrationUseCase _completeRegistrationUseCase;
 
   RegistrationViewModel(
     this._registerEmailUseCase,
@@ -69,18 +66,23 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
     this._addNameUseCase,
     this._completeRegistrationUseCase,
   ) : super(const RegistrationState());
+  final RegisterEmailUseCase _registerEmailUseCase;
+  final VerifyRegistrationOtpUseCase _verifyOtpUseCase;
+  final AddPhoneUseCase _addPhoneUseCase;
+  final AddNameUseCase _addNameUseCase;
+  final CompleteRegistrationUseCase _completeRegistrationUseCase;
 
   /// Step 1: Register email
   Future<void> registerEmail(String email) async {
     state = state.copyWith(stepState: const BaseState.loading());
 
-    final result = await _registerEmailUseCase(email: email);
+    final Either<Failure, RegistrationSessionEntity> result = await _registerEmailUseCase(email: email);
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         state = state.copyWith(stepState: BaseState.error(failure));
       },
-      (session) {
+      (RegistrationSessionEntity session) {
         state = state.copyWith(
           email: email,
           sessionId: session.sessionId,
@@ -95,7 +97,7 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
   Future<void> verifyOtp(String otp) async {
     if (state.email == null || state.sessionId == null) {
       state = state.copyWith(
-        stepState: BaseState.error(
+        stepState: const BaseState.error(
           ServerFailure(message: 'Email or session ID missing'),
         ),
       );
@@ -104,20 +106,19 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
 
     state = state.copyWith(stepState: const BaseState.loading());
 
-    final result = await _verifyOtpUseCase(
+    final Either<Failure, RegistrationTokenEntity> result = await _verifyOtpUseCase(
       email: state.email!,
       otp: otp,
       sessionId: state.sessionId!,
     );
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         state = state.copyWith(stepState: BaseState.error(failure));
       },
-      (token) {
+      (RegistrationTokenEntity token) {
         state = state.copyWith(
           registrationToken: token.registrationToken,
-          sessionId: null, // Clear session ID
           currentStep: 3,
           stepState: BaseState.success(token),
         );
@@ -129,7 +130,7 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
   Future<void> addPhone(String phoneNo) async {
     if (state.registrationToken == null) {
       state = state.copyWith(
-        stepState: BaseState.error(
+        stepState: const BaseState.error(
           ServerFailure(message: 'Registration token missing'),
         ),
       );
@@ -138,16 +139,16 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
 
     state = state.copyWith(stepState: const BaseState.loading());
 
-    final result = await _addPhoneUseCase(
+    final Either<Failure, RegistrationTokenEntity> result = await _addPhoneUseCase(
       phoneNo: phoneNo,
       registrationToken: state.registrationToken!,
     );
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         state = state.copyWith(stepState: BaseState.error(failure));
       },
-      (token) {
+      (RegistrationTokenEntity token) {
         state = state.copyWith(
           phoneNo: phoneNo,
           registrationToken: token.registrationToken, // Update token
@@ -162,7 +163,7 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
   Future<void> addName(String firstName, String lastName) async {
     if (state.registrationToken == null) {
       state = state.copyWith(
-        stepState: BaseState.error(
+        stepState: const BaseState.error(
           ServerFailure(message: 'Registration token missing'),
         ),
       );
@@ -171,17 +172,17 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
 
     state = state.copyWith(stepState: const BaseState.loading());
 
-    final result = await _addNameUseCase(
+    final Either<Failure, RegistrationTokenEntity> result = await _addNameUseCase(
       firstName: firstName,
       lastName: lastName,
       registrationToken: state.registrationToken!,
     );
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         state = state.copyWith(stepState: BaseState.error(failure));
       },
-      (token) {
+      (RegistrationTokenEntity token) {
         state = state.copyWith(
           firstName: firstName,
           lastName: lastName,
@@ -197,7 +198,7 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
   Future<void> completeRegistration(String password, String role) async {
     if (state.registrationToken == null) {
       state = state.copyWith(
-        stepState: BaseState.error(
+        stepState: const BaseState.error(
           ServerFailure(message: 'Registration token missing'),
         ),
       );
@@ -206,17 +207,17 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
 
     state = state.copyWith(stepState: const BaseState.loading());
 
-    final result = await _completeRegistrationUseCase(
+    final Either<Failure, RegistrationCompleteEntity> result = await _completeRegistrationUseCase(
       password: password,
       role: role,
       registrationToken: state.registrationToken!,
     );
 
     result.fold(
-      (failure) {
+      (Failure failure) {
         state = state.copyWith(stepState: BaseState.error(failure));
       },
-      (complete) {
+      (RegistrationCompleteEntity complete) {
         state = state.copyWith(
           stepState: BaseState.success(complete),
         );
@@ -241,13 +242,13 @@ class RegistrationViewModel extends StateNotifier<RegistrationState> {
 }
 
 /// Registration ViewModel Provider
-final registrationViewModelProvider =
-    StateNotifierProvider<RegistrationViewModel, RegistrationState>((ref) {
-  final registerEmailUseCase = ref.watch(registerEmailUseCaseProvider);
-  final verifyOtpUseCase = ref.watch(verifyRegistrationOtpUseCaseProvider);
-  final addPhoneUseCase = ref.watch(addPhoneUseCaseProvider);
-  final addNameUseCase = ref.watch(addNameUseCaseProvider);
-  final completeRegistrationUseCase = ref.watch(completeRegistrationUseCaseProvider);
+final StateNotifierProvider<RegistrationViewModel, RegistrationState> registrationViewModelProvider =
+    StateNotifierProvider<RegistrationViewModel, RegistrationState>((StateNotifierProviderRef<RegistrationViewModel, RegistrationState> ref) {
+  final RegisterEmailUseCase registerEmailUseCase = ref.watch(registerEmailUseCaseProvider);
+  final VerifyRegistrationOtpUseCase verifyOtpUseCase = ref.watch(verifyRegistrationOtpUseCaseProvider);
+  final AddPhoneUseCase addPhoneUseCase = ref.watch(addPhoneUseCaseProvider);
+  final AddNameUseCase addNameUseCase = ref.watch(addNameUseCaseProvider);
+  final CompleteRegistrationUseCase completeRegistrationUseCase = ref.watch(completeRegistrationUseCaseProvider);
 
   return RegistrationViewModel(
     registerEmailUseCase,
