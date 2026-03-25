@@ -91,7 +91,13 @@ class _MyTicketsScreenV2State extends ConsumerState<MyTicketsScreenV2>
         backgroundColor: context.colors.surface,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(RouteManager.home);
+            }
+          },
         ),
         bottom: TabBar(
           controller: _tabController,

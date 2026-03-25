@@ -54,8 +54,8 @@ final Provider<GetEarningsBreakdownUseCase> getEarningsBreakdownUseCaseProvider 
 });
 
 // ViewModel Providers
-final AutoDisposeStateNotifierProvider<WalletViewModel, WalletState> walletViewModelProvider =
-    StateNotifierProvider.autoDispose<WalletViewModel, WalletState>((AutoDisposeStateNotifierProviderRef<WalletViewModel, WalletState> ref) {
+final StateNotifierProvider<WalletViewModel, WalletState> walletViewModelProvider =
+    StateNotifierProvider<WalletViewModel, WalletState>((ref) {
   final GetWalletBalanceUseCase getBalanceUseCase = ref.watch(getWalletBalanceUseCaseProvider);
   final GetWalletTransactionsUseCase getTransactionsUseCase = ref.watch(getWalletTransactionsUseCaseProvider);
   final GetEarningsBreakdownUseCase getEarningsUseCase = ref.watch(getEarningsBreakdownUseCaseProvider);
@@ -73,8 +73,8 @@ final AutoDisposeStateNotifierProvider<WithdrawViewModel, WithdrawState> withdra
   return WithdrawViewModel(withdrawUseCase);
 });
 
-final AutoDisposeStateNotifierProvider<TopupViewModel, TopupState> topupViewModelProvider =
-    StateNotifierProvider.autoDispose<TopupViewModel, TopupState>((AutoDisposeStateNotifierProviderRef<TopupViewModel, TopupState> ref) {
+final StateNotifierProvider<TopupViewModel, TopupState> topupViewModelProvider =
+    StateNotifierProvider<TopupViewModel, TopupState>((ref) {
   final TopupWalletUseCase topupUseCase = ref.watch(topupWalletUseCaseProvider);
   return TopupViewModel(topupUseCase);
 });

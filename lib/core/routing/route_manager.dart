@@ -47,6 +47,7 @@ class RouteManager {
   static const String terms = '/terms';
   static const String notificationSettings = '/notification-settings';
   static const String walletBalance = '/wallet/balance';
+  static const String walletFund = '/wallet/fund';
   static const String walletEnterAmount = '/wallet/enter-amount';
   static const String walletReview = '/wallet/review';
   static const String walletConfirmation = '/wallet/confirmation';
@@ -105,6 +106,7 @@ class RouteManager {
   static const String termsName = 'terms';
   static const String notificationSettingsName = 'notification-settings';
   static const String walletBalanceName = 'wallet-balance';
+  static const String walletFundName = 'wallet-fund';
   static const String walletEnterAmountName = 'wallet-enter-amount';
   static const String walletReviewName = 'wallet-review';
   static const String walletConfirmationName = 'wallet-confirmation';

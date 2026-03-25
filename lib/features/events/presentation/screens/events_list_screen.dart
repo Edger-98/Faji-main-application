@@ -1,19 +1,17 @@
-import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
+import 'package:fajimobileapp/core/services/toast_service.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/events_list_viewmodel.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/favorites_viewmodel.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_card.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:fajimobileapp/core/design_system/design_system.dart';
-import 'package:fajimobileapp/core/routing/route_manager.dart';
-import 'package:fajimobileapp/core/services/toast_service.dart';
-import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
-import 'package:fajimobileapp/features/events/presentation/viewmodels/events_list_viewmodel.dart';
-import 'package:fajimobileapp/features/events/presentation/viewmodels/favorites_viewmodel.dart';
-import 'package:fajimobileapp/features/events/presentation/widgets/event_card.dart';
-import 'package:fajimobileapp/features/events/presentation/widgets/category_filter.dart';
-import 'package:fajimobileapp/features/events/presentation/widgets/event_search_bar.dart';
 
 /// Events List Screen with filters
 class EventsListScreen extends ConsumerStatefulWidget {
@@ -25,19 +23,7 @@ class EventsListScreen extends ConsumerStatefulWidget {
 
 class _EventsListScreenState extends ConsumerState<EventsListScreen> {
   final TextEditingController _searchController = TextEditingController();
-  String? _selectedCategory;
   bool _isGridView = true;
-  
-  final List<String> _categories = <String>[
-    'Music',
-    'Sports',
-    'Technology',
-    'Business',
-    'Arts',
-    'Food',
-    'Health',
-    'Education',
-  ];
 
   @override
   void initState() {
@@ -54,22 +40,15 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
   }
 
   void _loadEvents() {
-    print('🔍 EventsListScreen: Loading events with category: $_selectedCategory');
+    final selectedCategory = ref.read(selectedCategoryProvider);
+    print('🔍 EventsListScreen: Loading events with category ID: $selectedCategory');
     print('🔍 EventsListScreen: Search query: ${_searchController.text}');
     
     ref.read(eventsListViewModelProvider.notifier).getEvents(
-      category: _selectedCategory,
+      category: selectedCategory,
       search: _searchController.text.isNotEmpty ? _searchController.text : null,
       limit: 20,
     );
-  }
-
-  void _onCategorySelected(String? category) {
-    print('🔍 EventsListScreen: Category selected: $category');
-    setState(() {
-      _selectedCategory = category;
-    });
-    _loadEvents();
   }
 
   void _onSearchChanged(String query) {
@@ -110,7 +89,16 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final BaseState<List<EventEntity>> eventsState = ref.watch(eventsListViewModelProvider);
+    final eventsState = ref.watch(eventsListViewModelProvider);
+    final selectedCategory = ref.watch(selectedCategoryProvider);
+    final categoriesAsync = ref.watch(categoriesProvider);
+
+    // Listen to category changes and reload
+    ref.listen<String?>(selectedCategoryProvider, (previous, next) {
+      if (previous != next) {
+        _loadEvents();
+      }
+    });
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -158,12 +146,76 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
               ),
             ),
             
-            // Category Filter
+            // Category Filter - Using the same component as dashboard
             SliverToBoxAdapter(
-              child: CategoryFilter(
-                categories: _categories,
-                selectedCategory: _selectedCategory,
-                onCategorySelected: _onCategorySelected,
+              child: categoriesAsync.when(
+                data: (categories) {
+                  final allCategories = [
+                    {'id': null, 'name': 'All', 'icon': '🎯'},
+                    ...categories.map((cat) => {
+                      'id': cat.name, // Use name instead of id for API
+                      'name': cat.name,
+                      'icon': cat.icon,
+                    }),
+                  ];
+
+                  return SizedBox(
+                    height: 44.h,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: allCategories.length,
+                      separatorBuilder: (_, __) => SizedBox(width: 10.w),
+                      itemBuilder: (context, index) {
+                        final category = allCategories[index];
+                        final isSelected = selectedCategory == category['id'];
+                        
+                        return GestureDetector(
+                          onTap: () {
+                            ref.read(selectedCategoryProvider.notifier).state = category['id'];
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? context.colors.primary
+                                  : context.colors.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(24.r),
+                              border: Border.all(
+                                color: isSelected
+                                    ? context.colors.primary
+                                    : Colors.transparent,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  category['icon'] as String,
+                                  style: TextStyle(fontSize: 16.sp),
+                                ),
+                                SizedBox(width: 6.w),
+                                Text(
+                                  category['name'] as String,
+                                  style: AppTypography.bodyMedium.copyWith(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : context.colors.onSurface,
+                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
               ),
             ),
             

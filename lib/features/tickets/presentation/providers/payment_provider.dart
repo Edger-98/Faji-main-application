@@ -150,6 +150,37 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
   void reset() {
     state = const PaymentState();
   }
+
+  /// Purchase ticket using wallet balance
+  Future<bool> processWalletPayment({
+    required String eventId,
+    required int quantity,
+    String? promoCode,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true, error: null);
+
+      final result = await _repository.purchaseWithWallet(
+        eventId: eventId,
+        quantity: quantity,
+        promoCode: promoCode,
+      );
+
+      return result.fold(
+        (failure) {
+          state = state.copyWith(isLoading: false, error: failure.message);
+          return false;
+        },
+        (_) {
+          state = state.copyWith(isLoading: false);
+          return true;
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
 }
 
 /// Payment provider

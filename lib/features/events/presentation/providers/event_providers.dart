@@ -134,7 +134,9 @@ final AutoDisposeStateNotifierProvider<UserEventsNotifier, AsyncValue<List<Event
 
 class UserEventsNotifier extends StateNotifier<AsyncValue<List<EventEntity>>> {
 
-  UserEventsNotifier(this._getUserEventsUseCase) : super(const AsyncValue.loading());
+  UserEventsNotifier(this._getUserEventsUseCase) : super(const AsyncValue.loading()) {
+    getUserEvents();
+  }
   final GetUserEventsUseCase _getUserEventsUseCase;
 
   Future<void> getUserEvents() async {

@@ -31,8 +31,7 @@ class WalletRepositoryImpl implements WalletRepository {
         return Right(walletBalance);
       } else {
         return const Left(ServerFailure(message: 'Failed to get wallet balance'));
-      }
-    } on DioException catch (e) {
+      }    } on DioException catch (e) {
       return Left(_handleDioError(e));
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
@@ -130,7 +129,7 @@ class WalletRepositoryImpl implements WalletRepository {
         return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
         final int? statusCode = error.response?.statusCode;
-        final message = error.response?.data?['message'] ?? 'Server error';
+        final message = (error.response?.data?['message'] as String?) ?? 'Server error';
         if (statusCode == 401) {
           return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {

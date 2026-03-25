@@ -73,15 +73,39 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     required CreateBookingRequest request,
   }) async {
     try {
+      print('📡 REPO createBooking: calling API with ${request.toJson()}');
       final ApiResponse<Booking> response = await remoteDataSource.createBooking(request);
+      print('📡 REPO createBooking: got response success=${response.success} data=${response.data} message=${response.message}');
       if (response.success && response.data != null) {
         return Right(response.data!);
       } else {
-        return Left(ServerFailure(message: response.message ?? 'Failed to create booking'));
+        // Extract message from errors map if top-level message is empty
+        String errorMessage = response.message;
+        if (errorMessage.isEmpty && response.errors != null) {
+          errorMessage = response.errors!['message'] as String? ??
+              response.errors!['code'] as String? ??
+              'Failed to create booking';
+        }
+        if (errorMessage.isEmpty) errorMessage = 'Failed to create booking';
+        return Left(ServerFailure(message: errorMessage));
       }
     } on DioException catch (e) {
+      print('📡 REPO createBooking: DioException ${e.type} ${e.response?.statusCode} ${e.response?.data}');
+      // Try to extract message from response body
+      final responseData = e.response?.data;
+      if (responseData is Map) {
+        final error = responseData['error'];
+        if (error is Map) {
+          return Left(ServerFailure(message: error['message'] as String? ?? 'Failed to create booking'));
+        }
+        final msg = responseData['message'];
+        if (msg is String && msg.isNotEmpty) {
+          return Left(ServerFailure(message: msg));
+        }
+      }
       return Left(_handleDioError(e));
     } catch (e) {
+      print('📡 REPO createBooking: Exception $e');
       return Left(ServerFailure(message: e.toString()));
     }
   }
@@ -323,7 +347,8 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
         return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
         final int? statusCode = error.response?.statusCode;
-        final message = error.response?.data?['message'] ?? 'Server error';
+        final String message = (error.response?.data?['message'] as String?) ?? 
+            (error.response?.data?['error']?['message'] as String?) ?? 'Server error';
         if (statusCode == 401) {
           return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {

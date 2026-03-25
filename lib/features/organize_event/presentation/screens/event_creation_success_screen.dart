@@ -5,12 +5,17 @@ import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/models/event_model.dart';
 
-class EventCreationSuccessScreen extends StatefulWidget {
+// Helper function for unawaited futures
+void unawaited(Future<void> future) {
+  // Intentionally not awaiting
+}
 
+class EventCreationSuccessScreen extends StatefulWidget {
   const EventCreationSuccessScreen({
     super.key,
     required this.createdEvent,
   });
+  
   final EventModel createdEvent;
 
   @override
@@ -77,14 +82,14 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
   }
 
   Future<void> _startAnimations() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _scaleController.forward();
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    unawaited(_scaleController.forward());
     
-    await Future.delayed(const Duration(milliseconds: 400));
-    _fadeController.forward();
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    unawaited(_fadeController.forward());
     
-    await Future.delayed(const Duration(milliseconds: 200));
-    _slideController.forward();
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    unawaited(_slideController.forward());
   }
 
   @override
@@ -93,6 +98,13 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
     _fadeController.dispose();
     _slideController.dispose();
     super.dispose();
+  }
+
+  void _goToVendorMarketplace() {
+    context.pushReplacement(
+      RouteManager.vendorMarketplace,
+      extra: {'eventId': widget.createdEvent.id, 'fromEventCreation': true},
+    );
   }
 
   void _goToDashboard() {
@@ -107,7 +119,7 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
           padding: EdgeInsets.all(24.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               // Animated Success Icon
               ScaleTransition(
                 scale: _scaleAnimation,
@@ -115,11 +127,11 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
                   width: 140.w,
                   height: 140.h,
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.15),
+                    color: AppColors.success.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
-                    boxShadow: [
+                    boxShadow: <BoxShadow>[
                       BoxShadow(
-                        color: AppColors.success.withOpacity(0.3),
+                        color: AppColors.success.withValues(alpha: 0.3),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -158,11 +170,10 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
-                      width: 1,
+                      color: AppColors.primary.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -184,7 +195,7 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: Text(
-                  'Your event is now live and ready to share!\nWhat would you like to do next?',
+                  'Your event is now live!\nWould you like to add vendors?',
                   style: TextStyle(
                     fontFamily: AppTypography.modicaPro,
                     fontSize: 16.sp,
@@ -202,32 +213,71 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
               SlideTransition(
                 position: _slideAnimation,
                 child: Column(
-                  children: [
-                    // Go to Dashboard Button (Primary)
+                  children: <Widget>[
+                    // Add Vendors Button (Primary)
                     SizedBox(
                       width: double.infinity,
                       height: 56.h,
                       child: ElevatedButton(
-                        onPressed: _goToDashboard,
+                        onPressed: _goToVendorMarketplace,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: AppColors.onPrimary,
                           elevation: 2,
-                          shadowColor: AppColors.primary.withOpacity(0.3),
+                          shadowColor: AppColors.primary.withValues(alpha: 0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.r),
                           ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children: <Widget>[
+                            Icon(
+                              Icons.store_rounded,
+                              size: 20.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'Browse Vendors',
+                              style: TextStyle(
+                                fontFamily: AppTypography.modicaPro,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    SizedBox(height: 16.h),
+                    
+                    // Skip to Dashboard Button (Secondary)
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56.h,
+                      child: OutlinedButton(
+                        onPressed: _goToDashboard,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.onSurface,
+                          side: BorderSide(
+                            color: AppColors.outline,
+                            width: 1.5,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
                             Icon(
                               Icons.dashboard_rounded,
                               size: 20.sp,
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              'Go to Dashboard',
+                              'Skip to Dashboard',
                               style: TextStyle(
                                 fontFamily: AppTypography.modicaPro,
                                 fontSize: 16.sp,
@@ -250,11 +300,11 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
                 child: Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.surface.withOpacity(0.5),
+                    color: AppColors.surface.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.info_outline_rounded,
                         size: 20.sp,
@@ -263,7 +313,7 @@ class _EventCreationSuccessScreenState extends State<EventCreationSuccessScreen>
                       SizedBox(width: 12.w),
                       Expanded(
                         child: Text(
-                          'You can view and manage your event from the dashboard.',
+                          'You can add vendors now or later from your event dashboard.',
                           style: TextStyle(
                             fontFamily: AppTypography.modicaPro,
                             fontSize: 13.sp,

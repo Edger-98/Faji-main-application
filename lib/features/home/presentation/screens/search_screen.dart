@@ -1,21 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:geolocator/geolocator.dart';
-
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/core/services/location_service.dart';
+import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
+import 'package:fajimobileapp/features/events/presentation/viewmodels/search_viewmodel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _selectedCategory = 'All';
   Position? _userLocation;
@@ -115,7 +118,24 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 border: InputBorder.none,
                               ),
-                              onChanged: (value) => setState(() {}),
+                              onChanged: (value) {
+                                setState(() {});
+                                if (value.trim().isNotEmpty) {
+                                  // Debounce search
+                                  Future.delayed(const Duration(milliseconds: 500), () {
+                                    if (_searchController.text == value) {
+                                      ref.read(searchViewModelProvider.notifier).search(
+                                        query: value,
+                                        latitude: _userLocation?.latitude,
+                                        longitude: _userLocation?.longitude,
+                                        limit: 20,
+                                      );
+                                    }
+                                  });
+                                } else {
+                                  ref.read(searchViewModelProvider.notifier).clear();
+                                }
+                              },
                             ),
                           ),
                           if (_searchController.text.isNotEmpty)
@@ -318,47 +338,121 @@ class _SearchScreenState extends State<SearchScreen> {
     );
 
   Widget _buildSearchResults() {
-    // Mock search results
-    final List<Map<String, String>> results = <Map<String, String>>[
-      <String, String>{
-        'title': 'Summer Music Festival 2025',
-        'subtitle': 'Central Park, New York',
-        'date': 'Jul 15, 2025',
-        'price': r'$45.00',
-        'image': 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400',
-      },
-      <String, String>{
-        'title': 'Tech Innovation Summit',
-        'subtitle': 'Convention Center, SF',
-        'date': 'Aug 20, 2025',
-        'price': r'$120.00',
-        'image': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400',
-      },
-      <String, String>{
-        'title': 'Food & Wine Tasting',
-        'subtitle': 'Downtown Plaza',
-        'date': 'Sep 5, 2025',
-        'price': r'$65.00',
-        'image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400',
-      },
-    ];
+    final searchState = ref.watch(searchViewModelProvider);
 
-    return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      itemCount: results.length,
-      separatorBuilder: (_, __) => SizedBox(height: 16.h),
-      itemBuilder: (BuildContext context, int index) {
-        final Map<String, String> result = results[index];
-        return _buildResultCard(result);
+    return searchState.when(
+      initial: () => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.search_rounded,
+              size: 64.sp,
+              color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Start searching',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+      loading: () => Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(context.colors.primary),
+        ),
+      ),
+      success: (events) {
+        if (events.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.search_off_rounded,
+                  size: 64.sp,
+                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.5),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'No results found',
+                  style: AppTypography.titleMedium.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Try adjusting your search',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.separated(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          itemCount: events.length,
+          separatorBuilder: (_, __) => SizedBox(height: 16.h),
+          itemBuilder: (BuildContext context, int index) {
+            final event = events[index];
+            return _buildEventCard(event);
+          },
+        );
       },
+      error: (failure) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.error_outline_rounded,
+              size: 64.sp,
+              color: context.colors.error,
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Something went wrong',
+              style: AppTypography.titleMedium.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              failure.message,
+              style: AppTypography.bodySmall.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 16.h),
+            ElevatedButton(
+              onPressed: () {
+                if (_searchController.text.trim().isNotEmpty) {
+                  ref.read(searchViewModelProvider.notifier).search(
+                    query: _searchController.text,
+                    latitude: _userLocation?.latitude,
+                    longitude: _userLocation?.longitude,
+                    limit: 20,
+                  );
+                }
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildResultCard(Map<String, String> result) => GestureDetector(
+  Widget _buildEventCard(EventEntity event) => GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        // TODO: Navigate to event details with actual event ID
-        context.push('${RouteManager.eventDetails}/event_123');
+        context.push('${RouteManager.eventDetails}/${event.id}');
       },
       child: Container(
         decoration: BoxDecoration(
@@ -372,11 +466,21 @@ class _SearchScreenState extends State<SearchScreen> {
               height: 100.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.horizontal(left: Radius.circular(16.r)),
-                image: DecorationImage(
-                  image: NetworkImage(result['image']!),
-                  fit: BoxFit.cover,
-                ),
+                color: context.colors.surfaceContainerHighest,
+                image: event.imageUrl.isNotEmpty
+                    ? DecorationImage(
+                        image: NetworkImage(event.imageUrl),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
+              child: event.imageUrl.isEmpty
+                  ? Icon(
+                      Icons.event,
+                      size: 40.sp,
+                      color: context.colors.onSurfaceVariant,
+                    )
+                  : null,
             ),
             Expanded(
               child: Padding(
@@ -385,7 +489,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      result['title']!,
+                      event.title,
                       style: AppTypography.bodyMedium.copyWith(
                         color: context.colors.onSurface,
                         fontWeight: FontWeight.w600,
@@ -404,7 +508,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
-                            result['subtitle']!,
+                            _formatLocation(event.location),
                             style: AppTypography.bodySmall.copyWith(
                               color: context.colors.onSurfaceVariant,
                             ),
@@ -419,18 +523,27 @@ class _SearchScreenState extends State<SearchScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          result['date']!,
+                          DateFormat('MMM dd, yyyy').format(event.startDate),
                           style: AppTypography.bodySmall.copyWith(
                             color: context.colors.onSurfaceVariant,
                           ),
                         ),
-                        Text(
-                          'From ${result['price']!}',
-                          style: AppTypography.bodySmall.copyWith(
-                            color: context.colors.primary,
-                            fontWeight: FontWeight.w600,
+                        if (event.price > 0)
+                          Text(
+                            'From ${event.currency} ${event.price.toStringAsFixed(0)}',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        else
+                          Text(
+                            'Free',
+                            style: AppTypography.bodySmall.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ],
@@ -446,5 +559,14 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  String _formatLocation(String location) {
+    // Check if location looks like coordinates (contains "Lat:" or numbers with commas)
+    if (location.contains('Lat:') || location.contains('Lng:') || 
+        RegExp(r'^\d+\.\d+,\s*-?\d+\.\d+$').hasMatch(location)) {
+      return 'Location available';
+    }
+    return location;
   }
 }

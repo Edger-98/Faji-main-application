@@ -22,6 +22,7 @@ class CheckoutScreen extends ConsumerStatefulWidget {
 
 class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   int _quantity = 1;
+  String _paymentMethod = 'stripe'; // 'stripe' or 'wallet'
   final TextEditingController _promoController = TextEditingController();
 
   @override
@@ -33,11 +34,22 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   double get _total => widget.event.price * _quantity;
 
   Future<void> _handlePayment() async {
-    final success = await ref.read(paymentProvider.notifier).processPayment(
-          eventId: widget.event.id,
-          quantity: _quantity,
-          promoCode: _promoController.text.trim().isEmpty ? null : _promoController.text.trim(),
-        );
+    final promoCode = _promoController.text.trim().isEmpty ? null : _promoController.text.trim();
+
+    bool success;
+    if (_paymentMethod == 'wallet') {
+      success = await ref.read(paymentProvider.notifier).processWalletPayment(
+            eventId: widget.event.id,
+            quantity: _quantity,
+            promoCode: promoCode,
+          );
+    } else {
+      success = await ref.read(paymentProvider.notifier).processPayment(
+            eventId: widget.event.id,
+            quantity: _quantity,
+            promoCode: promoCode,
+          );
+    }
 
     if (!mounted) return;
 
@@ -58,6 +70,44 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
         message: error ?? 'Payment failed. Please try again.',
       );
     }
+  }
+
+  Widget _buildPaymentOption(
+    BuildContext context, {
+    required String value,
+    required IconData icon,
+    required String label,
+    required String subtitle,
+  }) {
+    final isSelected = _paymentMethod == value;
+    return InkWell(
+      onTap: () => setState(() => _paymentMethod = value),
+      borderRadius: BorderRadius.circular(12.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Row(
+          children: [
+            Icon(icon, color: isSelected ? context.colors.primary : context.colors.onSurfaceVariant),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText.bodyLarge(label),
+                  AppText.bodySmall(subtitle, color: context.colors.onSurfaceVariant),
+                ],
+              ),
+            ),
+            Radio<String>(
+              value: value,
+              groupValue: _paymentMethod,
+              onChanged: (v) => setState(() => _paymentMethod = v!),
+              activeColor: context.colors.primary,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -248,6 +298,37 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
             SizedBox(height: 32.h),
 
+            // Payment Method Selector
+            AppText.titleMedium('Payment Method'),
+            SizedBox(height: 12.h),
+            Container(
+              decoration: BoxDecoration(
+                color: context.colors.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Column(
+                children: [
+                  _buildPaymentOption(
+                    context,
+                    value: 'stripe',
+                    icon: Icons.credit_card,
+                    label: 'Credit / Debit Card',
+                    subtitle: 'Pay securely with Stripe',
+                  ),
+                  Divider(height: 1, indent: 16.w, endIndent: 16.w),
+                  _buildPaymentOption(
+                    context,
+                    value: 'wallet',
+                    icon: Icons.account_balance_wallet_outlined,
+                    label: 'Wallet',
+                    subtitle: 'Pay using your wallet balance',
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 32.h),
+
             // Payment Button
             SizedBox(
               width: double.infinity,
@@ -273,10 +354,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.payment, size: 20.sp),
+                          Icon(
+                            _paymentMethod == 'wallet'
+                                ? Icons.account_balance_wallet_outlined
+                                : Icons.payment,
+                            size: 20.sp,
+                          ),
                           SizedBox(width: 8.w),
                           AppText.titleMedium(
-                            'Pay Now',
+                            _paymentMethod == 'wallet' ? 'Pay with Wallet' : 'Pay with Card',
                             color: context.colors.onPrimary,
                           ),
                         ],

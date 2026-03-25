@@ -14,4 +14,10 @@ abstract class PaymentRepository {
     required String orderId,
     required String paymentIntentId,
   });
+
+  Future<Either<Failure, void>> purchaseWithWallet({
+    required String eventId,
+    required int quantity,
+    String? promoCode,
+  });
 }

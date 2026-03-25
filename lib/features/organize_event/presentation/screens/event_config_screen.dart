@@ -316,7 +316,18 @@ class _EventConfigScreenState extends ConsumerState<EventConfigScreen> {
                     title: 'Enable Vendors Feature',
                     description: 'Turn this on if you need to find & manage vendors, order drinks, food, etc for your event',
                     value: state.eventData.enableCohostMarketplace,
-                    onChanged: viewModel.toggleCohostMarketplace,
+                    onChanged: (enabled) {
+                      viewModel.toggleCohostMarketplace(enabled);
+                      if (enabled) {
+                        // Automatically navigate to vendor marketplace when enabled
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          context.push(RouteManager.vendorMarketplace);
+                        });
+                      }
+                    },
+                    onTap: () {
+                      context.push(RouteManager.vendorMarketplace);
+                    },
                   ),
                   SizedBox(height: 40.h),
 

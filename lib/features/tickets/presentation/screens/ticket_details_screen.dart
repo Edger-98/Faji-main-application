@@ -92,33 +92,74 @@ Hosted by ${event.host.name}
     final event = details.event;
     final order = details.order;
     final imageUrl = event.imageUrl ?? event.media.poster;
+    final isPaid = ticket.status.toLowerCase() == 'valid' || ticket.status.toLowerCase() == 'used';
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Event Image
-          if (imageUrl.isNotEmpty)
-            CachedNetworkImage(
-              imageUrl: imageUrl,
-              height: 250.h,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                height: 250.h,
-                color: context.colors.surfaceContainerHighest,
-                child: const Center(child: CircularProgressIndicator()),
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: 250.h,
-                color: context.colors.surfaceContainerHighest,
-                child: Icon(
-                  Icons.image_not_supported,
-                  color: context.colors.onSurfaceVariant,
-                  size: 64.sp,
+          // Event Image with gradient overlay
+          Stack(
+            children: [
+              if (imageUrl.isNotEmpty)
+                CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  height: 280.h,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    height: 280.h,
+                    color: context.colors.surfaceContainerHighest,
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    height: 280.h,
+                    color: context.colors.surfaceContainerHighest,
+                    child: Icon(
+                      Icons.image_not_supported,
+                      color: context.colors.onSurfaceVariant,
+                      size: 64.sp,
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  height: 280.h,
+                  color: context.colors.surfaceContainerHighest,
+                  child: Icon(
+                    Icons.confirmation_number,
+                    color: context.colors.onSurfaceVariant,
+                    size: 64.sp,
+                  ),
+                ),
+              // Gradient overlay
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 120.h,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        context.colors.surface.withValues(alpha: 0.9),
+                        context.colors.surface,
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+              // Status Badge
+              Positioned(
+                top: 16.h,
+                right: 16.w,
+                child: _buildStatusBadge(ticket.status),
+              ),
+            ],
+          ),
 
           Padding(
             padding: EdgeInsets.all(24.w),
@@ -126,49 +167,75 @@ Hosted by ${event.host.name}
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Event Name
-                AppText.headlineMedium(
+                AppText.headlineLarge(
                   event.name,
                   color: context.colors.onSurface,
                 ),
-                SizedBox(height: 8.h),
-                
-                // Status Badge
-                _buildStatusBadge(ticket.status),
-                
-                SizedBox(height: 32.h),
+                SizedBox(height: 24.h),
 
-                // QR Code Section
+                // QR Code Section - Prominent card
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(24.w),
+                  padding: EdgeInsets.all(32.w),
                   decoration: BoxDecoration(
-                    color: context.colors.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(16.r),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        context.colors.primary.withValues(alpha: 0.1),
+                        context.colors.primary.withValues(alpha: 0.05),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(24.r),
+                    border: Border.all(
+                      color: context.colors.primary.withValues(alpha: 0.2),
+                      width: 2,
+                    ),
                   ),
                   child: Column(
                     children: [
                       if (ticket.qrCode != null && ticket.qrCode!.isNotEmpty)
                         Container(
-                          padding: EdgeInsets.all(16.w),
+                          padding: EdgeInsets.all(20.w),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(12.r),
+                            borderRadius: BorderRadius.circular(16.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: Image.network(
                             ticket.qrCode!,
-                            width: 200.w,
-                            height: 200.w,
+                            width: 220.w,
+                            height: 220.w,
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) => _buildQRPlaceholder(),
                           ),
                         )
                       else
                         _buildQRPlaceholder(),
-                      SizedBox(height: 16.h),
-                      AppText.titleMedium(
-                        ticket.ticketNumber,
+                      SizedBox(height: 20.h),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                        decoration: BoxDecoration(
+                          color: context.colors.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: AppText.titleMedium(
+                          ticket.ticketNumber,
+                          textAlign: TextAlign.center,
+                          color: context.colors.onSurface,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      AppText.bodySmall(
+                        'Show this QR code at the event entrance',
                         textAlign: TextAlign.center,
-                        color: context.colors.onSurface,
+                        color: context.colors.onSurfaceVariant,
                       ),
                     ],
                   ),
@@ -177,84 +244,84 @@ Hosted by ${event.host.name}
                 SizedBox(height: 32.h),
 
                 // Event Details Section
-                AppText.titleLarge(
-                  'Event Details',
-                  color: context.colors.onSurface,
-                ),
+                _buildSectionHeader('Event Details', Icons.event),
                 SizedBox(height: 16.h),
                 
-                _buildInfoRow(
-                  Icons.calendar_today,
-                  'Date',
-                  _formatDate(event.startDate),
-                ),
-                SizedBox(height: 12.h),
-                _buildInfoRow(
-                  Icons.access_time,
-                  'Time',
-                  _formatTime(event.startDate),
-                ),
-                SizedBox(height: 12.h),
-                _buildInfoRow(
-                  Icons.location_on,
-                  'Location',
-                  event.location.address,
-                ),
-                SizedBox(height: 12.h),
-                _buildInfoRow(
-                  Icons.person,
-                  'Host',
-                  event.host.name,
-                ),
+                _buildInfoCard([
+                  _buildInfoRow(
+                    Icons.calendar_today,
+                    'Date',
+                    _formatDate(event.startDate),
+                  ),
+                  Divider(height: 24.h, color: context.colors.surfaceContainerHighest),
+                  _buildInfoRow(
+                    Icons.access_time,
+                    'Time',
+                    _formatTime(event.startDate),
+                  ),
+                  Divider(height: 24.h, color: context.colors.surfaceContainerHighest),
+                  _buildInfoRow(
+                    Icons.location_on,
+                    'Location',
+                    event.location.address,
+                  ),
+                  Divider(height: 24.h, color: context.colors.surfaceContainerHighest),
+                  _buildInfoRow(
+                    Icons.person,
+                    'Host',
+                    event.host.name,
+                  ),
+                ]),
 
                 SizedBox(height: 32.h),
 
                 // Order Details Section
-                AppText.titleLarge(
-                  'Order Details',
-                  color: context.colors.onSurface,
-                ),
+                _buildSectionHeader('Order Details', Icons.receipt_long),
                 SizedBox(height: 16.h),
                 
-                _buildInfoRow(
-                  Icons.receipt,
-                  'Order Number',
-                  order.orderNumber,
-                ),
-                SizedBox(height: 12.h),
-                _buildInfoRow(
-                  Icons.payment,
-                  'Total Paid',
-                  '\$${order.total.toStringAsFixed(2)} ${order.currency}',
-                ),
-                SizedBox(height: 12.h),
-                _buildInfoRow(
-                  Icons.check_circle,
-                  'Purchase Date',
-                  _formatDate(ticket.purchaseDate),
-                ),
+                _buildInfoCard([
+                  _buildInfoRow(
+                    Icons.confirmation_number,
+                    'Order Number',
+                    order.orderNumber,
+                  ),
+                  Divider(height: 24.h, color: context.colors.surfaceContainerHighest),
+                  _buildInfoRow(
+                    Icons.payment,
+                    'Total Paid',
+                    '\$${order.total.toStringAsFixed(2)} ${order.currency}',
+                  ),
+                  Divider(height: 24.h, color: context.colors.surfaceContainerHighest),
+                  _buildInfoRow(
+                    Icons.check_circle,
+                    'Purchase Date',
+                    _formatDate(ticket.purchaseDate),
+                  ),
+                ]),
 
                 SizedBox(height: 32.h),
 
                 // Action Buttons
-                if (ticket.status.toLowerCase() == 'valid') ...[
+                if (isPaid) ...[
                   SizedBox(
                     width: double.infinity,
                     height: 56.h,
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {
                         context.push('/event-details/${event.id}');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: context.colors.primary,
-                        foregroundColor: context.colors.onPrimary,
+                        foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
+                        elevation: 0,
                       ),
-                      child: AppText.titleMedium(
+                      icon: const Icon(Icons.event),
+                      label: AppText.titleMedium(
                         'View Event Details',
-                        color: context.colors.onPrimary,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -266,9 +333,9 @@ Hosted by ${event.host.name}
                       onPressed: _shareTicket,
                       style: OutlinedButton.styleFrom(
                         foregroundColor: context.colors.primary,
-                        side: BorderSide(color: context.colors.primary),
+                        side: BorderSide(color: context.colors.primary, width: 2),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
                       ),
                       icon: const Icon(Icons.share),
@@ -279,6 +346,7 @@ Hosted by ${event.host.name}
                     ),
                   ),
                 ],
+                SizedBox(height: 24.h),
               ],
             ),
           ),
@@ -287,13 +355,53 @@ Hosted by ${event.host.name}
     );
   }
 
+  Widget _buildSectionHeader(String title, IconData icon) => Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: context.colors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              icon,
+              size: 20.sp,
+              color: context.colors.primary,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          AppText.titleLarge(
+            title,
+            color: context.colors.onSurface,
+          ),
+        ],
+      );
+
+  Widget _buildInfoCard(List<Widget> children) => Container(
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Column(
+          children: children,
+        ),
+      );
+
   Widget _buildQRPlaceholder() => Container(
-        width: 200.w,
-        height: 200.w,
-        padding: EdgeInsets.all(16.w),
+        width: 220.w,
+        height: 220.w,
+        padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Center(
           child: Column(
@@ -352,22 +460,18 @@ Hosted by ${event.host.name}
         backgroundColor = Colors.green.withValues(alpha: 0.1);
         textColor = Colors.green;
         label = 'Valid';
-        break;
       case 'used':
         backgroundColor = Colors.orange.withValues(alpha: 0.1);
         textColor = Colors.orange;
         label = 'Used';
-        break;
       case 'cancelled':
         backgroundColor = Colors.red.withValues(alpha: 0.1);
         textColor = Colors.red;
         label = 'Cancelled';
-        break;
       case 'refunded':
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         textColor = Colors.blue;
         label = 'Refunded';
-        break;
       default:
         backgroundColor = context.colors.surfaceContainerHighest;
         textColor = context.colors.onSurfaceVariant;
@@ -375,12 +479,19 @@ Hosted by ${event.host.name}
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(8.r),
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: AppText.bodySmall(
+      child: AppText.labelLarge(
         label,
         color: textColor,
       ),

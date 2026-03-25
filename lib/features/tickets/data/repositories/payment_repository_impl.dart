@@ -43,4 +43,22 @@ class PaymentRepositoryImpl implements PaymentRepository {
       return Left(ServerFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> purchaseWithWallet({
+    required String eventId,
+    required int quantity,
+    String? promoCode,
+  }) async {
+    try {
+      await _remoteDataSource.purchaseWithWallet(
+        eventId: eventId,
+        quantity: quantity,
+        promoCode: promoCode,
+      );
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(message: e.toString()));
+    }
+  }
 }

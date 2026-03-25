@@ -50,7 +50,13 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back_ios_new, size: 16),
                       color: AppColors.onSurface,
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        if (context.canPop()) {
+                          context.pop();
+                        } else {
+                          context.go(RouteManager.home);
+                        }
+                      },
                     ),
                   ),
                   const Spacer(),

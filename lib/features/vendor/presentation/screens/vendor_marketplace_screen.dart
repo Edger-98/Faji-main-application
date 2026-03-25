@@ -2,21 +2,30 @@ import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:fajimobileapp/features/marketplace/presentation/viewmodels/marketplace_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:fajimobileapp/core/design_system/design_system.dart';
-import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_detail_screen.dart';
-import 'package:fajimobileapp/features/marketplace/presentation/providers/marketplace_providers.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/marketplace/domain/entities/marketplace_resource.dart';
+import 'package:fajimobileapp/features/marketplace/presentation/providers/marketplace_providers.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_detail_screen.dart';
 
 /// Vendor Marketplace - Public discovery only
 /// Purpose: Fiverr/Airbnb-style marketplace for discovering vendors and services
 /// Contains: Public vendor profiles, vendor services, search and filters
 /// Does NOT contain: Vendor onboarding, service creation, booking management
 class VendorMarketplaceScreen extends HookConsumerWidget {
-  const VendorMarketplaceScreen({super.key});
+  const VendorMarketplaceScreen({
+    super.key,
+    this.eventId,
+    this.fromEventCreation = false,
+  });
+  
+  final String? eventId;
+  final bool fromEventCreation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +67,11 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
         category: category == 'All' ? 'all' : category,
       );
     }
+    
+    void onDone() {
+      HapticFeedback.lightImpact();
+      context.go(RouteManager.dashboard);
+    }
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -69,6 +83,50 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
           backgroundColor: AppColors.surfaceContainerHighest,
           child: CustomScrollView(
             slivers: <Widget>[
+              // Back button
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 0),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: 40.w,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                          color: context.colors.surfaceContainerHighest,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back_ios_new, size: 18.sp),
+                          color: context.colors.onSurface,
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      if (fromEventCreation) ...<Widget>[
+                        const Spacer(),
+                        ElevatedButton.icon(
+                          onPressed: onDone,
+                          icon: const Icon(Icons.check, size: 18),
+                          label: const Text('Done'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.onPrimary,
+                            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+
               // Header
               SliverToBoxAdapter(
                 child: AppHeader(
@@ -396,15 +454,18 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
       onTap: () {
         HapticFeedback.lightImpact();
         // TODO: Navigate to vendor detail with resource data
-        Navigator.push(
+        Navigator.push<void>(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute<void>(
             builder: (context) => VendorDetailScreen(vendor: {
+              'id': resource.id,
+              'vendorId': resource.vendorId,
               'name': resource.vendorName,
               'category': resource.category,
               'rating': resource.rating,
               'reviews': resource.reviewCount,
               'price': 'From \$${resource.basePrice.toStringAsFixed(0)}',
+              'basePrice': resource.basePrice,
               'image': resource.photos.isNotEmpty ? resource.photos.first : '',
               'verified': resource.isVerified,
             }),
@@ -589,15 +650,18 @@ class VendorMarketplaceScreen extends HookConsumerWidget {
   Widget _buildVendorListTile(BuildContext context, MarketplaceResource resource) => GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        Navigator.push(
+        Navigator.push<void>(
           context,
-          MaterialPageRoute(
+          MaterialPageRoute<void>(
             builder: (context) => VendorDetailScreen(vendor: {
+              'id': resource.id,
+              'vendorId': resource.vendorId,
               'name': resource.vendorName,
               'category': resource.category,
               'rating': resource.rating,
               'reviews': resource.reviewCount,
               'price': 'From \$${resource.basePrice.toStringAsFixed(0)}',
+              'basePrice': resource.basePrice,
               'image': resource.photos.isNotEmpty ? resource.photos.first : '',
               'verified': resource.isVerified,
             }),

@@ -14,6 +14,12 @@ abstract class PaymentRemoteDataSource {
     required String orderId,
     required String paymentIntentId,
   });
+
+  Future<void> purchaseWithWallet({
+    required String eventId,
+    required int quantity,
+    String? promoCode,
+  });
 }
 
 class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
@@ -61,5 +67,22 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
 
     return PaymentConfirmationModel.fromJson(response.data!);
+  }
+
+  @override
+  Future<void> purchaseWithWallet({
+    required String eventId,
+    required int quantity,
+    String? promoCode,
+  }) async {
+    await _dio.post<Map<String, dynamic>>(
+      '/tickets/purchase',
+      data: {
+        'eventId': eventId,
+        'quantity': quantity,
+        'paymentMethod': 'wallet',
+        if (promoCode != null) 'promoCode': promoCode,
+      },
+    );
   }
 }

@@ -111,22 +111,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 SizedBox(height: 40.h),
                 
                 // Back button
-                GestureDetector(
-                  onTap: () => context.pop(),
-                  child: Container(
-                    width: 50.w,
-                    height: 50.h,
-                    decoration: const BoxDecoration(
-                      color: AppColors.surfaceContainerHighest,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: context.colors.onSurface,
-                      size: 16.sp,
-                    ),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () => context.pop(),
+                //   child: Container(
+                //     width: 50.w,
+                //     height: 50.h,
+                //     decoration: const BoxDecoration(
+                //       color: AppColors.surfaceContainerHighest,
+                //       shape: BoxShape.circle,
+                //     ),
+                //     child: Icon(
+                //       Icons.arrow_back_ios_new,
+                //       color: context.colors.onSurface,
+                //       size: 16.sp,
+                //     ),
+                //   ),
+                // ),
                 
                 SizedBox(height: 40.h),
                 

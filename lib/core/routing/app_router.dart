@@ -21,7 +21,6 @@ import 'package:fajimobileapp/features/events/presentation/screens/event_details
 import 'package:fajimobileapp/features/events/presentation/screens/search_screen.dart' as events_search;
 import 'package:fajimobileapp/features/events/presentation/screens/my_events_screen.dart';
 import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
-import 'package:fajimobileapp/features/tickets/tickets.dart';
 import 'package:fajimobileapp/features/tickets/presentation/screens/checkout_screen.dart';
 import 'package:fajimobileapp/features/tickets/presentation/screens/ticket_details_screen.dart';
 import 'package:fajimobileapp/features/tickets/presentation/screens/my_tickets_screen_v2.dart';
@@ -38,6 +37,7 @@ import 'package:fajimobileapp/features/terms/terms.dart';
 import 'package:fajimobileapp/features/notifications/presentation/screens/notification_settings_screen.dart';
 import 'package:fajimobileapp/features/wallet/wallet.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_registration_screen.dart';
+import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_marketplace_screen.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_resources_list_screen.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_add_resource_screen_v2.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_bookings_list_screen.dart';
@@ -257,6 +257,26 @@ class AppRouter {
           state,
           const MainDashboardScreen(),
         ),
+      ),
+      
+      // Vendor Marketplace route
+      GoRoute(
+        path: RouteManager.vendorMarketplace,
+        name: RouteManager.vendorMarketplaceName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
+          final String? eventId = extra?['eventId'] as String?;
+          final bool fromEventCreation = extra?['fromEventCreation'] as bool? ?? false;
+          
+          return _buildPageWithTransition(
+            context,
+            state,
+            VendorMarketplaceScreen(
+              eventId: eventId,
+              fromEventCreation: fromEventCreation,
+            ),
+          );
+        },
       ),
       
       // Events List route
@@ -584,6 +604,15 @@ class AppRouter {
           context,
           state,
           const BalanceDetailScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.walletFund,
+        name: RouteManager.walletFundName,
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
+          context,
+          state,
+          const FundWalletScreen(),
         ),
       ),
       GoRoute(

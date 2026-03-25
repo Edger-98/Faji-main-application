@@ -32,8 +32,8 @@ abstract class WalletRemoteDataSource {
     @Body() WithdrawRequest request,
   );
 
-  /// Top-up wallet
-  @POST('/wallet/topup')
+  /// Fund wallet - POST /wallet/fund
+  @POST('/wallet/fund')
   Future<ApiResponse<TopupResponse>> topupWallet(
     @Body() TopupRequest request,
   );

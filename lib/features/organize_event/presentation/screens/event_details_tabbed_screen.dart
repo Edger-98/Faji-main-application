@@ -35,7 +35,6 @@ class _EventDetailsTabbedScreenState
   final List<String> _tabs = <String>[
     'PLAN',
     'GUEST',
-    'CHAT',
     'SETTINGS',
     'EDIT',
   ];
@@ -75,7 +74,6 @@ class _EventDetailsTabbedScreenState
                   children: <Widget>[
                     PlanTab(eventId: widget.eventId),
                     GuestTab(eventId: widget.eventId),
-                    ChatTab(eventId: widget.eventId),
                     SettingsTab(eventId: widget.eventId),
                     EditTab(eventId: widget.eventId),
                   ],

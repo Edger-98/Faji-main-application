@@ -39,8 +39,6 @@ class PlanTab extends ConsumerWidget {
           SizedBox(height: 12.h),
           _buildPlannersCard(context, ref),
           SizedBox(height: 12.h),
-          _buildSellTicketsCard(context),
-          SizedBox(height: 12.h),
           // _buildMoreToolsCard(context),
           // SizedBox(height: 80.h),
         ],

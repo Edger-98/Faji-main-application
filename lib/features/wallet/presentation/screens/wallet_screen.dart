@@ -11,7 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/wallet/presentation/providers/wallet_providers.dart';
-import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
 import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
 import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
 
@@ -79,10 +78,10 @@ class WalletScreen extends HookConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: walletState.balanceState.when(
+                  child: walletState.earningsState.when(
                     initial: () => _buildBalanceCardSkeleton(context),
                     loading: () => _buildBalanceCardSkeleton(context),
-                    success: (WalletBalance balance) => _buildBalanceCard(context, balance),
+                    success: (EarningsBreakdown earnings) => _buildBalanceCard(context, earnings),
                     error: (Failure failure) => _buildBalanceCardError(context, failure.message),
                   ),
                 ),
@@ -193,7 +192,7 @@ class WalletScreen extends HookConsumerWidget {
   }
 
   // Balance Card with real data
-  Widget _buildBalanceCard(BuildContext context, WalletBalance balance) => Container(
+  Widget _buildBalanceCard(BuildContext context, EarningsBreakdown earnings) => Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -217,16 +216,16 @@ class WalletScreen extends HookConsumerWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            '${balance.currency} ${balance.availableBalance.toStringAsFixed(2)}',
+            '${earnings.currency} ${earnings.availableBalance.toStringAsFixed(2)}',
             style: AppTypography.displayLarge.copyWith(
               color: context.colors.onPrimary,
               fontSize: 42.sp,
             ),
           ),
-          if (balance.pendingBalance > 0) ...[
+          if (earnings.pendingBalance > 0) ...[
             SizedBox(height: 8.h),
             Text(
-              'Pending: ${balance.currency} ${balance.pendingBalance.toStringAsFixed(2)}',
+              'Pending: ${earnings.currency} ${earnings.pendingBalance.toStringAsFixed(2)}',
               style: AppTypography.bodySmall.copyWith(
                 color: context.colors.onPrimary.withValues(alpha: 0.7),
               ),
@@ -235,6 +234,18 @@ class WalletScreen extends HookConsumerWidget {
           SizedBox(height: 24.h),
           Row(
             children: [
+              Expanded(
+                child: _buildBalanceAction(
+                  context: context,
+                  icon: Icons.arrow_downward_rounded,
+                  label: 'Fund',
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    context.push(RouteManager.walletFund);
+                  },
+                ),
+              ),
+              SizedBox(width: 12.w),
               Expanded(
                 child: _buildBalanceAction(
                   context: context,
@@ -299,6 +310,15 @@ class WalletScreen extends HookConsumerWidget {
           SizedBox(height: 24.h),
           Row(
             children: [
+              Expanded(
+                child: _buildBalanceAction(
+                  context: context,
+                  icon: Icons.arrow_downward_rounded,
+                  label: 'Fund',
+                  onTap: () {},
+                ),
+              ),
+              SizedBox(width: 12.w),
               Expanded(
                 child: _buildBalanceAction(
                   context: context,
@@ -608,7 +628,7 @@ class WalletScreen extends HookConsumerWidget {
   }) => GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
+        padding: EdgeInsets.symmetric(vertical: 8.h),
         decoration: BoxDecoration(
           color: context.colors.onPrimary.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12.r),
@@ -617,7 +637,7 @@ class WalletScreen extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: context.colors.onPrimary, size: 20.sp),
-            SizedBox(width: 8.w),
+            SizedBox(width: 3.w),
             Text(
               label,
               style: AppTypography.labelMedium.copyWith(

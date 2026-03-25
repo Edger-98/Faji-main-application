@@ -282,30 +282,16 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
   Widget _buildEventDetails(BuildContext context, EventEntity event) {
     final favorites = ref.watch(favoritesProvider);
     
-    return CustomScrollView(
-      slivers: <Widget>[
-        // App Bar with Image
-        SliverAppBar(
-          expandedHeight: 300.h,
-          pinned: true,
-          backgroundColor: context.colors.surface,
-          leading: IconButton(
-            icon: Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: 20.sp,
-              ),
-            ),
-            onPressed: () => context.pop(),
-          ),
-          actions: <Widget>[
-            IconButton(
+    return SafeArea(
+      bottom: false, // Allow content to extend under bottom nav
+      child: CustomScrollView(
+        slivers: <Widget>[
+          // App Bar with Image
+          SliverAppBar(
+            expandedHeight: 300.h,
+            pinned: true,
+            backgroundColor: context.colors.surface,
+            leading: IconButton(
               icon: Container(
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
@@ -313,37 +299,53 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  favorites.contains(event.id) ? Icons.favorite : Icons.favorite_border,
-                  color: favorites.contains(event.id) ? AppColors.error : Colors.white,
+                  Icons.arrow_back,
+                  color: Colors.white,
                   size: 20.sp,
                 ),
               ),
-              onPressed: () => _toggleFavorite(event),
+              onPressed: () => context.pop(),
             ),
-          ],
-          flexibleSpace: FlexibleSpaceBar(
-            background: CachedNetworkImage(
-              imageUrl: event.imageUrl,
-              fit: BoxFit.cover,
-              placeholder: (BuildContext context, String url) => ColoredBox(
-                color: context.colors.surfaceContainerHighest,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: context.colors.primary,
+            actions: <Widget>[
+              IconButton(
+                icon: Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    favorites.contains(event.id) ? Icons.favorite : Icons.favorite_border,
+                    color: favorites.contains(event.id) ? AppColors.error : Colors.white,
+                    size: 20.sp,
                   ),
                 ),
+                onPressed: () => _toggleFavorite(event),
               ),
-              errorWidget: (BuildContext context, String url, Object error) => ColoredBox(
-                color: context.colors.surfaceContainerHighest,
-                child: Icon(
-                  Icons.image_not_supported,
-                  color: context.colors.onSurfaceVariant,
-                  size: 48.sp,
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              background: CachedNetworkImage(
+                imageUrl: event.imageUrl,
+                fit: BoxFit.cover,
+                placeholder: (BuildContext context, String url) => ColoredBox(
+                  color: context.colors.surfaceContainerHighest,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ),
+                errorWidget: (BuildContext context, String url, Object error) => ColoredBox(
+                  color: context.colors.surfaceContainerHighest,
+                  child: Icon(
+                    Icons.image_not_supported,
+                    color: context.colors.onSurfaceVariant,
+                    size: 48.sp,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
         
         // Event Details
         SliverToBoxAdapter(
@@ -503,13 +505,14 @@ class _EventDetailsScreenState extends ConsumerState<EventDetailsScreen> {
                         ),
                       )).toList(),
                   ),
-                  SizedBox(height: 120.h), // Increased space for bottom button and scrolling
+                  SizedBox(height: 150.h), // Extra space for bottom button and safe scrolling
                 ],
               ],
             ),
           ),
         ),
       ],
+    ),
     );
   }
 

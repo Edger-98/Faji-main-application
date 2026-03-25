@@ -1,42 +1,58 @@
 import 'package:dartz/dartz.dart';
-import 'package:fajimobileapp/core/error/failures.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fajimobileapp/core/base/base_state.dart';
+import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/core/services/stripe_service.dart';
 import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
 import 'package:fajimobileapp/features/wallet/domain/usecases/topup_wallet_usecase.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// State for top-up
 typedef TopupState = BaseState<TopupResponse>;
 
 class TopupViewModel extends StateNotifier<TopupState> {
+  TopupViewModel(this._topupWalletUseCase) : super(const BaseState.initial());
 
-  TopupViewModel(
-    this._topupWalletUseCase,
-  ) : super(const BaseState.initial());
   final TopupWalletUseCase _topupWalletUseCase;
+  final StripeService _stripeService = StripeService();
 
-  /// Top-up wallet
-  Future<void> topupWallet({
-    required double amount,
-    String paymentMethod = 'paystack',
-  }) async {
+  /// Fund wallet: calls /wallet/fund, then presents Stripe payment sheet
+  Future<bool> fundWallet({required double amount}) async {
+    if (!mounted) return false;
     state = const BaseState.loading();
 
-    final TopupRequest request = TopupRequest(
-      amount: amount,
-      paymentMethod: paymentMethod,
+    final Either<Failure, TopupResponse> result = await _topupWalletUseCase(
+      request: TopupRequest(amount: amount),
     );
 
-    final Either<Failure, TopupResponse> result = await _topupWalletUseCase(request: request);
-
-    result.fold(
-      (Failure failure) => state = BaseState.error(failure),
-      (TopupResponse response) => state = BaseState.success(response),
+    return result.fold(
+      (Failure failure) {
+        if (mounted) state = BaseState.error(failure);
+        return false;
+      },
+      (TopupResponse response) async {
+        try {
+          final bool paid = await _stripeService.presentPaymentSheet(
+            clientSecret: response.paymentIntentClientSecret,
+            customerId: response.customerId,
+            ephemeralKey: response.ephemeralKey,
+          );
+          if (mounted) {
+            if (paid) {
+              state = BaseState.success(response);
+            } else {
+              // User cancelled — reset so they can try again
+              state = const BaseState.initial();
+            }
+          }
+          return paid;
+        } catch (e) {
+          if (mounted) {
+            state = BaseState.error(ServerFailure(message: e.toString()));
+          }
+          return false;
+        }
+      },
     );
   }
 
-  /// Reset state
-  void reset() {
-    state = const BaseState.initial();
-  }
+  void reset() => state = const BaseState.initial();
 }

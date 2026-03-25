@@ -10,34 +10,37 @@ _$TopupRequestImpl _$$TopupRequestImplFromJson(Map json) =>
     $checkedCreate(r'_$TopupRequestImpl', json, ($checkedConvert) {
       final val = _$TopupRequestImpl(
         amount: $checkedConvert('amount', (v) => (v as num).toDouble()),
-        paymentMethod: $checkedConvert('paymentMethod', (v) => v as String),
       );
       return val;
     });
 
 Map<String, dynamic> _$$TopupRequestImplToJson(_$TopupRequestImpl instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'paymentMethod': instance.paymentMethod,
-    };
+    <String, dynamic>{'amount': instance.amount};
 
 _$TopupResponseImpl _$$TopupResponseImplFromJson(Map json) =>
     $checkedCreate(r'_$TopupResponseImpl', json, ($checkedConvert) {
       final val = _$TopupResponseImpl(
-        topupId: $checkedConvert('topupId', (v) => v as String),
+        paymentIntentClientSecret: $checkedConvert(
+          'paymentIntentClientSecret',
+          (v) => v as String,
+        ),
+        ephemeralKey: $checkedConvert('ephemeralKey', (v) => v as String),
+        customerId: $checkedConvert('customerId', (v) => v as String),
+        publishableKey: $checkedConvert('publishableKey', (v) => v as String),
         amount: $checkedConvert('amount', (v) => (v as num).toDouble()),
         currency: $checkedConvert('currency', (v) => v as String),
-        paymentUrl: $checkedConvert('paymentUrl', (v) => v as String),
-        reference: $checkedConvert('reference', (v) => v as String),
+        transactionId: $checkedConvert('transactionId', (v) => v as String),
       );
       return val;
     });
 
 Map<String, dynamic> _$$TopupResponseImplToJson(_$TopupResponseImpl instance) =>
     <String, dynamic>{
-      'topupId': instance.topupId,
+      'paymentIntentClientSecret': instance.paymentIntentClientSecret,
+      'ephemeralKey': instance.ephemeralKey,
+      'customerId': instance.customerId,
+      'publishableKey': instance.publishableKey,
       'amount': instance.amount,
       'currency': instance.currency,
-      'paymentUrl': instance.paymentUrl,
-      'reference': instance.reference,
+      'transactionId': instance.transactionId,
     };

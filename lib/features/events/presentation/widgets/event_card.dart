@@ -156,7 +156,7 @@ class EventCard extends StatelessWidget { // Defaults to false now
                       SizedBox(width: 4.w),
                       Expanded(
                         child: AppText.bodySmall(
-                          event.location,
+                          _formatLocation(event.location),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           color: context.colors.onSurfaceVariant,
@@ -307,5 +307,14 @@ class EventCard extends StatelessWidget { // Defaults to false now
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  String _formatLocation(String location) {
+    // Check if location looks like coordinates (contains "Lat:" or numbers with commas)
+    if (location.contains('Lat:') || location.contains('Lng:') || 
+        RegExp(r'^\d+\.\d+,\s*-?\d+\.\d+$').hasMatch(location)) {
+      return 'Location available';
+    }
+    return location;
   }
 }

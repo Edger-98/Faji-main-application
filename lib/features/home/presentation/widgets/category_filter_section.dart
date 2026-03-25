@@ -37,7 +37,7 @@ class CategoryFilterSection extends ConsumerWidget {
               final List<Map<String, String?>> allCategories = <Map<String, String?>>[
                 <String, String?>{'id': null, 'name': 'All', 'icon': '🎯'},
                 ...categories.take(5).map((CategoryEntity cat) => <String, String>{
-                  'id': cat.id,
+                  'id': cat.name, // Use name for API filtering
                   'name': cat.name,
                   'icon': cat.icon,
                 }),

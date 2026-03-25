@@ -79,6 +79,17 @@ class ResponseNormalizerInterceptor extends Interceptor {
         // If it has 'success' but no 'data', it might be an error response or boolean response
         if (data.containsKey('success')) {
           print('🔄 NORMALIZER: Has success but no data, passing through...');
+          // Remap 'error' (singular) to 'errors' for ApiResponse compatibility
+          if (data.containsKey('error') && !data.containsKey('errors')) {
+            data['errors'] = data['error'];
+            // Also extract message from error object if top-level message is missing
+            if (!data.containsKey('message') || (data['message'] as String?)?.isEmpty == true) {
+              final error = data['error'];
+              if (error is Map && error.containsKey('message')) {
+                data['message'] = error['message'];
+              }
+            }
+          }
           print('🔄 NORMALIZER: ========== END (SUCCESS ONLY) ==========');
           return handler.next(response);
         }

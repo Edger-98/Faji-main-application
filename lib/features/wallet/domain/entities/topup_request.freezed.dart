@@ -22,18 +22,17 @@ TopupRequest _$TopupRequestFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$TopupRequest {
   double get amount => throw _privateConstructorUsedError;
-  String get paymentMethod => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(double amount, String paymentMethod) $default,
+    TResult Function(double amount) $default,
   ) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(double amount, String paymentMethod)? $default,
+    TResult? Function(double amount)? $default,
   ) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(double amount, String paymentMethod)? $default, {
+    TResult Function(double amount)? $default, {
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -67,7 +66,7 @@ abstract class $TopupRequestCopyWith<$Res> {
     $Res Function(TopupRequest) then,
   ) = _$TopupRequestCopyWithImpl<$Res, TopupRequest>;
   @useResult
-  $Res call({double amount, String paymentMethod});
+  $Res call({double amount});
 }
 
 /// @nodoc
@@ -84,17 +83,13 @@ class _$TopupRequestCopyWithImpl<$Res, $Val extends TopupRequest>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? amount = null, Object? paymentMethod = null}) {
+  $Res call({Object? amount = null}) {
     return _then(
       _value.copyWith(
             amount: null == amount
                 ? _value.amount
                 : amount // ignore: cast_nullable_to_non_nullable
                       as double,
-            paymentMethod: null == paymentMethod
-                ? _value.paymentMethod
-                : paymentMethod // ignore: cast_nullable_to_non_nullable
-                      as String,
           )
           as $Val,
     );
@@ -110,7 +105,7 @@ abstract class _$$TopupRequestImplCopyWith<$Res>
   ) = __$$TopupRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double amount, String paymentMethod});
+  $Res call({double amount});
 }
 
 /// @nodoc
@@ -126,17 +121,13 @@ class __$$TopupRequestImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? amount = null, Object? paymentMethod = null}) {
+  $Res call({Object? amount = null}) {
     return _then(
       _$TopupRequestImpl(
         amount: null == amount
             ? _value.amount
             : amount // ignore: cast_nullable_to_non_nullable
                   as double,
-        paymentMethod: null == paymentMethod
-            ? _value.paymentMethod
-            : paymentMethod // ignore: cast_nullable_to_non_nullable
-                  as String,
       ),
     );
   }
@@ -145,19 +136,17 @@ class __$$TopupRequestImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TopupRequestImpl implements _TopupRequest {
-  const _$TopupRequestImpl({required this.amount, required this.paymentMethod});
+  const _$TopupRequestImpl({required this.amount});
 
   factory _$TopupRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$TopupRequestImplFromJson(json);
 
   @override
   final double amount;
-  @override
-  final String paymentMethod;
 
   @override
   String toString() {
-    return 'TopupRequest(amount: $amount, paymentMethod: $paymentMethod)';
+    return 'TopupRequest(amount: $amount)';
   }
 
   @override
@@ -165,14 +154,12 @@ class _$TopupRequestImpl implements _TopupRequest {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopupRequestImpl &&
-            (identical(other.amount, amount) || other.amount == amount) &&
-            (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
+            (identical(other.amount, amount) || other.amount == amount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, amount, paymentMethod);
+  int get hashCode => Object.hash(runtimeType, amount);
 
   /// Create a copy of TopupRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -185,27 +172,27 @@ class _$TopupRequestImpl implements _TopupRequest {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(double amount, String paymentMethod) $default,
+    TResult Function(double amount) $default,
   ) {
-    return $default(amount, paymentMethod);
+    return $default(amount);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(double amount, String paymentMethod)? $default,
+    TResult? Function(double amount)? $default,
   ) {
-    return $default?.call(amount, paymentMethod);
+    return $default?.call(amount);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(double amount, String paymentMethod)? $default, {
+    TResult Function(double amount)? $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(amount, paymentMethod);
+      return $default(amount);
     }
     return orElse();
   }
@@ -245,18 +232,14 @@ class _$TopupRequestImpl implements _TopupRequest {
 }
 
 abstract class _TopupRequest implements TopupRequest {
-  const factory _TopupRequest({
-    required final double amount,
-    required final String paymentMethod,
-  }) = _$TopupRequestImpl;
+  const factory _TopupRequest({required final double amount}) =
+      _$TopupRequestImpl;
 
   factory _TopupRequest.fromJson(Map<String, dynamic> json) =
       _$TopupRequestImpl.fromJson;
 
   @override
   double get amount;
-  @override
-  String get paymentMethod;
 
   /// Create a copy of TopupRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -272,41 +255,49 @@ TopupResponse _$TopupResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TopupResponse {
-  String get topupId => throw _privateConstructorUsedError;
+  String get paymentIntentClientSecret => throw _privateConstructorUsedError;
+  String get ephemeralKey => throw _privateConstructorUsedError;
+  String get customerId => throw _privateConstructorUsedError;
+  String get publishableKey => throw _privateConstructorUsedError;
   double get amount => throw _privateConstructorUsedError;
   String get currency => throw _privateConstructorUsedError;
-  String get paymentUrl => throw _privateConstructorUsedError;
-  String get reference => throw _privateConstructorUsedError;
+  String get transactionId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-      String topupId,
+      String paymentIntentClientSecret,
+      String ephemeralKey,
+      String customerId,
+      String publishableKey,
       double amount,
       String currency,
-      String paymentUrl,
-      String reference,
+      String transactionId,
     )
     $default,
   ) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-      String topupId,
+      String paymentIntentClientSecret,
+      String ephemeralKey,
+      String customerId,
+      String publishableKey,
       double amount,
       String currency,
-      String paymentUrl,
-      String reference,
+      String transactionId,
     )?
     $default,
   ) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-      String topupId,
+      String paymentIntentClientSecret,
+      String ephemeralKey,
+      String customerId,
+      String publishableKey,
       double amount,
       String currency,
-      String paymentUrl,
-      String reference,
+      String transactionId,
     )?
     $default, {
     required TResult orElse(),
@@ -343,11 +334,13 @@ abstract class $TopupResponseCopyWith<$Res> {
   ) = _$TopupResponseCopyWithImpl<$Res, TopupResponse>;
   @useResult
   $Res call({
-    String topupId,
+    String paymentIntentClientSecret,
+    String ephemeralKey,
+    String customerId,
+    String publishableKey,
     double amount,
     String currency,
-    String paymentUrl,
-    String reference,
+    String transactionId,
   });
 }
 
@@ -366,17 +359,31 @@ class _$TopupResponseCopyWithImpl<$Res, $Val extends TopupResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? topupId = null,
+    Object? paymentIntentClientSecret = null,
+    Object? ephemeralKey = null,
+    Object? customerId = null,
+    Object? publishableKey = null,
     Object? amount = null,
     Object? currency = null,
-    Object? paymentUrl = null,
-    Object? reference = null,
+    Object? transactionId = null,
   }) {
     return _then(
       _value.copyWith(
-            topupId: null == topupId
-                ? _value.topupId
-                : topupId // ignore: cast_nullable_to_non_nullable
+            paymentIntentClientSecret: null == paymentIntentClientSecret
+                ? _value.paymentIntentClientSecret
+                : paymentIntentClientSecret // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ephemeralKey: null == ephemeralKey
+                ? _value.ephemeralKey
+                : ephemeralKey // ignore: cast_nullable_to_non_nullable
+                      as String,
+            customerId: null == customerId
+                ? _value.customerId
+                : customerId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            publishableKey: null == publishableKey
+                ? _value.publishableKey
+                : publishableKey // ignore: cast_nullable_to_non_nullable
                       as String,
             amount: null == amount
                 ? _value.amount
@@ -386,13 +393,9 @@ class _$TopupResponseCopyWithImpl<$Res, $Val extends TopupResponse>
                 ? _value.currency
                 : currency // ignore: cast_nullable_to_non_nullable
                       as String,
-            paymentUrl: null == paymentUrl
-                ? _value.paymentUrl
-                : paymentUrl // ignore: cast_nullable_to_non_nullable
-                      as String,
-            reference: null == reference
-                ? _value.reference
-                : reference // ignore: cast_nullable_to_non_nullable
+            transactionId: null == transactionId
+                ? _value.transactionId
+                : transactionId // ignore: cast_nullable_to_non_nullable
                       as String,
           )
           as $Val,
@@ -410,11 +413,13 @@ abstract class _$$TopupResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    String topupId,
+    String paymentIntentClientSecret,
+    String ephemeralKey,
+    String customerId,
+    String publishableKey,
     double amount,
     String currency,
-    String paymentUrl,
-    String reference,
+    String transactionId,
   });
 }
 
@@ -432,17 +437,31 @@ class __$$TopupResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? topupId = null,
+    Object? paymentIntentClientSecret = null,
+    Object? ephemeralKey = null,
+    Object? customerId = null,
+    Object? publishableKey = null,
     Object? amount = null,
     Object? currency = null,
-    Object? paymentUrl = null,
-    Object? reference = null,
+    Object? transactionId = null,
   }) {
     return _then(
       _$TopupResponseImpl(
-        topupId: null == topupId
-            ? _value.topupId
-            : topupId // ignore: cast_nullable_to_non_nullable
+        paymentIntentClientSecret: null == paymentIntentClientSecret
+            ? _value.paymentIntentClientSecret
+            : paymentIntentClientSecret // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ephemeralKey: null == ephemeralKey
+            ? _value.ephemeralKey
+            : ephemeralKey // ignore: cast_nullable_to_non_nullable
+                  as String,
+        customerId: null == customerId
+            ? _value.customerId
+            : customerId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        publishableKey: null == publishableKey
+            ? _value.publishableKey
+            : publishableKey // ignore: cast_nullable_to_non_nullable
                   as String,
         amount: null == amount
             ? _value.amount
@@ -452,13 +471,9 @@ class __$$TopupResponseImplCopyWithImpl<$Res>
             ? _value.currency
             : currency // ignore: cast_nullable_to_non_nullable
                   as String,
-        paymentUrl: null == paymentUrl
-            ? _value.paymentUrl
-            : paymentUrl // ignore: cast_nullable_to_non_nullable
-                  as String,
-        reference: null == reference
-            ? _value.reference
-            : reference // ignore: cast_nullable_to_non_nullable
+        transactionId: null == transactionId
+            ? _value.transactionId
+            : transactionId // ignore: cast_nullable_to_non_nullable
                   as String,
       ),
     );
@@ -469,30 +484,36 @@ class __$$TopupResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TopupResponseImpl implements _TopupResponse {
   const _$TopupResponseImpl({
-    required this.topupId,
+    required this.paymentIntentClientSecret,
+    required this.ephemeralKey,
+    required this.customerId,
+    required this.publishableKey,
     required this.amount,
     required this.currency,
-    required this.paymentUrl,
-    required this.reference,
+    required this.transactionId,
   });
 
   factory _$TopupResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$TopupResponseImplFromJson(json);
 
   @override
-  final String topupId;
+  final String paymentIntentClientSecret;
+  @override
+  final String ephemeralKey;
+  @override
+  final String customerId;
+  @override
+  final String publishableKey;
   @override
   final double amount;
   @override
   final String currency;
   @override
-  final String paymentUrl;
-  @override
-  final String reference;
+  final String transactionId;
 
   @override
   String toString() {
-    return 'TopupResponse(topupId: $topupId, amount: $amount, currency: $currency, paymentUrl: $paymentUrl, reference: $reference)';
+    return 'TopupResponse(paymentIntentClientSecret: $paymentIntentClientSecret, ephemeralKey: $ephemeralKey, customerId: $customerId, publishableKey: $publishableKey, amount: $amount, currency: $currency, transactionId: $transactionId)';
   }
 
   @override
@@ -500,25 +521,35 @@ class _$TopupResponseImpl implements _TopupResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TopupResponseImpl &&
-            (identical(other.topupId, topupId) || other.topupId == topupId) &&
+            (identical(
+                  other.paymentIntentClientSecret,
+                  paymentIntentClientSecret,
+                ) ||
+                other.paymentIntentClientSecret == paymentIntentClientSecret) &&
+            (identical(other.ephemeralKey, ephemeralKey) ||
+                other.ephemeralKey == ephemeralKey) &&
+            (identical(other.customerId, customerId) ||
+                other.customerId == customerId) &&
+            (identical(other.publishableKey, publishableKey) ||
+                other.publishableKey == publishableKey) &&
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.currency, currency) ||
                 other.currency == currency) &&
-            (identical(other.paymentUrl, paymentUrl) ||
-                other.paymentUrl == paymentUrl) &&
-            (identical(other.reference, reference) ||
-                other.reference == reference));
+            (identical(other.transactionId, transactionId) ||
+                other.transactionId == transactionId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
-    topupId,
+    paymentIntentClientSecret,
+    ephemeralKey,
+    customerId,
+    publishableKey,
     amount,
     currency,
-    paymentUrl,
-    reference,
+    transactionId,
   );
 
   /// Create a copy of TopupResponse
@@ -533,47 +564,77 @@ class _$TopupResponseImpl implements _TopupResponse {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-      String topupId,
+      String paymentIntentClientSecret,
+      String ephemeralKey,
+      String customerId,
+      String publishableKey,
       double amount,
       String currency,
-      String paymentUrl,
-      String reference,
+      String transactionId,
     )
     $default,
   ) {
-    return $default(topupId, amount, currency, paymentUrl, reference);
+    return $default(
+      paymentIntentClientSecret,
+      ephemeralKey,
+      customerId,
+      publishableKey,
+      amount,
+      currency,
+      transactionId,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-      String topupId,
+      String paymentIntentClientSecret,
+      String ephemeralKey,
+      String customerId,
+      String publishableKey,
       double amount,
       String currency,
-      String paymentUrl,
-      String reference,
+      String transactionId,
     )?
     $default,
   ) {
-    return $default?.call(topupId, amount, currency, paymentUrl, reference);
+    return $default?.call(
+      paymentIntentClientSecret,
+      ephemeralKey,
+      customerId,
+      publishableKey,
+      amount,
+      currency,
+      transactionId,
+    );
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-      String topupId,
+      String paymentIntentClientSecret,
+      String ephemeralKey,
+      String customerId,
+      String publishableKey,
       double amount,
       String currency,
-      String paymentUrl,
-      String reference,
+      String transactionId,
     )?
     $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(topupId, amount, currency, paymentUrl, reference);
+      return $default(
+        paymentIntentClientSecret,
+        ephemeralKey,
+        customerId,
+        publishableKey,
+        amount,
+        currency,
+        transactionId,
+      );
     }
     return orElse();
   }
@@ -614,26 +675,32 @@ class _$TopupResponseImpl implements _TopupResponse {
 
 abstract class _TopupResponse implements TopupResponse {
   const factory _TopupResponse({
-    required final String topupId,
+    required final String paymentIntentClientSecret,
+    required final String ephemeralKey,
+    required final String customerId,
+    required final String publishableKey,
     required final double amount,
     required final String currency,
-    required final String paymentUrl,
-    required final String reference,
+    required final String transactionId,
   }) = _$TopupResponseImpl;
 
   factory _TopupResponse.fromJson(Map<String, dynamic> json) =
       _$TopupResponseImpl.fromJson;
 
   @override
-  String get topupId;
+  String get paymentIntentClientSecret;
+  @override
+  String get ephemeralKey;
+  @override
+  String get customerId;
+  @override
+  String get publishableKey;
   @override
   double get amount;
   @override
   String get currency;
   @override
-  String get paymentUrl;
-  @override
-  String get reference;
+  String get transactionId;
 
   /// Create a copy of TopupResponse
   /// with the given fields replaced by the non-null parameter values.

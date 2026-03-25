@@ -7,26 +7,14 @@ part of 'wallet_balance.dart';
 // **************************************************************************
 
 _$WalletBalanceImpl _$$WalletBalanceImplFromJson(Map json) =>
-    $checkedCreate(r'_$WalletBalanceImpl', json, ($checkedConvert) {
-      final val = _$WalletBalanceImpl(
-        balance: $checkedConvert('balance', (v) => (v as num).toDouble()),
-        currency: $checkedConvert('currency', (v) => v as String),
-        currencySymbol: $checkedConvert('currencySymbol', (v) => v as String),
-        pendingBalance: $checkedConvert(
-          'pendingBalance',
-          (v) => (v as num).toDouble(),
-        ),
-        availableBalance: $checkedConvert(
-          'availableBalance',
-          (v) => (v as num).toDouble(),
-        ),
-        escrowBalance: $checkedConvert(
-          'escrowBalance',
-          (v) => (v as num).toDouble(),
-        ),
-      );
-      return val;
-    });
+    _$WalletBalanceImpl(
+      balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
+      currency: json['currency'] as String? ?? 'USD',
+      currencySymbol: json['currencySymbol'] as String? ?? '\$',
+      pendingBalance: (json['pendingBalance'] as num?)?.toDouble() ?? 0.0,
+      availableBalance: (json['availableBalance'] as num?)?.toDouble() ?? 0.0,
+      escrowBalance: (json['escrowBalance'] as num?)?.toDouble() ?? 0.0,
+    );
 
 Map<String, dynamic> _$$WalletBalanceImplToJson(_$WalletBalanceImpl instance) =>
     <String, dynamic>{

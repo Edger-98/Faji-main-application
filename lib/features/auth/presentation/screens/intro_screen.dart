@@ -162,7 +162,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                                 style: TextStyle(
                                   fontFamily: AppTypography.modicaPro,
                                   fontSize: 14.sp, // Responsive font size from Figma
-                                  fontWeight: FontWeight.w100, // EXACT from Figma
+                                  fontWeight: FontWeight.w300, // EXACT from Figma
                                   height: 1.1,
                                   letterSpacing: 0,
                                   color: context.colors.onSurfaceVariant,
@@ -200,7 +200,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                                   style: TextStyle(
                                     fontFamily: AppTypography.modicaPro,
                                     fontSize: 16.sp, // Responsive font size from Figma
-                                    fontWeight: FontWeight.w100, // EXACT from Figma
+                                    fontWeight: FontWeight.w300, // EXACT from Figma
                                     height: 1.2,
                                     letterSpacing: 0,
                                     color: context.colors.onSurfaceVariant,
