@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -111,7 +109,7 @@ abstract class AuthRemoteDataSource {
     @Part(name: 'firstName') String? firstName,
     @Part(name: 'lastName') String? lastName,
     @Part(name: 'phoneNo') String? phoneNo,
-    @Part(name: 'image') File? image,
+    @Part(name: 'imageUrl') String? imageUrl,
   );
 
   /// Delete account

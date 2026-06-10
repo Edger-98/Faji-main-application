@@ -1,38 +1,57 @@
-import 'package:flutter/material.dart';
-import 'package:fajimobileapp/core/design_system/design_system.dart';
 import 'dart:ui';
 
-class WithdrawalConfirmationScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:fajimobileapp/core/design_system/design_system.dart';
+import 'package:fajimobileapp/core/routing/route_manager.dart';
+
+class WithdrawalConfirmationScreen extends StatelessWidget {
   const WithdrawalConfirmationScreen({
     super.key,
     required this.amount,
+    this.estimatedArrival,
+    this.currency = 'USD',
   });
+
   final String amount;
+  final String? estimatedArrival;
+  final String currency;
+
+  String get _formattedArrival {
+    if (estimatedArrival == null || estimatedArrival!.isEmpty) {
+      return '2 business days';
+    }
+    try {
+      final DateTime dt = DateTime.parse(estimatedArrival!);
+      const List<String> months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      ];
+      return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
+    } catch (_) {
+      return estimatedArrival!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
+      backgroundColor: AppColors.background,
       body: Stack(
-        children: <Widget>[
-          // Blurred background
+        children: [
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
-              child: Container(
-                color: const Color(0x4A0F0E0E),
-              ),
+              child: Container(color: const Color(0x4A0F0E0E)),
             ),
           ),
-          // Content
           SafeArea(
             child: Column(
-              children: <Widget>[
+              children: [
                 const Spacer(),
-                _buildSuccessCard(context),
+                _buildCard(context),
                 const Spacer(),
                 _buildDoneButton(context),
               ],
@@ -43,94 +62,121 @@ class WithdrawalConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSuccessCard(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    
-    return Container(
-      margin: const EdgeInsets.symmetric(),
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 43),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(43),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          _buildSuccessIcon(),
-          const SizedBox(height: 11),
-          Text(
-            'Withdraw Successful',
-            style: theme.textTheme.headlineLarge?.copyWith(
-              fontFamily: AppTypography.modicaPro,
-              fontSize: 28,
-              fontWeight: AppTypography.medium,
-              color: AppColors.onSurface,
-            ),
-          ),
-          const SizedBox(height: 3),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Text(
-              'You have successfully withdraw USD\$ $amount\nto your Republic bank account. *** *** 454',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontFamily: AppTypography.modicaPro,
-                fontSize: 15,
-                fontWeight: AppTypography.regular,
-                color: AppColors.textSecondary,
-                height: 1.2,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuccessIcon() => Container(
-      width: 72,
-      height: 72,
-      decoration: const BoxDecoration(
-        color: AppColors.primary,
-        shape: BoxShape.circle,
-      ),
-      child: const Icon(
-        Icons.check,
-        color: AppColors.primary,
-        size: 40,
-      ),
-    );
-
-  Widget _buildDoneButton(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 0, 25, 101),
-      child: GestureDetector(
-        onTap: () {
-          // Navigate back to wallet home or main screen
-          Navigator.of(context).popUntil((Route route) => route.isFirst);
-        },
+  Widget _buildCard(BuildContext context) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
         child: Container(
-          width: double.infinity,
-          height: 69,
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
           decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(34.5),
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(32.r),
           ),
-          child: Center(
-            child: Text(
-              'Done',
-              style: theme.textTheme.labelLarge?.copyWith(
-                fontFamily: AppTypography.modicaPro,
-                fontSize: 18,
-                fontWeight: AppTypography.semiBold,
-                color: AppColors.onPrimary,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Success icon
+              Container(
+                width: 72.w,
+                height: 72.w,
+                decoration: const BoxDecoration(
+                  color: AppColors.successGreen,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.check_rounded,
+                  color: Colors.white,
+                  size: 36.sp,
+                ),
+              ),
+
+              SizedBox(height: 20.h),
+
+              Text(
+                'Withdrawal Initiated',
+                style: AppTypography.headlineMedium.copyWith(
+                  color: AppColors.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: 8.h),
+
+              Text(
+                '\$$amount $currency',
+                style: AppTypography.displaySmall.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+
+              SizedBox(height: 16.h),
+
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: AppColors.successGreen.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(
+                    color: AppColors.successGreen.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.schedule_rounded,
+                        size: 18.sp, color: AppColors.successGreen),
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      child: Text(
+                        'Est. arrival: $_formattedArrival',
+                        style: AppTypography.bodyMedium.copyWith(
+                          color: AppColors.successGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 16.h),
+
+              Text(
+                'The funds are on their way to your Stripe connected bank account. '
+                'Stripe typically processes payouts within 2 business days.',
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildDoneButton(BuildContext context) => Padding(
+        padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 32.h),
+        child: GestureDetector(
+          onTap: () => context.go(RouteManager.dashboard),
+          child: Container(
+            width: double.infinity,
+            height: 58.h,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(29.h),
+            ),
+            child: Center(
+              child: Text(
+                'Done',
+                style: AppTypography.titleMedium.copyWith(
+                  color: AppColors.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

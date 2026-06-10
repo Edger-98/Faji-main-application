@@ -8,6 +8,12 @@ import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
 
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str) as Map<String, dynamic>);
 
+String? _sanitizeImageUrl(String? url) {
+  if (url == null || url.isEmpty) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return null;
+}
+
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
@@ -32,7 +38,7 @@ class UserModel {
         firstName: json['firstName'] as String? ?? '',
         lastName: json['lastName'] as String? ?? '',
         role: json['role'] as String? ?? 'Attendee',
-        image: json['image'] as String?,
+        image: _sanitizeImageUrl(json['image'] as String?),
         pushNotificationsEnabled: json['pushNotificationsEnabled'] as bool? ?? false,
         expoPushToken: json['expoPushToken'] as String?,
         createdAt: json['createdAt'] == null

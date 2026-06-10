@@ -7,7 +7,7 @@ import 'package:fajimobileapp/core/network/network_info.dart';
 import 'package:fajimobileapp/features/event_verification/domain/entities/refund_response.dart';
 import 'package:fajimobileapp/features/event_verification/domain/entities/revenue_distribution.dart';
 import 'package:fajimobileapp/features/event_verification/domain/entities/verification_status.dart';
-import 'package:fajimobileapp/features/event_verification/domain/entities/verify_event_response.dart';
+import 'package:fajimobileapp/features/event_verification/domain/entities/verify_event_response.dart' hide VerificationStatus;
 import 'package:fajimobileapp/features/event_verification/domain/repositories/event_verification_repository.dart';
 import 'package:fajimobileapp/features/event_verification/data/datasources/event_verification_remote_datasource.dart';
 
@@ -30,10 +30,10 @@ class EventVerificationRepositoryImpl implements EventVerificationRepository {
     }
 
     try {
-      final ApiResponse response = await remoteDataSource.getVerificationStatus(eventId);
+      final ApiResponse<VerificationStatus> response = await remoteDataSource.getVerificationStatus(eventId);
 
       if (response.success && response.data != null) {
-        return Right(response.data);
+        return Right(response.data!);
       } else {
         return Left(ServerFailure(message: response.message));
       }

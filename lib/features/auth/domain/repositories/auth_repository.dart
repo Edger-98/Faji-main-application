@@ -110,7 +110,7 @@ abstract class AuthRepository {
     String? firstName,
     String? lastName,
     String? phoneNo,
-    String? imagePath,
+    String? imageUrl,
   });
 
   /// Delete account

@@ -57,12 +57,12 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
   }
 
   Map<String, dynamic> _getMockStats() => {
-      'totalBookings': 24,
-      'totalEarnings': 4850000,
-      'pendingRequests': 3,
-      'activeResources': 8,
-      'completedBookings': 21,
-      'averageRating': 4.8,
+      'totalBookings': 0,
+      'totalEarnings': 0,
+      'pendingRequests': 0,
+      'activeResources': 0,
+      'completedBookings': 0,
+      'averageRating': 0.0,
     };
 
   @override
@@ -140,7 +140,7 @@ class _VendorDashboardScreenState extends ConsumerState<VendorDashboardScreen> {
                         child: _StatCard(
                           icon: Icons.monetization_on,
                           label: 'Total Earnings',
-                          value: '₦${_formatPrice((mockStats['totalEarnings'] as num?)?.toInt() ?? 0)}',
+                          value: '\$${_formatPrice((mockStats['totalEarnings'] as num?)?.toInt() ?? 0)}',
                           color: AppColors.primary,
                         ),
                       ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/auth/presentation/viewmodels/auth_state_viewmodel.dart';
 import 'package:fajimobileapp/features/auth/presentation/providers/auth_providers.dart';
 import 'package:fajimobileapp/features/profile/presentation/widgets/rate_app_bottom_sheet.dart';
+import 'package:fajimobileapp/features/vendor/presentation/providers/vendor_providers.dart';
 
 class ProfileContent extends ConsumerStatefulWidget {
   const ProfileContent({super.key});
@@ -21,6 +23,10 @@ class ProfileContent extends ConsumerStatefulWidget {
 class _ProfileContentState extends ConsumerState<ProfileContent> {
   String _userName = 'User';
   String _userEmail = 'user@example.com';
+  String? _profileImageUrl;
+
+  bool _isValidUrl(String? url) =>
+      url != null && (url.startsWith('http://') || url.startsWith('https://'));
 
   @override
   void initState() {
@@ -32,24 +38,30 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
 
   Future<void> _loadUserData() async {
     final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
-    final Map<String, String?> userData = await localDataSource.getUserData();
-    
-    if (userData['firstName'] != null && userData['email'] != null) {
-      if (mounted) {
-        setState(() {
-          _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
-          _userEmail = userData['email']!;
-        });
-      }
+
+    // Load locally-persisted profile image first (instant, no network)
+    final String? savedImageUrl = await localDataSource.getProfileImageUrl();
+    if (mounted && _isValidUrl(savedImageUrl)) {
+      setState(() => _profileImageUrl = savedImageUrl);
     }
-    
+
+    final Map<String, String?> userData = await localDataSource.getUserData();
+    if (userData['firstName'] != null && userData['email'] != null && mounted) {
+      setState(() {
+        _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
+        _userEmail = userData['email']!;
+      });
+    }
+
     ref.read(authStateViewModelProvider.notifier).checkAuthStatus().then((_) {
       final UserEntity? currentUser = ref.read(currentUserProvider);
-      
       if (currentUser != null && mounted) {
         setState(() {
           _userName = '${currentUser.firstName} ${currentUser.lastName}';
           _userEmail = currentUser.email;
+          if (_isValidUrl(currentUser.image)) {
+            _profileImageUrl = currentUser.image;
+          }
         });
       }
     });
@@ -78,11 +90,12 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(currentUserProvider, (UserEntity? previous, UserEntity? next) {
+    ref.listen<UserEntity?>(currentUserProvider, (UserEntity? previous, UserEntity? next) {
       if (next != null) {
         setState(() {
           _userName = '${next.firstName} ${next.lastName}';
           _userEmail = next.email;
+          if (_isValidUrl(next.image)) _profileImageUrl = next.image;
         });
       }
     });
@@ -110,30 +123,41 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
                     SizedBox(height: 24.h),
                     
                     // Quick Actions
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _buildQuickAction(
-                            icon: Icons.storefront_rounded,
-                            label: 'Become Vendor',
-                            onTap: () {
-                              HapticFeedback.lightImpact();
-                              context.push(RouteManager.vendorRegistration);
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: _buildQuickAction(
-                            icon: Icons.history_rounded,
-                            label: 'Events History',
-                            onTap: () {
-                              HapticFeedback.lightImpact();
-                              context.push(RouteManager.myEvents);
-                            },
-                          ),
-                        ),
-                      ],
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final vendorStatusAsync = ref.watch(vendorStatusProvider);
+                        final bool isVendor = vendorStatusAsync.maybeWhen(
+                          data: (s) => s != null && s.hasVendorAccount,
+                          orElse: () => false,
+                        );
+                        return Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: _buildQuickAction(
+                                icon: Icons.storefront_rounded,
+                                label: isVendor ? 'Vendor Dashboard' : 'Become Vendor',
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
+                                  context.push(isVendor
+                                      ? RouteManager.vendorDashboardScreen
+                                      : RouteManager.vendorRegistration);
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: _buildQuickAction(
+                                icon: Icons.history_rounded,
+                                label: 'Events History',
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
+                                  context.push(RouteManager.myEvents);
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     
                     SizedBox(height: 32.h),
@@ -240,6 +264,18 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
     );
   }
 
+  Widget _buildAvatarFallback() => Container(
+      color: context.colors.primary.withValues(alpha: 0.2),
+      alignment: Alignment.center,
+      child: Text(
+        _userName.isNotEmpty ? _userName[0].toUpperCase() : 'U',
+        style: AppTypography.headlineMedium.copyWith(
+          color: context.colors.primary,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+
   Widget _buildProfileCard() => Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -249,21 +285,17 @@ class _ProfileContentState extends ConsumerState<ProfileContent> {
       child: Row(
         children: [
           // Avatar
-          Container(
+          SizedBox(
             width: 60.w,
-            height: 60.h,
-            decoration: BoxDecoration(
-              color: context.colors.primary.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                _userName.isNotEmpty ? _userName[0].toUpperCase() : 'U',
-                style: AppTypography.headlineMedium.copyWith(
-                  color: context.colors.primary,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+            height: 60.w,
+            child: ClipOval(
+              child: _isValidUrl(_profileImageUrl)
+                  ? CachedNetworkImage(
+                      imageUrl: _profileImageUrl!,
+                      fit: BoxFit.cover,
+                      errorWidget: (_, __, ___) => _buildAvatarFallback(),
+                    )
+                  : _buildAvatarFallback(),
             ),
           ),
           

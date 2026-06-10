@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:fajimobileapp/core/network/api_response.dart';
-import 'package:fajimobileapp/features/wallet/domain/entities/wallet_balance.dart';
 import 'package:fajimobileapp/features/wallet/domain/entities/wallet_transaction.dart';
-import 'package:fajimobileapp/features/wallet/domain/entities/withdraw_request.dart';
 import 'package:fajimobileapp/features/wallet/domain/entities/topup_request.dart';
 import 'package:fajimobileapp/features/wallet/domain/entities/earnings_breakdown.dart';
 
@@ -26,10 +24,10 @@ abstract class WalletRemoteDataSource {
     @Query('limit') int limit,
   );
 
-  /// Withdraw funds from wallet
+  /// Withdraw funds from wallet — sends { "amount": <number> } only
   @POST('/wallet/withdraw')
   Future<HttpResponse<dynamic>> withdrawFunds(
-    @Body() WithdrawRequest request,
+    @Body() Map<String, dynamic> body,
   );
 
   /// Fund wallet - POST /wallet/fund

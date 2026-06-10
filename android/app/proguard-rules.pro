@@ -1,26 +1,39 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
+# ============================================================
+# Flutter
+# ============================================================
+-keep class io.flutter.app.** { *; }
+-keep class io.flutter.plugin.** { *; }
+-keep class io.flutter.util.** { *; }
+-keep class io.flutter.view.** { *; }
+-keep class io.flutter.** { *; }
+-keep class io.flutter.plugins.** { *; }
+-dontwarn io.flutter.embedding.**
 
+# ============================================================
+# App package
+# ============================================================
+-keep class com.fajimobile.app.fajispacemobileapp.** { *; }
+
+# ============================================================
 # Stripe SDK
+# ============================================================
 -keep class com.stripe.android.** { *; }
 -keep class com.stripe.android.pushProvisioning.** { *; }
 -dontwarn com.stripe.android.pushProvisioning.**
-
-# React Native Stripe SDK (used by flutter_stripe)
 -keep class com.reactnativestripesdk.** { *; }
 -dontwarn com.reactnativestripesdk.**
 
-# Keep all classes that are referenced by Stripe
--keepclassmembers class * {
-    @com.stripe.android.** *;
-}
-
+# ============================================================
 # Firebase
+# ============================================================
 -keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
 
-# Retrofit
+# ============================================================
+# Retrofit + OkHttp
+# ============================================================
 -keepattributes Signature
 -keepattributes Exceptions
 -keepattributes *Annotation*
@@ -28,31 +41,25 @@
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
-
-# OkHttp
 -dontwarn okhttp3.**
 -dontwarn okio.**
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
 
+# ============================================================
 # Gson
--keepattributes Signature
--keepattributes *Annotation*
+# ============================================================
 -keep class com.google.gson.** { *; }
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 
-# Keep data models
--keep class com.fajimobileapp.data.models.** { *; }
--keep class com.fajimobileapp.domain.entities.** { *; }
-
-# Keep Parcelable classes
+# ============================================================
+# Parcelable / Serializable
+# ============================================================
 -keep class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }
-
-# Keep Serializable classes
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
@@ -61,3 +68,14 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# ============================================================
+# Google Maps
+# ============================================================
+-keep class com.google.android.gms.maps.** { *; }
+-dontwarn com.google.android.gms.maps.**
+
+# ============================================================
+# Multidex
+# ============================================================
+-keep class androidx.multidex.** { *; }

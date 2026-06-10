@@ -11,10 +11,10 @@ class AuthGuard {
     final String? userEmail = prefs.getString('user_email');
     final bool hasUserData = userEmail != null && userEmail.isNotEmpty;
     
-    // List of protected routes
+    // Apple Guideline 5.1.1(v): browsing events does not require an account.
+    // dashboard, eventDetails, eventDirection, eventsList are intentionally public.
+    // Only account-based actions are protected.
     final List<String> protectedRoutes = <String>[
-      RouteManager.home,
-      RouteManager.dashboard,
       RouteManager.profile,
       RouteManager.accountSettings,
       RouteManager.myTickets,
@@ -23,9 +23,7 @@ class AuthGuard {
       RouteManager.chatList,
       RouteManager.chatDetail,
       RouteManager.organizerChat,
-      RouteManager.eventDetails,
       RouteManager.ticketInformation,
-      RouteManager.eventDirection,
       RouteManager.buyTicket,
       RouteManager.makePayment,
       RouteManager.paymentSuccessful,
@@ -36,6 +34,7 @@ class AuthGuard {
       RouteManager.walletReview,
       RouteManager.walletConfirmation,
       RouteManager.walletHistory,
+      RouteManager.walletBankConnect,
       RouteManager.vendorDashboardScreen,
       RouteManager.vendorResourcesList,
       RouteManager.vendorAddResource,

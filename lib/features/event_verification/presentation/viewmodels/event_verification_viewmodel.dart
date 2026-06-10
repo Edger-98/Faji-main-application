@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fajimobileapp/core/base/base_state.dart';
 import 'package:fajimobileapp/features/event_verification/domain/entities/revenue_distribution.dart';
 import 'package:fajimobileapp/features/event_verification/domain/entities/verification_status.dart';
-import 'package:fajimobileapp/features/event_verification/domain/entities/verify_event_response.dart';
+import 'package:fajimobileapp/features/event_verification/domain/entities/verify_event_response.dart' hide VerificationStatus;
 import 'package:fajimobileapp/features/event_verification/domain/usecases/get_revenue_distribution_usecase.dart';
 import 'package:fajimobileapp/features/event_verification/domain/usecases/get_verification_status_usecase.dart';
 import 'package:fajimobileapp/features/event_verification/domain/usecases/process_refunds_usecase.dart';

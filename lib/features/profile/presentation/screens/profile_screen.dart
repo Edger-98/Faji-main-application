@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fajimobileapp/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:fajimobileapp/features/auth/domain/entities/user_entity.dart';
 import 'package:fajimobileapp/features/vendor/presentation/providers/vendor_providers.dart';
@@ -23,6 +24,10 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String _userName = 'User';
   String _userEmail = 'user@example.com';
+  String? _profileImageUrl;
+
+  bool _isValidUrl(String? url) =>
+      url != null && (url.startsWith('http://') || url.startsWith('https://'));
 
   @override
   void initState() {
@@ -34,33 +39,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    // Trigger auth check to ensure user data is loaded
+    final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
+
+    // Load locally-persisted profile image first (fast, no network)
+    final String? savedImageUrl = await localDataSource.getProfileImageUrl();
+    if (mounted && savedImageUrl != null) {
+      setState(() => _profileImageUrl = savedImageUrl);
+    }
+
     await ref.read(authStateViewModelProvider.notifier).checkAuthStatus();
-    
-    // Try to get from current user provider
+
     final UserEntity? currentUser = ref.read(currentUserProvider);
-    
-    if (currentUser != null) {
-      if (mounted) {
-        setState(() {
-          _userName = '${currentUser.firstName} ${currentUser.lastName}';
-          _userEmail = currentUser.email;
-        });
-      }
+    if (currentUser != null && mounted) {
+      setState(() {
+        _userName = '${currentUser.firstName} ${currentUser.lastName}';
+        _userEmail = currentUser.email;
+        if (_isValidUrl(currentUser.image)) {
+          _profileImageUrl = currentUser.image;
+        }
+      });
       return;
     }
 
-    // Fallback to saved user data
-    final AuthLocalDataSource localDataSource = ref.read(authLocalDataSourceProvider);
     final Map<String, String?> userData = await localDataSource.getUserData();
-    
-    if (userData['firstName'] != null && userData['email'] != null) {
-      if (mounted) {
-        setState(() {
-          _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
-          _userEmail = userData['email']!;
-        });
-      }
+    if (userData['firstName'] != null && userData['email'] != null && mounted) {
+      setState(() {
+        _userName = '${userData['firstName']} ${userData['lastName'] ?? ''}';
+        _userEmail = userData['email']!;
+      });
     }
   }
 
@@ -137,12 +143,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch for user changes
-    ref.listen(currentUserProvider, (UserEntity? previous, UserEntity? next) {
+    ref.listen<UserEntity?>(currentUserProvider, (UserEntity? previous, UserEntity? next) {
       if (next != null) {
         setState(() {
           _userName = '${next.firstName} ${next.lastName}';
           _userEmail = next.email;
+          if (_isValidUrl(next.image)) _profileImageUrl = next.image;
         });
       }
     });
@@ -197,13 +203,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 31),
                   // Profile picture
                   Center(
-                    child: Container(
-                      width: 106,
-                      height: 106,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFC4C4C4),
-                        shape: BoxShape.circle,
-                      ),
+                    child: CircleAvatar(
+                      radius: 53,
+                      backgroundColor: const Color(0xFFC4C4C4),
+                      backgroundImage: _isValidUrl(_profileImageUrl)
+                          ? CachedNetworkImageProvider(_profileImageUrl!)
+                          : null,
+                      child: !_isValidUrl(_profileImageUrl)
+                          ? const Icon(Icons.person, size: 48, color: Colors.white)
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 4),

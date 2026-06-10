@@ -44,7 +44,7 @@ class _VendorResourcesListScreenState
       if (response.response.statusCode == 200) {
         final data = response.data;
         setState(() {
-          _resources = data['data']?['resources'] ?? data['data'] ?? <dynamic>[];
+          _resources = ((data['data']?['resources'] ?? data['data']) as List<dynamic>?) ?? <dynamic>[];
           _isLoading = false;
         });
       } else {
@@ -62,35 +62,7 @@ class _VendorResourcesListScreenState
     }
   }
 
-  List<Map<String, dynamic>> _getMockResources() => [
-      {
-        'id': '1',
-        '_id': '1',
-        'title': 'Grand Ballroom - Premium Venue',
-        'category': 'venue',
-        'basePrice': 500000,
-        'isAvailable': true,
-        'bookingCount': 12,
-      },
-      {
-        'id': '2',
-        '_id': '2',
-        'title': 'Professional DJ Services',
-        'category': 'entertainment',
-        'basePrice': 150000,
-        'isAvailable': true,
-        'bookingCount': 8,
-      },
-      {
-        'id': '3',
-        '_id': '3',
-        'title': 'Catering Package - 100 guests',
-        'category': 'catering',
-        'basePrice': 250000,
-        'isAvailable': false,
-        'bookingCount': 15,
-      },
-    ];
+  List<Map<String, dynamic>> _getMockResources() => [];
 
   Future<void> _deleteResource(
       BuildContext context, Map<String, dynamic> resource) async {
@@ -285,7 +257,7 @@ class _VendorResourcesListScreenState
                             padding: const EdgeInsets.symmetric(horizontal: 24),
                             itemCount: _resources.length,
                             itemBuilder: (context, index) {
-                              final resource = _resources[index];
+                              final Map<String, dynamic> resource = _resources[index] as Map<String, dynamic>;
                               return _ResourceCard(
                                 title: resource['title'] as String,
                                 category: resource['category'] as String,

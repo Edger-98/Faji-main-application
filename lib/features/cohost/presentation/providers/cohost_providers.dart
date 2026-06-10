@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fajimobileapp/core/network/dio_client.dart';
+import 'package:fajimobileapp/core/network/api_client.dart';
 import 'package:fajimobileapp/features/cohost/data/datasources/cohost_remote_datasource.dart';
 import 'package:fajimobileapp/features/cohost/data/repositories/cohost_repository_impl.dart';
 import 'package:fajimobileapp/features/cohost/domain/repositories/cohost_repository.dart';

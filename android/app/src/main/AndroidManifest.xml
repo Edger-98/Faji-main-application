@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     
     <application
-        android:label="fajimobileapp"
+        android:label="Faji Space"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

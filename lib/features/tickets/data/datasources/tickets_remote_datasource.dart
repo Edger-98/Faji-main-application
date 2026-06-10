@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fajimobileapp/features/tickets/data/models/event_dashboard_model.dart';
 import 'package:fajimobileapp/features/tickets/data/models/my_tickets_response_model.dart';
 import 'package:fajimobileapp/features/tickets/data/models/purchase_status_model.dart';
 import 'package:fajimobileapp/features/tickets/data/models/ticket_details_model.dart';
@@ -30,6 +31,12 @@ abstract class TicketsRemoteDataSource {
 
   /// Get detailed ticket information
   Future<TicketDetailsModel> getTicketDetails(String ticketId);
+
+  /// Check in at an event
+  Future<Map<String, dynamic>> checkIn(Map<String, dynamic> body);
+
+  /// Get event dashboard (creator)
+  Future<EventDashboardModel> getEventDashboard(String eventId);
 }
 
 class TicketsRemoteDataSourceImpl implements TicketsRemoteDataSource {
@@ -129,13 +136,28 @@ class TicketsRemoteDataSourceImpl implements TicketsRemoteDataSource {
       }
 
       final ticketDetails = TicketDetailsModel.fromJson(response.data!);
-      print('✅ Ticket details parsed successfully');
-      
       return ticketDetails;
-    } catch (e, stackTrace) {
-      print('❌ Error fetching ticket details: $e');
-      print('Stack trace: $stackTrace');
+    } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<Map<String, dynamic>> checkIn(Map<String, dynamic> body) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '/tickets/check-in',
+      data: body,
+    );
+    if (response.data == null) throw Exception('Check-in failed');
+    return response.data!;
+  }
+
+  @override
+  Future<EventDashboardModel> getEventDashboard(String eventId) async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/events/$eventId/dashboard',
+    );
+    if (response.data == null) throw Exception('Failed to load dashboard');
+    return EventDashboardModel.fromJson(response.data!);
   }
 }

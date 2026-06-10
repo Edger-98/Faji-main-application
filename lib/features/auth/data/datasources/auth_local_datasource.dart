@@ -14,6 +14,8 @@ abstract class AuthLocalDataSource {
   Future<String?> getUserEmail();
   Future<void> saveUserData(String firstName, String lastName, String email, {String? phoneNo});
   Future<Map<String, String?>> getUserData();
+  Future<void> saveProfileImageUrl(String? url);
+  Future<String?> getProfileImageUrl();
   Future<void> savePassword(String password);
   Future<String?> getPassword();
   Future<void> clearAll();
@@ -36,6 +38,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const String _userLastNameKey = 'user_last_name';
   static const String _userPhoneKey = 'user_phone';
   static const String _passwordKey = 'user_password';
+  static const String _profileImageUrlKey = 'user_profile_image_url';
 
   @override
   Future<void> saveToken(String token) async {
@@ -91,6 +94,19 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       'email': sharedPreferences.getString(_userEmailKey),
       'phoneNo': sharedPreferences.getString(_userPhoneKey),
     };
+
+  @override
+  Future<void> saveProfileImageUrl(String? url) async {
+    if (url != null) {
+      await sharedPreferences.setString(_profileImageUrlKey, url);
+    } else {
+      await sharedPreferences.remove(_profileImageUrlKey);
+    }
+  }
+
+  @override
+  Future<String?> getProfileImageUrl() async =>
+      sharedPreferences.getString(_profileImageUrlKey);
 
   @override
   Future<void> savePassword(String password) async {

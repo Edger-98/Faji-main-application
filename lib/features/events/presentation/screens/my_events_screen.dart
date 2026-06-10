@@ -9,6 +9,7 @@ import 'package:fajimobileapp/core/routing/route_manager.dart';
 import 'package:fajimobileapp/features/events/domain/entities/event_entity.dart';
 import 'package:fajimobileapp/features/events/presentation/providers/event_providers.dart';
 import 'package:fajimobileapp/features/events/presentation/widgets/event_list.dart';
+import 'package:fajimobileapp/features/events/presentation/widgets/event_card.dart';
 import 'package:fajimobileapp/features/tickets/presentation/providers/tickets_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fajimobileapp/features/tickets/data/models/my_tickets_response_model.dart';
@@ -59,6 +60,13 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
     context.push('${RouteManager.eventDetails}/${event.id}');
   }
 
+  void _onEventDashboardTap(EventEntity event) {
+    context.push(
+      RouteManager.eventDashboard,
+      extra: {'eventId': event.id, 'eventName': event.title},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<EventEntity>> userEventsState = ref.watch(userEventsProvider);
@@ -69,25 +77,35 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
         bottom: false,
         child: Column(
           children: <Widget>[
-            // Header with Create Button
+            // Header with Back + Create Button
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      AppText.headlineMedium(
-                        'My Events',
-                        color: context.colors.onSurface,
-                      ),
-                      SizedBox(height: 4.h),
-                      AppText.bodySmall(
-                        'Your upcoming and past events',
-                        color: context.colors.onSurfaceVariant,
-                      ),
-                    ],
+                  // Back button
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios_new,
+                        size: 18.sp, color: context.colors.onSurface),
+                    onPressed: () => context.pop(),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        AppText.headlineMedium(
+                          'My Events',
+                          color: context.colors.onSurface,
+                        ),
+                        SizedBox(height: 4.h),
+                        AppText.bodySmall(
+                          'Your upcoming and past events',
+                          color: context.colors.onSurfaceVariant,
+                        ),
+                      ],
+                    ),
                   ),
                   // CREATE EVENT BUTTON
                   GestureDetector(
@@ -209,19 +227,55 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
         switch (filter) {
           case 'upcoming':
             filteredEvents = events.where((e) => e.startDate.isAfter(now)).toList();
-            break;
           case 'past':
             filteredEvents = events.where((e) => e.endDate.isBefore(now)).toList();
-            break;
           case 'cancelled':
             filteredEvents = events.where((e) => e.isCancelled).toList();
-            break;
           default:
             filteredEvents = events;
         }
 
         if (filteredEvents.isEmpty) {
           return _buildEmptyState(filter);
+        }
+
+        // For upcoming paid events, show dashboard button
+        if (filter == 'upcoming') {
+          return ListView.builder(
+            padding: EdgeInsets.all(16.w),
+            itemCount: filteredEvents.length,
+            itemBuilder: (context, index) {
+              final event = filteredEvents[index];
+              return Column(
+                children: [
+                  EventCard(
+                    event: event,
+                    onTap: () => _onEventTap(event),
+                    showFavoriteButton: false,
+                  ),
+                  if (event.isPaidEvent)
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 12.h, left: 4.w, right: 4.w),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () => _onEventDashboardTap(event),
+                          icon: const Icon(Icons.bar_chart, size: 18),
+                          label: const Text('Event Dashboard'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: context.colors.primary,
+                            side: BorderSide(color: context.colors.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          );
         }
 
         return EventList(
@@ -231,8 +285,8 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen>
           showFavoriteButton: false,
         );
       },
-      loading: () => EventList(
-        events: const [],
+      loading: () => const EventList(
+        events: [],
         isLoading: true,
         isGridView: false,
       ),

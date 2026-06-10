@@ -15,12 +15,12 @@ class UpdateSettingsUseCase {
     String? firstName,
     String? lastName,
     String? phoneNo,
-    String? imagePath,
+    String? imageUrl,
   }) async => await repository.updateSettings(
       id: id,
       firstName: firstName,
       lastName: lastName,
       phoneNo: phoneNo,
-      imagePath: imagePath,
+      imageUrl: imageUrl,
     );
 }

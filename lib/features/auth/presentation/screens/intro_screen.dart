@@ -181,31 +181,49 @@ class _IntroScreenState extends ConsumerState<IntroScreen>
                               onPressed: () => context.goNamed(RouteManager.authEmailName),
                             ),
                             
-                            SizedBox(height: 11.h), // EXACT from Figma
-                            
-                            // Sign in link - exact positioning
+                            SizedBox(height: 11.h),
+
+                            // Sign in link
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 64.w), // EXACT from Figma (88px - 24px = 64px)
+                              padding: EdgeInsets.symmetric(horizontal: 64.w),
                               child: TextButton(
                                 onPressed: () {
-                                  // Navigate to login screen
                                   context.goNamed(RouteManager.loginName);
                                 },
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
-                                  minimumSize: Size(217.w, 19.h), // Responsive size
+                                  minimumSize: Size(217.w, 19.h),
                                 ),
                                 child: Text(
                                   'Already have an account? Sign in',
                                   style: TextStyle(
                                     fontFamily: AppTypography.modicaPro,
-                                    fontSize: 16.sp, // Responsive font size from Figma
-                                    fontWeight: FontWeight.w300, // EXACT from Figma
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w300,
                                     height: 1.2,
                                     letterSpacing: 0,
                                     color: context.colors.onSurfaceVariant,
                                   ),
                                   textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(height: 16.h),
+
+                            // Browse as Guest
+                            TextButton(
+                              onPressed: () => context.go(RouteManager.dashboard),
+                              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                              child: Text(
+                                'Browse as Guest',
+                                style: TextStyle(
+                                  fontFamily: AppTypography.modicaPro,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: context.colors.onSurfaceVariant.withValues(alpha: 0.6),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: context.colors.onSurfaceVariant.withValues(alpha: 0.4),
                                 ),
                               ),
                             ),

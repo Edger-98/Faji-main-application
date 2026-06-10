@@ -355,7 +355,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     String? firstName,
     String? lastName,
     String? phoneNo,
-    File? image,
+    String? imageUrl,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -371,16 +371,8 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     if (phoneNo != null) {
       _data.fields.add(MapEntry('phoneNo', phoneNo));
     }
-    if (image != null) {
-      _data.files.add(
-        MapEntry(
-          'image',
-          MultipartFile.fromFileSync(
-            image.path,
-            filename: image.path.split(Platform.pathSeparator).last,
-          ),
-        ),
-      );
+    if (imageUrl != null) {
+      _data.fields.add(MapEntry('imageUrl', imageUrl));
     }
     final _options = _setStreamType<ApiResponse<UserModel>>(
       Options(

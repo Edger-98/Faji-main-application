@@ -1,4 +1,6 @@
 import 'package:fajimobileapp/core/error/failures.dart';
+import 'package:fajimobileapp/features/wallet/domain/entities/stripe_connect_status.dart';
+import 'package:fajimobileapp/features/wallet/presentation/providers/stripe_connect_providers.dart';
 import 'package:fajimobileapp/features/wallet/presentation/viewmodels/wallet_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +44,7 @@ class WalletScreen extends HookConsumerWidget {
     void onFilterChanged(String filter) {
       HapticFeedback.lightImpact();
       selectedFilter.value = filter;
-      
+
       // Map filter to API type
       String? apiType;
       if (filter == 'Hosting') {
@@ -52,8 +54,23 @@ class WalletScreen extends HookConsumerWidget {
       } else if (filter == 'Vendor') {
         apiType = 'vendor_earning';
       }
-      
+
       walletViewModel.filterTransactionsByType(apiType ?? '');
+    }
+
+    // Stripe Connect status — gates the withdraw flow
+    final AsyncValue<StripeConnectStatus?> stripeStatusAsync =
+        ref.watch(stripeConnectStatusProvider);
+
+    void onWithdrawTap() {
+      HapticFeedback.lightImpact();
+      final StripeConnectStatus? status = stripeStatusAsync.value;
+      if (status == null || !status.isReady) {
+        // Not set up — direct user to connect bank first
+        context.push(RouteManager.walletBankConnect);
+      } else {
+        context.push(RouteManager.walletEnterAmount);
+      }
     }
 
     return Scaffold(
@@ -81,7 +98,7 @@ class WalletScreen extends HookConsumerWidget {
                   child: walletState.earningsState.when(
                     initial: () => _buildBalanceCardSkeleton(context),
                     loading: () => _buildBalanceCardSkeleton(context),
-                    success: (EarningsBreakdown earnings) => _buildBalanceCard(context, earnings),
+                    success: (EarningsBreakdown earnings) => _buildBalanceCard(context, earnings, onWithdrawTap),
                     error: (Failure failure) => _buildBalanceCardError(context, failure.message),
                   ),
                 ),
@@ -192,7 +209,7 @@ class WalletScreen extends HookConsumerWidget {
   }
 
   // Balance Card with real data
-  Widget _buildBalanceCard(BuildContext context, EarningsBreakdown earnings) => Container(
+  Widget _buildBalanceCard(BuildContext context, EarningsBreakdown earnings, VoidCallback onWithdraw) => Container(
       padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -233,41 +250,40 @@ class WalletScreen extends HookConsumerWidget {
           ],
           SizedBox(height: 24.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: _buildBalanceAction(
-                  context: context,
-                  icon: Icons.arrow_downward_rounded,
-                  label: 'Fund',
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.push(RouteManager.walletFund);
-                  },
-                ),
+              _buildBalanceAction(
+                context: context,
+                icon: Icons.arrow_downward_rounded,
+                label: 'Fund',
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.push(RouteManager.walletFund);
+                },
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: _buildBalanceAction(
-                  context: context,
-                  icon: Icons.arrow_upward_rounded,
-                  label: 'Withdraw',
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.push(RouteManager.walletEnterAmount);
-                  },
-                ),
+              _buildBalanceAction(
+                context: context,
+                icon: Icons.arrow_upward_rounded,
+                label: 'Withdraw',
+                onTap: onWithdraw,
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: _buildBalanceAction(
-                  context: context,
-                  icon: Icons.history_rounded,
-                  label: 'History',
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.push(RouteManager.walletHistory);
-                  },
-                ),
+              _buildBalanceAction(
+                context: context,
+                icon: Icons.account_balance_rounded,
+                label: 'Bank',
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.push(RouteManager.walletBankConnect);
+                },
+              ),
+              _buildBalanceAction(
+                context: context,
+                icon: Icons.history_rounded,
+                label: 'History',
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.push(RouteManager.walletHistory);
+                },
               ),
             ],
           ),
@@ -309,33 +325,12 @@ class WalletScreen extends HookConsumerWidget {
           ),
           SizedBox(height: 24.h),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: _buildBalanceAction(
-                  context: context,
-                  icon: Icons.arrow_downward_rounded,
-                  label: 'Fund',
-                  onTap: () {},
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: _buildBalanceAction(
-                  context: context,
-                  icon: Icons.arrow_upward_rounded,
-                  label: 'Withdraw',
-                  onTap: () {},
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: _buildBalanceAction(
-                  context: context,
-                  icon: Icons.history_rounded,
-                  label: 'History',
-                  onTap: () {},
-                ),
-              ),
+              _buildBalanceAction(context: context, icon: Icons.arrow_downward_rounded, label: 'Fund', onTap: () {}),
+              _buildBalanceAction(context: context, icon: Icons.arrow_upward_rounded, label: 'Withdraw', onTap: () {}),
+              _buildBalanceAction(context: context, icon: Icons.account_balance_rounded, label: 'Bank', onTap: () {}),
+              _buildBalanceAction(context: context, icon: Icons.history_rounded, label: 'History', onTap: () {}),
             ],
           ),
         ],
@@ -627,25 +622,27 @@ class WalletScreen extends HookConsumerWidget {
     required VoidCallback onTap,
   }) => GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.h),
-        decoration: BoxDecoration(
-          color: context.colors.onPrimary.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: context.colors.onPrimary, size: 20.sp),
-            SizedBox(width: 3.w),
-            Text(
-              label,
-              style: AppTypography.labelMedium.copyWith(
-                color: context.colors.onPrimary,
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 44.w,
+            height: 44.w,
+            decoration: BoxDecoration(
+              color: context.colors.onPrimary.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
             ),
-          ],
-        ),
+            child: Icon(icon, color: context.colors.onPrimary, size: 20.sp),
+          ),
+          SizedBox(height: 6.h),
+          Text(
+            label,
+            style: AppTypography.labelSmall.copyWith(
+              color: context.colors.onPrimary.withValues(alpha: 0.9),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
 

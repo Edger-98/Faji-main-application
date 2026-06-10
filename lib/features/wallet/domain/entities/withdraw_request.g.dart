@@ -42,20 +42,19 @@ Map<String, dynamic> _$$BankAccountImplToJson(_$BankAccountImpl instance) =>
       'accountName': instance.accountName,
     };
 
-_$WithdrawResponseImpl _$$WithdrawResponseImplFromJson(Map json) =>
-    $checkedCreate(r'_$WithdrawResponseImpl', json, ($checkedConvert) {
-      final val = _$WithdrawResponseImpl(
-        withdrawalId: $checkedConvert('withdrawalId', (v) => v as String),
-        amount: $checkedConvert('amount', (v) => (v as num).toDouble()),
-        currency: $checkedConvert('currency', (v) => v as String),
-        status: $checkedConvert('status', (v) => v as String),
-        estimatedArrival: $checkedConvert(
-          'estimatedArrival',
-          (v) => v as String,
-        ),
-      );
-      return val;
-    });
+_$WithdrawResponseImpl _$$WithdrawResponseImplFromJson(Map json) {
+  // API returns transactionId/payoutId — fall back to withdrawalId for compatibility
+  final String withdrawalId =
+      (json['transactionId'] ?? json['payoutId'] ?? json['withdrawalId'] ?? '')
+          as String;
+  return _$WithdrawResponseImpl(
+    withdrawalId: withdrawalId,
+    amount: (json['amount'] as num?)?.toDouble() ?? 0,
+    currency: (json['currency'] as String?) ?? 'USD',
+    status: (json['status'] as String?) ?? 'pending',
+    estimatedArrival: (json['estimatedArrival'] as String?) ?? '',
+  );
+}
 
 Map<String, dynamic> _$$WithdrawResponseImplToJson(
   _$WithdrawResponseImpl instance,

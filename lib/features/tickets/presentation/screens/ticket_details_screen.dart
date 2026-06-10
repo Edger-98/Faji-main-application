@@ -303,6 +303,37 @@ Hosted by ${event.host.name}
 
                 // Action Buttons
                 if (isPaid) ...[
+                  // Check In button — only for valid (not yet used) tickets
+                  if (ticket.status.toLowerCase() == 'valid' &&
+                      _isCheckInWindowOpen(event.startDate, event.endDate)) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56.h,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          context.push(
+                            '/check-in',
+                            extra: {
+                              'ticketId': ticket.id,
+                              'eventId': event.id,
+                              'eventName': event.name,
+                            },
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.successGreen,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          elevation: 0,
+                        ),
+                        icon: const Icon(Icons.how_to_reg),
+                        label: AppText.titleMedium('Check In', color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                  ],
                   SizedBox(
                     width: double.infinity,
                     height: 56.h,
@@ -553,6 +584,18 @@ Hosted by ${event.host.name}
       return '${months[date.month - 1]} ${date.day}, ${date.year}';
     } catch (e) {
       return dateStr;
+    }
+  }
+
+  bool _isCheckInWindowOpen(String startDateStr, String endDateStr) {
+    try {
+      final now = DateTime.now();
+      final start = DateTime.parse(startDateStr);
+      final end = DateTime.parse(endDateStr);
+      // Window: 2 hours before start until end
+      return now.isAfter(start.subtract(const Duration(hours: 2))) && now.isBefore(end);
+    } catch (_) {
+      return false;
     }
   }
 

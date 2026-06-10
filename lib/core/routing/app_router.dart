@@ -42,6 +42,8 @@ import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_resour
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_add_resource_screen_v2.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_bookings_list_screen.dart';
 import 'package:fajimobileapp/features/vendor/presentation/screens/vendor_dashboard_screen.dart';
+import 'package:fajimobileapp/features/tickets/presentation/screens/event_dashboard_screen.dart';
+import 'package:fajimobileapp/features/tickets/presentation/screens/check_in_screen.dart';
 
 /// Application router configuration
 class AppRouter {
@@ -640,11 +642,25 @@ class AppRouter {
         path: RouteManager.walletConfirmation,
         name: RouteManager.walletConfirmationName,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          final String amount = state.extra as String? ?? '0.00';
+          final extra = state.extra;
+          String amount = '0.00';
+          String? estimatedArrival;
+          String currency = 'USD';
+          if (extra is Map<String, String>) {
+            amount = extra['amount'] ?? '0.00';
+            estimatedArrival = extra['estimatedArrival'];
+            currency = extra['currency'] ?? 'USD';
+          } else if (extra is String) {
+            amount = extra;
+          }
           return _buildPageWithTransition(
             context,
             state,
-            WithdrawalConfirmationScreen(amount: amount),
+            WithdrawalConfirmationScreen(
+              amount: amount,
+              estimatedArrival: estimatedArrival,
+              currency: currency,
+            ),
           );
         },
       ),
@@ -655,6 +671,14 @@ class AppRouter {
           context,
           state,
           const TransactionHistoryScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteManager.walletBankConnect,
+        pageBuilder: (BuildContext context, GoRouterState state) => _buildPageWithTransition(
+          context,
+          state,
+          const BankConnectScreen(),
         ),
       ),
 
@@ -703,6 +727,41 @@ class AppRouter {
           state,
           const VendorDashboardScreen(),
         ),
+      ),
+
+      // Event Dashboard (creator)
+      GoRoute(
+        path: RouteManager.eventDashboard,
+        name: RouteManager.eventDashboardName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return _buildPageWithTransition(
+            context,
+            state,
+            EventDashboardScreen(
+              eventId: extra['eventId'] as String,
+              eventName: extra['eventName'] as String,
+            ),
+          );
+        },
+      ),
+
+      // Check In (guest)
+      GoRoute(
+        path: RouteManager.checkIn,
+        name: RouteManager.checkInName,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return _buildPageWithTransition(
+            context,
+            state,
+            CheckInScreen(
+              ticketId: extra['ticketId'] as String,
+              eventId: extra['eventId'] as String,
+              eventName: extra['eventName'] as String,
+            ),
+          );
+        },
       ),
     ],
   );

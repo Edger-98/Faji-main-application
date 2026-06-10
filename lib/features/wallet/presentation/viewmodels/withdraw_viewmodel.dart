@@ -15,21 +15,16 @@ class WithdrawViewModel extends StateNotifier<WithdrawState> {
   ) : super(const BaseState.initial());
   final WithdrawFundsUseCase _withdrawFundsUseCase;
 
-  /// Withdraw funds from wallet
-  Future<void> withdrawFunds({
-    required double amount,
-    required String accountNumber,
-    required String bankCode,
-    required String accountName,
-  }) async {
+  /// Withdraw funds from wallet — backend routes to Stripe connected account
+  Future<void> withdrawFunds({required double amount}) async {
     state = const BaseState.loading();
 
     final WithdrawRequest request = WithdrawRequest(
       amount: amount,
-      bankAccount: BankAccount(
-        accountNumber: accountNumber,
-        bankCode: bankCode,
-        accountName: accountName,
+      bankAccount: const BankAccount(
+        accountNumber: '',
+        bankCode: '',
+        accountName: '',
       ),
     );
 

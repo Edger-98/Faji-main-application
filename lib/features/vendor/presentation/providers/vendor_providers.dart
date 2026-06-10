@@ -271,16 +271,40 @@ final FutureProvider<VendorStatus?> vendorStatusProvider = FutureProvider<Vendor
   try {
     final dio = ref.read(dioProvider);
     final vendorDataSource = VendorRemoteDataSource(dio);
-    
+
     final response = await vendorDataSource.checkVendorStatus();
-    
+
     if (response.response.statusCode == 200 && response.data != null) {
-      final data = response.data['data'] as Map<String, dynamic>?;
-      if (data != null) {
+      final responseMap = response.data as Map<String, dynamic>;
+
+      // Handle both wrapped ({data: {...}}) and unwrapped responses
+      final Map<String, dynamic> data =
+          (responseMap['data'] as Map<String, dynamic>?) ?? responseMap;
+
+      // Try the generated fromJson first
+      try {
         return VendorStatus.fromJson(data);
+      } catch (_) {
+        // Fallback: manually parse common field name variants
+        final bool isVendor = data['isVendor'] as bool? ??
+            data['is_vendor'] as bool? ??
+            data['hasVendorAccount'] as bool? ??
+            false;
+        final bool hasAccount = data['hasVendorAccount'] as bool? ??
+            data['has_vendor_account'] as bool? ??
+            isVendor;
+        return VendorStatus(
+          isVendor: isVendor,
+          hasVendorAccount: hasAccount,
+          vendorId: data['vendorId'] as String? ?? data['vendor_id'] as String?,
+          verificationStatus: data['verificationStatus'] as String? ??
+              data['status'] as String?,
+          isVerified: data['isVerified'] as bool? ?? false,
+          isActive: data['isActive'] as bool? ?? isVendor,
+        );
       }
     }
-    
+
     return null;
   } catch (e) {
     print('Error checking vendor status: $e');

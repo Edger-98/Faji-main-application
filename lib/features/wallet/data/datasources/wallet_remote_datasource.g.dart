@@ -80,11 +80,11 @@ class _WalletRemoteDataSource implements WalletRemoteDataSource {
   }
 
   @override
-  Future<HttpResponse<dynamic>> withdrawFunds(WithdrawRequest request) async {
+  Future<HttpResponse<dynamic>> withdrawFunds(Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = request;
+    final _data = body;
     final _options = _setStreamType<HttpResponse<dynamic>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(

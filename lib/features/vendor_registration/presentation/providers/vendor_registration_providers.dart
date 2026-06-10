@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fajimobileapp/core/network/dio_client.dart';
+import 'package:fajimobileapp/core/network/api_client.dart';
 import 'package:fajimobileapp/features/vendor_registration/data/datasources/vendor_registration_remote_datasource.dart';
 import 'package:fajimobileapp/features/vendor_registration/data/repositories/vendor_registration_repository_impl.dart';
 import 'package:fajimobileapp/features/vendor_registration/domain/repositories/vendor_registration_repository.dart';

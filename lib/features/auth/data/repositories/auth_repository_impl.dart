@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:fajimobileapp/core/network/api_response.dart';
@@ -7,7 +5,6 @@ import 'package:retrofit/dio.dart';
 
 import 'package:fajimobileapp/core/error/failures.dart';
 import 'package:fajimobileapp/core/network/network_info.dart';
-import 'package:fajimobileapp/core/services/api_service.dart';
 import 'package:fajimobileapp/features/auth/domain/entities/auth_token_entity.dart';
 import 'package:fajimobileapp/features/auth/domain/entities/registration_complete_entity.dart';
 import 'package:fajimobileapp/features/auth/domain/entities/registration_session_entity.dart';
@@ -51,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository { // Add API service for toke
 
       if (response.response.statusCode == 200) {
         final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
-        final data = responseData['data'] ?? responseData;
+        final Map<String, dynamic> data = (responseData['data'] as Map<String, dynamic>?) ?? responseData;
         final RegistrationSessionModel model = RegistrationSessionModel.fromJson(data);
         return Right(model.toEntity());
       } else {
@@ -83,7 +80,7 @@ class AuthRepositoryImpl implements AuthRepository { // Add API service for toke
 
       if (response.response.statusCode == 200) {
         final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
-        final data = responseData['data'] ?? responseData;
+        final Map<String, dynamic> data = (responseData['data'] as Map<String, dynamic>?) ?? responseData;
         final RegistrationTokenModel model = RegistrationTokenModel.fromJson(data);
         return Right(model.toEntity());
       } else {
@@ -113,7 +110,7 @@ class AuthRepositoryImpl implements AuthRepository { // Add API service for toke
 
       if (response.response.statusCode == 200) {
         final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
-        final data = responseData['data'] ?? responseData;
+        final Map<String, dynamic> data = (responseData['data'] as Map<String, dynamic>?) ?? responseData;
         final RegistrationTokenModel model = RegistrationTokenModel.fromJson(data);
         return Right(model.toEntity());
       } else {
@@ -145,7 +142,7 @@ class AuthRepositoryImpl implements AuthRepository { // Add API service for toke
 
       if (response.response.statusCode == 200) {
         final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
-        final data = responseData['data'] ?? responseData;
+        final Map<String, dynamic> data = (responseData['data'] as Map<String, dynamic>?) ?? responseData;
         final RegistrationTokenModel model = RegistrationTokenModel.fromJson(data);
         return Right(model.toEntity());
       } else {
@@ -254,10 +251,10 @@ class AuthRepositoryImpl implements AuthRepository { // Add API service for toke
       } else {
         // Extract error message from response
         final Map<String, dynamic>? responseData = response.data as Map<String, dynamic>?;
-        final errorMessage = responseData?['message'] ?? 
-                           responseData?['msg'] ?? 
-                           responseData?['error'] ?? 
-                           'Login failed';
+        final String errorMessage = (responseData?['message'] ??
+                           responseData?['msg'] ??
+                           responseData?['error'] ??
+                           'Login failed') as String;
         return Left(ServerFailure(message: errorMessage));
       }
     } on DioException catch (e) {
@@ -541,24 +538,19 @@ class AuthRepositoryImpl implements AuthRepository { // Add API service for toke
     String? firstName,
     String? lastName,
     String? phoneNo,
-    String? imagePath,
+    String? imageUrl,
   }) async {
     if (!await networkInfo.isConnected) {
       return Left(NetworkFailure.noConnection());
     }
 
     try {
-      File? imageFile;
-      if (imagePath != null) {
-        imageFile = File(imagePath);
-      }
-
       final ApiResponse<UserModel> response = await remoteDataSource.updateSettings(
         id,
         firstName,
         lastName,
         phoneNo,
-        imageFile,
+        imageUrl,
       );
 
       if (response.success && response.data != null) {

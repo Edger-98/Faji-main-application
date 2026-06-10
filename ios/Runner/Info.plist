@@ -16,6 +16,10 @@
 	<string>fajimobileapp</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSCameraUsageDescription</key>
+<string>Faji uses your camera to allow you to capture photos for events, profiles, or uploads</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Faji uses your location to show nearby events and vendors, even when the app is running in the background</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

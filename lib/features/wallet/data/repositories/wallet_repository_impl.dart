@@ -67,18 +67,22 @@ class WalletRepositoryImpl implements WalletRepository {
     required WithdrawRequest request,
   }) async {
     try {
-      final HttpResponse response = await remoteDataSource.withdrawFunds(request);
+      final HttpResponse response = await remoteDataSource.withdrawFunds(<String, dynamic>{'amount': request.amount});
       
       if (response.response.statusCode == 200 || response.response.statusCode == 201) {
         final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
-        
-        // Handle both wrapped and direct responses
         final Map<String, dynamic> data = responseData['data'] as Map<String, dynamic>? ?? responseData;
-        
-        final WithdrawResponse withdrawResponse = WithdrawResponse.fromJson(data);
-        return Right(withdrawResponse);
+        return Right(WithdrawResponse.fromJson(data));
       } else {
-        return const Left(ServerFailure(message: 'Failed to withdraw funds'));
+        // Extract the real API error message from the response body
+        final d = response.data;
+        final String msg = (d is Map)
+            ? ((d['message'] as String?) ??
+                  (d['error'] is Map ? d['error']['message'] as String? : null) ??
+                  (d['errors'] is Map ? d['errors']['message'] as String? : null) ??
+                  'Withdrawal failed')
+            : 'Withdrawal failed';
+        return Left(ServerFailure(message: msg));
       }
     } on DioException catch (e) {
       return Left(_handleDioError(e));
@@ -129,7 +133,13 @@ class WalletRepositoryImpl implements WalletRepository {
         return const ServerFailure(message: 'Connection timeout');
       case DioExceptionType.badResponse:
         final int? statusCode = error.response?.statusCode;
-        final message = (error.response?.data?['message'] as String?) ?? 'Server error';
+        final d = error.response?.data;
+        final String message = (d is Map)
+            ? ((d['message'] as String?) ??
+                  (d['error'] is Map ? d['error']['message'] as String? : null) ??
+                  (d['errors'] is Map ? d['errors']['message'] as String? : null) ??
+                  'Something went wrong')
+            : 'Something went wrong';
         if (statusCode == 401) {
           return const AuthFailure(message: 'Unauthorized');
         } else if (statusCode == 403) {
