@@ -2,7 +2,7 @@ name: fajimobileapp
 description: "Enterprise-grade Flutter application with Clean Architecture"
 publish_to: 'none'
 
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: ^3.8.1
@@ -132,8 +132,57 @@ flutter:
     - .env.staging
     - .env.production
   
-  # Fonts - Using Modica Pro exclusively
+  # Fonts
   fonts:
+    # SF Pro Display - active font (swap AppFonts.primary in app_fonts.dart to change)
+    - family: SF Pro Display
+      fonts:
+        - asset: assets/fonts/SFProDisplay-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/SFProDisplay-Ultralight.ttf
+          weight: 200
+        - asset: assets/fonts/SFProDisplay-Light.ttf
+          weight: 300
+        - asset: assets/fonts/SFProDisplay-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/SFProDisplay-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/SFProDisplay-Semibold.ttf
+          weight: 600
+        - asset: assets/fonts/SFProDisplay-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/SFProDisplay-Heavy.ttf
+          weight: 800
+        - asset: assets/fonts/SFProDisplay-Black.ttf
+          weight: 900
+        - asset: assets/fonts/SFProDisplay-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/SFProDisplay-UltralightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/SFProDisplay-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/SFProDisplay-RegularItalic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/SFProDisplay-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/SFProDisplay-SemiboldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/SFProDisplay-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/SFProDisplay-HeavyItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/SFProDisplay-BlackItalic.ttf
+          weight: 900
+          style: italic
+    # Modica Pro - kept as fallback/alternative
     - family: Modica Pro
       fonts:
         - asset: assets/fonts/ModicaPro-Normal-Hairline.otf

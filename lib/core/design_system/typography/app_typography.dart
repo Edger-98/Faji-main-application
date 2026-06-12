@@ -1,3 +1,4 @@
+import 'package:fajimobileapp/core/design_system/typography/app_fonts.dart';
 import 'package:flutter/material.dart';
 
 /// Faji App typography system based on Figma designs
@@ -5,10 +6,10 @@ import 'package:flutter/material.dart';
 class AppTypography {
   AppTypography._();
 
-  // Base font family - Modica Pro
-  static const String modicaPro = 'Modica Pro';
+  // Alias kept for backward compatibility — change font in AppFonts.primary
+  static const String modicaPro = AppFonts.primary;
 
-  // Font weights (matching actual font files)
+  // Font weights
   static const FontWeight thin = FontWeight.w100;
   static const FontWeight light = FontWeight.w300;
   static const FontWeight regular = FontWeight.w400;
@@ -17,9 +18,9 @@ class AppTypography {
   static const FontWeight bold = FontWeight.w700;
   static const FontWeight black = FontWeight.w900;
 
-  // Display styles - Using Modica Pro Bold for impact
+  // Display styles
   static const TextStyle displayLarge = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 32,
     fontWeight: bold, // 700
     height: 1.2,
@@ -27,7 +28,7 @@ class AppTypography {
   );
 
   static const TextStyle displayMedium = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 28,
     fontWeight: bold,
     height: 1.2,
@@ -35,7 +36,7 @@ class AppTypography {
   );
 
   static const TextStyle displaySmall = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 24,
     fontWeight: bold,
     height: 1.2,
@@ -44,7 +45,7 @@ class AppTypography {
 
   // Headlines - Using Modica Pro SemiBold for hierarchy
   static const TextStyle headlineLarge = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 24,
     fontWeight: semiBold, // 600
     height: 1.2,
@@ -52,7 +53,7 @@ class AppTypography {
   );
 
   static const TextStyle headlineMedium = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 20,
     fontWeight: semiBold,
     height: 1.2,
@@ -60,7 +61,7 @@ class AppTypography {
   );
 
   static const TextStyle headlineSmall = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 18,
     fontWeight: semiBold,
     height: 1.2,
@@ -69,7 +70,7 @@ class AppTypography {
 
   // Titles - Using Modica Pro Medium for emphasis
   static const TextStyle titleLarge = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 18,
     fontWeight: semiBold,
     height: 1.3,
@@ -77,7 +78,7 @@ class AppTypography {
   );
 
   static const TextStyle titleMedium = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 16,
     fontWeight: medium,
     height: 1.3,
@@ -85,7 +86,7 @@ class AppTypography {
   );
 
   static const TextStyle titleSmall = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 14,
     fontWeight: medium,
     height: 1.3,
@@ -94,7 +95,7 @@ class AppTypography {
 
   // Labels/Buttons - Using Modica Pro SemiBold for clarity
   static const TextStyle labelLarge = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 16,
     fontWeight: semiBold, // 600
     height: 1.2,
@@ -102,7 +103,7 @@ class AppTypography {
   );
 
   static const TextStyle labelMedium = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 14,
     fontWeight: semiBold,
     height: 1.2,
@@ -110,7 +111,7 @@ class AppTypography {
   );
 
   static const TextStyle labelSmall = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 12,
     fontWeight: medium,
     height: 1.2,
@@ -119,7 +120,7 @@ class AppTypography {
 
   // Body Text - Using Modica Pro Regular for readability
   static const TextStyle bodyLarge = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 15,
     fontWeight: regular, // 400
     height: 1.5,
@@ -127,7 +128,7 @@ class AppTypography {
   );
 
   static const TextStyle bodyMedium = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 14,
     fontWeight: regular, // 400
     height: 1.5,
@@ -135,7 +136,7 @@ class AppTypography {
   );
 
   static const TextStyle bodySmall = TextStyle(
-    fontFamily: modicaPro,
+    fontFamily: AppFonts.primary,
     fontSize: 12,
     fontWeight: regular, // 400
     height: 1.5,

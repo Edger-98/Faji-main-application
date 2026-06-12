@@ -13,6 +13,16 @@ import 'package:fajimobileapp/core/services/inactivity_timeout_service.dart';
 import 'package:fajimobileapp/core/services/stripe_service.dart';
 
 void main() async {
+  // Catch Flutter framework errors in release mode (grey box = silent error)
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    debugPrint('FAJI_ERROR: ${details.exception}');
+    debugPrint('FAJI_ERROR_STACK: ${details.stack}');
+  };
+
+  // Catch any Dart errors not caught by Flutter framework
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Initialize the application
   await AppInitializer.initialize();
   

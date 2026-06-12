@@ -1,9 +1,0 @@
-// Domain
-// Data
-export 'data/mock_cohost_data.dart';
-export 'domain/entities/cohost_profile_entity.dart';
-export 'domain/entities/cohost_resource_entity.dart';
-export 'domain/entities/resource_category.dart';
-export 'presentation/screens/cohost_list_screen.dart';
-// Presentation
-export 'presentation/screens/resource_categories_screen.dart';
